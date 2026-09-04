@@ -12,30 +12,41 @@ class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
   final List<Map<String, Widget>>? childrens;
   final Map<String, dynamic>? defaultValues;
+  final String pageName;
+  final String currentSchemaKey;
+  final Map<String, dynamic>? navigationParams;
 
   const JsonForms({
     super.key,
     required this.propertySchema,
     this.childrens,
     this.defaultValues,
+    required this.pageName,
+    required this.currentSchemaKey,
+    this.navigationParams,
   });
 
   static Map<String, AbstractControl<dynamic>> getFormControls(
     PropertySchema schema, {
     String? defaultLatlng,
     Map<String, dynamic>? defaultValues,
+    String? schemaKey,
+    Map<String, dynamic>? navigationParams,
   }) {
     assert(schema.properties != null);
 
     final Map<String, AbstractControl<dynamic>> controls = {
       for (final entry in schema.properties!.entries)
-        if (!isHidden(entry.value) || entry.value.includeInForm == true)
+        if (entry.value.displayOnly != true &&
+            (!isHidden(entry.value) || entry.value.includeInForm == true))
           entry.key: buildFormControl(
             entry.key,
             entry.value,
             schema,
             defaultLatlng: defaultLatlng,
             defaultValues: defaultValues,
+            navigationParams: navigationParams,
+            schemaKey: schemaKey,
           ),
     };
 
@@ -53,7 +64,17 @@ class JsonForms extends StatelessWidget {
         .whereType<MapEntry<String, dynamic>>()
         .toList();
 
-    return Map.fromEntries(values);
+    final result = Map.fromEntries(values);
+
+    // Additionally, collect any form controls with entity suffixes (e.g., fieldName_item_0)
+    // These are created by MultiEntityTabView and need to be preserved for the transformer
+    for (final controlKey in form.controls.keys) {
+      if (controlKey.contains('_item_')) {
+        result[controlKey] = form.control(controlKey).value;
+      }
+    }
+
+    return result;
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
@@ -70,6 +91,12 @@ class JsonForms extends StatelessWidget {
         Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
       );
     } else {
+      // Skip if control doesn't exist (hidden field without includeInForm: true,
+      // or renamed in MultiEntityTabView)
+      if (!form.contains(name)) {
+        return null;
+      }
+
       final value = form.control(name).value;
       if (value == null) return null;
       return MapEntry(name, value);
@@ -81,5 +108,8 @@ class JsonForms extends StatelessWidget {
         schema: propertySchema,
         formControlName: '/',
         components: childrens,
+        pageName: pageName,
+        currentSchemaKey: currentSchemaKey,
+        navigationParams: navigationParams,
       );
 }

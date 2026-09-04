@@ -1,9 +1,10 @@
 import 'dart:async'; // Import the dart:async library for asynchronous operations
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/utils/typedefs.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart'; // Import the collection package for collection utilities
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
 import 'package:digit_ui_components/theme/colors.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';

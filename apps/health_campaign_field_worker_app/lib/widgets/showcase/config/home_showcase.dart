@@ -24,8 +24,10 @@ class _HomePageShowcaseData {
         supervisorSyncData,
         deleteAll,
         db,
+        dataShare,
         beneficiaryId,
         closedHouseHold,
+        transitPost
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
@@ -41,6 +43,10 @@ class _HomePageShowcaseData {
   );
 
   final distributorSyncData = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.distributorSyncData,
+  );
+
+  final stockSyncData = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );
 
@@ -118,6 +124,26 @@ class _HomePageShowcaseData {
 
   final transitPost = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.transitPostLabel,
+  );
+
+  final polioRegistration = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioRegistrationLabel,
+  );
+
+  final polioMissedChildren = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioMissedChildrenLabel,
+  );
+
+  final polioStockDetails = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioStockDetailsLabel,
+  );
+
+  final polioLqaDataCollection = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioLqaDataCollectionLabel,
+  );
+
+  final polioInsideMonitoring = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.polioInsideMonitoringLabel,
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);

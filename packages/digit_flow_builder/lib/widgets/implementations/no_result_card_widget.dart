@@ -1,0 +1,127 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../resolved_flow_widget.dart';
+
+class NoResultCardWidget extends ResolvedFlowWidget {
+  @override
+  String get format => 'noResultCard';
+
+  @override
+  Widget buildResolved(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
+    final compositeKey = resolved.compositeKey;
+
+    if (compositeKey == null) {
+      return NoResultCard(
+        label: json['labelPlaceHolders'] != null
+            ? resolved.resolveTextWithPlaceHolders(
+                json['label'], json['labelPlaceHolders'])
+            : resolved.resolveTextWithArgs(
+                json['label'], json['labelArgs']),
+        description: json['descriptionPlaceHolders'] != null
+            ? resolved.resolveTextWithPlaceHolders(
+                json['description'], json['descriptionPlaceHolders'])
+            : resolved.resolveTextWithArgs(
+                json['description'], json['descriptionArgs']),
+      );
+    }
+
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
+      builder: (context, flowState, _) {
+        final showOnEmptySearch = json['showOnEmptySearch'] == true;
+        if (showOnEmptySearch) {
+          final base = flowState?.base;
+          final stateWrapper = flowState?.stateWrapper;
+          final hasSearchCompleted = base is CrudStateLoaded;
+          final hasNoResults = stateWrapper == null || stateWrapper.isEmpty;
+          if (!hasSearchCompleted || !hasNoResults) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(top: spacer6),
+          child: NoResultCard(
+            label: json['labelPlaceHolders'] != null
+                ? resolved.resolveTextWithPlaceHolders(
+                    json['label'], json['labelPlaceHolders'])
+                : resolved.resolveTextWithArgs(
+                    json['label'], json['labelArgs']),
+            description: json['descriptionPlaceHolders'] != null
+                ? resolved.resolveTextWithPlaceHolders(
+                    json['description'], json['descriptionPlaceHolders'])
+                : resolved.resolveTextWithArgs(
+                    json['description'], json['descriptionArgs']),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class NoResultCard extends StatelessWidget {
+  final String? label;
+  final String? description;
+  final AlignmentGeometry align;
+  final double padding;
+
+  const NoResultCard({
+    super.key,
+    this.align = Alignment.center,
+    this.padding = spacer4,
+    required this.label,
+    this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    const String noResultSvg = 'assets/icons/svg/no_result.svg';
+
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: Center(
+        child: Padding(
+            padding: const EdgeInsets.all(spacer1),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(noResultSvg),
+                const SizedBox(height: spacer2),
+                Text(
+                  label ?? '',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorTheme.primary.primary2,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (description != null) ...[
+                  const SizedBox(height: spacer2),
+                  Text(
+                    description!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorTheme.text.secondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ],
+            )),
+      ),
+    );
+  }
+}

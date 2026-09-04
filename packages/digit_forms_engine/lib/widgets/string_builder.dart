@@ -4,6 +4,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final TextInputType inputType;
   final String? prefixText;
   final String? suffixText;
+  final bool capitalizeWords;
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
@@ -22,13 +23,22 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.helpText,
     super.tooltipText,
     super.charCount,
+    this.capitalizeWords = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
-    final inputFormatter = getPatternFormatter(validations);
+    final patternFormatter = getPatternFormatter(validations);
+    final noEmojiFilter = FilteringTextInputFormatter.allow(
+      RegExp(r'[\x00-\x7F]'), // ASCII only (0-127)
+    );
+    final formatters = [
+      noEmojiFilter,
+      if (patternFormatter != null) patternFormatter,
+      if (capitalizeWords) _CapitalizeWordsFormatter(),
+    ];
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
@@ -56,11 +66,26 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
                 form.control(formControlName).value = value;
               },
               errorMessage: field.errorText,
-              inputFormatters: inputFormatter != null ? [inputFormatter] : null,
+              inputFormatters: formatters,
             ),
           ),
         );
       },
     );
+  }
+}
+
+class _CapitalizeWordsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final newText = newValue.text.replaceAllMapped(
+      RegExp(r'(^|\s)\S'),
+      (match) => match.group(0)!.toUpperCase(),
+    );
+    return newValue.copyWith(text: newText, selection: newValue.selection);
   }
 }

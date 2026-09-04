@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -10,7 +9,6 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {
@@ -52,6 +50,10 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableExposureOffset = 0.0;
   bool _changingCameraLens = false;
 
+  // Zoom slider, camera-flip and gallery controls are kept in the code but
+  // intentionally hidden from the scanner UI. Flip to true to re-enable them.
+  static const bool _showAdvancedCameraControls = false;
+
   @override
   void initState() {
     super.initState();
@@ -60,11 +62,21 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _initialize() async {
-    _cameras = widget.cameras;
-    _cameraIndex = _cameras.indexWhere(
-        (camera) => camera.lensDirection == widget.initialCameraLensDirection);
-    if (_cameraIndex != -1) {
-      _startLiveFeed();
+    try {
+      _cameras = widget.cameras;
+      if (_cameras.isEmpty) {
+        return;
+      }
+      _cameraIndex = _cameras.indexWhere(
+          (camera) => camera.lensDirection == widget.initialCameraLensDirection);
+      if (_cameraIndex == -1 && _cameras.isNotEmpty) {
+        _cameraIndex = 0;
+      }
+      if (_cameraIndex != -1) {
+        _startLiveFeed();
+      }
+    } catch (e) {
+      if (kDebugMode) print('Unable to scan: Camera initialization failed - $e');
     }
   }
 
@@ -103,34 +115,15 @@ class _CameraViewState extends State<CameraView> {
                     child: widget.customPaint,
                   ),
           ),
-          _backButton(context),
-          _switchLiveCameraToggle(),
-          _detectionViewModeToggle(),
-          _zoomControl(),
-          _exposureControl(context),
+          if (_showAdvancedCameraControls) ...[
+            _switchLiveCameraToggle(),
+            _detectionViewModeToggle(),
+            _zoomControl(),
+          ],
         ],
       ),
     );
   }
-
-  Widget _backButton(context) => Positioned(
-        top: 40,
-        left: 8,
-        child: SizedBox(
-          height: 50.0,
-          width: 50.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            onPressed: widget.onBackButtonPressed,
-            backgroundColor: Theme.of(context).colorTheme.generic.background,
-            child: Icon(
-              Icons.arrow_back_ios_outlined,
-              size: 20,
-              color: Theme.of(context).colorTheme.text.primary,
-            ),
-          ),
-        ),
-      );
 
   Widget _detectionViewModeToggle() => Positioned(
         bottom: 8,
@@ -220,69 +213,72 @@ class _CameraViewState extends State<CameraView> {
         ),
       );
 
-  Widget _exposureControl(context) => Positioned(
-        top: 80,
-        left: MediaQuery.of(context).size.width / 14,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxHeight: 250,
-          ),
-          child: Column(children: [
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                margin: const EdgeInsets.all(15.0),
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: spacer1,
-                    color: DigitTheme.instance.colorScheme.error,
-                  ),
-                ),
-              ),
-            ),
-            // TODO : Need to add the Scanner Box
-          ]),
-        ),
-      );
-
   Future _startLiveFeed() async {
-    final camera = _cameras[_cameraIndex];
-    _controller = widget.cameraController;
-
-    _controller?.initialize().then((_) {
-      if (!mounted) {
+    try {
+      if (_cameras.isEmpty || _cameraIndex < 0 || _cameraIndex >= _cameras.length) {
         return;
       }
-      _controller?.getMinZoomLevel().then((value) {
-        _currentZoomLevel = value;
-        _minAvailableZoom = value;
-      });
-      _controller?.getMaxZoomLevel().then((value) {
-        _maxAvailableZoom = value;
-      });
-      _controller?.getMinExposureOffset().then((value) {
-        _minAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+      final camera = _cameras[_cameraIndex];
+      _controller = widget.cameraController;
+
+      _controller?.initialize().then((_) {
+        if (!mounted) {
+          return;
         }
-      });
-      _controller?.getMaxExposureOffset().then((value) {
-        _maxAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+        _controller?.getMinZoomLevel().then((value) {
+          if (mounted) {
+            _currentZoomLevel = value;
+            _minAvailableZoom = value;
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get min zoom level: $e');
+        });
+        _controller?.getMaxZoomLevel().then((value) {
+          if (mounted) {
+            _maxAvailableZoom = value;
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get max zoom level: $e');
+        });
+        _controller?.getMinExposureOffset().then((value) {
+          if (mounted) {
+            _minAvailableExposureOffset = value;
+          }
+          if (kDebugMode) {
+            print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get min exposure: $e');
+        });
+        _controller?.getMaxExposureOffset().then((value) {
+          if (mounted) {
+            _maxAvailableExposureOffset = value;
+          }
+          if (kDebugMode) {
+            print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get max exposure: $e');
+        });
+        _controller?.startImageStream(_processCameraImage).then((value) {
+          if (widget.onCameraFeedReady != null) {
+            widget.onCameraFeedReady!();
+          }
+          if (widget.onCameraLensDirectionChanged != null) {
+            widget.onCameraLensDirectionChanged!(camera.lensDirection);
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to start image stream: $e');
+        });
+        if (mounted) {
+          setState(() {});
         }
+      }).catchError((e) {
+        if (kDebugMode) print('Unable to scan: Camera initialization failed - $e');
       });
-      _controller?.startImageStream(_processCameraImage).then((value) {
-        if (widget.onCameraFeedReady != null) {
-          widget.onCameraFeedReady!();
-        }
-        if (widget.onCameraLensDirectionChanged != null) {
-          widget.onCameraLensDirectionChanged!(camera.lensDirection);
-        }
-      });
-      setState(() {});
-    });
+    } catch (e) {
+      if (kDebugMode) print('Unable to scan: $e');
+    }
   }
 
   Future _stopLiveFeed() async {
@@ -292,12 +288,17 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _switchLiveCamera() async {
-    setState(() => _changingCameraLens = true);
+    if (_cameras.isEmpty) return;
+    if (mounted) {
+      setState(() => _changingCameraLens = true);
+    }
     _cameraIndex = (_cameraIndex + 1) % _cameras.length;
 
     await _stopLiveFeed();
     await _startLiveFeed();
-    setState(() => _changingCameraLens = false);
+    if (mounted) {
+      setState(() => _changingCameraLens = false);
+    }
   }
 
   void _processCameraImage(CameraImage image) {

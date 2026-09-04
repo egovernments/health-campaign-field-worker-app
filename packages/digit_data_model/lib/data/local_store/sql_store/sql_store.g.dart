@@ -18308,6 +18308,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<String> senderType = GeneratedColumn<String>(
       'sender_type', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _campaignNumberMeta =
+      const VerificationMeta('campaignNumber');
+  @override
+  late final GeneratedColumn<String> campaignNumber = GeneratedColumn<String>(
+      'campaign_number', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _dateOfEntryMeta =
       const VerificationMeta('dateOfEntry');
   @override
@@ -18428,6 +18434,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -18529,6 +18536,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _senderTypeMeta,
           senderType.isAcceptableOrUnknown(
               data['sender_type']!, _senderTypeMeta));
+    }
+    if (data.containsKey('campaign_number')) {
+      context.handle(
+          _campaignNumberMeta,
+          campaignNumber.isAcceptableOrUnknown(
+              data['campaign_number']!, _campaignNumberMeta));
     }
     if (data.containsKey('date_of_entry')) {
       context.handle(
@@ -18664,6 +18677,8 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           .read(DriftSqlType.string, data['${effectivePrefix}sender_id']),
       senderType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sender_type']),
+      campaignNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}campaign_number']),
       dateOfEntry: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}date_of_entry']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
@@ -18720,6 +18735,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final String? campaignNumber;
   final int? dateOfEntry;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
@@ -18751,6 +18767,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.receiverType,
       this.senderId,
       this.senderType,
+      this.campaignNumber,
       this.dateOfEntry,
       this.auditCreatedBy,
       this.nonRecoverableError,
@@ -18811,6 +18828,9 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || senderType != null) {
       map['sender_type'] = Variable<String>(senderType);
+    }
+    if (!nullToAbsent || campaignNumber != null) {
+      map['campaign_number'] = Variable<String>(campaignNumber);
     }
     if (!nullToAbsent || dateOfEntry != null) {
       map['date_of_entry'] = Variable<int>(dateOfEntry);
@@ -18903,6 +18923,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       senderType: senderType == null && nullToAbsent
           ? const Value.absent()
           : Value(senderType),
+      campaignNumber: campaignNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campaignNumber),
       dateOfEntry: dateOfEntry == null && nullToAbsent
           ? const Value.absent()
           : Value(dateOfEntry),
@@ -18972,6 +18995,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       receiverType: serializer.fromJson<String?>(json['receiverType']),
       senderId: serializer.fromJson<String?>(json['senderId']),
       senderType: serializer.fromJson<String?>(json['senderType']),
+      campaignNumber: serializer.fromJson<String?>(json['campaignNumber']),
       dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
@@ -19010,6 +19034,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'receiverType': serializer.toJson<String?>(receiverType),
       'senderId': serializer.toJson<String?>(senderId),
       'senderType': serializer.toJson<String?>(senderType),
+      'campaignNumber': serializer.toJson<String?>(campaignNumber),
       'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
@@ -19044,6 +19069,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           Value<String?> receiverType = const Value.absent(),
           Value<String?> senderId = const Value.absent(),
           Value<String?> senderType = const Value.absent(),
+          Value<String?> campaignNumber = const Value.absent(),
           Value<int?> dateOfEntry = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
@@ -19085,6 +19111,8 @@ class StockData extends DataClass implements Insertable<StockData> {
             receiverType.present ? receiverType.value : this.receiverType,
         senderId: senderId.present ? senderId.value : this.senderId,
         senderType: senderType.present ? senderType.value : this.senderType,
+        campaignNumber:
+            campaignNumber.present ? campaignNumber.value : this.campaignNumber,
         dateOfEntry: dateOfEntry.present ? dateOfEntry.value : this.dateOfEntry,
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
@@ -19142,6 +19170,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -19178,6 +19207,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         receiverType,
         senderId,
         senderType,
+        campaignNumber,
         dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
@@ -19213,6 +19243,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.receiverType == this.receiverType &&
           other.senderId == this.senderId &&
           other.senderType == this.senderType &&
+          other.campaignNumber == this.campaignNumber &&
           other.dateOfEntry == this.dateOfEntry &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
@@ -19246,6 +19277,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> receiverType;
   final Value<String?> senderId;
   final Value<String?> senderType;
+  final Value<String?> campaignNumber;
   final Value<int?> dateOfEntry;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
@@ -19278,6 +19310,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19311,6 +19344,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.campaignNumber = const Value.absent(),
     this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -19344,6 +19378,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? receiverType,
     Expression<String>? senderId,
     Expression<String>? senderType,
+    Expression<String>? campaignNumber,
     Expression<int>? dateOfEntry,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
@@ -19379,6 +19414,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (receiverType != null) 'receiver_type': receiverType,
       if (senderId != null) 'sender_id': senderId,
       if (senderType != null) 'sender_type': senderType,
+      if (campaignNumber != null) 'campaign_number': campaignNumber,
       if (dateOfEntry != null) 'date_of_entry': dateOfEntry,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
@@ -19416,6 +19452,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? receiverType,
       Value<String?>? senderId,
       Value<String?>? senderType,
+      Value<String?>? campaignNumber,
       Value<int?>? dateOfEntry,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
@@ -19448,6 +19485,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       receiverType: receiverType ?? this.receiverType,
       senderId: senderId ?? this.senderId,
       senderType: senderType ?? this.senderType,
+      campaignNumber: campaignNumber ?? this.campaignNumber,
       dateOfEntry: dateOfEntry ?? this.dateOfEntry,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
@@ -19513,6 +19551,9 @@ class StockCompanion extends UpdateCompanion<StockData> {
     }
     if (senderType.present) {
       map['sender_type'] = Variable<String>(senderType.value);
+    }
+    if (campaignNumber.present) {
+      map['campaign_number'] = Variable<String>(campaignNumber.value);
     }
     if (dateOfEntry.present) {
       map['date_of_entry'] = Variable<int>(dateOfEntry.value);
@@ -19585,6 +19626,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('campaignNumber: $campaignNumber, ')
           ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -32262,6 +32304,12 @@ class $HFReferralTable extends HFReferral
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _localityCodeMeta =
+      const VerificationMeta('localityCode');
+  @override
+  late final GeneratedColumn<String> localityCode = GeneratedColumn<String>(
+      'locality_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -32286,7 +32334,8 @@ class $HFReferralTable extends HFReferral
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -32425,6 +32474,12 @@ class $HFReferralTable extends HFReferral
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('locality_code')) {
+      context.handle(
+          _localityCodeMeta,
+          localityCode.isAcceptableOrUnknown(
+              data['locality_code']!, _localityCodeMeta));
+    }
     return context;
   }
 
@@ -32480,6 +32535,8 @@ class $HFReferralTable extends HFReferral
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      localityCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locality_code']),
     );
   }
 
@@ -32513,6 +32570,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? localityCode;
   const HFReferralData(
       {this.id,
       this.tenantId,
@@ -32536,7 +32594,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.localityCode});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -32607,6 +32666,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || localityCode != null) {
+      map['locality_code'] = Variable<String>(localityCode);
+    }
     return map;
   }
 
@@ -32675,6 +32737,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      localityCode: localityCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localityCode),
     );
   }
 
@@ -32707,6 +32772,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      localityCode: serializer.fromJson<String?>(json['localityCode']),
     );
   }
   @override
@@ -32736,6 +32802,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'localityCode': serializer.toJson<String?>(localityCode),
     };
   }
 
@@ -32762,7 +32829,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           String? clientReferenceId,
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> localityCode = const Value.absent()}) =>
       HFReferralData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
@@ -32814,6 +32882,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        localityCode:
+            localityCode.present ? localityCode.value : this.localityCode,
       );
   @override
   String toString() {
@@ -32840,7 +32910,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode')
           ..write(')'))
         .toString();
   }
@@ -32869,7 +32940,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ]);
   @override
   bool operator ==(Object other) =>
@@ -32897,7 +32969,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.localityCode == this.localityCode);
 }
 
 class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
@@ -32924,6 +32997,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> localityCode;
   final Value<int> rowid;
   const HFReferralCompanion({
     this.id = const Value.absent(),
@@ -32949,6 +33023,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   HFReferralCompanion.insert({
@@ -32975,6 +33050,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<HFReferralData> custom({
@@ -33001,6 +33077,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? localityCode,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -33029,6 +33106,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (localityCode != null) 'locality_code': localityCode,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -33057,6 +33135,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? localityCode,
       Value<int>? rowid}) {
     return HFReferralCompanion(
       id: id ?? this.id,
@@ -33082,6 +33161,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      localityCode: localityCode ?? this.localityCode,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -33158,6 +33238,9 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (localityCode.present) {
+      map['locality_code'] = Variable<String>(localityCode.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -33190,6 +33273,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -40649,6 +40733,18 @@ class $UserActionTable extends UserAction
   late final GeneratedColumn<String> action = GeneratedColumn<String>(
       'action', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _beneficiaryTagMeta =
+      const VerificationMeta('beneficiaryTag');
+  @override
+  late final GeneratedColumn<String> beneficiaryTag = GeneratedColumn<String>(
+      'beneficiary_tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _resourceTagMeta =
+      const VerificationMeta('resourceTag');
+  @override
+  late final GeneratedColumn<String> resourceTag = GeneratedColumn<String>(
+      'resource_tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _auditCreatedTimeMeta =
       const VerificationMeta('auditCreatedTime');
   @override
@@ -40732,6 +40828,8 @@ class $UserActionTable extends UserAction
         projectId,
         boundaryCode,
         action,
+        beneficiaryTag,
+        resourceTag,
         auditCreatedTime,
         clientCreatedTime,
         clientModifiedBy,
@@ -40828,6 +40926,18 @@ class $UserActionTable extends UserAction
     } else if (isInserting) {
       context.missing(_actionMeta);
     }
+    if (data.containsKey('beneficiary_tag')) {
+      context.handle(
+          _beneficiaryTagMeta,
+          beneficiaryTag.isAcceptableOrUnknown(
+              data['beneficiary_tag']!, _beneficiaryTagMeta));
+    }
+    if (data.containsKey('resource_tag')) {
+      context.handle(
+          _resourceTagMeta,
+          resourceTag.isAcceptableOrUnknown(
+              data['resource_tag']!, _resourceTagMeta));
+    }
     if (data.containsKey('audit_created_time')) {
       context.handle(
           _auditCreatedTimeMeta,
@@ -40922,6 +41032,10 @@ class $UserActionTable extends UserAction
           .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
       action: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      beneficiaryTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}beneficiary_tag']),
+      resourceTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_tag']),
       auditCreatedTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: attachedDatabase.typeMapping.read(
@@ -40966,6 +41080,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
   final String projectId;
   final String boundaryCode;
   final String action;
+  final String? beneficiaryTag;
+  final String? resourceTag;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
   final String? clientModifiedBy;
@@ -40990,6 +41106,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       required this.projectId,
       required this.boundaryCode,
       required this.action,
+      this.beneficiaryTag,
+      this.resourceTag,
       this.auditCreatedTime,
       this.clientCreatedTime,
       this.clientModifiedBy,
@@ -41022,6 +41140,12 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
     map['project_id'] = Variable<String>(projectId);
     map['boundary_code'] = Variable<String>(boundaryCode);
     map['action'] = Variable<String>(action);
+    if (!nullToAbsent || beneficiaryTag != null) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag);
+    }
+    if (!nullToAbsent || resourceTag != null) {
+      map['resource_tag'] = Variable<String>(resourceTag);
+    }
     if (!nullToAbsent || auditCreatedTime != null) {
       map['audit_created_time'] = Variable<int>(auditCreatedTime);
     }
@@ -41078,6 +41202,12 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       projectId: Value(projectId),
       boundaryCode: Value(boundaryCode),
       action: Value(action),
+      beneficiaryTag: beneficiaryTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(beneficiaryTag),
+      resourceTag: resourceTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resourceTag),
       auditCreatedTime: auditCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedTime),
@@ -41129,6 +41259,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       projectId: serializer.fromJson<String>(json['projectId']),
       boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
       action: serializer.fromJson<String>(json['action']),
+      beneficiaryTag: serializer.fromJson<String?>(json['beneficiaryTag']),
+      resourceTag: serializer.fromJson<String?>(json['resourceTag']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
       clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
@@ -41158,6 +41290,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       'projectId': serializer.toJson<String>(projectId),
       'boundaryCode': serializer.toJson<String>(boundaryCode),
       'action': serializer.toJson<String>(action),
+      'beneficiaryTag': serializer.toJson<String?>(beneficiaryTag),
+      'resourceTag': serializer.toJson<String?>(resourceTag),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
       'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
@@ -41185,6 +41319,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           String? projectId,
           String? boundaryCode,
           String? action,
+          Value<String?> beneficiaryTag = const Value.absent(),
+          Value<String?> resourceTag = const Value.absent(),
           Value<int?> auditCreatedTime = const Value.absent(),
           Value<int?> clientCreatedTime = const Value.absent(),
           Value<String?> clientModifiedBy = const Value.absent(),
@@ -41211,6 +41347,9 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         projectId: projectId ?? this.projectId,
         boundaryCode: boundaryCode ?? this.boundaryCode,
         action: action ?? this.action,
+        beneficiaryTag:
+            beneficiaryTag.present ? beneficiaryTag.value : this.beneficiaryTag,
+        resourceTag: resourceTag.present ? resourceTag.value : this.resourceTag,
         auditCreatedTime: auditCreatedTime.present
             ? auditCreatedTime.value
             : this.auditCreatedTime,
@@ -41255,6 +41394,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           ..write('projectId: $projectId, ')
           ..write('boundaryCode: $boundaryCode, ')
           ..write('action: $action, ')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
           ..write('clientModifiedBy: $clientModifiedBy, ')
@@ -41284,6 +41425,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         projectId,
         boundaryCode,
         action,
+        beneficiaryTag,
+        resourceTag,
         auditCreatedTime,
         clientCreatedTime,
         clientModifiedBy,
@@ -41312,6 +41455,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           other.projectId == this.projectId &&
           other.boundaryCode == this.boundaryCode &&
           other.action == this.action &&
+          other.beneficiaryTag == this.beneficiaryTag &&
+          other.resourceTag == this.resourceTag &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
           other.clientModifiedBy == this.clientModifiedBy &&
@@ -41338,6 +41483,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
   final Value<String> projectId;
   final Value<String> boundaryCode;
   final Value<String> action;
+  final Value<String?> beneficiaryTag;
+  final Value<String?> resourceTag;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
   final Value<String?> clientModifiedBy;
@@ -41363,6 +41510,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.projectId = const Value.absent(),
     this.boundaryCode = const Value.absent(),
     this.action = const Value.absent(),
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
     this.clientModifiedBy = const Value.absent(),
@@ -41389,6 +41538,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     required String projectId,
     required String boundaryCode,
     required String action,
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
     this.clientModifiedBy = const Value.absent(),
@@ -41422,6 +41573,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     Expression<String>? projectId,
     Expression<String>? boundaryCode,
     Expression<String>? action,
+    Expression<String>? beneficiaryTag,
+    Expression<String>? resourceTag,
     Expression<int>? auditCreatedTime,
     Expression<int>? clientCreatedTime,
     Expression<String>? clientModifiedBy,
@@ -41449,6 +41602,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       if (projectId != null) 'project_id': projectId,
       if (boundaryCode != null) 'boundary_code': boundaryCode,
       if (action != null) 'action': action,
+      if (beneficiaryTag != null) 'beneficiary_tag': beneficiaryTag,
+      if (resourceTag != null) 'resource_tag': resourceTag,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
       if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
@@ -41478,6 +41633,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       Value<String>? projectId,
       Value<String>? boundaryCode,
       Value<String>? action,
+      Value<String?>? beneficiaryTag,
+      Value<String?>? resourceTag,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
       Value<String?>? clientModifiedBy,
@@ -41503,6 +41660,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       projectId: projectId ?? this.projectId,
       boundaryCode: boundaryCode ?? this.boundaryCode,
       action: action ?? this.action,
+      beneficiaryTag: beneficiaryTag ?? this.beneficiaryTag,
+      resourceTag: resourceTag ?? this.resourceTag,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
       clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
@@ -41556,6 +41715,12 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     }
     if (action.present) {
       map['action'] = Variable<String>(action.value);
+    }
+    if (beneficiaryTag.present) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag.value);
+    }
+    if (resourceTag.present) {
+      map['resource_tag'] = Variable<String>(resourceTag.value);
     }
     if (auditCreatedTime.present) {
       map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
@@ -41611,6 +41776,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
           ..write('projectId: $projectId, ')
           ..write('boundaryCode: $boundaryCode, ')
           ..write('action: $action, ')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
           ..write('clientModifiedBy: $clientModifiedBy, ')
@@ -41622,6 +41789,1558 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('id: $id, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FaceAuthEventTable extends FaceAuthEvent
+    with TableInfo<$FaceAuthEventTable, FaceAuthEventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FaceAuthEventTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String> individualId = GeneratedColumn<String>(
+      'individual_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _deviceIdMeta =
+      const VerificationMeta('deviceId');
+  @override
+  late final GeneratedColumn<String> deviceId = GeneratedColumn<String>(
+      'device_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _eventTypeMeta =
+      const VerificationMeta('eventType');
+  @override
+  late final GeneratedColumn<String> eventType = GeneratedColumn<String>(
+      'event_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _outcomeMeta =
+      const VerificationMeta('outcome');
+  @override
+  late final GeneratedColumn<String> outcome = GeneratedColumn<String>(
+      'outcome', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _confidenceMeta =
+      const VerificationMeta('confidence');
+  @override
+  late final GeneratedColumn<String> confidence = GeneratedColumn<String>(
+      'confidence', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
+      'latitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
+      'longitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<String> locationAccuracy = GeneratedColumn<String>(
+      'location_accuracy', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _syncTimestampMeta =
+      const VerificationMeta('syncTimestamp');
+  @override
+  late final GeneratedColumn<int> syncTimestamp = GeneratedColumn<int>(
+      'sync_timestamp', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _fallbackReasonMeta =
+      const VerificationMeta('fallbackReason');
+  @override
+  late final GeneratedColumn<String> fallbackReason = GeneratedColumn<String>(
+      'fallback_reason', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptCountMeta =
+      const VerificationMeta('failedAttemptCount');
+  @override
+  late final GeneratedColumn<int> failedAttemptCount = GeneratedColumn<int>(
+      'failed_attempt_count', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _popupTimeMeta =
+      const VerificationMeta('popupTime');
+  @override
+  late final GeneratedColumn<int> popupTime = GeneratedColumn<int>(
+      'popup_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _responseTimeMeta =
+      const VerificationMeta('responseTime');
+  @override
+  late final GeneratedColumn<int> responseTime = GeneratedColumn<int>(
+      'response_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _responseTypeMeta =
+      const VerificationMeta('responseType');
+  @override
+  late final GeneratedColumn<String> responseType = GeneratedColumn<String>(
+      'response_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _anomalyFlagsMeta =
+      const VerificationMeta('anomalyFlags');
+  @override
+  late final GeneratedColumn<String> anomalyFlags = GeneratedColumn<String>(
+      'anomaly_flags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _faceImageMeta =
+      const VerificationMeta('faceImage');
+  @override
+  late final GeneratedColumn<String> faceImage = GeneratedColumn<String>(
+      'face_image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isSyncMeta = const VerificationMeta('isSync');
+  @override
+  late final GeneratedColumn<bool> isSync = GeneratedColumn<bool>(
+      'is_sync', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_sync" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _boundaryCodeMeta =
+      const VerificationMeta('boundaryCode');
+  @override
+  late final GeneratedColumn<String> boundaryCode = GeneratedColumn<String>(
+      'boundary_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        clientReferenceId,
+        individualId,
+        deviceId,
+        eventType,
+        outcome,
+        confidence,
+        latitude,
+        longitude,
+        locationAccuracy,
+        timestamp,
+        syncTimestamp,
+        fallbackReason,
+        failedAttemptCount,
+        popupTime,
+        responseTime,
+        responseType,
+        projectId,
+        anomalyFlags,
+        faceImage,
+        isSync,
+        boundaryCode,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        id,
+        additionalFields,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'face_auth_event';
+  @override
+  VerificationContext validateIntegrity(Insertable<FaceAuthEventData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    } else if (isInserting) {
+      context.missing(_individualIdMeta);
+    }
+    if (data.containsKey('device_id')) {
+      context.handle(_deviceIdMeta,
+          deviceId.isAcceptableOrUnknown(data['device_id']!, _deviceIdMeta));
+    } else if (isInserting) {
+      context.missing(_deviceIdMeta);
+    }
+    if (data.containsKey('event_type')) {
+      context.handle(_eventTypeMeta,
+          eventType.isAcceptableOrUnknown(data['event_type']!, _eventTypeMeta));
+    } else if (isInserting) {
+      context.missing(_eventTypeMeta);
+    }
+    if (data.containsKey('outcome')) {
+      context.handle(_outcomeMeta,
+          outcome.isAcceptableOrUnknown(data['outcome']!, _outcomeMeta));
+    } else if (isInserting) {
+      context.missing(_outcomeMeta);
+    }
+    if (data.containsKey('confidence')) {
+      context.handle(
+          _confidenceMeta,
+          confidence.isAcceptableOrUnknown(
+              data['confidence']!, _confidenceMeta));
+    } else if (isInserting) {
+      context.missing(_confidenceMeta);
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
+    } else if (isInserting) {
+      context.missing(_locationAccuracyMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('sync_timestamp')) {
+      context.handle(
+          _syncTimestampMeta,
+          syncTimestamp.isAcceptableOrUnknown(
+              data['sync_timestamp']!, _syncTimestampMeta));
+    }
+    if (data.containsKey('fallback_reason')) {
+      context.handle(
+          _fallbackReasonMeta,
+          fallbackReason.isAcceptableOrUnknown(
+              data['fallback_reason']!, _fallbackReasonMeta));
+    }
+    if (data.containsKey('failed_attempt_count')) {
+      context.handle(
+          _failedAttemptCountMeta,
+          failedAttemptCount.isAcceptableOrUnknown(
+              data['failed_attempt_count']!, _failedAttemptCountMeta));
+    } else if (isInserting) {
+      context.missing(_failedAttemptCountMeta);
+    }
+    if (data.containsKey('popup_time')) {
+      context.handle(_popupTimeMeta,
+          popupTime.isAcceptableOrUnknown(data['popup_time']!, _popupTimeMeta));
+    }
+    if (data.containsKey('response_time')) {
+      context.handle(
+          _responseTimeMeta,
+          responseTime.isAcceptableOrUnknown(
+              data['response_time']!, _responseTimeMeta));
+    }
+    if (data.containsKey('response_type')) {
+      context.handle(
+          _responseTypeMeta,
+          responseType.isAcceptableOrUnknown(
+              data['response_type']!, _responseTypeMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('anomaly_flags')) {
+      context.handle(
+          _anomalyFlagsMeta,
+          anomalyFlags.isAcceptableOrUnknown(
+              data['anomaly_flags']!, _anomalyFlagsMeta));
+    }
+    if (data.containsKey('face_image')) {
+      context.handle(_faceImageMeta,
+          faceImage.isAcceptableOrUnknown(data['face_image']!, _faceImageMeta));
+    }
+    if (data.containsKey('is_sync')) {
+      context.handle(_isSyncMeta,
+          isSync.isAcceptableOrUnknown(data['is_sync']!, _isSyncMeta));
+    }
+    if (data.containsKey('boundary_code')) {
+      context.handle(
+          _boundaryCodeMeta,
+          boundaryCode.isAcceptableOrUnknown(
+              data['boundary_code']!, _boundaryCodeMeta));
+    } else if (isInserting) {
+      context.missing(_boundaryCodeMeta);
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {clientReferenceId};
+  @override
+  FaceAuthEventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FaceAuthEventData(
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      individualId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}individual_id'])!,
+      deviceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_id'])!,
+      eventType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_type'])!,
+      outcome: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}outcome'])!,
+      confidence: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}confidence'])!,
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude'])!,
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}location_accuracy'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}timestamp'])!,
+      syncTimestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_timestamp']),
+      fallbackReason: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}fallback_reason']),
+      failedAttemptCount: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}failed_attempt_count'])!,
+      popupTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}popup_time']),
+      responseTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}response_time']),
+      responseType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}response_type']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id'])!,
+      anomalyFlags: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}anomaly_flags']),
+      faceImage: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}face_image']),
+      isSync: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_sync'])!,
+      boundaryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+    );
+  }
+
+  @override
+  $FaceAuthEventTable createAlias(String alias) {
+    return $FaceAuthEventTable(attachedDatabase, alias);
+  }
+}
+
+class FaceAuthEventData extends DataClass
+    implements Insertable<FaceAuthEventData> {
+  final String clientReferenceId;
+  final String individualId;
+  final String deviceId;
+  final String eventType;
+  final String outcome;
+  final String confidence;
+  final String latitude;
+  final String longitude;
+  final String locationAccuracy;
+  final int timestamp;
+  final int? syncTimestamp;
+  final String? fallbackReason;
+  final int failedAttemptCount;
+  final int? popupTime;
+  final int? responseTime;
+  final String? responseType;
+  final String projectId;
+  final String? anomalyFlags;
+
+  /// Base64-encoded JPEG of the cropped face image captured during verification.
+  final String? faceImage;
+  final bool isSync;
+  final String boundaryCode;
+  final bool? nonRecoverableError;
+  final String? tenantId;
+  final int? rowVersion;
+  final String? id;
+  final String? additionalFields;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String? auditCreatedBy;
+  final bool? isDeleted;
+  const FaceAuthEventData(
+      {required this.clientReferenceId,
+      required this.individualId,
+      required this.deviceId,
+      required this.eventType,
+      required this.outcome,
+      required this.confidence,
+      required this.latitude,
+      required this.longitude,
+      required this.locationAccuracy,
+      required this.timestamp,
+      this.syncTimestamp,
+      this.fallbackReason,
+      required this.failedAttemptCount,
+      this.popupTime,
+      this.responseTime,
+      this.responseType,
+      required this.projectId,
+      this.anomalyFlags,
+      this.faceImage,
+      required this.isSync,
+      required this.boundaryCode,
+      this.nonRecoverableError,
+      this.tenantId,
+      this.rowVersion,
+      this.id,
+      this.additionalFields,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.auditCreatedBy,
+      this.isDeleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['individual_id'] = Variable<String>(individualId);
+    map['device_id'] = Variable<String>(deviceId);
+    map['event_type'] = Variable<String>(eventType);
+    map['outcome'] = Variable<String>(outcome);
+    map['confidence'] = Variable<String>(confidence);
+    map['latitude'] = Variable<String>(latitude);
+    map['longitude'] = Variable<String>(longitude);
+    map['location_accuracy'] = Variable<String>(locationAccuracy);
+    map['timestamp'] = Variable<int>(timestamp);
+    if (!nullToAbsent || syncTimestamp != null) {
+      map['sync_timestamp'] = Variable<int>(syncTimestamp);
+    }
+    if (!nullToAbsent || fallbackReason != null) {
+      map['fallback_reason'] = Variable<String>(fallbackReason);
+    }
+    map['failed_attempt_count'] = Variable<int>(failedAttemptCount);
+    if (!nullToAbsent || popupTime != null) {
+      map['popup_time'] = Variable<int>(popupTime);
+    }
+    if (!nullToAbsent || responseTime != null) {
+      map['response_time'] = Variable<int>(responseTime);
+    }
+    if (!nullToAbsent || responseType != null) {
+      map['response_type'] = Variable<String>(responseType);
+    }
+    map['project_id'] = Variable<String>(projectId);
+    if (!nullToAbsent || anomalyFlags != null) {
+      map['anomaly_flags'] = Variable<String>(anomalyFlags);
+    }
+    if (!nullToAbsent || faceImage != null) {
+      map['face_image'] = Variable<String>(faceImage);
+    }
+    map['is_sync'] = Variable<bool>(isSync);
+    map['boundary_code'] = Variable<String>(boundaryCode);
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    return map;
+  }
+
+  FaceAuthEventCompanion toCompanion(bool nullToAbsent) {
+    return FaceAuthEventCompanion(
+      clientReferenceId: Value(clientReferenceId),
+      individualId: Value(individualId),
+      deviceId: Value(deviceId),
+      eventType: Value(eventType),
+      outcome: Value(outcome),
+      confidence: Value(confidence),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationAccuracy: Value(locationAccuracy),
+      timestamp: Value(timestamp),
+      syncTimestamp: syncTimestamp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncTimestamp),
+      fallbackReason: fallbackReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fallbackReason),
+      failedAttemptCount: Value(failedAttemptCount),
+      popupTime: popupTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(popupTime),
+      responseTime: responseTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(responseTime),
+      responseType: responseType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(responseType),
+      projectId: Value(projectId),
+      anomalyFlags: anomalyFlags == null && nullToAbsent
+          ? const Value.absent()
+          : Value(anomalyFlags),
+      faceImage: faceImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(faceImage),
+      isSync: Value(isSync),
+      boundaryCode: Value(boundaryCode),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+    );
+  }
+
+  factory FaceAuthEventData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FaceAuthEventData(
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      individualId: serializer.fromJson<String>(json['individualId']),
+      deviceId: serializer.fromJson<String>(json['deviceId']),
+      eventType: serializer.fromJson<String>(json['eventType']),
+      outcome: serializer.fromJson<String>(json['outcome']),
+      confidence: serializer.fromJson<String>(json['confidence']),
+      latitude: serializer.fromJson<String>(json['latitude']),
+      longitude: serializer.fromJson<String>(json['longitude']),
+      locationAccuracy: serializer.fromJson<String>(json['locationAccuracy']),
+      timestamp: serializer.fromJson<int>(json['timestamp']),
+      syncTimestamp: serializer.fromJson<int?>(json['syncTimestamp']),
+      fallbackReason: serializer.fromJson<String?>(json['fallbackReason']),
+      failedAttemptCount: serializer.fromJson<int>(json['failedAttemptCount']),
+      popupTime: serializer.fromJson<int?>(json['popupTime']),
+      responseTime: serializer.fromJson<int?>(json['responseTime']),
+      responseType: serializer.fromJson<String?>(json['responseType']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      anomalyFlags: serializer.fromJson<String?>(json['anomalyFlags']),
+      faceImage: serializer.fromJson<String?>(json['faceImage']),
+      isSync: serializer.fromJson<bool>(json['isSync']),
+      boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      id: serializer.fromJson<String?>(json['id']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'individualId': serializer.toJson<String>(individualId),
+      'deviceId': serializer.toJson<String>(deviceId),
+      'eventType': serializer.toJson<String>(eventType),
+      'outcome': serializer.toJson<String>(outcome),
+      'confidence': serializer.toJson<String>(confidence),
+      'latitude': serializer.toJson<String>(latitude),
+      'longitude': serializer.toJson<String>(longitude),
+      'locationAccuracy': serializer.toJson<String>(locationAccuracy),
+      'timestamp': serializer.toJson<int>(timestamp),
+      'syncTimestamp': serializer.toJson<int?>(syncTimestamp),
+      'fallbackReason': serializer.toJson<String?>(fallbackReason),
+      'failedAttemptCount': serializer.toJson<int>(failedAttemptCount),
+      'popupTime': serializer.toJson<int?>(popupTime),
+      'responseTime': serializer.toJson<int?>(responseTime),
+      'responseType': serializer.toJson<String?>(responseType),
+      'projectId': serializer.toJson<String>(projectId),
+      'anomalyFlags': serializer.toJson<String?>(anomalyFlags),
+      'faceImage': serializer.toJson<String?>(faceImage),
+      'isSync': serializer.toJson<bool>(isSync),
+      'boundaryCode': serializer.toJson<String>(boundaryCode),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'id': serializer.toJson<String?>(id),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+    };
+  }
+
+  FaceAuthEventData copyWith(
+          {String? clientReferenceId,
+          String? individualId,
+          String? deviceId,
+          String? eventType,
+          String? outcome,
+          String? confidence,
+          String? latitude,
+          String? longitude,
+          String? locationAccuracy,
+          int? timestamp,
+          Value<int?> syncTimestamp = const Value.absent(),
+          Value<String?> fallbackReason = const Value.absent(),
+          int? failedAttemptCount,
+          Value<int?> popupTime = const Value.absent(),
+          Value<int?> responseTime = const Value.absent(),
+          Value<String?> responseType = const Value.absent(),
+          String? projectId,
+          Value<String?> anomalyFlags = const Value.absent(),
+          Value<String?> faceImage = const Value.absent(),
+          bool? isSync,
+          String? boundaryCode,
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> id = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent()}) =>
+      FaceAuthEventData(
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        individualId: individualId ?? this.individualId,
+        deviceId: deviceId ?? this.deviceId,
+        eventType: eventType ?? this.eventType,
+        outcome: outcome ?? this.outcome,
+        confidence: confidence ?? this.confidence,
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+        timestamp: timestamp ?? this.timestamp,
+        syncTimestamp:
+            syncTimestamp.present ? syncTimestamp.value : this.syncTimestamp,
+        fallbackReason:
+            fallbackReason.present ? fallbackReason.value : this.fallbackReason,
+        failedAttemptCount: failedAttemptCount ?? this.failedAttemptCount,
+        popupTime: popupTime.present ? popupTime.value : this.popupTime,
+        responseTime:
+            responseTime.present ? responseTime.value : this.responseTime,
+        responseType:
+            responseType.present ? responseType.value : this.responseType,
+        projectId: projectId ?? this.projectId,
+        anomalyFlags:
+            anomalyFlags.present ? anomalyFlags.value : this.anomalyFlags,
+        faceImage: faceImage.present ? faceImage.value : this.faceImage,
+        isSync: isSync ?? this.isSync,
+        boundaryCode: boundaryCode ?? this.boundaryCode,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        id: id.present ? id.value : this.id,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FaceAuthEventData(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('eventType: $eventType, ')
+          ..write('outcome: $outcome, ')
+          ..write('confidence: $confidence, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('syncTimestamp: $syncTimestamp, ')
+          ..write('fallbackReason: $fallbackReason, ')
+          ..write('failedAttemptCount: $failedAttemptCount, ')
+          ..write('popupTime: $popupTime, ')
+          ..write('responseTime: $responseTime, ')
+          ..write('responseType: $responseType, ')
+          ..write('projectId: $projectId, ')
+          ..write('anomalyFlags: $anomalyFlags, ')
+          ..write('faceImage: $faceImage, ')
+          ..write('isSync: $isSync, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        clientReferenceId,
+        individualId,
+        deviceId,
+        eventType,
+        outcome,
+        confidence,
+        latitude,
+        longitude,
+        locationAccuracy,
+        timestamp,
+        syncTimestamp,
+        fallbackReason,
+        failedAttemptCount,
+        popupTime,
+        responseTime,
+        responseType,
+        projectId,
+        anomalyFlags,
+        faceImage,
+        isSync,
+        boundaryCode,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        id,
+        additionalFields,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FaceAuthEventData &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.individualId == this.individualId &&
+          other.deviceId == this.deviceId &&
+          other.eventType == this.eventType &&
+          other.outcome == this.outcome &&
+          other.confidence == this.confidence &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
+          other.timestamp == this.timestamp &&
+          other.syncTimestamp == this.syncTimestamp &&
+          other.fallbackReason == this.fallbackReason &&
+          other.failedAttemptCount == this.failedAttemptCount &&
+          other.popupTime == this.popupTime &&
+          other.responseTime == this.responseTime &&
+          other.responseType == this.responseType &&
+          other.projectId == this.projectId &&
+          other.anomalyFlags == this.anomalyFlags &&
+          other.faceImage == this.faceImage &&
+          other.isSync == this.isSync &&
+          other.boundaryCode == this.boundaryCode &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.id == this.id &&
+          other.additionalFields == this.additionalFields &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.isDeleted == this.isDeleted);
+}
+
+class FaceAuthEventCompanion extends UpdateCompanion<FaceAuthEventData> {
+  final Value<String> clientReferenceId;
+  final Value<String> individualId;
+  final Value<String> deviceId;
+  final Value<String> eventType;
+  final Value<String> outcome;
+  final Value<String> confidence;
+  final Value<String> latitude;
+  final Value<String> longitude;
+  final Value<String> locationAccuracy;
+  final Value<int> timestamp;
+  final Value<int?> syncTimestamp;
+  final Value<String?> fallbackReason;
+  final Value<int> failedAttemptCount;
+  final Value<int?> popupTime;
+  final Value<int?> responseTime;
+  final Value<String?> responseType;
+  final Value<String> projectId;
+  final Value<String?> anomalyFlags;
+  final Value<String?> faceImage;
+  final Value<bool> isSync;
+  final Value<String> boundaryCode;
+  final Value<bool?> nonRecoverableError;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String?> id;
+  final Value<String?> additionalFields;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> isDeleted;
+  final Value<int> rowid;
+  const FaceAuthEventCompanion({
+    this.clientReferenceId = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.deviceId = const Value.absent(),
+    this.eventType = const Value.absent(),
+    this.outcome = const Value.absent(),
+    this.confidence = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.syncTimestamp = const Value.absent(),
+    this.fallbackReason = const Value.absent(),
+    this.failedAttemptCount = const Value.absent(),
+    this.popupTime = const Value.absent(),
+    this.responseTime = const Value.absent(),
+    this.responseType = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.anomalyFlags = const Value.absent(),
+    this.faceImage = const Value.absent(),
+    this.isSync = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FaceAuthEventCompanion.insert({
+    required String clientReferenceId,
+    required String individualId,
+    required String deviceId,
+    required String eventType,
+    required String outcome,
+    required String confidence,
+    required String latitude,
+    required String longitude,
+    required String locationAccuracy,
+    required int timestamp,
+    this.syncTimestamp = const Value.absent(),
+    this.fallbackReason = const Value.absent(),
+    required int failedAttemptCount,
+    this.popupTime = const Value.absent(),
+    this.responseTime = const Value.absent(),
+    this.responseType = const Value.absent(),
+    required String projectId,
+    this.anomalyFlags = const Value.absent(),
+    this.faceImage = const Value.absent(),
+    this.isSync = const Value.absent(),
+    required String boundaryCode,
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : clientReferenceId = Value(clientReferenceId),
+        individualId = Value(individualId),
+        deviceId = Value(deviceId),
+        eventType = Value(eventType),
+        outcome = Value(outcome),
+        confidence = Value(confidence),
+        latitude = Value(latitude),
+        longitude = Value(longitude),
+        locationAccuracy = Value(locationAccuracy),
+        timestamp = Value(timestamp),
+        failedAttemptCount = Value(failedAttemptCount),
+        projectId = Value(projectId),
+        boundaryCode = Value(boundaryCode);
+  static Insertable<FaceAuthEventData> custom({
+    Expression<String>? clientReferenceId,
+    Expression<String>? individualId,
+    Expression<String>? deviceId,
+    Expression<String>? eventType,
+    Expression<String>? outcome,
+    Expression<String>? confidence,
+    Expression<String>? latitude,
+    Expression<String>? longitude,
+    Expression<String>? locationAccuracy,
+    Expression<int>? timestamp,
+    Expression<int>? syncTimestamp,
+    Expression<String>? fallbackReason,
+    Expression<int>? failedAttemptCount,
+    Expression<int>? popupTime,
+    Expression<int>? responseTime,
+    Expression<String>? responseType,
+    Expression<String>? projectId,
+    Expression<String>? anomalyFlags,
+    Expression<String>? faceImage,
+    Expression<bool>? isSync,
+    Expression<String>? boundaryCode,
+    Expression<bool>? nonRecoverableError,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? id,
+    Expression<String>? additionalFields,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (individualId != null) 'individual_id': individualId,
+      if (deviceId != null) 'device_id': deviceId,
+      if (eventType != null) 'event_type': eventType,
+      if (outcome != null) 'outcome': outcome,
+      if (confidence != null) 'confidence': confidence,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (syncTimestamp != null) 'sync_timestamp': syncTimestamp,
+      if (fallbackReason != null) 'fallback_reason': fallbackReason,
+      if (failedAttemptCount != null)
+        'failed_attempt_count': failedAttemptCount,
+      if (popupTime != null) 'popup_time': popupTime,
+      if (responseTime != null) 'response_time': responseTime,
+      if (responseType != null) 'response_type': responseType,
+      if (projectId != null) 'project_id': projectId,
+      if (anomalyFlags != null) 'anomaly_flags': anomalyFlags,
+      if (faceImage != null) 'face_image': faceImage,
+      if (isSync != null) 'is_sync': isSync,
+      if (boundaryCode != null) 'boundary_code': boundaryCode,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (id != null) 'id': id,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FaceAuthEventCompanion copyWith(
+      {Value<String>? clientReferenceId,
+      Value<String>? individualId,
+      Value<String>? deviceId,
+      Value<String>? eventType,
+      Value<String>? outcome,
+      Value<String>? confidence,
+      Value<String>? latitude,
+      Value<String>? longitude,
+      Value<String>? locationAccuracy,
+      Value<int>? timestamp,
+      Value<int?>? syncTimestamp,
+      Value<String?>? fallbackReason,
+      Value<int>? failedAttemptCount,
+      Value<int?>? popupTime,
+      Value<int?>? responseTime,
+      Value<String?>? responseType,
+      Value<String>? projectId,
+      Value<String?>? anomalyFlags,
+      Value<String?>? faceImage,
+      Value<bool>? isSync,
+      Value<String>? boundaryCode,
+      Value<bool?>? nonRecoverableError,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String?>? id,
+      Value<String?>? additionalFields,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? isDeleted,
+      Value<int>? rowid}) {
+    return FaceAuthEventCompanion(
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      individualId: individualId ?? this.individualId,
+      deviceId: deviceId ?? this.deviceId,
+      eventType: eventType ?? this.eventType,
+      outcome: outcome ?? this.outcome,
+      confidence: confidence ?? this.confidence,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+      timestamp: timestamp ?? this.timestamp,
+      syncTimestamp: syncTimestamp ?? this.syncTimestamp,
+      fallbackReason: fallbackReason ?? this.fallbackReason,
+      failedAttemptCount: failedAttemptCount ?? this.failedAttemptCount,
+      popupTime: popupTime ?? this.popupTime,
+      responseTime: responseTime ?? this.responseTime,
+      responseType: responseType ?? this.responseType,
+      projectId: projectId ?? this.projectId,
+      anomalyFlags: anomalyFlags ?? this.anomalyFlags,
+      faceImage: faceImage ?? this.faceImage,
+      isSync: isSync ?? this.isSync,
+      boundaryCode: boundaryCode ?? this.boundaryCode,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      id: id ?? this.id,
+      additionalFields: additionalFields ?? this.additionalFields,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (deviceId.present) {
+      map['device_id'] = Variable<String>(deviceId.value);
+    }
+    if (eventType.present) {
+      map['event_type'] = Variable<String>(eventType.value);
+    }
+    if (outcome.present) {
+      map['outcome'] = Variable<String>(outcome.value);
+    }
+    if (confidence.present) {
+      map['confidence'] = Variable<String>(confidence.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<String>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<String>(locationAccuracy.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<int>(timestamp.value);
+    }
+    if (syncTimestamp.present) {
+      map['sync_timestamp'] = Variable<int>(syncTimestamp.value);
+    }
+    if (fallbackReason.present) {
+      map['fallback_reason'] = Variable<String>(fallbackReason.value);
+    }
+    if (failedAttemptCount.present) {
+      map['failed_attempt_count'] = Variable<int>(failedAttemptCount.value);
+    }
+    if (popupTime.present) {
+      map['popup_time'] = Variable<int>(popupTime.value);
+    }
+    if (responseTime.present) {
+      map['response_time'] = Variable<int>(responseTime.value);
+    }
+    if (responseType.present) {
+      map['response_type'] = Variable<String>(responseType.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (anomalyFlags.present) {
+      map['anomaly_flags'] = Variable<String>(anomalyFlags.value);
+    }
+    if (faceImage.present) {
+      map['face_image'] = Variable<String>(faceImage.value);
+    }
+    if (isSync.present) {
+      map['is_sync'] = Variable<bool>(isSync.value);
+    }
+    if (boundaryCode.present) {
+      map['boundary_code'] = Variable<String>(boundaryCode.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FaceAuthEventCompanion(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('eventType: $eventType, ')
+          ..write('outcome: $outcome, ')
+          ..write('confidence: $confidence, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('syncTimestamp: $syncTimestamp, ')
+          ..write('fallbackReason: $fallbackReason, ')
+          ..write('failedAttemptCount: $failedAttemptCount, ')
+          ..write('popupTime: $popupTime, ')
+          ..write('responseTime: $responseTime, ')
+          ..write('responseType: $responseType, ')
+          ..write('projectId: $projectId, ')
+          ..write('anomalyFlags: $anomalyFlags, ')
+          ..write('faceImage: $faceImage, ')
+          ..write('isSync: $isSync, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -42254,11 +43973,25 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $ReferralTable referral = $ReferralTable(this);
   late final $LocalizationTable localization = $LocalizationTable(this);
   late final $UserActionTable userAction = $UserActionTable(this);
+  late final $FaceAuthEventTable faceAuthEvent = $FaceAuthEventTable(this);
   late final $UniqueIdPoolTable uniqueIdPool = $UniqueIdPoolTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
       'CREATE INDEX attendance_individualid ON attendance (individual_id)');
+  late final Index addressLocalityboundarycode = Index(
+      'address_localityboundarycode',
+      'CREATE INDEX address_localityboundarycode ON address (locality_boundary_code)');
+  late final Index addressRelatedclientref = Index('address_relatedclientref',
+      'CREATE INDEX address_relatedclientref ON address (related_client_reference_id)');
+  late final Index nameGivenname = Index(
+      'name_givenname', 'CREATE INDEX name_givenname ON name (given_name)');
+  late final Index nameFamilyname = Index(
+      'name_familyname', 'CREATE INDEX name_familyname ON name (family_name)');
+  late final Index nameIndividualclientref = Index('name_individualclientref',
+      'CREATE INDEX name_individualclientref ON name (individual_client_reference_id)');
+  late final Index productVariantProductid = Index('product_variant_productid',
+      'CREATE INDEX product_variant_productid ON product_variant (product_id)');
   late final Index projectClinetref = Index('project_clinetref',
       'CREATE INDEX project_clinetref ON project_beneficiary (client_reference_id)');
   late final Index projectProjectid = Index('project_projectid',
@@ -42266,6 +43999,22 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index projectProjectbeneficiaryclientref = Index(
       'project_projectbeneficiaryclientref',
       'CREATE INDEX project_projectbeneficiaryclientref ON project_beneficiary (beneficiary_client_reference_id)');
+  late final Index projectFacilityProjectid = Index(
+      'project_facility_projectid',
+      'CREATE INDEX project_facility_projectid ON project_facility (project_id)');
+  late final Index projectFacilityFacilityid = Index(
+      'project_facility_facilityid',
+      'CREATE INDEX project_facility_facilityid ON project_facility (facility_id)');
+  late final Index projectResourceProjectid = Index(
+      'project_resource_projectid',
+      'CREATE INDEX project_resource_projectid ON project_resource (project_id)');
+  late final Index individualClientref = Index('individual_clientref',
+      'CREATE INDEX individual_clientref ON individual (client_reference_id)');
+  late final Index identifierIdentifierid = Index('identifier_identifierid',
+      'CREATE INDEX identifier_identifierid ON identifier (identifier_id)');
+  late final Index identifierIndividualclientref = Index(
+      'identifier_individualclientref',
+      'CREATE INDEX identifier_individualclientref ON identifier (individual_client_reference_id)');
   late final Index stockClientref = Index('stock_clientref',
       'CREATE INDEX stock_clientref ON stock (client_reference_id)');
   late final Index stockProductvariantid = Index('stock_productvariantid',
@@ -42279,10 +44028,14 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index stockreconProductvariantid = Index(
       'stockrecon_productvariantid',
       'CREATE INDEX stockrecon_productvariantid ON stock_reconciliation (product_variant_id)');
+  late final Index pgrServiceTenantid = Index('pgr_service_tenantid',
+      'CREATE INDEX pgr_service_tenantid ON pgr_service (tenant_id)');
   late final Index hfreferralClientref = Index('hfreferral_clientref',
       'CREATE INDEX hfreferral_clientref ON h_f_referral (client_reference_id)');
   late final Index hfreferralProjectid = Index('hfreferral_projectid',
       'CREATE INDEX hfreferral_projectid ON h_f_referral (project_id)');
+  late final Index householdSelfClientref = Index('household_self_clientref',
+      'CREATE INDEX household_self_clientref ON household (client_reference_id)');
   late final Index householdmemberClinetref = Index('householdmember_clinetref',
       'CREATE INDEX householdmember_clinetref ON household_member (client_reference_id)');
   late final Index householdClientref = Index('household_clientref',
@@ -42299,6 +44052,21 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index taskProjectbeneficiaryclientref = Index(
       'task_projectbeneficiaryclientref',
       'CREATE INDEX task_projectbeneficiaryclientref ON task (project_beneficiary_client_reference_id)');
+  late final Index taskStatus =
+      Index('task_status', 'CREATE INDEX task_status ON task (status)');
+  late final Index taskProjectStatus = Index('task_project_status',
+      'CREATE INDEX task_project_status ON task (project_id, status, is_deleted)');
+  late final Index taskClientmodifiedtime = Index('task_clientmodifiedtime',
+      'CREATE INDEX task_clientmodifiedtime ON task (client_modified_time)');
+  late final Index taskSearchProjectCreatedStatus = Index(
+      'task_search_project_created_status',
+      'CREATE INDEX task_search_project_created_status ON task (project_id, client_created_by, status)');
+  late final Index taskSearchProjectCreatedStatusModifiedtime = Index(
+      'task_search_project_created_status_modifiedtime',
+      'CREATE INDEX task_search_project_created_status_modifiedtime ON task (project_id, client_created_by, status, client_modified_time)');
+  late final Index taskSearchProjectCreatedStatusPlannedstart = Index(
+      'task_search_project_created_status_plannedstart',
+      'CREATE INDEX task_search_project_created_status_plannedstart ON task (project_id, client_created_by, status, planned_start_date)');
   late final Index taskresourceclinetref = Index('taskresourceclinetref',
       'CREATE INDEX taskresourceclinetref ON task_resource (client_reference_id)');
   late final Index taskresourceTaskclientref = Index(
@@ -42322,6 +44090,9 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
       'CREATE INDEX referral_projectbeneficiaryclientref ON referral (project_beneficiary_client_reference_id)');
   late final Index localizationModule = Index('localization_module',
       'CREATE INDEX localization_module ON localization (module)');
+  late final Index localizationLocaleModule = Index(
+      'localization_locale_module',
+      'CREATE INDEX localization_locale_module ON localization (locale, module)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -42370,20 +44141,35 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referral,
         localization,
         userAction,
+        faceAuthEvent,
         uniqueIdPool,
         attendanceClientref,
         attendanceIndividualid,
+        addressLocalityboundarycode,
+        addressRelatedclientref,
+        nameGivenname,
+        nameFamilyname,
+        nameIndividualclientref,
+        productVariantProductid,
         projectClinetref,
         projectProjectid,
         projectProjectbeneficiaryclientref,
+        projectFacilityProjectid,
+        projectFacilityFacilityid,
+        projectResourceProjectid,
+        individualClientref,
+        identifierIdentifierid,
+        identifierIndividualclientref,
         stockClientref,
         stockProductvariantid,
         stockFacilityid,
         stockreconClientref,
         stockreconFacilityid,
         stockreconProductvariantid,
+        pgrServiceTenantid,
         hfreferralClientref,
         hfreferralProjectid,
+        householdSelfClientref,
         householdmemberClinetref,
         householdClientref,
         householdmemberIndividualid,
@@ -42391,6 +44177,12 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         taskProjectid,
         taskProjectbeneficiaryid,
         taskProjectbeneficiaryclientref,
+        taskStatus,
+        taskProjectStatus,
+        taskClientmodifiedtime,
+        taskSearchProjectCreatedStatus,
+        taskSearchProjectCreatedStatusModifiedtime,
+        taskSearchProjectCreatedStatusPlannedstart,
         taskresourceclinetref,
         taskresourceTaskclientref,
         taskresourceProductvariantid,
@@ -42400,7 +44192,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referralClinetref,
         referralProjectid,
         referralProjectbeneficiaryclientref,
-        localizationModule
+        localizationModule,
+        localizationLocaleModule
       ];
 }
 
@@ -49733,6 +51526,7 @@ typedef $$StockTableInsertCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49766,6 +51560,7 @@ typedef $$StockTableUpdateCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<String?> campaignNumber,
   Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -49818,6 +51613,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -49851,6 +51647,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -49884,6 +51681,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<String?> campaignNumber = const Value.absent(),
             Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -49917,6 +51715,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            campaignNumber: campaignNumber,
             dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -50020,6 +51819,11 @@ class $$StockTableFilterComposer
 
   ColumnFilters<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -50174,6 +51978,11 @@ class $$StockTableOrderingComposer
 
   ColumnOrderings<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get campaignNumber => $state.composableBuilder(
+      column: $state.table.campaignNumber,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -55292,6 +57101,7 @@ typedef $$HFReferralTableInsertCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
@@ -55318,6 +57128,7 @@ typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 
@@ -55364,6 +57175,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion(
@@ -55390,6 +57202,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -55416,6 +57229,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion.insert(
@@ -55442,6 +57256,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
         ));
@@ -55576,6 +57391,11 @@ class $$HFReferralTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$HFReferralTableOrderingComposer
@@ -55693,6 +57513,11 @@ class $$HFReferralTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -58637,6 +60462,8 @@ typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
   required String projectId,
   required String boundaryCode,
   required String action,
+  Value<String?> beneficiaryTag,
+  Value<String?> resourceTag,
   Value<int?> auditCreatedTime,
   Value<int?> clientCreatedTime,
   Value<String?> clientModifiedBy,
@@ -58663,6 +60490,8 @@ typedef $$UserActionTableUpdateCompanionBuilder = UserActionCompanion Function({
   Value<String> projectId,
   Value<String> boundaryCode,
   Value<String> action,
+  Value<String?> beneficiaryTag,
+  Value<String?> resourceTag,
   Value<int?> auditCreatedTime,
   Value<int?> clientCreatedTime,
   Value<String?> clientModifiedBy,
@@ -58709,6 +60538,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             Value<String> projectId = const Value.absent(),
             Value<String> boundaryCode = const Value.absent(),
             Value<String> action = const Value.absent(),
+            Value<String?> beneficiaryTag = const Value.absent(),
+            Value<String?> resourceTag = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
             Value<int?> clientCreatedTime = const Value.absent(),
             Value<String?> clientModifiedBy = const Value.absent(),
@@ -58735,6 +60566,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             projectId: projectId,
             boundaryCode: boundaryCode,
             action: action,
+            beneficiaryTag: beneficiaryTag,
+            resourceTag: resourceTag,
             auditCreatedTime: auditCreatedTime,
             clientCreatedTime: clientCreatedTime,
             clientModifiedBy: clientModifiedBy,
@@ -58761,6 +60594,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             required String projectId,
             required String boundaryCode,
             required String action,
+            Value<String?> beneficiaryTag = const Value.absent(),
+            Value<String?> resourceTag = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
             Value<int?> clientCreatedTime = const Value.absent(),
             Value<String?> clientModifiedBy = const Value.absent(),
@@ -58787,6 +60622,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             projectId: projectId,
             boundaryCode: boundaryCode,
             action: action,
+            beneficiaryTag: beneficiaryTag,
+            resourceTag: resourceTag,
             auditCreatedTime: auditCreatedTime,
             clientCreatedTime: clientCreatedTime,
             clientModifiedBy: clientModifiedBy,
@@ -58875,6 +60712,16 @@ class $$UserActionTableFilterComposer
 
   ColumnFilters<String> get action => $state.composableBuilder(
       column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get beneficiaryTag => $state.composableBuilder(
+      column: $state.table.beneficiaryTag,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get resourceTag => $state.composableBuilder(
+      column: $state.table.resourceTag,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -58997,6 +60844,16 @@ class $$UserActionTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get beneficiaryTag => $state.composableBuilder(
+      column: $state.table.beneficiaryTag,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get resourceTag => $state.composableBuilder(
+      column: $state.table.resourceTag,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
       column: $state.table.auditCreatedTime,
       builder: (column, joinBuilders) =>
@@ -59049,6 +60906,630 @@ class $$UserActionTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$FaceAuthEventTableInsertCompanionBuilder = FaceAuthEventCompanion
+    Function({
+  required String clientReferenceId,
+  required String individualId,
+  required String deviceId,
+  required String eventType,
+  required String outcome,
+  required String confidence,
+  required String latitude,
+  required String longitude,
+  required String locationAccuracy,
+  required int timestamp,
+  Value<int?> syncTimestamp,
+  Value<String?> fallbackReason,
+  required int failedAttemptCount,
+  Value<int?> popupTime,
+  Value<int?> responseTime,
+  Value<String?> responseType,
+  required String projectId,
+  Value<String?> anomalyFlags,
+  Value<String?> faceImage,
+  Value<bool> isSync,
+  required String boundaryCode,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+typedef $$FaceAuthEventTableUpdateCompanionBuilder = FaceAuthEventCompanion
+    Function({
+  Value<String> clientReferenceId,
+  Value<String> individualId,
+  Value<String> deviceId,
+  Value<String> eventType,
+  Value<String> outcome,
+  Value<String> confidence,
+  Value<String> latitude,
+  Value<String> longitude,
+  Value<String> locationAccuracy,
+  Value<int> timestamp,
+  Value<int?> syncTimestamp,
+  Value<String?> fallbackReason,
+  Value<int> failedAttemptCount,
+  Value<int?> popupTime,
+  Value<int?> responseTime,
+  Value<String?> responseType,
+  Value<String> projectId,
+  Value<String?> anomalyFlags,
+  Value<String?> faceImage,
+  Value<bool> isSync,
+  Value<String> boundaryCode,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+
+class $$FaceAuthEventTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $FaceAuthEventTable,
+    FaceAuthEventData,
+    $$FaceAuthEventTableFilterComposer,
+    $$FaceAuthEventTableOrderingComposer,
+    $$FaceAuthEventTableProcessedTableManager,
+    $$FaceAuthEventTableInsertCompanionBuilder,
+    $$FaceAuthEventTableUpdateCompanionBuilder> {
+  $$FaceAuthEventTableTableManager(
+      _$LocalSqlDataStore db, $FaceAuthEventTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$FaceAuthEventTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$FaceAuthEventTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$FaceAuthEventTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String> individualId = const Value.absent(),
+            Value<String> deviceId = const Value.absent(),
+            Value<String> eventType = const Value.absent(),
+            Value<String> outcome = const Value.absent(),
+            Value<String> confidence = const Value.absent(),
+            Value<String> latitude = const Value.absent(),
+            Value<String> longitude = const Value.absent(),
+            Value<String> locationAccuracy = const Value.absent(),
+            Value<int> timestamp = const Value.absent(),
+            Value<int?> syncTimestamp = const Value.absent(),
+            Value<String?> fallbackReason = const Value.absent(),
+            Value<int> failedAttemptCount = const Value.absent(),
+            Value<int?> popupTime = const Value.absent(),
+            Value<int?> responseTime = const Value.absent(),
+            Value<String?> responseType = const Value.absent(),
+            Value<String> projectId = const Value.absent(),
+            Value<String?> anomalyFlags = const Value.absent(),
+            Value<String?> faceImage = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            Value<String> boundaryCode = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FaceAuthEventCompanion(
+            clientReferenceId: clientReferenceId,
+            individualId: individualId,
+            deviceId: deviceId,
+            eventType: eventType,
+            outcome: outcome,
+            confidence: confidence,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            timestamp: timestamp,
+            syncTimestamp: syncTimestamp,
+            fallbackReason: fallbackReason,
+            failedAttemptCount: failedAttemptCount,
+            popupTime: popupTime,
+            responseTime: responseTime,
+            responseType: responseType,
+            projectId: projectId,
+            anomalyFlags: anomalyFlags,
+            faceImage: faceImage,
+            isSync: isSync,
+            boundaryCode: boundaryCode,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            id: id,
+            additionalFields: additionalFields,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String clientReferenceId,
+            required String individualId,
+            required String deviceId,
+            required String eventType,
+            required String outcome,
+            required String confidence,
+            required String latitude,
+            required String longitude,
+            required String locationAccuracy,
+            required int timestamp,
+            Value<int?> syncTimestamp = const Value.absent(),
+            Value<String?> fallbackReason = const Value.absent(),
+            required int failedAttemptCount,
+            Value<int?> popupTime = const Value.absent(),
+            Value<int?> responseTime = const Value.absent(),
+            Value<String?> responseType = const Value.absent(),
+            required String projectId,
+            Value<String?> anomalyFlags = const Value.absent(),
+            Value<String?> faceImage = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            required String boundaryCode,
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FaceAuthEventCompanion.insert(
+            clientReferenceId: clientReferenceId,
+            individualId: individualId,
+            deviceId: deviceId,
+            eventType: eventType,
+            outcome: outcome,
+            confidence: confidence,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            timestamp: timestamp,
+            syncTimestamp: syncTimestamp,
+            fallbackReason: fallbackReason,
+            failedAttemptCount: failedAttemptCount,
+            popupTime: popupTime,
+            responseTime: responseTime,
+            responseType: responseType,
+            projectId: projectId,
+            anomalyFlags: anomalyFlags,
+            faceImage: faceImage,
+            isSync: isSync,
+            boundaryCode: boundaryCode,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            id: id,
+            additionalFields: additionalFields,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$FaceAuthEventTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $FaceAuthEventTable,
+    FaceAuthEventData,
+    $$FaceAuthEventTableFilterComposer,
+    $$FaceAuthEventTableOrderingComposer,
+    $$FaceAuthEventTableProcessedTableManager,
+    $$FaceAuthEventTableInsertCompanionBuilder,
+    $$FaceAuthEventTableUpdateCompanionBuilder> {
+  $$FaceAuthEventTableProcessedTableManager(super.$state);
+}
+
+class $$FaceAuthEventTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $FaceAuthEventTable> {
+  $$FaceAuthEventTableFilterComposer(super.$state);
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get deviceId => $state.composableBuilder(
+      column: $state.table.deviceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get eventType => $state.composableBuilder(
+      column: $state.table.eventType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get outcome => $state.composableBuilder(
+      column: $state.table.outcome,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get confidence => $state.composableBuilder(
+      column: $state.table.confidence,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get syncTimestamp => $state.composableBuilder(
+      column: $state.table.syncTimestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fallbackReason => $state.composableBuilder(
+      column: $state.table.fallbackReason,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get failedAttemptCount => $state.composableBuilder(
+      column: $state.table.failedAttemptCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get popupTime => $state.composableBuilder(
+      column: $state.table.popupTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get responseTime => $state.composableBuilder(
+      column: $state.table.responseTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get responseType => $state.composableBuilder(
+      column: $state.table.responseType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get anomalyFlags => $state.composableBuilder(
+      column: $state.table.anomalyFlags,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get faceImage => $state.composableBuilder(
+      column: $state.table.faceImage,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$FaceAuthEventTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $FaceAuthEventTable> {
+  $$FaceAuthEventTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get deviceId => $state.composableBuilder(
+      column: $state.table.deviceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get eventType => $state.composableBuilder(
+      column: $state.table.eventType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get outcome => $state.composableBuilder(
+      column: $state.table.outcome,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get confidence => $state.composableBuilder(
+      column: $state.table.confidence,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get syncTimestamp => $state.composableBuilder(
+      column: $state.table.syncTimestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fallbackReason => $state.composableBuilder(
+      column: $state.table.fallbackReason,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get failedAttemptCount => $state.composableBuilder(
+      column: $state.table.failedAttemptCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get popupTime => $state.composableBuilder(
+      column: $state.table.popupTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get responseTime => $state.composableBuilder(
+      column: $state.table.responseTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get responseType => $state.composableBuilder(
+      column: $state.table.responseType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get anomalyFlags => $state.composableBuilder(
+      column: $state.table.anomalyFlags,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get faceImage => $state.composableBuilder(
+      column: $state.table.faceImage,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -59381,6 +61862,8 @@ class _$LocalSqlDataStoreManager {
       $$LocalizationTableTableManager(_db, _db.localization);
   $$UserActionTableTableManager get userAction =>
       $$UserActionTableTableManager(_db, _db.userAction);
+  $$FaceAuthEventTableTableManager get faceAuthEvent =>
+      $$FaceAuthEventTableTableManager(_db, _db.faceAuthEvent);
   $$UniqueIdPoolTableTableManager get uniqueIdPool =>
       $$UniqueIdPoolTableTableManager(_db, _db.uniqueIdPool);
 }

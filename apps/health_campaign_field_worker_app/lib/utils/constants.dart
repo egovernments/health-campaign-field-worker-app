@@ -1,22 +1,46 @@
-import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/utils/utils.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
-import 'package:complaints/complaints.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_register.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
+import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_register.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
 import 'package:digit_location_tracker/location_tracker.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:digit_face_verification/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/oplog/face_auth_event_oplog.dart';
+import 'package:digit_face_verification/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
@@ -76,6 +100,8 @@ class Constants {
           RowVersionListSchema,
           DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
+          FaceEmbeddingSchema,
+          FaceEnrollmentProfileSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -87,6 +113,43 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  // Modules to load initially (fetch from server and cache locally)
+  static const List<String> initialLocalizationModules = [
+    'digit-privacy-policy',
+    'hcm-login',
+    'hcm-common',
+    'hcm-scanner',
+    'hcm-beneficiary',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
+
+  // Modules to load when inside packages
+  static const List<String> packageLocalizationModules = [
+    'hcm-common',
+    'hcm-login',
+    'hcm-scanner',
+    'hcm-beneficiary',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
+
+  // Modules to load on home page and logout
+  static const List<String> homeLocalizationModules = [
+    'hcm-login',
+    'hcm-common',
+    'hcm-beneficiary',
+    'digit-privacy-policy',
+    'hcm-scanner',
+    'hcm-peer-to-peer',
+    'hcm-transit-post',
+    'hcm-attendance',
+    'hcm-dashboard'
+  ];
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
@@ -97,9 +160,35 @@ class Constants {
 
   static const String dashboardAnalyticsPath =
       '/dashboard-analytics/dashboard/getChartV2';
+  static const String logoutUserPath = '/user/_logout';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+
+  static const String healthFacility = 'Health Facility';
+  static const String lgaBoundaryLevel = 'LGA';
+  static const String provincialBoundaryLevel = 'Provincia';
+  static const String centralFacility = 'Central Facility';
+  static const String stateBoundaryLevel = 'State';
+  static const String stateFacility = 'State Facility';
+  static const String lgaFacility = 'LGA Facility';
+  static const String deviceSwitch = 'DEVICE_SWITCH';
+  static const String other = 'OTHER';
+  static const String deviceSwitchReason = 'DEVICE_SWITCH_REASON';
+  static const String oldDeviceToken = 'OLD_TOKEN';
+  static const String newDeviceToken = 'NEW_TOKEN';
+  static const String deviceSelectionOtherReason = 'OTHERS';
+  static const String multiLoginService = 'MULTILOGIN';
+  static const String multiLoginEntity = 'MultiLogin';
+  static const String multiLoginSwitchOperation = 'switch';
+  static const String userActionService = 'USER-ACTION';
+  static const String userActionEntity = 'userAction';
+
+  static const String downloadAnimation =
+      'assets/animated_json/download_animation.json';
+
+  static const String downloadSuccessAnimation =
+      'assets/animated_json/download_success.json';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -166,6 +255,7 @@ class Constants {
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
       UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
+      FaceAuthEventLocalRepository(sql, FaceAuthEventOpLogManager(isar)),
     ];
   }
 
@@ -176,10 +266,15 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
+    // Always initialize Firebase Core (required for FCM, analytics, etc.)
+    await firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      firebase_services.initialize(
+      await firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
@@ -259,6 +354,8 @@ class Constants {
           LocationTrackerRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
           UserActionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.faceAuthEvent)
+          FaceAuthEventRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -280,6 +377,38 @@ class Constants {
     return actionResult ?? '';
   }
 
+  static String getMultiLoginEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+            element.entityName == entityName && element.action == action)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
+  static String getNotificationEndPoint({
+    required List<ServiceRegistry> serviceRegistry,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = serviceRegistry
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) =>
+    element.entityName == entityName && element.action == action)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
   static List<KeyValue> yesNo = [
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
@@ -287,30 +416,24 @@ class Constants {
 
   void setInitialDataOfPackages() {
     DigitDataModelSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        retryTimeInterval: envConfig.variables.retryTimeInterval,
-        tenantId: envConfig.variables.tenantId,
-        entityMapper: EntityMapper(),
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
-        hierarchyType: envConfig.variables.hierarchyType);
-    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
-    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
-    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
-    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
-    InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      retryTimeInterval: envConfig.variables.retryTimeInterval,
+      tenantId: envConfig.variables.tenantId,
+      entityMapper: EntityMapper(),
+      errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
+    );
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
     TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
       syncDownRetryCount: envConfig.variables.syncDownRetryCount,
       persistenceConfiguration: PersistenceConfiguration.offlineFirst,
       entityMapper: SyncServiceMapper(),
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
-    SyncServiceSingleton().registries?.registerSyncRegistries({
-      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
-      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
-    });
+    SyncServiceSingleton().registries?.registerSyncRegistries(
+        {DataModelType.complaints: (remote) => CustomSyncRegistry(remote)});
   }
 }
 
@@ -367,11 +490,29 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
-  String projectId;
-  String boundary;
-  String boundaryName;
+  ProjectModel projectModel;
+  String get projectId => projectModel.id;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -382,12 +523,14 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
+  String? infoCardTitle;
+  String? infoCardDescription;
 
   DownloadBeneficiary({
     required this.title,
-    required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.projectModel,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
@@ -398,5 +541,8 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
+    this.infoCardTitle,
+    this.infoCardDescription,
   });
 }

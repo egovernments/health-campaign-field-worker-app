@@ -25,7 +25,7 @@ if (flutterVersionName == null) {
 
 
 android {
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -54,8 +54,22 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Enable code obfuscation with R8 and updated ProGuard rules
+            minifyEnabled true
+            shrinkResources true
+            // proguard-android-optimize.txt enables R8 full mode: better obfuscation + dead-code removal
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // TODO: For production release, replace signingConfigs.debug with signingConfigs.release
+            // 1. Generate keystore: keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
+            // 2. Create android/key.properties with storePassword, keyPassword, keyAlias, storeFile
+            // 3. Add signingConfigs.release block and reference it here
+            signingConfig signingConfigs.debug
+        }
+        
+        debug {
+            // Disable obfuscation for debug builds to speed up development
+            minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.debug
         }
     }
@@ -67,6 +81,20 @@ android {
             }
         }
     }
+}
+
+// Exclude sqlite3_flutter_libs since sqlcipher_flutter_libs is used as a drop-in replacement
+// Both share the same Android package (eu.simonbinder.sqlite3_flutter_libs) causing duplicate class errors
+configurations.all {
+    exclude module: 'sqlite3_flutter_libs'
+}
+
+dependencies {
+    // Fix: Gradle 7.4 + AGP 7.3.0 cannot resolve lifecycle-process as a
+    // transitive constraint (pulled in by CameraX/ML Kit from the face-auth
+    // packages) — fails with "Corrupt serialized resolution result" on
+    // :app:processDebugResources. Declaring it directly resolves it.
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
 }
 
 flutter {

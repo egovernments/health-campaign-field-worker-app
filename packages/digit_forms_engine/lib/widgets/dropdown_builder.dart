@@ -2,19 +2,21 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
   final List<Option> enums;
+  final bool isMultiselect;
 
-  const JsonSchemaDropdownBuilder({
-    required super.formControlName,
-    required super.form,
-    required this.enums,
-    super.label,
-    super.key,
-    super.value,
-    super.isRequired,
-    super.helpText,
-    super.validations,
-    super.tooltipText,
-  });
+  const JsonSchemaDropdownBuilder(
+      {required super.formControlName,
+      required super.form,
+      required this.enums,
+      super.label,
+      super.key,
+      super.value,
+      super.isRequired,
+      super.helpText,
+      super.validations,
+      super.tooltipText,
+      this.isMultiselect = false,
+      super.readOnly});
 
   @override
   Widget build(BuildContext context) {
@@ -30,39 +32,83 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         label: label,
         capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
-        child: DigitDropdown<String>(
-          helpText: helpText,
-          errorMessage: field.errorText,
-          selectedOption: field.value != null
-              ? DropdownItem(
-                  code: field.value!,
-                  name: loc.translate(
-                    enums
-                        .firstWhere(
-                          (e) => e.code == field.value,
-                          orElse: () =>
-                              Option(code: field.value!, name: field.value!),
+        child: isMultiselect
+            ? MultiSelectDropDown(
+          sentenceCaseEnabled: false,
+                readOnly: readOnly,
+                helpText: helpText,
+          emptyItemText: loc.translate('NO_OPTIONS_AVAILABLE'),
+                errorMessage: field.errorText,
+                initialOptions: field.value != null &&
+                        (field.value as String).trim().isNotEmpty
+                    ? (field.value as String)
+                        .split('.')
+                        .where((val) => val.trim().isNotEmpty) // 🔑 important
+                        .map(
+                          (val) => DropdownItem(
+                            code: val,
+                            name: loc.translate(
+                              enums
+                                  .firstWhere(
+                                    (e) => e.code == val,
+                                    orElse: () => Option(code: val, name: val),
+                                  )
+                                  .name,
+                            ),
+                          ),
                         )
-                        .name,
-                  ),
-                )
-              : null,
-          items: enums
-              .map(
-                (e) => DropdownItem(code: e.code, name: loc.translate(e.name)),
+                        .toList()
+                    : null,
+                options: enums
+                    .map(
+                      (e) => DropdownItem(
+                          code: e.code, name: loc.translate(e.name)),
+                    )
+                    .toList(),
+                onOptionSelected: (selectedValues) {
+                  form.control(formControlName).markAsTouched();
+                  // join selected values into dot-separated string
+                  form.control(formControlName).value =
+                      selectedValues.map((e) => e.code).join('.');
+                },
               )
-              .toList(),
-          onSelect: (value) {
-            form.control(formControlName).markAsTouched();
-            form.control(formControlName).value = value.code;
-          },
-          onChange: (value) {
-            form.control(formControlName).markAsTouched();
-            if (value.isEmpty) {
-              form.control(formControlName).value = null;
-            }
-          },
-        ),
+            : DigitDropdown<String>(
+                readOnly: readOnly,
+                sentenceCaseEnabled: false,
+                helpText: helpText,
+                emptyItemText: loc.translate('NO_OPTIONS_AVAILABLE'),
+                errorMessage: field.errorText,
+                selectedOption: field.value != null
+                    ? DropdownItem(
+                        code: field.value!,
+                        name: loc.translate(
+                          enums
+                              .firstWhere(
+                                (e) => e.code == field.value,
+                                orElse: () => Option(
+                                    code: field.value!, name: field.value!),
+                              )
+                              .name,
+                        ),
+                      )
+                    : null,
+                items: enums
+                    .map(
+                      (e) => DropdownItem(
+                          code: e.code, name: loc.translate(e.name)),
+                    )
+                    .toList(),
+                onSelect: (value) {
+                  form.control(formControlName).markAsTouched();
+                  form.control(formControlName).value = value.code;
+                },
+                onChange: (value) {
+                  form.control(formControlName).markAsTouched();
+                  if (value.isEmpty) {
+                    form.control(formControlName).value = null;
+                  }
+                },
+              ),
       ),
     );
   }

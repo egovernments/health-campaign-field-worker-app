@@ -1,62 +1,105 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:closed_household/closed_household.dart';
-import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:complaints/complaints.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:attendance_management/utils/utils.dart';
+import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/enum_values.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/action_handler/action_executor_registry.dart';
+import 'package:digit_flow_builder/data/digit_crud_service.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
+import 'package:digit_flow_builder/utils/function_registry.dart';
+import 'package:digit_flow_builder/widgets/flow_widget_interface.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:recase/recase.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
+import '../blocs/stock_downsync/stock_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/attendance_flows.dart';
+import '../sampleJsonConfigs/closed_household.dart';
+import '../sampleJsonConfigs/complaints.dart';
+import '../sampleJsonConfigs/hf_referral.dart';
+import '../sampleJsonConfigs/inventory_reports.dart';
+import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
+import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+import '../sampleJsonConfigs/polio_stock_details.dart';
+import '../sampleJsonConfigs/registration_bednet_flows.dart';
+import '../sampleJsonConfigs/registration_smc_flows.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/stock_reconciliation.dart';
+import '../utils/attendance_utils.dart';
+import '../utils/date_util_attendance.dart';
 import '../utils/debound.dart';
+import '../utils/eligibility_navigation_executor.dart';
 import '../utils/environment_config.dart';
+import '../utils/feature_flags.dart';
+import '../utils/flow_navigation_utils.dart';
+import '../utils/function_registries.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/runtime_hierarchy.dart';
+import '../utils/stock_downsync_utils.dart';
 import '../utils/utils.dart';
+import '../widgets/attendance/attendance_qr_scanner_button.dart';
+import '../widgets/attendance/custom_row_widget.dart';
+import '../widgets/attendance/face_auth_event_dots_widget.dart';
+import '../widgets/attendance/group_list_view_widget.dart';
+import '../widgets/attendance/signature_compare_dialog_widget.dart';
+import '../widgets/h_f_referral/evaluation_facility.dart';
+import '../widgets/h_f_referral/project_cycles.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/inventory/custom_facility_widgets.dart';
+import '../widgets/inventory/custom_product_selection_card.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_bar/beneficiary_progress.dart';
+import '../widgets/progress_bar/hf_referral_progress.dart';
+import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import '../widgets/stock_balance/stock_balance_card.dart';
+import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
+import '../widgets/task_functions.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -74,10 +117,86 @@ class _HomePageState extends LocalizedState<HomePage> {
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
+  final _syncDebouncer = Debouncer(seconds: 5);
+  final StreamController<double> stockDownloadProgress =
+      StreamController<double>.broadcast();
+  bool _faceGateActive = false;
+
+  /// Check if the logged-in user needs face enrollment (first time only).
+  /// Routes to the face gate, which handles enrollment + verification.
+  void _checkFaceEnrollment() async {
+    if (!kFaceAuthEnabled) return;
+    try {
+      final individualId = await LocalSecureStore.instance.userIndividualId;
+      if (individualId == null || !mounted) return;
+
+      // Scope to this specific user's embedding so a flag set by a previously
+      // enrolled user on a shared device doesn't skip this user's enrollment.
+      final repository = context.read<FaceEmbeddingRepository>();
+      final embedding = await repository.getEmbedding(individualId);
+      if (embedding != null || !mounted) return;
+
+      _faceGateActive = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.router.push(
+            FaceGateRoute(
+              onVerified: () {
+                _faceGateActive = false;
+                if (mounted) {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                }
+              },
+            ),
+          ).then((_) {
+            _faceGateActive = false;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('HomePage: _checkFaceEnrollment error: $e');
+    }
+  }
+
+  // OverlayEntry-based loader shown while a module-open cascade is running
+  // (localization fetch + schema decode + flow setup + router.push). We use
+  // `OverlayEntry` (inserted into the ROOT `Overlay`) instead of
+  // `DigitLoaders.overlayLoader` — the latter is `showDialog`-based, so any
+  // `context.router.push(...)` fired mid-flight lands on top of it. An
+  // `OverlayEntry` sits above the entire Navigator stack and stays visible
+  // across intermediate route pushes. See `_openModule` for the primary
+  // driver; the `BlocListener<LocalizationBloc>` in `build()` remains as a
+  // safety net for paths that fire outside `_openModule`.
+  OverlayEntry? _localizationLoaderOverlay;
+
+  /// Number of `_openModule` calls currently in flight. Used to make the
+  /// overlay dismiss ownership-aware: nested opens (outer card opens a
+  /// module that itself calls `_openModule` from its own initActions) would
+  /// otherwise let the outer's finally rip the overlay from under the
+  /// still-running inner one.
+  int _openModuleOwners = 0;
 
   @override
   initState() {
     super.initState();
+
+    // Check if the user needs face enrollment (first time after login).
+    _checkFaceEnrollment();
+
+    // If background service was killed with the app, release orphaned lock
+    // and restart the service.
+    FlutterBackgroundService().isRunning().then((isRunning) {
+      if (!isRunning) {
+        SyncLock.release();
+        if (context.mounted) {
+          performBackgroundService(
+            isBackground: false,
+            stopService: false,
+            context: context,
+          );
+        }
+      }
+    });
 
     subscription = Connectivity()
         .onConnectivityChanged
@@ -90,13 +209,1467 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
+
+    // Register custom components for forms
+    _registerCustomComponents();
+
+    // Pre-warm the heavy one-time costs the first card tap would otherwise
+    // pay synchronously. Deferred to a post-frame callback so it doesn't
+    // block the home page's own first frame — by the time a user can
+    // physically tap a card, this warmup has already completed. Saves
+    // ~60ms on the first tap that lands on sampleSMCFlows (the biggest
+    // sample-flow bundle) plus a chunk of JIT/regex warmup on the first
+    // preprocessConfigWithState call.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      try {
+        WidgetRegistry.initialize();
+        FlowRegistry.setConfig(
+          sampleSMCFlows["flows"] as List<Map<String, dynamic>>,
+        );
+        // Trigger interpolation + function-registry warmup with a throwaway
+        // resolve. Cheap in absolute terms; expensive on first call because
+        // of lazy regex compilation and JIT.
+        resolveTemplates(<Map<String, dynamic>>[
+          {'value': '{{fn:length([])}}'}
+        ], const <String, dynamic>{});
+      } catch (_) {
+        // Warmup is best-effort — a failure here shouldn't affect the app.
+      }
+    });
+  }
+
+  /// Parses the `sessionToggle` widget-data value into a bool.
+  ///
+  /// The widgetData plumbing surfaces this as a String ("true"/"false")
+  /// via the template resolver — the sibling `showAttendanceQRButton` at
+  /// line ~533 already does the string comparison manually. A raw
+  /// `x as bool?` cast throws a TypeError on a String value, which
+  /// silently killed `todayAttendeesList` / `allAttendanceSelected` and
+  /// made the Save-later button and marked-status computation misfire.
+  /// Accepts bool, "true"/"false" String, and null (defaults to morning).
+  static bool _parseIsMorning(dynamic value) {
+    if (value is bool) return value;
+    if (value == null) return true;
+    return value.toString().toLowerCase() == 'true';
+  }
+
+  /// Register custom components for forms engine
+  void _registerCustomComponents() {
+    FlowWidgetFactory.register(AttendanceQrScannerButton());
+    FlowWidgetFactory.register(GroupListViewWidget());
+    FlowWidgetFactory.register(CustomRowWidget());
+    FlowWidgetFactory.register(SignatureCompareWidget());
+    if (kFaceAuthEnabled) {
+      FlowWidgetFactory.register(FaceAuthEventDotsWidget());
+      FlowWidgetFactory.register(FaceAuthEventLegendWidget());
+    } else {
+      // Face auth disabled via env: register no-op stubs so configs
+      // referencing these formats render as empty space instead of the
+      // "Unknown widget format" error placeholder.
+      FlowWidgetFactory.register(const NoOpFaceAuthWidget('faceAuthEventDots'));
+      FlowWidgetFactory
+          .register(const NoOpFaceAuthWidget('faceAuthEventLegend'));
+    }
+
+    // Register custom action executor for REDOSE eligibility check
+    ActionExecutorRegistry().register(
+      'CHECK_ELIGIBILITY_AND_NAVIGATE',
+      EligibilityNavigationExecutor(),
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'resourceCard',
+      (context, stateAccessor) {
+        final beneficiaryDetails =
+            stateAccessor.getPageData('beneficiaryDetails');
+
+        if (beneficiaryDetails != null) {
+          // DELIVERY flow
+          return ResourceCard(
+            stateData: beneficiaryDetails,
+            pageSchema: stateAccessor.currentPageName ?? 'DELIVERY',
+          );
+        }
+
+        // REDOSE flow — eligibleProductVariants are pre-computed by
+        // EligibilityNavigationExecutor and passed as nav params
+        final currentPage = stateAccessor.currentPageName ?? 'REDOSE';
+        final navParams =
+            FlowCrudStateRegistry().getNavigationParams(currentPage);
+
+        // Read eligible product variants from nav params
+        // (set by CHECK_ELIGIBILITY_AND_NAVIGATE executor)
+        final eligibleProductVariants = navParams?['eligibleProductVariants'];
+
+        List<Map<String, dynamic>> matchingCriteria;
+        if (eligibleProductVariants is List) {
+          matchingCriteria = eligibleProductVariants
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
+        } else {
+          matchingCriteria = [];
+        }
+
+        final computedState = FlowCrudState(
+          stateWrapper: [
+            {'eligibleProductVariants': matchingCriteria}
+          ],
+        );
+
+        return ResourceCard(
+          stateData: computedState,
+          pageSchema: currentPage,
+        );
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'evaluationFacility',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
+            schemaName: "REFERRAL_CREATE",
+            formControlName: "evaluationFacility");
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'healthFacility',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
+            schemaName: "REFER_BENEFICIARY", formControlName: "healthFacility");
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'referralCycle',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const CycleDropDown();
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityToWhich',
+      (context, stateAccessor) {
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Use stateAccessor.currentPageName which is set by the screen builder
+        // to the active form's schemaKey (e.g., 'RECORDSTOCK' or 'RECORDLESSEXCESS')
+        final schemaName = stateAccessor.currentPageName;
+
+        return FacilityCard(
+          stateData: stockData,
+          schemaName: schemaName,
+          formKey: 'facilityToWhich',
+          dependantFormKey: 'teamCode',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityFromWhich',
+      (context, stateAccessor) {
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Use stateAccessor.currentPageName for the active form's schemaKey
+        final schemaName = stateAccessor.currentPageName;
+
+        return FacilityCard(
+          stateData: stockData,
+          schemaName: schemaName,
+          formKey: 'facilityFromWhich',
+          dependantFormKey: 'deliveryTeam',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productdetail',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return ProductSelectionCard(
+          stateData: stockData,
+          pageSchema: 'RECORDSTOCK',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productVariant',
+      (context, stateAccessor) {
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        return ProductSelectionCard(
+          stateData: stockData,
+          pageSchema: 'RECORDLESSEXCESS',
+          formKey: 'productVariant',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'stockReconciliationCard',
+      (context, stateAccessor) {
+        // Access data from stock reconciliation page
+        final reconciliationData = stateAccessor.getPageData('stockRecon');
+
+        // Build stock reconciliation component with facility, product, and metrics
+        return StockReconciliationCard(
+          stateData: reconciliationData,
+          pageSchema: 'stockReconciliationDetails',
+        );
+      },
+    );
+    FunctionRegistries(context).registerAll();
+    registerTaskFunctions();
+
+    FunctionRegistry.register('projectBeneficiaryAvailable', (args, stateData) {
+      if (args.isEmpty) return false;
+
+      final projectBeneficiary = args.first;
+
+      return projectBeneficiary.isNotEmpty;
+    });
+
+    // Attendance
+
+    FunctionRegistry.register('todayAttendanceLogs', (args, stateData) {
+      if (args.isEmpty || args.first == null) return [];
+
+      final widgetData = args.first;
+      var attendanceRegister =
+          args.length > 1 && args[1] != null ? args[1] : null;
+
+      if (attendanceRegister == null) return [];
+
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      if (entryTime == null || exitTime == null) return [];
+
+      List filteredLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
+
+      return filteredLogs;
+    });
+
+    // Update attendanceStatus to also check in-memory collection (4th arg)
+    FunctionRegistry.register('attendanceStatus', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+
+      double? currentStatus;
+
+      String attendanceUnmarked = 'ATTENDANCE_UNMARKED';
+      String markAsPresent = 'MARK_AS_PRESENT';
+      String markedAsAbsent = 'MARK_AS_ABSENT';
+
+      // Different wrapper configs surface the attendee's individualId at
+      // different nesting depths; try the flat key first, then the entity
+      // path (matches face_auth_event_dots_widget.dart:_resolveIndividualId).
+      final entity = attendee is Map ? attendee['entity'] : null;
+      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
+          (entity is Map ? entity['individualId'] : null);
+
+      var attendanceCollectionData =
+          widgetData?["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == 1.0) {
+        return markAsPresent;
+      } else if (status == 0.0) {
+        return markedAsAbsent;
+      } else if (status == -1.0) {
+        return attendanceUnmarked;
+      }
+    });
+
+    FunctionRegistry.register('buttonType', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+      final targetStatus = args.length > 2 ? args[2] : null;
+
+      double? currentStatus;
+
+      final entity = attendee is Map ? attendee['entity'] : null;
+      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
+          (entity is Map ? entity['individualId'] : null);
+
+      var attendanceCollectionData =
+          widgetData["attendanceCollection"]?[individualId];
+
+      if (attendanceCollectionData == 'present') {
+        currentStatus = 1.0;
+      } else if (attendanceCollectionData == 'absent') {
+        currentStatus = 0.0;
+      }
+
+      var status = currentStatus ?? attendee?['status'] ?? -1.0;
+
+      if (status == targetStatus) {
+        return "primary";
+      } else {
+        return "secondary";
+      }
+    });
+
+    FunctionRegistry.register('hideMarkAttendanceButtons', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final attendee = args.length > 1 ? args[1] : null;
+      final attendanceRegister =
+          args.length > 2 && args[2] != null ? args[2] : [];
+
+      if (widgetData == null ||
+          attendee == null ||
+          attendanceRegister == null) {
+        return false; // hide buttons if no attendee or logs
+      }
+
+      final individualId = attendee?["individualId"];
+      List attendanceLogs = attendanceRegister.attendanceLog ?? [];
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final isMorning = widgetData['sessionToggle'] as bool? ?? true;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
+      if (selectedDate == null)
+        return false; // hide buttons if no date selected
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegister);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      // Filter logs for this individual and selected session times
+      List filterLocalAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer != true;
+      }).toList();
+
+      // Filter logs for this individual and selected session times
+      List filterUploadedAttendanceLogs = attendanceLogs.where((log) {
+        return ((entryTime != null && log.time == entryTime) ||
+                (exitTime != null && log.time == exitTime)) &&
+            log.individualId == individualId?.toString() &&
+            log.uploadToServer == true;
+      }).toList();
+
+      final now = DateTime.now();
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
+
+      bool show = false;
+
+      if (filterUploadedAttendanceLogs.isNotEmpty) {
+        show =
+            false; // hide buttons if already uploaded logs exist for this session
+      } else if (!isSameDay) {
+        show = true; // show buttons for past dates if no uploaded logs exist
+      } else {
+        show = filterLocalAttendanceLogs.isNotEmpty ||
+            (isSameDay &&
+                attendanceManualData !=
+                    null); // show buttons for current day if local logs exist or manual marking is enabled
+      }
+
+      return !show;
+    });
+
+    FunctionRegistry.register('showAttendanceQRButton', (args, stateData) {
+      final selectedDate = args.isNotEmpty ? args[0] : null;
+      final isMorning = args.length > 1 ? args[1] : null;
+      final attendanceRegisterModel = args.length > 2 ? args[2] : null;
+
+      if (attendanceRegisterModel == null) {
+        return false; // hide if no attendance data
+      }
+
+      if (selectedDate == null) {
+        return false; // hide buttons if no date selected
+      }
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate,
+          isMorning == "true" ? true : false,
+          attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceLogs = attendanceRegisterModel.attendanceLog;
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final filterUploadedAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime) &&
+            log.uploadToServer == true;
+      }).toList();
+
+      final now = DateTime.now();
+      final selectedDateTime =
+          DateTime.fromMillisecondsSinceEpoch(selectedDate);
+      bool isSameDay = selectedDateTime.year == now.year &&
+          selectedDateTime.month == now.month &&
+          selectedDateTime.day == now.day;
+      return isSameDay && (filterUploadedAttendanceLogs?.isEmpty ?? true);
+    });
+
+    FunctionRegistry.register('todayAttendeesList', (args, stateData) {
+      final widgetData = args.isNotEmpty && args[0] != null ? args[0] : null;
+      List items = args.length > 1 && args[1] != null ? args[1] : [];
+
+      // The third slot is documented as a list of AttendanceLogModel, but
+      // the existing config at attendance_flows.dart:678 passes the whole
+      // AttendanceRegisterModel here (logs live on its `attendanceLog`
+      // field). Unwrap when needed so `.where(...)` below doesn't crash
+      // on a non-iterable register instance, and reuse the register as
+      // the 4-arg fallback for AttendanceUtils.attendanceTime.
+      final rawThirdArg = args.length > 2 && args[2] != null ? args[2] : null;
+      final rawFourthArg = args.length > 3 && args[3] != null ? args[3] : null;
+
+      dynamic attendanceLogs = const [];
+      dynamic attendanceRegisterModel = rawFourthArg;
+
+      if (rawThirdArg is Iterable) {
+        attendanceLogs = rawThirdArg;
+      } else if (rawThirdArg != null) {
+        try {
+          final nested = (rawThirdArg as dynamic).attendanceLog;
+          if (nested is Iterable) attendanceLogs = nested;
+        } catch (_) {}
+        attendanceRegisterModel ??= rawThirdArg;
+      }
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      // `sessionToggle` arrives as a String ("true"/"false") from the
+      // widgetData plumbing — the sibling `showAttendanceQRButton`
+      // (line 533) already unwraps it that way. A raw `as bool?` cast
+      // throws a TypeError on a String, which used to be masked by the
+      // .where crash further down; now that the register unwrap works,
+      // the cast is the next thing that fails and drops us out of the
+      // whole fn (empty items → UI treats every attendee as unmarked
+      // and Submit/save-later gating misfires).
+      final isMorning = _parseIsMorning(widgetData?['sessionToggle']);
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      // Filter logs for the selected entry and exit times that are uploaded
+      final todayAttendanceLogs = attendanceLogs?.where((log) {
+        final logTime = log.time;
+        if (logTime == null) return false;
+        return (logTime == entryTime || logTime == exitTime);
+      }).toList();
+
+      // Drop de-enrolled attendees. The CRUD wrapper (WrapperBuilder) hands
+      // us Maps shaped like {entity: AttendeeModel, individual: [...],
+      // <mappedFields>: ...} — `denrollmentDate` is not spread onto the top
+      // level, it lives on the underlying AttendeeModel under `entity`. Try
+      // both shapes so the filter still works if this ever changes.
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      items = items.where((item) {
+        dynamic raw;
+        if (item is Map) {
+          raw = item['denrollmentDate'];
+          if (raw == null && item['entity'] != null) {
+            try {
+              raw = (item['entity'] as dynamic).denrollmentDate;
+            } catch (_) {}
+          }
+        } else {
+          try {
+            raw = (item as dynamic).denrollmentDate;
+          } catch (_) {
+            return true;
+          }
+        }
+        if (raw == null) return true;
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null) return true;
+        return deDate >= nowMs;
+      }).toList();
+
+      items = items.map((item) {
+        if (item is Map && item['individualId'] != null) {
+          double status = -1.0;
+          final individualId = item['individualId'];
+          List filterAttendanceLogs = todayAttendanceLogs.where((log) {
+            return log.individualId == individualId;
+          }).toList();
+          if (filterAttendanceLogs.isEmpty) {
+            status = -1.0; // no logs
+            item['status'] = status;
+            return item;
+          }
+          final hasMorningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "ENTRY") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          ;
+          final hasEveningLog = filterAttendanceLogs.any((element) {
+            final elementType = element.type?.toString();
+            final elementStatus = element.status;
+            if (elementStatus == null) return false;
+            if (elementType == "EXIT") {
+              return elementStatus == 'ACTIVE';
+            }
+            return false;
+          });
+          if (hasMorningLog && hasEveningLog) {
+            status = 1.0; // present
+          } else if (!hasMorningLog && !hasEveningLog) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+          item['status'] = status;
+        }
+        return item;
+      }).toList();
+
+      return items;
+    });
+
+    FunctionRegistry.register('anyAttendanceSelected', (args, stateData) {
+      if (args.isEmpty || args.first == null) return true;
+
+      final widgetData = args.first;
+      final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
+
+      return (attendanceCollection == null || attendanceCollection.isEmpty);
+    });
+
+    FunctionRegistry.register('allAttendanceSelected', (args, stateData) {
+      // Returns TRUE when every attendee is accounted for on this
+      // session (either already saved as a log pair, or currently in the
+      // in-progress `attendanceCollection`), FALSE otherwise. The
+      // attendance config gates the Submit button with
+      // `{{fn:allAttendanceSelected(...)}}==false` so `disabled` is true
+      // whenever the fn returns false — Submit stays locked until every
+      // attendee is marked.
+      //
+      // Missing args → return false so the button stays disabled instead
+      // of enabling on an incomplete widgetData snapshot.
+      if (args.isEmpty || args.first == null) return false;
+
+      final widgetData = args.first;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+
+      final selectedDate = widgetData?['selectedDate'] as int?;
+      // See _parseIsMorning — sessionToggle arrives as String from the
+      // widgetData plumbing; a straight bool cast throws on it.
+      final isMorning = _parseIsMorning(widgetData?['sessionToggle']);
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
+
+      // Match the render-side drop in todayAttendeesList: de-enrolled
+      // attendees are hidden from the marking list, so counting the raw
+      // `attendees` here would lock Submit forever (collectionLength can
+      // never reach the raw count). Keep only actives.
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      final attendees =
+          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
+        dynamic raw;
+        try {
+          raw = (a as dynamic).denrollmentDate;
+        } catch (_) {
+          return true;
+        }
+        if (raw == null) return true;
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null) return true;
+        return deDate >= nowMs;
+      }).toList();
+      final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
+
+      // Filter logs for the selected entry and exit times that are not yet uploaded
+      final filterAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        final logUploadToServer = log.uploadToServer;
+        return (logTime == entryTime || logTime == exitTime) &&
+            logUploadToServer != true;
+      }).toList();
+
+      if (filterAttendanceLogs.isNotEmpty) {
+        // Two logs per attendee (ENTRY + EXIT). Fully-saved when the
+        // pair count matches the attendee count.
+        return attendees.length == (filterAttendanceLogs.length / 2);
+      }
+
+      // Fresh session: every attendee has an entry in the in-progress
+      // collection. Null-safe on collection so an unset widgetData
+      // doesn't accidentally count as "all marked".
+      final collectionLength = attendanceCollection?.length ?? 0;
+      return attendees.isNotEmpty && attendees.length == collectionLength;
+    });
+
+    FunctionRegistry.register('updateAttendeeStatus', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      List<dynamic> attendees = args.first;
+      List<dynamic> attendanceLogs =
+          args.length > 1 && args[1] != null ? args[1] : [];
+      final selectedDate = args.length > 2 && args[2] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(args[2].toString()) ??
+                  DateTime.now().millisecondsSinceEpoch)
+          : DateTime.now();
+
+      for (var attendee in attendees) {
+        String? individualId;
+        try {
+          individualId = attendee.individualId?.toString();
+        } catch (_) {
+          individualId = null;
+        }
+        if (individualId == null) continue;
+
+        // Find logs for this attendee
+        final filteredLogs = attendanceLogs
+            .where((log) => log.individualId?.toString() == individualId)
+            .toList();
+
+        // Determine attendance status based on logs
+        final hasMorningLog =
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'ENTRY');
+        final hasEveningLog =
+            AttendanceUtils.hasLogWithType(filteredLogs, selectedDate, 'EXIT');
+
+        double status;
+        if (hasMorningLog && hasEveningLog) {
+          final morningLogActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'ENTRY');
+          final eveningActive = AttendanceUtils.hasLogActiveStatus(
+              filteredLogs, selectedDate, 'EXIT');
+
+          if (morningLogActive && eveningActive) {
+            status = 1.0; // present
+          } else if (!morningLogActive && !eveningActive) {
+            status = 0.0; // absent
+          } else {
+            status = 0.5; // half day
+          }
+        } else {
+          status = -1.0; // not marked
+        }
+
+        // Update attendee with computed status
+        try {
+          attendee.attendanceStatus = status;
+        } catch (_) {
+          // If attendee is a Map, update the field directly
+          if (attendee is Map) {
+            attendee['status'] = status;
+          }
+        }
+      }
+
+      return attendees;
+    });
+
+    FunctionRegistry.register('entryTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+      final startOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        9,
+        0,
+        0,
+      );
+      return startOfDay.millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('exitTime', (args, stateData) {
+      DateTime today = DateTime.now();
+      if (args.isNotEmpty && args.first != null) {
+        today = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(args.first.toString()) ??
+                today.millisecondsSinceEpoch);
+      }
+
+      final endOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        18,
+        0,
+        0,
+        0,
+      );
+      return endOfDay.millisecondsSinceEpoch;
+    });
+
+    /// Registers a function to calculate completed attendance days.
+    ///
+    /// - **Function Name**: `'calculateCompletedDays'`
+    /// - **Arguments**: A list where:
+    ///   - First element is the AttendanceRegisterModel or its Map representation.
+    ///   - Second element (optional) is the attendance logs list from wrapper relations (List<AttendanceLogModel> or List<Map>).
+    /// - **Returns**: A formatted string like `"3/5"` representing completed/total days.
+    ///
+    /// This function handles both:
+    /// 1. Model's attendanceLog field (List<Map<DateTime, bool>>?) - legacy format
+    /// 2. Wrapper's attendanceLog relation (List<AttendanceLogModel>) - raw attendance records
+
+    FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
+      if (args.isEmpty || args.first == null) return '0/0';
+
+      final attendanceRegister = args.first;
+
+      if (attendanceRegister == null) return '0/0';
+
+      List list = AttendanceUtils.generateAttendanceLogDateList(
+        attendanceRegister.startDate!,
+        attendanceRegister.endDate!,
+        attendanceRegister.attendanceLog,
+      );
+
+      var completedDays = 0;
+      var totalDays = 0;
+      totalDays = list.length;
+      for (var element in list) {
+        if (element.containsValue(true)) {
+          completedDays++;
+        }
+      }
+      return '$completedDays/$totalDays';
+    });
+
+    FunctionRegistry.register('filterAttendeesByTeam', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final item = args.first;
+      List<dynamic>? attendees;
+
+      try {
+        attendees = item.attendees;
+      } catch (_) {
+        attendees = null;
+      }
+
+      return attendees;
+    });
+
+    FunctionRegistry.register('todayDate', (args, stateData) {
+      return DateTime.now().millisecondsSinceEpoch.toString();
+    });
+
+    FunctionRegistry.register('isActiveAttendee', (args, stateData) {
+      if (args.isEmpty) return true;
+      final denrollmentDate = args.first;
+      if (denrollmentDate == null) return true;
+      final deDate = denrollmentDate is int
+          ? denrollmentDate
+          : int.tryParse(denrollmentDate.toString());
+      if (deDate == null) return true;
+      return deDate >= DateTime.now().millisecondsSinceEpoch;
+    });
+
+    // Count of attendees that are NOT de-enrolled. Mirrors the drop rule in
+    // todayAttendeesList so the manageAttendance card count agrees with what
+    // the register-marking list actually renders. Handles both shapes: raw
+    // AttendeeModel objects (manageAttendance wrapper has no nested relations
+    // on `attendees`) and Maps with `entity` (register-marking wrapper wraps
+    // the attendee because of the nested `individual` relation).
+    FunctionRegistry.register('activeAttendeesCount', (args, stateData) {
+      if (args.isEmpty || args.first == null) return 0;
+      final list = args.first;
+      if (list is! Iterable) return 0;
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      var count = 0;
+      for (final item in list) {
+        dynamic raw;
+        if (item is Map) {
+          raw = item['denrollmentDate'];
+          if (raw == null && item['entity'] != null) {
+            try {
+              raw = (item['entity'] as dynamic).denrollmentDate;
+            } catch (_) {}
+          }
+        } else {
+          try {
+            raw = (item as dynamic).denrollmentDate;
+          } catch (_) {
+            count++;
+            continue;
+          }
+        }
+        if (raw == null) {
+          count++;
+          continue;
+        }
+        final deDate = raw is int ? raw : int.tryParse(raw.toString());
+        if (deDate == null || deDate >= nowMs) count++;
+      }
+      return count;
+    });
+
+    FunctionRegistry.register('isLogNotMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+      bool? filter = args.length > 3 ? args[3] as bool? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
+      bool isLogNotMarked = status == -1.0;
+      if (filter != null) {
+        return filter
+            ? isLogNotMarked
+            : true; // If filter is true, return isLogNotMarked; if false, ignore and return true
+      }
+      return isLogNotMarked;
+    });
+
+    FunctionRegistry.register('isAbsentMarked', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      Map? attendanceCollection = args.length > 2 ? args[2] as Map? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceStatus(
+          individualId, selectedDate, attendanceCollection);
+      if (status == -1.0) {
+        return false;
+      } else if (status == 1.0) {
+        return false;
+      } else if (status == 0.0) {
+        return true;
+      }
+    });
+
+    FunctionRegistry.register('attendanceLogStatus', (args, stateData) {
+      String? individualId = args.isNotEmpty ? args[0] : null;
+      int? selectedDateRaw =
+          args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') : null;
+      List<dynamic>? attendanceLogs =
+          args.length > 2 ? args[2] as List<dynamic>? : null;
+
+      DateTime selectedDate = selectedDateRaw != null
+          ? DateTime.fromMillisecondsSinceEpoch(selectedDateRaw)
+          : DateTime.now();
+
+      double status = AttendanceUtils.attendanceLogsStatus(
+          individualId, selectedDate, attendanceLogs);
+      return status; // 1.0 for present, 0.0 for absent, 0.5 for half day, -1.0 for unmarked
+    });
+
+    FunctionRegistry.register('showOpenRegisterButton', (args, stateData) {
+      if (args.isEmpty || args.first == null) return false;
+
+      var register = args.isNotEmpty ? args[0] : null;
+      if (register == null) return false;
+
+      var attendanceRegisters = args.length > 1 ? args[1] : null;
+
+      if (attendanceRegisters == null ||
+          (attendanceRegisters is List && attendanceRegisters.isEmpty)) {
+        return false;
+      }
+
+      return register.startDate != null &&
+          register.endDate != null &&
+          register.startDate! <= DateTime.now().millisecondsSinceEpoch &&
+          register.endDate! > DateTime.now().millisecondsSinceEpoch;
+    });
+
+    FunctionRegistry.register('setAttendanceDate', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final selectedDate = args.first as int?;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+      final isMorning = args.length > 2 ? args[2] as String? ?? 'true' : 'true';
+
+      if (selectedDate == null || attendanceRegisterModel == null) return null;
+
+      DateTime? dateSession = DateTime.now().isAfter(
+              DateTime.fromMillisecondsSinceEpoch(
+                  attendanceRegisterModel.endDate!))
+          ? DateTime.fromMillisecondsSinceEpoch(
+              attendanceRegisterModel.endDate!)
+          : DateTime.fromMillisecondsSinceEpoch(selectedDate);
+
+      if (dateSession == null) return null;
+
+      var entryTime = attendanceRegisterModel
+                  .additionalDetails?[EnumValues.sessions.toValue()] ==
+              2
+          ? AttendanceDateTimeManagement.getMillisecondEpoch(
+              dateSession,
+              isMorning == 'true' ? 0 : 1,
+              "entryTime",
+            )
+          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+              .millisecondsSinceEpoch);
+
+      var exitTime = attendanceRegisterModel
+                  .additionalDetails?[EnumValues.sessions.toValue()] ==
+              2
+          ? AttendanceDateTimeManagement.getMillisecondEpoch(
+              dateSession,
+              isMorning == 'true' ? 0 : 1,
+              "exitTime",
+            )
+          : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+              .millisecondsSinceEpoch);
+
+      if (entryTime == null || exitTime == null) return null;
+
+      return {
+        'selectedAttendanceDate': {
+          'date': dateSession.millisecondsSinceEpoch,
+          'entryTime': entryTime,
+          'exitTime': exitTime,
+        }
+      };
+    });
+
+    FunctionRegistry.register('getCurrentSignature', (args, stateData) {
+      final widgetData = args.isNotEmpty ? args[0] : null;
+      final individualId = args.length > 1 ? args[1] as String? : null;
+
+      if (widgetData == null || individualId == null) return null;
+
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final signatureData =
+          signatureCollection?[individualId]?['signatureData'] as String?;
+
+      return signatureData;
+    });
+
+    FunctionRegistry.register('getExistingSignature', (args, stateData) {
+      final individualId = args.isNotEmpty ? args[0]?.toString() : null;
+      final attendanceLogs = args.length > 1 ? args[1] as List<dynamic>? : null;
+
+      if (attendanceLogs == null || attendanceLogs.isEmpty) return null;
+      List logs = attendanceLogs.where((log) {
+        final additionalDetails = log.additionalDetails as Map?;
+        final isFirstSignature =
+            additionalDetails?['isFirstSignature'] == "true";
+        return log.individualId == individualId && isFirstSignature;
+      }).toList();
+      return logs.isNotEmpty
+          ? (logs.first.additionalDetails?['signatureData'])
+          : null;
+    });
+
+    FunctionRegistry.register('createAttendanceLog', (args, stateData) {
+      if (args.isEmpty || args.first == null) return null;
+
+      final widgetData = args.first as Map;
+      final attendanceRegisterModel = args.length > 1 ? args[1] : null;
+      // Call sites pass (widgetData, register, register.attendanceLog, flag).
+      // args[2] is the redundant log list (we re-derive it from the register
+      // on the next line), and args[3] is the upload flag — reading the flag
+      // from args[2] blew up with `List<dynamic> → int?`.
+      final uploadToServer = args.length > 3 ? args[3] as int? : 0;
+
+      final registerId = attendanceRegisterModel?.id ?? '';
+      List attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
+
+      final attendanceCollection = widgetData['attendanceCollection'] as Map?;
+      final signatureCollection = widgetData['signatureCollection'] as Map?;
+      final attendanceQRCollection =
+          widgetData['attendanceQRCollection'] as Map?;
+
+      final comment = widgetData['COMMENT'] as String?;
+      // See _parseIsMorning — sessionToggle arrives as String from the
+      // widgetData plumbing; a straight bool cast throws on it.
+      final isMorning = _parseIsMorning(widgetData['sessionToggle']);
+
+      final selectedDate = widgetData['selectedDate'] as int?;
+      final attendanceManualData = widgetData['attendanceManualData'] as Map?;
+
+      Map<String, dynamic>? attendanceTime = AttendanceUtils.attendanceTime(
+          selectedDate, isMorning, attendanceRegisterModel);
+
+      var entryTime = attendanceTime?['entryTime'];
+      var exitTime = attendanceTime?['exitTime'];
+
+      final isManualScan = attendanceManualData?['isManualScan'] as String?;
+      final reason = attendanceManualData?['reason'] as String?;
+      final reasonComment = attendanceManualData?['reasonComment'] as String?;
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      List todayAttendanceLogs = attendanceLogs.where((log) {
+        final logTime = log.time;
+        return logTime == entryTime || logTime == exitTime;
+      }).toList();
+
+      //
+      List notMarkedAttendanceLogs = todayAttendanceLogs.where((log) {
+        bool isMarked = log.individualId != null &&
+            attendanceCollection?.containsKey(log.individualId.toString()) ==
+                true &&
+            (attendanceCollection?[log.individualId.toString()] == 'present' ||
+                attendanceCollection?[log.individualId.toString()] == 'absent');
+        return !isMarked;
+      }).toList(); // logs that are not marked
+
+      notMarkedAttendanceLogs = notMarkedAttendanceLogs.map((e) {
+        return e.copyWith(
+          uploadToServer: uploadToServer == 1,
+        );
+      }).toList();
+
+      final List<EntityModel> entities = [...notMarkedAttendanceLogs];
+
+      for (final entry in (attendanceCollection ?? {}).entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value;
+        if (data == null) continue;
+
+        double markStatus = -1.0;
+        if (data == "present") {
+          markStatus = 1.0;
+        } else if (data == "absent") {
+          markStatus = 0.0;
+        }
+        if (markStatus == -1.0) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final isFirstSignature =
+            signatureCollection?[individualId]?['isFirstSignature'] as bool? ??
+                false;
+        final signatureData =
+            signatureCollection?[individualId]?['signatureData'] as String?;
+        final qrCreatedTime =
+            attendanceQRCollection?[individualId]?['qrCreatedTime'] as int?;
+
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        // Build additionalDetails matching _onSaveAsDraft
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          'SESSION_TYPE': isMorning ? 'MORNING' : 'EVENING',
+          if (qrCreatedTime != null) 'qrCreatedTime': qrCreatedTime,
+          if (isFirstSignature)
+            'isFirstSignature': isFirstSignature ? "true" : "false",
+          if (signatureData != null) 'signatureData': signatureData,
+          if (comment != null && comment.isNotEmpty) 'comment': comment,
+          if (isManualScan != null) 'isMarkedManually': isManualScan,
+          if (reason != null && reason.isNotEmpty)
+            'manualMarkingReason': reason,
+          if (reasonComment != null && reasonComment.isNotEmpty)
+            'manualMarkingComment': reasonComment,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        // Mirrors submitAttendanceDetails: match on individualId + registerId + type + time
+        final existingEntryLog = attendanceLogs
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.entry.toValue() &&
+                log.time == entryTime &&
+                log.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = attendanceLogs
+            .where((log) =>
+                log.individualId == individualId &&
+                log.registerId == registerId &&
+                log.type == EnumValues.exit.toValue() &&
+                log.time == exitTime &&
+                log.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: entryTime,
+          uploadToServer: uploadToServer == 1,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: exitTime,
+          uploadToServer: uploadToServer == 1,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+      return entities;
+    });
+
+    FunctionRegistry.register("markAttendance", (args, stateData) {
+      final individualId = args.isNotEmpty ? args.first?.toString() : null;
+      final registerId = args.length > 1 ? args[1]?.toString() : null;
+      final status = args.length > 2 ? (args[2] as double?)?.toDouble() : null;
+      final signatureData = args.length > 3 ? args[3] as String? : null;
+      final collection = args.length > 4 ? args[4] as Map? : null;
+
+      if (individualId == null || individualId.isEmpty) return null;
+      if (registerId == null || registerId.isEmpty) return null;
+      if (status == null) return null;
+
+      // Toggle logic matching _onIndividualAttendanceMark
+      final existing = collection?[individualId];
+      final currentStatus =
+          existing is Map ? (existing['status'] as num?)?.toDouble() : null;
+
+      final double finalStatus;
+      if (currentStatus == null || currentStatus == -1) {
+        finalStatus = status; // not marked, take new status
+      } else if (currentStatus == 1.0 && status == 1.0) {
+        finalStatus = 1.0; // already present, keep present
+      } else {
+        finalStatus =
+            status; // otherwise, update to new status (could be marking absent or toggling)
+      }
+      collection?[individualId] = {
+        'registerId': registerId,
+        'individualId': individualId,
+        'status': finalStatus,
+        'signatureData': signatureData,
+      };
+      return collection;
+    });
+
+    /// Registers a function to check if attendance is single session mode.
+    ///
+    /// - **Function Name**: `'isSingleSession'`
+    /// - **Arguments**: A list where the first element is the sessions value from
+    ///   AttendanceRegisterModel.additionalDetails.sessions
+    /// - **Returns**: `true` if single session (sessions != 2), `false` if double session (sessions == 2).
+    ///
+    /// This function is used in attendance marking to determine if the register
+    /// operates in single session mode (one entry/exit per day) or double session mode
+    /// (morning and evening sessions).
+    FunctionRegistry.register("isNotSingleSession", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) {
+        return true;
+      }
+
+      final registerModel = args.first;
+
+      var isSingleSession = registerModel.additionalDetails?["sessions"] != 2;
+
+      return !isSingleSession;
+    });
+
+    FunctionRegistry.register("attendeeFilterByTeam", (args, stateData) {
+      // If no argument provided, default to single session
+      if (args.isEmpty || args.first == null) return null;
+
+      final attendees = args.first;
+      final teamName = args.length > 1 ? args[1]?.toString() : null;
+      List filteredAttendees = attendees;
+
+      return filteredAttendees;
+    });
+
+    FunctionRegistry.register("getMissedDays", (args, stateData) {
+      List attendanceLog =
+          (args.isEmpty || args.first == null) ? [] : args.first;
+
+      String missedDays = ""; // Initialize the missedDays string
+
+      // Get current date
+      DateTime nowTime = DateTime.now();
+      DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
+
+      // Check if attendance log exists
+      if (attendanceLog.isNotEmpty) {
+        // Iterate through attendance log entries
+        for (var entry in attendanceLog) {
+          // Check each entry for missed attendance
+          entry.forEach((key, value) {
+            if (value == false && key.isBefore(currentDate)) {
+              // Add missed day to missedDays string
+              missedDays += "${key.day}/${key.month}/${key.year} \n";
+            }
+          });
+        }
+      }
+
+      // Return missed attendance days with description
+      return "MISSED_ATTENDANCE_DESCRIPTION\n$missedDays";
+    });
+
+    /// Builds AttendanceLogModel entities (ENTRY + EXIT per individual) from
+    /// attendanceCollection, mirroring _onSaveAsDraft / submitAttendanceDetails.
+    /// Reuses clientReferenceId from existing logs for dedup on re-submit.
+    ///
+    /// Args:
+    ///  - args[0]: attendanceCollection (Map<individualId, {status, signatureData, ...}>)
+    ///  - args[1]: selectedDate (Map with 'entryTime' and 'exitTime' as epoch millis)
+    ///  - args[2]: registerId (String)
+    ///  - args[3]: existingLogs (List<AttendanceLogModel>) - optional, for dedup
+    ///
+    /// Returns: List<AttendanceLogModel> entities ready for CREATE action.
+    FunctionRegistry.register('attendanceLogEntities', (args, stateData) {
+      if (args.isEmpty || args.first == null) return <EntityModel>[];
+
+      final attendanceCollection = args[0] as Map?;
+      if (attendanceCollection == null || attendanceCollection.isEmpty) {
+        return <EntityModel>[];
+      }
+
+      final selectedDate = args.length > 1 ? args[1] as Map? : null;
+      final entryTime = (selectedDate?['entryTime'] as num?)?.toInt() ?? 0;
+      final exitTime = (selectedDate?['exitTime'] as num?)?.toInt() ?? 0;
+
+      final registerId = args.length > 2 ? args[2]?.toString() ?? '' : '';
+      final List<dynamic> existingLogs =
+          args.length > 3 && args[3] is List ? args[3] as List : [];
+
+      final tenantId = FlowBuilderSingleton().selectedProject?.tenantId ?? '';
+      final boundaryCode = AttendanceSingleton().boundary?.code ?? '';
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid ?? '';
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final List<EntityModel> entities = [];
+
+      for (final entry in attendanceCollection.entries) {
+        final individualId = entry.key.toString();
+        final data = entry.value as Map?;
+        if (data == null) continue;
+
+        final markStatus = (data['status'] as num?)?.toDouble() ?? -1;
+        if (markStatus == -1) continue; // skip unmarked
+
+        final isPresent = markStatus >= 1.0;
+        final signatureData = data['signatureData'] as String?;
+        final logStatus = isPresent
+            ? EnumValues.active.toValue()
+            : EnumValues.inactive.toValue();
+
+        final additionalDetails = <String, dynamic>{
+          if (boundaryCode.isNotEmpty)
+            EnumValues.boundaryCode.toValue(): boundaryCode,
+          if (signatureData != null) 'signatureData': signatureData,
+        };
+
+        final clientAudit = ClientAuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+        final audit = AuditDetails(
+          createdBy: userUuid,
+          createdTime: now,
+          lastModifiedBy: userUuid,
+          lastModifiedTime: now,
+        );
+
+        // Reuse clientReferenceId from existing log if present (dedup)
+        final existingEntryLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.entry.toValue() &&
+                l.time == entryTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        final existingExitLog = existingLogs
+            .where((l) =>
+                l.individualId == individualId &&
+                l.registerId == registerId &&
+                l.type == EnumValues.exit.toValue() &&
+                l.time == exitTime &&
+                l.clientReferenceId != null)
+            .toList();
+
+        // ENTRY log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingEntryLog.isNotEmpty
+              ? existingEntryLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.entry.toValue(),
+          status: logStatus,
+          time: entryTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+
+        // EXIT log
+        entities.add(AttendanceLogModel(
+          clientReferenceId: existingExitLog.isNotEmpty
+              ? existingExitLog.last.clientReferenceId!
+              : IdGen.i.identifier,
+          individualId: individualId,
+          registerId: registerId,
+          tenantId: tenantId,
+          type: EnumValues.exit.toValue(),
+          status: logStatus,
+          time: exitTime,
+          uploadToServer: true,
+          rowVersion: 1,
+          additionalDetails: additionalDetails,
+          clientAuditDetails: clientAudit,
+          auditDetails: audit,
+        ));
+      }
+
+      return entities;
+    });
   }
 
   //  Be sure to cancel subscription after you are done
   @override
   dispose() {
     subscription.cancel();
+    stockDownloadProgress.close();
+    _hideLoader();
     super.dispose();
+  }
+
+  void _showLoader() {
+    if (_localizationLoaderOverlay != null) return;
+    final overlay = Overlay.maybeOf(context, rootOverlay: true);
+    if (overlay == null) return;
+    _localizationLoaderOverlay = OverlayEntry(
+      builder: (_) => Material(
+        color: Colors.black.withOpacity(0.4),
+        child: Center(
+          child: DigitLoaders.inlineLoader(size: 80),
+        ),
+      ),
+    );
+    overlay.insert(_localizationLoaderOverlay!);
+  }
+
+  void _hideLoader() {
+    _localizationLoaderOverlay?.remove();
+    _localizationLoaderOverlay = null;
+  }
+
+  /// Runs [work] with the full-screen overlay visible for its synchronous
+  /// portion and dismisses the overlay as soon as [work] returns.
+  ///
+  /// Yields to the framework via `endOfFrame` after inserting the overlay
+  /// entry: without this, Dart would run the whole synchronous portion of
+  /// `work` (JSON decode of `app_config_schemas`, `FlowRegistry.setConfig`,
+  /// etc.) before returning to the event loop — meaning the overlay would
+  /// only paint AFTER the freeze, defeating the point.
+  ///
+  /// The overlay does NOT wait for the target route's initial CRUD search
+  /// to settle. Target routes own their own loading UX; this method only
+  /// guards the router.push transition itself.
+  ///
+  /// Safe to call while another `_openModule` is in flight: each call
+  /// takes an ownership token (`_openModuleOwners`) and the overlay is
+  /// only dismissed when the last owner releases. Prevents the outer
+  /// call from ripping the overlay from under a nested inner call.
+  Future<T> _openModule<T>(Future<T> Function() work) async {
+    _openModuleOwners++;
+    _showLoader();
+    await WidgetsBinding.instance.endOfFrame;
+    try {
+      return await work();
+    } finally {
+      _openModuleOwners--;
+      if (_openModuleOwners <= 0) {
+        _openModuleOwners = 0;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _hideLoader());
+      }
+    }
   }
 
   @override
@@ -107,6 +1680,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return Container();
     }
+    final isPolio =
+        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
+            true;
     final roles = state.userModel.roles.map((e) {
       return e.code;
     });
@@ -124,171 +1700,500 @@ class _HomePageState extends LocalizedState<HomePage> {
       ...(mappedItems?.showcaseKeys ?? []),
     ];
 
-    return Scaffold(
-      backgroundColor: DigitTheme.instance.colorScheme.surface,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: ScrollableContent(
-          slivers: [
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return homeItems.elementAt(index);
-                },
-                childCount: homeItems.length,
-              ),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 145,
-                childAspectRatio: 104 / 128,
-              ),
-            ),
-          ],
-          header: Column(
-            children: [
-              BackNavigationHelpHeaderWidget(
-                showBackNavigation: false,
-                showHelp: false,
-                showcaseButton: ShowcaseButton(
-                  showcaseFor: showcaseKeys.toSet().toList(),
-                ),
-              ),
-              skipProgressBar
-                  ? const SizedBox.shrink()
-                  : homeShowcaseData.distributorProgressBar.buildWith(
-                      child: BeneficiaryProgressBar(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
-                        ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
-                        ),
+    return BlocListener<LocalizationBloc, LocalizationState>(
+      // Safety net: if a localization event fires outside a card handler
+      // wrapped in `_openModule` (e.g. from a package-triggered path we
+      // don't own), still show the loader while the bloc is fetching.
+      //
+      // Only shows — does NOT auto-hide. Auto-hide used to fire when the
+      // bloc transitioned to `loading:false`, which happens as soon as
+      // localization finishes. But `_openModule` keeps waiting for the
+      // target route's initial CRUD search to settle (up to 8s cap), and
+      // an auto-hide here would rip the overlay away in the middle of
+      // that wait — exactly the "loader disappears right after
+      // localization; module opens naked while the primary query runs"
+      // symptom. `_openModule`'s `finally` block is the single owner of
+      // dismiss; the safety-net loader would also be dismissed by that
+      // same post-frame callback if `_openModule` was in flight.
+      //
+      // For pure package-triggered loads (no `_openModule` wrapper),
+      // the overlay stays up until the next `_openModule` tap or app
+      // teardown. That's a rare-enough case that leaving a stray loader
+      // is preferable to killing a real one mid-open.
+      listener: (context, locState) {
+        if (locState.loading) {
+          _showLoader();
+        }
+      },
+      child: BlocListener<StockDownSyncBloc, StockDownSyncState>(
+        listener: (context, stockDownSyncState) {
+          stockDownSyncState.maybeWhen(
+            orElse: () {},
+            loading: (isPop) {
+              if (isPop) {
+                Navigator.of(context, rootNavigator: true)
+                    .popUntil((route) => route is! PopupRoute);
+              }
+              showCustomPopup(
+                context: context,
+                barrierDismissible: false,
+                builder: (ctx) => Popup(
+                  type: PopUpType.simple,
+                  title: "",
+                  additionalWidgets: [
+                    DownloadSpinnerContent(
+                      title: localizations.translate(
+                        i18.projectSelection.syncInProgressTitleText,
                       ),
                     ),
-            ],
-          ),
-          footer: Padding(
-            padding: const EdgeInsets.only(bottom: spacer2),
-            child: PoweredByDigit(
-              version: Constants().version,
-            ),
-          ),
-          children: [
-            const SizedBox(height: spacer2 * 2),
-            // INFO : Need to add sync bloc of package Here
-            BlocConsumer<SyncBloc, SyncState>(
-              listener: (context, state) {
-                state.maybeWhen(
-                  orElse: () => null,
-                  pendingSync: (count) {
-                    final debouncer = Debouncer(seconds: 5);
-                    debouncer.run(() async {
-                      if (count != 0) {
+                  ],
+                ),
+              );
+            },
+            getBatchSize: (batchSize, projectModel) {
+              context.read<StockDownSyncBloc>().add(
+                    StockDownSyncCheckTotalCountEvent(
+                      projectModel: projectModel,
+                      batchSize: batchSize,
+                    ),
+                  );
+            },
+            dataFound: (initialServerCount, batchSize, offset, lastSyncedTime) {
+              if (initialServerCount <= 0) {
+                // Nothing new to download — treat it as the all-synced
+                // success state, mirroring the Sync Data tile.
+                Navigator.of(context, rootNavigator: true)
+                    .popUntil((route) => route is! PopupRoute);
+                DigitSyncDialog.show(
+                  context,
+                  type: DialogType.complete,
+                  label: localizations.translate(
+                    i18.syncDialog.noDataToSyncTitle,
+                  ),
+                  description: localizations.translate(
+                    i18.syncDialog.allSyncedDescription,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.syncDialog.closeButtonLabel,
+                    ),
+                    action: (ctx) => Navigator.pop(ctx),
+                  ),
+                  barrierDismissible: true,
+                );
+                return;
+              }
+              showStockDownloadDialog(
+                context,
+                model: DownloadBeneficiary(
+                  title: localizations.translate(
+                    initialServerCount > 0
+                        ? i18.common.stockDataFound
+                        : i18.common.stockNoDataFound,
+                  ),
+                  projectModel: context.selectedProject,
+                  boundaries: [],
+                  batchSize: batchSize,
+                  totalCount: initialServerCount,
+                  content: localizations.translate(
+                    initialServerCount > 0
+                        ? i18.common.stockDataFoundContent
+                        : i18.common.stockNoDataFoundContent,
+                  ),
+                  primaryButtonLabel: localizations.translate(
+                    initialServerCount > 0
+                        ? i18.common.coreCommonDownload
+                        : i18.acknowledgementSuccess.goToHome,
+                  ),
+                  secondaryButtonLabel: initialServerCount > 0
+                      ? localizations.translate(
+                          i18.common.coreCommonGoback,
+                        )
+                      : localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
+                ),
+                dialogType: DigitProgressDialogType.dataFound,
+                isPop: true,
+              );
+            },
+            inProgress: (syncCount, totalCount) {
+              stockDownloadProgress.add(
+                totalCount > 0 ? syncCount / totalCount : 0,
+              );
+              if (syncCount < 1) {
+                showStockDownloadDialog(
+                  context,
+                  model: DownloadBeneficiary(
+                    title: localizations.translate(
+                      i18.beneficiaryDetails.dataDownloadInProgress,
+                    ),
+                    projectModel: context.selectedProject,
+                    boundaries: [],
+                    syncCount: syncCount,
+                    totalCount: totalCount,
+                    prefixLabel: syncCount.toString(),
+                    suffixLabel: totalCount.toString(),
+                  ),
+                  dialogType: DigitProgressDialogType.inProgress,
+                  isPop: true,
+                  downloadProgressController: stockDownloadProgress,
+                );
+              }
+            },
+            success: (syncedCount, totalCount) {
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route is! PopupRoute);
+              DigitSyncDialog.show(
+                context,
+                type: DialogType.complete,
+                label: localizations.translate(
+                  i18.acknowledgementSuccess.dataDownloadedSuccessLabel,
+                ),
+                description: localizations.translate(
+                  i18.acknowledgementSuccess.dataDownloadedSuccessDesc,
+                ),
+                primaryAction: DigitDialogActions(
+                  label: localizations.translate(
+                    i18.acknowledgementSuccess.goToHome,
+                  ),
+                  action: (ctx) {
+                    Navigator.pop(ctx);
+                    context.router.replaceAll([HomeRoute()]);
+                  },
+                ),
+                barrierDismissible: true,
+              );
+            },
+            failed: () {
+              context.read<AppInitializationBloc>().state.maybeWhen(
+                    orElse: () {},
+                    initialized: (appConfiguration, _, __) {
+                      showStockDownloadDialog(
+                        context,
+                        model: DownloadBeneficiary(
+                          title: localizations.translate(
+                            i18.common.coreCommonDownloadFailed,
+                          ),
+                          appConfiguartion: appConfiguration,
+                          projectModel: context.selectedProject,
+                          boundaries: [],
+                          primaryButtonLabel: localizations.translate(
+                            i18.syncDialog.retryButtonLabel,
+                          ),
+                          secondaryButtonLabel: localizations.translate(
+                            i18.common.coreCommonGoback,
+                          ),
+                        ),
+                        dialogType: DigitProgressDialogType.failed,
+                        isPop: true,
+                      );
+                    },
+                  );
+            },
+            totalCountCheckFailed: () {
+              context.read<AppInitializationBloc>().state.maybeWhen(
+                    orElse: () {},
+                    initialized: (appConfiguration, _, __) {
+                      showStockDownloadDialog(
+                        context,
+                        model: DownloadBeneficiary(
+                          title: localizations.translate(
+                            i18.common.coreCommonDownloadFailed,
+                          ),
+                          appConfiguartion: appConfiguration,
+                          projectModel: context.selectedProject,
+                          boundaries: [],
+                          primaryButtonLabel: localizations.translate(
+                            i18.syncDialog.retryButtonLabel,
+                          ),
+                          secondaryButtonLabel: localizations.translate(
+                            i18.common.coreCommonGoback,
+                          ),
+                        ),
+                        dialogType: DigitProgressDialogType.checkFailed,
+                        isPop: true,
+                      );
+                    },
+                  );
+            },
+            insufficientStorage: () {
+              showStockDownloadDialog(
+                context,
+                model: DownloadBeneficiary(
+                  title: localizations.translate(
+                    i18.beneficiaryDetails.insufficientStorage,
+                  ),
+                  content: localizations.translate(
+                    i18.beneficiaryDetails.insufficientStorageContent,
+                  ),
+                  projectModel: context.selectedProject,
+                  boundaries: [],
+                  primaryButtonLabel: localizations.translate(
+                    i18.common.coreCommonOk,
+                  ),
+                ),
+                dialogType: DigitProgressDialogType.insufficientStorage,
+                isPop: true,
+              );
+            },
+          );
+        },
+        child: Scaffold(
+          backgroundColor: DigitTheme.instance.colorScheme.surface,
+          body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: ScrollableContent(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                      left: spacer2, right: spacer2, top: spacer2),
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return homeItems.elementAt(index);
+                      },
+                      childCount: homeItems.length,
+                    ),
+                    // Phones always get three tiles per row. The previous
+                    // max-extent delegate derived the count from the width
+                    // (ceil((w - 16) / 176)), which needs > 368dp for three —
+                    // so a 360dp phone fell back to two columns and ~204dp
+                    // tall tiles. Wider screens keep scaling up so tiles
+                    // don't stretch.
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width < 600
+                          ? 3
+                          : (MediaQuery.of(context).size.width / 176)
+                              .floor()
+                              .clamp(3, 8),
+                      childAspectRatio: 104 / 128,
+                      mainAxisSpacing: spacer3,
+                      crossAxisSpacing: spacer3,
+                    ),
+                  ),
+                ),
+              ],
+              header: Column(
+                children: [
+                  BackNavigationHelpHeaderWidget(
+                    showBackNavigation: false,
+                    showHelp: false,
+                    showcaseButton: ShowcaseButton(
+                      showcaseFor: showcaseKeys.toSet().toList(),
+                    ),
+                  ),
+                  if (kFaceAuthEnabled &&
+                      context.loggedInUserRoles.any((role) =>
+                          role.code == RolesType.distributor.toValue()))
+                    const FaceAuthSessionCard(),
+                  // Show stock balance card for users with stock management access (not for Polio)
+                  if (!isPolio &&
+                      state.actionsWrapper.actions
+                          .map((e) => e.displayName)
+                          .contains(i18.home.manageStockLabel))
+                    const StockBalanceCard(),
+                  skipProgressBar
+                      ? const SizedBox.shrink()
+                      : homeShowcaseData.distributorProgressBar.buildWith(
+                          child: BeneficiaryProgressBar(
+                            label: localizations.translate(
+                              i18.home.homeMyProgress,
+                            ),
+                            prefixLabel: localizations.translate(
+                              i18.home.progressIndicatorPrefixLabel,
+                            ),
+                          ),
+                        ),
+                  /////   hfreferral progress matrics
+                  if (state.actionsWrapper.actions
+                      .map((e) => e.displayName)
+                      .contains(i18.home.beneficiaryReferralLabel))
+                    HFReferralProgressBar(
+                      label: localizations.translate(
+                        i18.home.progressIndicatorTitle,
+                      ),
+                      prefixLabel: localizations.translate(
+                        i18.common.progressIndicatorPrefixLabelHFReferral,
+                      ),
+                    ),
+                ],
+              ),
+              footer: Padding(
+                padding: const EdgeInsets.only(bottom: spacer2),
+                child: PoweredByDigit(
+                  version: Constants().version,
+                ),
+              ),
+              children: [
+                const SizedBox(height: spacer2 * 2),
+                // INFO : Need to add sync bloc of package Here
+                BlocConsumer<SyncBloc, SyncState>(
+                  listener: (context, state) {
+                    state.maybeWhen(
+                      orElse: () => null,
+                      pendingSync: (count) {
+                        _syncDebouncer.run(() async {
+                          if (count != 0) {
+                            await localSecureStore.setManualSyncTrigger(false);
+                            if (context.mounted) {
+                              await performBackgroundService(
+                                isBackground: false,
+                                stopService: false,
+                                context: context,
+                              );
+                            }
+                          } else {
+                            await localSecureStore.setManualSyncTrigger(true);
+                          }
+                        });
+                      },
+                      syncInProgress: () async {
                         await localSecureStore.setManualSyncTrigger(false);
                         if (context.mounted) {
-                          await performBackgroundService(
-                            isBackground: false,
-                            stopService: false,
+                          showCustomPopup(
                             context: context,
+                            barrierDismissible: false,
+                            builder: (ctx) => Popup(
+                              type: PopUpType.simple,
+                              title: "",
+                              additionalWidgets: [
+                                StreamBuilder<sync_utils.SyncProgress>(
+                                  stream: sync_utils.SyncServiceSingleton()
+                                      .progressStream,
+                                  builder: (ctx, snapshot) =>
+                                      DownloadSpinnerContent(
+                                    title: localizations.translate(
+                                      i18.projectSelection
+                                          .syncInProgressTitleText,
+                                    ),
+                                    subtitle: snapshot.data == null
+                                        ? null
+                                        : formatSyncProgressLabel(
+                                            snapshot.data!,
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
-                      } else {
-                        await localSecureStore.setManualSyncTrigger(true);
-                      }
-                    });
-                  },
-                  syncInProgress: () async {
-                    await localSecureStore.setManualSyncTrigger(false);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DialogType.inProgress,
-                        label: localizations.translate(
-                          i18.syncDialog.syncInProgressTitle,
-                        ),
-                        barrierDismissible: false,
-                      );
-                    }
-                  },
-                  completedSync: () async {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      DigitSyncDialog.show(context,
-                          type: DialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                          barrierDismissible: true);
-                    }
-                  },
-                  failedSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.syncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedDownSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.downSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                  failedUpSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
-                    if (context.mounted) {
-                      _showSyncFailedDialog(
-                        context,
-                        message: localizations.translate(
-                          i18.syncDialog.upSyncFailedTitle,
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const Offstage(),
-                  pendingSync: (count) {
-                    return count == 0
-                        ? const Offstage()
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: spacer2,
-                            ),
-                            child: InfoCard(
-                              type: InfoType.info,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
+                      },
+                      nothingPending: () async {
+                        if (context.mounted) {
+                          DigitSyncDialog.show(context,
+                              type: DialogType.complete,
+                              label: localizations.translate(
+                                i18.syncDialog.noDataToSyncTitle,
                               ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
+                              ),
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.syncDialog.closeButtonLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                },
+                              ),
+                              barrierDismissible: true);
+                        }
+                      },
+                      completedSync: () async {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          DigitSyncDialog.show(context,
+                              type: DialogType.complete,
+                              label: localizations.translate(
+                                i18.syncDialog.noDataToSyncTitle,
+                              ),
+                              description: localizations.translate(
+                                i18.syncDialog.allSyncedDescription,
+                              ),
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.syncDialog.closeButtonLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                },
+                              ),
+                              barrierDismissible: true);
+                        }
+                      },
+                      failedSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.syncFailedTitle,
                             ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
                           );
+                        }
+                      },
+                      failedDownSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.downSyncFailedTitle,
+                            ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
+                          );
+                        }
+                      },
+                      failedUpSync: (message) async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.upSyncFailedTitle,
+                            ),
+                            errorMessage: message.isNotEmpty
+                                ? localizations.translate(message)
+                                : null,
+                          );
+                        }
+                      },
+                    );
                   },
-                );
-              },
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      orElse: () => const Offstage(),
+                      pendingSync: (count) {
+                        return count == 0
+                            ? const Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: spacer2,
+                                ),
+                                child: InfoCard(
+                                  type: InfoType.info,
+                                  description: localizations
+                                      .translate(i18.home.dataSyncInfoContent)
+                                      .replaceAll('{}', count.toString()),
+                                  title: localizations.translate(
+                                    i18.home.dataSyncInfoLabel,
+                                  ),
+                                ),
+                              );
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -297,13 +2202,14 @@ class _HomePageState extends LocalizedState<HomePage> {
   void _showSyncFailedDialog(
     BuildContext context, {
     required String message,
+    String? errorMessage,
   }) {
     Navigator.of(context, rootNavigator: true).pop();
 
     DigitSyncDialog.show(
       context,
       type: DialogType.failed,
-      label: message,
+      label: errorMessage != null ? '$message\n$errorMessage' : message,
       primaryAction: DigitDialogActions(
         label: localizations.translate(
           i18.syncDialog.retryButtonLabel,
@@ -329,6 +2235,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       return null;
     }
 
+    final isPolio =
+        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
+            true;
+
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
       i18.home.fileComplaint:
@@ -336,12 +2246,54 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const ComplaintsInboxWrapperRoute());
+          onPressed: () async {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) => _openModule(() async {
+                final moduleName =
+                    'hcm-complaints-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'COMPLAINTS',
+                    sampleFlows: sampleComplaintFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'pgrComplainant',
+                          to: 'pgrService',
+                          localKey: 'complaintClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      RelationshipMapping(
+                          from: 'address',
+                          to: 'pgrService',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'pgrService',
+                        fields: {
+                          'user': NestedFieldMapping(
+                            table: 'pgrComplainant',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'complaintClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          )
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ));
           },
         ),
       ),
@@ -350,145 +2302,441 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
-          onPressed: () {
+          onPressed: () => _openModule(() async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              const module = "hcm-dashboard";
+              triggerLocalization(module: module);
               isTriggerLocalisation = false;
             }
             context.router.push(const UserDashboardRoute());
-          },
+          }),
         ),
       ),
 
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
-          icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
+          icon: isPolio ? Icons.vaccines : Icons.all_inbox,
+          label: isPolio
+              ? i18.home.polioRegistrationLabel
+              : i18.home.beneficiaryLabel,
           onPressed: () async {
-            final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
-
-            if (schemaJsonRaw != null) {
-              final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
-
-              final registrationSchemaEntry =
-                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final deliverySchemaEntry =
-                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
-
-              final registrationSchemaData = registrationSchemaEntry?['data'];
-              final deliverySchemaData = deliverySchemaEntry?['data'];
-
-              if (registrationSchemaData != null ||
-                  deliverySchemaData != null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-                final delTemplatesRaw = deliverySchemaData?['templates'];
-
-                final Map<String, dynamic> regTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
-                        : {};
-
-                final Map<String, dynamic> delTemplateMap =
-                    delTemplatesRaw is Map<String, dynamic>
-                        ? delTemplatesRaw
-                        : {};
-
-                final templates = {
-                  for (final entry
-                      in {...regTemplateMap, ...delTemplateMap}.entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final registrationConfig = json.encode(registrationSchemaData);
-                final deliveryConfig = json.encode(deliverySchemaData);
-
-                RegistrationDeliverySingleton().setTemplateConfigs(templates);
-                RegistrationDeliverySingleton()
-                    .setRegistrationConfig(registrationConfig);
-                RegistrationDeliverySingleton()
-                    .setDeliveryConfig(deliveryConfig);
-              }
-
-              if (isTriggerLocalisation) {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
-                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+                    'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
-              }
-            }
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
 
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+                final prefs = await SharedPreferences.getInstance();
+                final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+                FlowBuilderSingleton().setPersistenceConfiguration(
+                    persistenceConfiguration:
+                        PersistenceConfiguration.offlineFirst);
+                WidgetRegistry.initialize();
+                CrudBlocSingleton().setData(
+                  crudService: DigitCrudService(
+                    context: ctx,
+                    relationshipMap: [
+                      const RelationshipMapping(
+                          from: 'name',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'identifier',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'address',
+                          to: 'household',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'household',
+                          localKey: 'householdClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'task',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'identifier',
+                          to: 'hFReferral',
+                          localKey: 'identifierId',
+                          foreignKey: 'beneficiaryId'),
+                      if (FlowBuilderSingleton().beneficiaryType ==
+                          BeneficiaryType.household)
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'household',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        )
+                      else
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'individual',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        ),
+                    ],
+                    nestedModelMappings: [
+                      const NestedModelMapping(
+                        rootModel: 'individual',
+                        fields: {
+                          'name': NestedFieldMapping(
+                            table: 'name',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                          'identifiers': NestedFieldMapping(
+                            table: 'identifier',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                      const NestedModelMapping(
+                        rootModel: 'household',
+                        fields: {
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                        },
+                      ),
+                      const NestedModelMapping(
+                        rootModel: 'task',
+                        fields: {
+                          'resource': NestedFieldMapping(
+                            table: 'resource',
+                            localKey: 'taskclientReferenceId',
+                            foreignKey: 'clientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                    ],
+                    searchEntityRepository: ctx.read<SearchEntityRepository>(),
+                  ),
+                  dynamicEntityModelListener: EntityModelMapMapper(),
+                );
+                try {
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData = (registrationDeliveryData['flows']
+                                as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
+                    FlowRegistry.setConfig(sampleBednetFlows["flows"]
+                        as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: sampleBednetFlows["initialPage"]),
+                    );
+                  }
+                } catch (e) {
+                  debugPrint('error $e');
+                }
+              }),
+            ));
           },
         ),
       ),
 
-      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-        child: HomeItemCard(
-          icon: Icons.account_balance,
-          label: i18.home.clfLabel,
-          onPressed: () async {
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.community);
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
-        ),
-      ),
+      /// TODO: NEED TO UPDATE CLF
+
+      // i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.clfLabel,
+      //     onPressed: () async {
+      //       RegistrationDeliverySingleton()
+      //           .setHouseholdType(HouseholdType.community);
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
+      //     },
+      //   ),
+      // ),
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
-          icon: Icons.home,
-          enableCustomIcon: true,
+          icon: isPolio ? Icons.child_care : Icons.home,
+          enableCustomIcon: !isPolio,
           customIconSize: 40,
-          customIcon: Constants.closedHouseholdSvg,
-          label: i18.home.closedHouseHoldLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const ClosedHouseholdWrapperRoute());
+          customIcon: isPolio ? "" : Constants.closedHouseholdSvg,
+          label: isPolio
+              ? i18.home.polioMissedChildrenLabel
+              : i18.home.closedHouseHoldLabel,
+          onPressed: () async {
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) => _openModule(() async {
+                final moduleName =
+                    'hcm-closehousehold-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'CLOSEHOUSEHOLD',
+                    sampleFlows: sampleCloseHouseholdFlows,
+                  ),
+                );
+              }),
+            ));
           },
         ),
       ),
+
+      // --- Polio LQA Data Collection ---
+      if (isPolio &&
+          state.actionsWrapper.actions
+              .map((e) => e.displayName)
+              .contains(i18.home.polioLqaDataCollectionLabel))
+        i18.home.polioLqaDataCollectionLabel:
+            homeShowcaseData.polioLqaDataCollection.buildWith(
+          child: HomeItemCard(
+            icon: Icons.checklist,
+            label: i18.home.polioLqaDataCollectionLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-lqa-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'LQA',
+                      sampleFlows: samplePolioLqaDataCollectionFlows,
+                    ),
+                  );
+                }),
+              ));
+            },
+          ),
+        ),
+
+      // --- Polio Inside Monitoring ---
+      if (isPolio &&
+          state.actionsWrapper.actions
+              .map((e) => e.displayName)
+              .contains(i18.home.polioInsideMonitoringLabel))
+        i18.home.polioInsideMonitoringLabel:
+            homeShowcaseData.polioInsideMonitoring.buildWith(
+          child: HomeItemCard(
+            icon: Icons.home_work,
+            label: i18.home.polioInsideMonitoringLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-insidemonitoring-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'INSIDEMONITORING',
+                      sampleFlows: samplePolioInsideHouseholdMonitoringFlows,
+                    ),
+                  );
+                }),
+              ));
+            },
+          ),
+        ),
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            if (isPolio) {
+              await context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-stock-${context.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'STOCK',
+                      sampleFlows: samplePolioStockDetailsFlows,
+                    ),
+                  );
+                }),
+              ));
+            } else {
+              await _openModule(() async {
+                FlowBuilderSingleton().setBoundary(
+                    boundary: BoundaryModel(
+                        code: LeastLevelBoundarySingleton().boundary?.first));
+
+                final moduleName =
+                    'hcm-inventory-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: context,
+                  config: FlowModuleConfig(
+                    schemaKey: 'INVENTORY',
+                    sampleFlows: sampleInventoryFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                      RelationshipMapping(
+                          from: 'projectResource',
+                          to: 'projectFacility',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId'),
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'projectFacility',
+                        fields: {
+                          'facility': NestedFieldMapping(
+                            table: 'facility',
+                            localKey: 'facilityId',
+                            foreignKey: 'id',
+                            type: NestedMappingType.one,
+                          ),
+                          'projectResources': NestedFieldMapping(
+                            table: 'projectResource',
+                            localKey: 'projectId',
+                            foreignKey: 'projectId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              });
             }
-            context.router.push(ManageStocksRoute());
           },
         ),
       ),
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
-        child: HomeItemCard(
-          icon: Icons.menu_book,
-          label: i18.home.stockReconciliationLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
+      if (!isPolio)
+        i18.home.stockReconciliationLabel:
+            homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+          child: HomeItemCard(
+            icon: Icons.menu_book,
+            label: i18.home.stockReconciliationLabel,
+            onPressed: () => _openModule(() async {
+              FlowBuilderSingleton().setBoundary(
+                  boundary: BoundaryModel(
+                      code: LeastLevelBoundarySingleton().boundary?.first));
+
+              final moduleName =
+                  'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
-            }
-            context.router.push(StockReconciliationRoute());
-          },
+
+              await FlowNavigationUtils.navigateToFlowModule(
+                context: context,
+                config: FlowModuleConfig(
+                  schemaKey: 'STOCKRECONCILIATION',
+                  sampleFlows: stockReconciliationFlows,
+                  relationshipMappings: const [
+                    RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    RelationshipMapping(
+                        from: 'stock',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: const [
+                    NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
-      ),
       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -497,13 +2745,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.checklist,
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+          onPressed: () => _openModule(() async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-checklist-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             context.router.push(SurveyFormWrapperRoute());
-          },
+          }),
         ),
       ),
 
@@ -511,12 +2761,33 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
           builder: (context, snapshot) {
+            final syncError = snapshot.data?['syncError'] as String?;
+            if (syncError != null && context.mounted) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  DigitSyncDialog.show(
+                    context,
+                    type: DialogType.failed,
+                    label:
+                        '${localizations.translate(i18.syncDialog.syncFailedTitle)}\n${localizations.translate(syncError)}',
+                    primaryAction: DigitDialogActions(
+                      label: localizations.translate(
+                        i18.syncDialog.closeButtonLabel,
+                      ),
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                    barrierDismissible: true,
+                  );
+                }
+              });
+            }
             return HomeItemCard(
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
                 if (envConfig.variables.envType == EnvType.qa ||
-                    envConfig.variables.envType == EnvType.dev) {
+                    envConfig.variables.envType == EnvType.dev ||
+                    envConfig.variables.envType == EnvType.uat) {
                   if (context.mounted) attemptSyncUp(context);
                 } else {
                   if (snapshot.data?['enablesManualSync'] == true) {
@@ -537,45 +2808,219 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.buildWith(
+          child: HomeItemCard(
+        icon: Icons.sync_alt,
+        label: i18.home.stockSyncDataLabel,
+        onPressed: () {
+          triggerStockDownSync(context);
+        },
+      )),
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(SearchReferralReconciliationsRoute());
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) => _openModule(() async {
+                final moduleName =
+                    'hcm-hfreferral-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'HFREFERRAL',
+                    sampleFlows: sampleReferralFlows,
+                  ),
+                );
+              }),
+            ));
           },
         ),
       ),
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.viewReportsLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
+      if (!isPolio)
+        i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+          child: HomeItemCard(
+            icon: Icons.announcement,
+            label: i18.home.viewReportsLabel,
+            onPressed: () => _openModule(() async {
+              FlowBuilderSingleton().setBoundary(
+                  boundary: BoundaryModel(
+                      code: LeastLevelBoundarySingleton().boundary?.first));
+
+              final moduleName =
+                  'hcm-stockreports-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
-            }
-            context.router.push(InventoryReportSelectionRoute());
-          },
+
+              await FlowNavigationUtils.navigateToFlowModule(
+                context: context,
+                config: FlowModuleConfig(
+                  schemaKey: 'STOCKREPORTS',
+                  sampleFlows: inventoryReportFlows,
+                  relationshipMappings: const [
+                    RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                    RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'productVariant',
+                        localKey: 'productVariantId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: const [
+                    NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
-      ),
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () => _openModule(() async {
+            // Set up CRUD service
+            CrudBlocSingleton().setData(
+              crudService: DigitCrudService(
+                context: context,
+                relationshipMap: const [
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendee',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendance',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                  RelationshipMapping(
+                    from: 'individual',
+                    to: 'name',
+                    localKey: 'clientReferenceId',
+                    foreignKey: 'individualClientReferenceId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendee',
+                    to: 'individual',
+                    localKey: 'individualId',
+                    foreignKey: 'id',
+                  ),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'attendanceRegister',
+                    fields: {
+                      'attendees': NestedFieldMapping(
+                        table: 'attendee',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                      'attendanceLog': NestedFieldMapping(
+                        table: 'attendance',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                  NestedModelMapping(
+                    rootModel: 'individual',
+                    fields: {
+                      'name': NestedFieldMapping(
+                        table: 'name',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                    },
+                  ),
+                ],
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: EntityModelMapMapper(),
+            );
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            try {
+              NavigationRegistry.setupNavigation(context);
+              context.router.push(CurrentBoundaryRoute(
+                  onBoundarySelected: (ctx) => _openModule(() async {
+                        if (isTriggerLocalisation) {
+                          final moduleName =
+                              'hcm-complaints-${context.selectedProject.referenceID}';
+                          const module = "hcm-attendance";
+                          triggerLocalization(module: module);
+                          isTriggerLocalisation = false;
+                        }
+                        // triggerLocalization(module: moduleName);
+                        Map<String, dynamic> attendanceData =
+                            attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
+                        List<Map<String, dynamic>> flowsData =
+                            (attendanceData['flows'] as List<dynamic>?)
+                                    ?.map((e) =>
+                                        Map<String, dynamic>.from(e as Map))
+                                    .toList() ??
+                                [];
+                        FlowRegistry.setConfig(flowsData);
+                        NavigationRegistry.setupNavigation(context);
+                        context.router.push(
+                          FlowBuilderHomeRoute(
+                              pageName: attendanceData["initialPage"]),
+                        );
+                      })));
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(const ManageAttendanceRoute());
-          },
+          }),
         ),
       ),
       i18.home.db: homeShowcaseData.db.buildWith(
@@ -597,51 +3042,52 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.send,
           label: i18.home.dataShare,
-          onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+          onPressed: () => _openModule(() async {
+            const module = "hcm-peer-to-peer";
+            // if (isTriggerLocalisation) {
+            triggerLocalization(module: module);
+            isTriggerLocalisation = false;
+            // }
             context.router.push(const DataShareHomeRoute());
-          },
+          }),
         ),
       ),
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const UserDashboardRoute());
-          },
-        ),
-      ),
+      // Duplicate i18.home.dashboard entry removed — the earlier gated
+      // handler above is authoritative. Dart map literals let a later entry
+      // silently replace an earlier one with the same key, so this second
+      // definition was making the `isTriggerLocalisation` check on the
+      // earlier entry unreachable and re-fetching dashboard localization on
+      // every tap.
+
+      /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
         child: HomeItemCard(
           label: i18.home.beneficiaryIdLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+          onPressed: () => _openModule(() async {
+            // if (isTriggerLocalisation) {
+            const module = "hcm-beneficiary";
+            triggerLocalization(module: module);
+            isTriggerLocalisation = false;
+            // }
             context.router.push(BeneficiaryIdDownSyncRoute());
-          },
+          }),
           icon: Icons.account_box,
           enableCustomIcon: true,
           customIconSize: spacer9,
           customIcon: Constants.beneficiaryIdDownload,
         ),
       ),
+
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-        icon: Icons.vaccines_outlined,
+        icon: Icons.local_shipping_outlined,
         label: i18.home.transitPostLabel,
-        onPressed: () {
+        onPressed: () => _openModule(() async {
+          const module = "hcm-transit-post";
+          // if (isTriggerLocalisation) {
+          triggerLocalization(module: module);
           context.router.push(const TransitPostWrapperRoute());
-        },
+        }),
       )),
     };
 
@@ -663,22 +3109,34 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.polioRegistrationLabel:
+          homeShowcaseData.polioRegistration.showcaseKey,
+      i18.home.polioMissedChildrenLabel:
+          homeShowcaseData.polioMissedChildren.showcaseKey,
+      i18.home.polioLqaDataCollectionLabel:
+          homeShowcaseData.polioLqaDataCollection.showcaseKey,
+      i18.home.polioInsideMonitoringLabel:
+          homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
-      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
-      i18.home.clfLabel,
+      // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
+      i18.home.polioLqaDataCollectionLabel,
+      i18.home.polioInsideMonitoringLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.mySurveyForm,
@@ -689,7 +3147,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
+      i18.home.faceRegistrationLabel,
       i18.home.dataShare,
+      i18.home.stockSyncDataLabel,
       i18.home.db,
     ];
 
@@ -700,18 +3160,23 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db)
+        .where(
+            (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-    final List<Widget> widgetList =
-        filteredLabels.map((label) => homeItemsMap[label]!).toList();
+
+    final List<Widget> widgetList = filteredLabels
+        .where((label) => homeItemsMap.containsKey(label))
+        .map((label) => homeItemsMap[label]!)
+        .toList();
 
     return _HomeItemDataModel(
       widgetList,
@@ -746,8 +3211,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    module: module != null && module.isNotEmpty
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
+                        : localizationModulesList?.interfaces
+                                .where(
+                                    (e) => e.type == Modules.localizationModule)
+                                .map((e) => e.name.toString())
+                                .join(',') ??
+                            "",
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
@@ -777,25 +3248,17 @@ void setPackagesSingleton(BuildContext context) {
               ? appConfiguration.transitPostType!.map((e) => e.code).toList()
               : [],
           loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
+          projectId: context.projectId,
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
         );
-        ComplaintsSingleton().setInitialData(
-          tenantId: envConfig.variables.tenantId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          userMobileNumber: context.loggedInUser.mobileNumber,
-          loggedInUserName: context.loggedInUser.name,
-          complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-          userName: context.loggedInUser.name ?? '',
-        );
-
-        RegistrationDeliverySingleton().setInitialData(
+        final selectedBoundary = context.boundaryOrNull;
+        if (selectedBoundary != null) {
+          TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+        }
+        FlowBuilderSingleton().setInitialData(
           beneficiaryIdMinCount:
               appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
-          beneficiaryIdBatchSize:
-              appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -803,60 +3266,13 @@ void setPackagesSingleton(BuildContext context) {
           selectedBeneficiaryType: context.beneficiaryType,
           projectType: context.selectedProjectType,
           selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes: appConfiguration.symptomsTypes
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          searchCLFFilters: appConfiguration.searchCLFFilters != null
-              ? appConfiguration.searchCLFFilters!
-                  .where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          referralReasons: appConfiguration.referralReasons
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          houseStructureTypes: appConfiguration.houseStructureTypes
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          refusalReasons: appConfiguration.refusalReasons
-              ?.where((e) => e.active)
-              .map((e) => e.code)
+          userRoles: context.loggedInUserRoles
+              .map((role) => {
+                    'code': role.code,
+                    'name': role.name,
+                  })
               .toList(),
         );
-
-        ClosedHouseholdSingleton().setInitialData(
-          loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.projectId,
-          beneficiaryType: context.beneficiaryType,
-        );
-
         AttendanceSingleton().setInitialData(
           project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
@@ -882,54 +3298,11 @@ void setPackagesSingleton(BuildContext context) {
                     .map((e) => e.code.snakeCase.toUpperCase())
                     .toList();
               }),
-        );
-
-        ReferralReconSingleton().setInitialData(
-          userName: context.loggedInUser.name ?? '',
-          userUUid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
-          projectName: context.selectedProject.name,
-          roleCode: RolesType.healthFacilityWorker.toValue(),
-          appVersion: Constants().version,
-          tenantId: envConfig.variables.tenantId,
-          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
-            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
-            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
-          ),
-          genderOptions:
-              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
-          cycles: context.cycles,
-          referralReasons: appConfiguration.referralReasons
-                  ?.where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList() ??
-              [],
-          checklistTypes:
-              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
-                  [],
-        );
-
-        InventorySingleton().setInitialData(
-          isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
-              .toList()
-              .isNotEmpty,
-          isDistributor: context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty,
-          loggedInUser: context.loggedInUserModel,
-          projectId: context.projectId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          transportTypes: appConfiguration.transportTypes
-              ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
+          checklistTypes: (appConfiguration.checklistTypes ?? [])
+              .map((e) => e.code)
               .toList(),
         );
+
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,

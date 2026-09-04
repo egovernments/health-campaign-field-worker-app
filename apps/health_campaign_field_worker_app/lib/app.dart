@@ -1,47 +1,50 @@
-import 'dart:math';
-
-import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/blocs/closed_household.dart';
-import 'package:closed_household/closed_household.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
 import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_flow_builder/flow_builder.dart'
+    hide FlowBuilderContextUtilityExtensions;
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
-import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
-import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/error/error.dart';
+import 'blocs/push_notification/push_notification.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/root_detection/root_detection.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
+import 'data/repositories/remote/notification_token.dart';
+import 'executors/stock_balance_executor.dart';
+import 'executors/update_identifier_status_executor.dart';
+import 'executors/navigate_to_downsync_executor.dart';
+import 'executors/load_unique_id_pool_executor.dart';
+import 'models/downsync/downsync.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
-import 'widgets/digit_error_widget.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatefulWidget {
@@ -71,6 +74,34 @@ class MainApplicationState extends State<MainApplication>
     LocalizationParams().setModule('boundary', true);
     super.initState();
     requestDisableBatteryOptimization();
+
+    // Register custom action executors
+    ActionHandler.registry.register(
+      'UPDATE_STOCK_BALANCE',
+      StockBalanceExecutor(),
+    );
+    ActionHandler.registry.register(
+      'UPDATE_IDENTIFIER_STATUS',
+      UpdateIdentifierStatusExecutor(),
+    );
+    ActionHandler.registry.register(
+      'NAVIGATE_TO_BENEFICIARY_ID_DOWN_SYNC',
+      NavigateToBeneficiaryIdDownSyncExecutor(),
+    );
+    ActionHandler.registry.register(
+      'LOAD_UNIQUE_ID_POOL',
+      LoadUniqueIdPoolExecutor(),
+    );
+
+    // NB: the identityPayloadValidator for
+    // JsonSchemaScannerBuilder's reject-at-scan is registered from
+    // AuthenticatedPageWrapper.initState — the check needs access to
+    // the logged-in user's mapped boundaries (BoundaryBloc.state.boundaryList),
+    // which don't exist until after login. Registering here in
+    // MainApplicationState.initState would either (a) read null, or
+    // (b) pin to FlowBuilderSingleton().boundary which is just the
+    // currently-selected leaf in the UI, not the user's actual
+    // jurisdiction.
   }
 
   @override
@@ -79,12 +110,6 @@ class MainApplicationState extends State<MainApplication>
       providers: [
         RepositoryProvider<LocalSqlDataStore>.value(value: widget.sql),
         RepositoryProvider<Isar>.value(value: widget.isar),
-        RepositoryProvider<IndividualGlobalSearchRepository>(
-          create: (context) => IndividualGlobalSearchRepository(
-            widget.sql,
-            IndividualOpLogManager(widget.isar),
-          ),
-        ),
         RepositoryProvider<SearchEntityRepository>(
           create: (context) => SearchEntityRepository(
             widget.sql,
@@ -93,19 +118,24 @@ class MainApplicationState extends State<MainApplication>
             /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
-        RepositoryProvider<HouseHoldGlobalSearchRepository>(
-          create: (context) => HouseHoldGlobalSearchRepository(
-            widget.sql,
-            HouseholdOpLogManager(widget.isar),
-          ),
-        ),
       ],
-      child: BlocProvider(
-        create: (context) => AppInitializationBloc(
-          isar: widget.isar,
-          mdmsRepository: MdmsRepository(widget.client),
-          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
-        )..add(const AppInitializationSetupEvent()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AppInitializationBloc(
+              isar: widget.isar,
+              mdmsRepository: MdmsRepository(widget.client),
+              dashboardRemoteRepository:
+                  DashboardRemoteRepository(widget.client),
+            )..add(const AppInitializationSetupEvent()),
+          ),
+          BlocProvider(
+            create: (_) {
+              return RootDetectionBloc()
+                ..add(const RootDetectionLoadedEvent());
+            },
+          ),
+        ],
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
           configuration: const NetworkManagerConfiguration(
@@ -116,6 +146,14 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+              BlocProvider(
+                create: (_) => PushNotificationBloc(
+                  notificationTokenRepository:
+                      NotificationTokenRepository(widget.client),
+                )..add(const PushNotificationEvent.initialize()),
+                lazy: false,
+              ),
+
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
@@ -164,206 +202,255 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                return BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, authState) {
-                    if (appConfigState is! AppInitialized) {
-                      return const MaterialApp(
-                        home: Scaffold(
-                          body: Center(
-                            child: Text('Loading'),
-                          ),
-                        ),
-                      );
-                    }
-
-                    final appConfig = appConfigState.appConfiguration;
-
-                    final localizationModulesList = appConfig.backendInterface;
-                    var firstLanguage;
-                    firstLanguage = appConfig.languages?.lastOrNull?.value;
-                    final selectedLocale =
-                        AppSharedPreferences().getSelectedLocale ??
-                            firstLanguage;
-                    LocalizationParams().setLocale(Locale(selectedLocale));
-                    final languages = appConfig.languages;
-
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                          create: (localizationModulesList != null &&
-                                  firstLanguage != null)
-                              ? (context) => LocalizationBloc(
-                                  const LocalizationState(),
-                                  LocalizationRepository(
-                                      widget.client, widget.sql),
-                                  widget.sql)
-                                ..add(
-                                  LocalizationEvent.onLoadLocalization(
-                                    module:
-                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                                    tenantId: envConfig.variables.tenantId,
-                                    locale: firstLanguage,
-                                    path: Constants.localizationApiPath,
-                                  ),
-                                )
-                              : (context) => LocalizationBloc(
-                                  const LocalizationState(),
-                                  LocalizationRepository(
-                                      widget.client, widget.sql),
-                                  widget.sql),
-                        ),
-                        BlocProvider(
-                          create: (ctx) => ProjectBloc(
-                            bandwidthCheckRepository: BandwidthCheckRepository(
-                              DioClient().dio,
-                              bandwidthPath:
-                                  envConfig.variables.checkBandwidthApiPath,
+                return BlocListener<AuthBloc, AuthState>(
+                  listener: (context, authState) {
+                    if (authState is AuthAuthenticatedState) {
+                      context.read<PushNotificationBloc>().add(
+                            PushNotificationEvent.login(
+                              userId: authState.userModel.uuid,
                             ),
-                            mdmsRepository: MdmsRepository(widget.client),
-                            dashboardRemoteRepository:
-                                DashboardRemoteRepository(widget.client),
-                            facilityLocalRepository: ctx.read<
-                                LocalRepository<FacilityModel,
-                                    FacilitySearchModel>>(),
-                            facilityRemoteRepository: ctx.read<
-                                RemoteRepository<FacilityModel,
-                                    FacilitySearchModel>>(),
-                            projectFacilityLocalRepository: ctx.read<
-                                LocalRepository<ProjectFacilityModel,
-                                    ProjectFacilitySearchModel>>(),
-                            projectFacilityRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectFacilityModel,
-                                    ProjectFacilitySearchModel>>(),
-                            projectLocalRepository: ctx.read<
-                                LocalRepository<ProjectModel,
-                                    ProjectSearchModel>>(),
-                            projectStaffLocalRepository: ctx.read<
-                                LocalRepository<ProjectStaffModel,
-                                    ProjectStaffSearchModel>>(),
-                            projectStaffRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectStaffModel,
-                                    ProjectStaffSearchModel>>(),
-                            projectRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectModel,
-                                    ProjectSearchModel>>(),
-                            serviceDefinitionRemoteRepository: ctx.read<
-                                RemoteRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
-                            isar: widget.isar,
-                            serviceDefinitionLocalRepository: ctx.read<
-                                LocalRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
-                            boundaryRemoteRepository: ctx.read<
-                                RemoteRepository<BoundaryModel,
-                                    BoundarySearchModel>>(),
-                            boundaryLocalRepository: ctx.read<
-                                LocalRepository<BoundaryModel,
-                                    BoundarySearchModel>>(),
-                            productVariantLocalRepository: ctx.read<
-                                LocalRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            productVariantRemoteRepository: ctx.read<
-                                RemoteRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            projectResourceLocalRepository: ctx.read<
-                                LocalRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
-                            projectResourceRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
-                            attendanceLocalRepository: ctx.read<
-                                LocalRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            individualLocalRepository: ctx.read<
-                                LocalRepository<IndividualModel,
-                                    IndividualSearchModel>>(),
-                            individualRemoteRepository: ctx.read<
-                                RemoteRepository<IndividualModel,
-                                    IndividualSearchModel>>(),
-                            attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            stockLocalRepository: ctx.read<
-                                LocalRepository<StockModel,
-                                    StockSearchModel>>(),
-                            stockRemoteRepository: ctx.read<
-                                RemoteRepository<StockModel,
-                                    StockSearchModel>>(),
-                            context: context,
+                          );
+                    }
+                  },
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, authState) {
+                      if (appConfigState is! AppInitialized) {
+                        return MaterialApp(
+                          debugShowCheckedModeBanner: false,
+                          home: Scaffold(
+                            body: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/app_icon.png',
+                                    width: 140,
+                                    height: 140,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  DigitLoaders.inlineLoader(size: 48),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                        BlocProvider(
-                            create: (ctx) => DashboardBloc(
-                                  const DashboardState.initialState(),
-                                  isar: widget.isar,
-                                  dashboardRemoteRepo:
-                                      DashboardRemoteRepository(widget.client),
-                                  attendanceDataRepository: context.repository<
-                                      AttendanceRegisterModel,
-                                      AttendanceRegisterSearchModel>(),
-                                  individualDataRepository: context.repository<
-                                      IndividualModel, IndividualSearchModel>(),
-                                )),
-                        BlocProvider(
-                          create: (context) => FacilityBloc(
-                            facilityDataRepository: context.repository<
-                                FacilityModel, FacilitySearchModel>(),
-                            projectFacilityDataRepository: context.repository<
-                                ProjectFacilityModel,
-                                ProjectFacilitySearchModel>(),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (context) => ProductVariantBloc(
-                            const ProductVariantEmptyState(),
-                            context.repository<ProductVariantModel,
-                                ProductVariantSearchModel>(),
-                            context.repository<ProjectResourceModel,
-                                ProjectResourceSearchModel>(),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (context) => ProjectFacilityBloc(
-                            const ProjectFacilityState.loading(),
-                            projectFacilityDataRepository: context.repository<
-                                ProjectFacilityModel,
-                                ProjectFacilitySearchModel>(),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (_) {
-                            return ClosedHouseholdBloc(
-                              const ClosedHouseholdState(),
-                              householdMemberRepository: context.repository<
-                                  HouseholdMemberModel,
-                                  HouseholdMemberSearchModel>(),
-                              householdRepository: context.repository<
-                                  HouseholdModel, HouseholdSearchModel>(),
-                              individualRepository: context.repository<
-                                  IndividualModel, IndividualSearchModel>(),
-                              projectBeneficiaryRepository: context.repository<
-                                  ProjectBeneficiaryModel,
-                                  ProjectBeneficiarySearchModel>(),
-                              taskRepository: context
-                                  .repository<TaskModel, TaskSearchModel>(),
-                            );
-                          },
-                          lazy: false,
-                        ),
-                        BlocProvider(
-                          create: (_) => ErrorBloc(),
-                    ),
-                      ],
-                      child: BlocBuilder<ErrorBloc, ErrorState>(
-                        builder: (context, errorState) {
+                        );
+                      }
 
-                          return BlocBuilder<LocalizationBloc, LocalizationState>(
+                      final appConfig = appConfigState.appConfiguration;
+
+                      final localizationModulesList =
+                          appConfig.backendInterface;
+                      // Default locale before the user picks one; keep in
+                      // sync with getSelectedLanguage() in utils.dart.
+                      final languagesList = appConfig.languages;
+                      var firstLanguage;
+                      firstLanguage = (languagesList != null &&
+                              languagesList.isNotEmpty)
+                          ? getDefaultLanguage(languagesList).value
+                          : null;
+                      final selectedLocale =
+                          AppSharedPreferences().getSelectedLocale ??
+                              firstLanguage;
+                      LocalizationParams().setLocale(Locale(selectedLocale));
+                      final languages = appConfig.languages;
+
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (localizationModulesList != null &&
+                                    selectedLocale != null)
+                                ? (context) => LocalizationBloc(
+                                    const LocalizationState(),
+                                    LocalizationRepository(
+                                        widget.client, widget.sql),
+                                    widget.sql)
+                                  ..add(
+                                    LocalizationEvent.onLoadLocalization(
+                                      // Hierarchy-keyed boundary module is
+                                      // deferred to post-project-selection;
+                                      // pre-login load only fetches the
+                                      // non-hierarchy modules.
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                                  Modules.localizationModule &&
+                                              Constants.initialLocalizationModules
+                                                  .contains(
+                                                      element.name.toString()))
+                                          .map((e) => e.name.toString())
+                                          .join(','),
+                                      tenantId: envConfig.variables.tenantId,
+                                      locale: selectedLocale,
+                                      path: Constants.localizationApiPath,
+                                    ),
+                                  )
+                                : (context) => LocalizationBloc(
+                                    const LocalizationState(),
+                                    LocalizationRepository(
+                                        widget.client, widget.sql),
+                                    widget.sql),
+                          ),
+                          BlocProvider(
+                            create: (ctx) => ProjectBloc(
+                              bandwidthCheckRepository:
+                                  BandwidthCheckRepository(
+                                DioClient().dio,
+                                bandwidthPath:
+                                    envConfig.variables.checkBandwidthApiPath,
+                              ),
+                              mdmsRepository: MdmsRepository(widget.client),
+                              dashboardRemoteRepository:
+                                  DashboardRemoteRepository(widget.client),
+                              facilityLocalRepository: ctx.read<
+                                  LocalRepository<FacilityModel,
+                                      FacilitySearchModel>>(),
+                              facilityRemoteRepository: ctx.read<
+                                  RemoteRepository<FacilityModel,
+                                      FacilitySearchModel>>(),
+                              projectFacilityLocalRepository: ctx.read<
+                                  LocalRepository<ProjectFacilityModel,
+                                      ProjectFacilitySearchModel>>(),
+                              projectFacilityRemoteRepository: ctx.read<
+                                  RemoteRepository<ProjectFacilityModel,
+                                      ProjectFacilitySearchModel>>(),
+                              projectLocalRepository: ctx.read<
+                                  LocalRepository<ProjectModel,
+                                      ProjectSearchModel>>(),
+                              projectStaffLocalRepository: ctx.read<
+                                  LocalRepository<ProjectStaffModel,
+                                      ProjectStaffSearchModel>>(),
+                              projectStaffRemoteRepository: ctx.read<
+                                  RemoteRepository<ProjectStaffModel,
+                                      ProjectStaffSearchModel>>(),
+                              projectRemoteRepository: ctx.read<
+                                  RemoteRepository<ProjectModel,
+                                      ProjectSearchModel>>(),
+                              serviceDefinitionRemoteRepository: ctx.read<
+                                  RemoteRepository<ServiceDefinitionModel,
+                                      ServiceDefinitionSearchModel>>(),
+                              isar: widget.isar,
+                              serviceDefinitionLocalRepository: ctx.read<
+                                  LocalRepository<ServiceDefinitionModel,
+                                      ServiceDefinitionSearchModel>>(),
+                              boundaryRemoteRepository: ctx.read<
+                                  RemoteRepository<BoundaryModel,
+                                      BoundarySearchModel>>(),
+                              boundaryLocalRepository: ctx.read<
+                                  LocalRepository<BoundaryModel,
+                                      BoundarySearchModel>>(),
+                              productVariantLocalRepository: ctx.read<
+                                  LocalRepository<ProductVariantModel,
+                                      ProductVariantSearchModel>>(),
+                              productVariantRemoteRepository: ctx.read<
+                                  RemoteRepository<ProductVariantModel,
+                                      ProductVariantSearchModel>>(),
+                              projectResourceLocalRepository: ctx.read<
+                                  LocalRepository<ProjectResourceModel,
+                                      ProjectResourceSearchModel>>(),
+                              projectResourceRemoteRepository: ctx.read<
+                                  RemoteRepository<ProjectResourceModel,
+                                      ProjectResourceSearchModel>>(),
+                              attendanceLocalRepository: ctx.read<
+                                  LocalRepository<AttendanceRegisterModel,
+                                      AttendanceRegisterSearchModel>>(),
+                              attendanceRemoteRepository: ctx.read<
+                                  RemoteRepository<AttendanceRegisterModel,
+                                      AttendanceRegisterSearchModel>>(),
+                              individualLocalRepository: ctx.read<
+                                  LocalRepository<IndividualModel,
+                                      IndividualSearchModel>>(),
+                              individualRemoteRepository: ctx.read<
+                                  RemoteRepository<IndividualModel,
+                                      IndividualSearchModel>>(),
+                              attendanceLogLocalRepository: ctx.read<
+                                  LocalRepository<AttendanceLogModel,
+                                      AttendanceLogSearchModel>>(),
+                              attendanceLogRemoteRepository: ctx.read<
+                                  RemoteRepository<AttendanceLogModel,
+                                      AttendanceLogSearchModel>>(),
+                              downSyncLocalRepository: ctx.read<
+                                  LocalRepository<DownsyncModel,
+                                      DownsyncSearchModel>>(),
+                              stockLocalRepository: ctx.read<
+                                  LocalRepository<StockModel,
+                                      StockSearchModel>>(),
+                              stockRemoteRepository: ctx.read<
+                                  RemoteRepository<StockModel,
+                                      StockSearchModel>>(),
+                              userActionLocalRepository:
+                                  ctx.read<UserActionLocalRepository>(),
+                              userActionRemoteRepository:
+                                  ctx.read<UserActionRemoteRepository>(),
+                              faceAuthEventRemoteRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      RemoteRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              faceAuthEventLocalRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      LocalRepository<FaceAuthEventModel,
+                                          FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              context: context,
+                            ),
+                          ),
+                          BlocProvider(
+                              create: (ctx) => DashboardBloc(
+                                    const DashboardState.initialState(),
+                                    isar: widget.isar,
+                                    dashboardRemoteRepo:
+                                        DashboardRemoteRepository(
+                                            widget.client),
+                                    attendanceDataRepository:
+                                        context.repository<
+                                            AttendanceRegisterModel,
+                                            AttendanceRegisterSearchModel>(),
+                                    individualDataRepository:
+                                        context.repository<IndividualModel,
+                                            IndividualSearchModel>(),
+                                  )),
+                          BlocProvider(
+                            create: (context) => FacilityBloc(
+                              facilityDataRepository: context.repository<
+                                  FacilityModel, FacilitySearchModel>(),
+                              projectFacilityDataRepository: context.repository<
+                                  ProjectFacilityModel,
+                                  ProjectFacilitySearchModel>(),
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (context) => ProductVariantBloc(
+                              const ProductVariantEmptyState(),
+                              context.repository<ProductVariantModel,
+                                  ProductVariantSearchModel>(),
+                              context.repository<ProjectResourceModel,
+                                  ProjectResourceSearchModel>(),
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (context) => ProjectFacilityBloc(
+                              const ProjectFacilityState.loading(),
+                              projectFacilityDataRepository: context.repository<
+                                  ProjectFacilityModel,
+                                  ProjectFacilitySearchModel>(),
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (_) => ErrorBloc(),
+                          ),
+                        ],
+                        child: BlocBuilder<ErrorBloc, ErrorState>(
+                            builder: (context, errorState) {
+                          return BlocBuilder<LocalizationBloc,
+                              LocalizationState>(
                             builder: (context, langState) {
                               final selectedLocale =
                                   AppSharedPreferences().getSelectedLocale ??
@@ -372,26 +459,40 @@ class MainApplicationState extends State<MainApplication>
                               return MaterialApp.router(
                                 debugShowCheckedModeBanner: false,
                                 builder: (context, child) {
+                                  // Wrap the entire app in a global logout
+                                  // loader listener. This has to live in a
+                                  // context that sits BELOW MaterialApp (so
+                                  // MaterialLocalizations + Navigator are in
+                                  // scope for `showDialog` / `Navigator.of`).
+                                  // Handling this at the outer BlocListener
+                                  // above MaterialApp threw
+                                  // `No MaterialLocalizations found`.
+                                  final wrapped = _LogoutLoaderListener(
+                                    child: child ?? const SizedBox.shrink(),
+                                  );
 
                                   final env = envConfig.variables.envType;
                                   if (env == EnvType.prod) {
-                                    return child ?? const SizedBox.shrink();
+                                    return wrapped;
                                   }
 
-                                  return Banner(
-                                    message: envConfig.variables.envType.name,
-                                    location: BannerLocation.topEnd,
-                                    color: () {
-                                      switch (envConfig.variables.envType) {
-                                        case EnvType.uat || EnvType.demo:
-                                          return Colors.green;
-                                        case EnvType.qa:
-                                          return Colors.pink;
-                                        default:
-                                          return Colors.red;
-                                      }
-                                    }(),
-                                    child: child,
+                                  return FlowDebugOverlay(
+                                    child: Banner(
+                                      message:
+                                          envConfig.variables.envType.name,
+                                      location: BannerLocation.topEnd,
+                                      color: () {
+                                        switch (envConfig.variables.envType) {
+                                          case EnvType.uat || EnvType.demo:
+                                            return Colors.green;
+                                          case EnvType.qa:
+                                            return Colors.pink;
+                                          default:
+                                            return Colors.red;
+                                        }
+                                      }(),
+                                      child: wrapped,
+                                    ),
                                   );
                                 },
                                 supportedLocales: languages != null
@@ -399,11 +500,13 @@ class MainApplicationState extends State<MainApplication>
                                         final results = e.value.split('_');
 
                                         return results.isNotEmpty
-                                            ? Locale(results.first, results.last)
+                                            ? Locale(
+                                                results.first, results.last)
                                             : firstLanguage;
                                       })
                                     : [firstLanguage],
-                                localizationsDelegates: getAppLocalizationDelegates(
+                                localizationsDelegates:
+                                    getAppLocalizationDelegates(
                                   sql: widget.sql,
                                   appConfig: appConfig,
                                   selectedLocale: Locale(
@@ -417,18 +520,21 @@ class MainApplicationState extends State<MainApplication>
                                         selectedLocale.split("_").last,
                                       )
                                     : firstLanguage,
-                                theme: DigitExtendedTheme.instance.getLightTheme(),
+                                theme:
+                                    DigitExtendedTheme.instance.getLightTheme(),
                                 routeInformationParser:
                                     widget.appRouter.defaultRouteParser(),
                                 scaffoldMessengerKey: scaffoldMessengerKey,
                                 routerDelegate: AutoRouterDelegate.declarative(
                                   widget.appRouter,
-                                  navigatorObservers: () => [AppRouterObserver()],
+                                  navigatorObservers: () =>
+                                      [AppRouterObserver()],
                                   routes: (handler) => authState.maybeWhen(
                                     orElse: () => [
                                       const UnauthenticatedRouteWrapper(),
                                     ],
-                                    authenticated: (_, __, ___, ____, _____) => [
+                                    authenticated: (_, __, ___, ____, _____) =>
+                                        [
                                       AuthenticatedRouteWrapper(),
                                     ],
                                   ),
@@ -436,16 +542,52 @@ class MainApplicationState extends State<MainApplication>
                               );
                             },
                           );
-                        }
-                      ),
-                    );
-                  },
+                        }),
+                      );
+                    },
+                  ),
                 );
               },
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Renders a global loading overlay directly in the widget tree while the
+/// auth bloc is in `AuthLoggingOutState`. Sits inside `MaterialApp.router`'s
+/// `builder`, which is above the app-level `Navigator` — so we can't use
+/// `showDialog` / `Navigator.of` from here. Instead we stack a barrier
+/// widget over `child`, which needs no Navigator context and is torn down
+/// automatically the moment the bloc leaves the `loggingOut` state.
+class _LogoutLoaderListener extends StatelessWidget {
+  final Widget child;
+  const _LogoutLoaderListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      buildWhen: (prev, curr) =>
+          (curr is AuthLoggingOutState) != (prev is AuthLoggingOutState),
+      builder: (context, authState) {
+        final showLoader = authState is AuthLoggingOutState;
+        return Stack(
+          children: [
+            child,
+            if (showLoader)
+              Positioned.fill(
+                child: ColoredBox(
+                  color: const Color(0x99000000),
+                  child: Center(
+                    child: DigitLoaders.inlineLoader(size: 80),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

@@ -6,12 +6,40 @@ import 'package:flutter/foundation.dart';
 
 export './crash_button.dart';
 
+/// Combined init, matching the hosted digit_firebase_services 0.0.1 API that
+/// the app's constants.dart calls. The local package only had the split
+/// initializeFirebaseCore/initializeCrashlytics functions, so builds with
+/// melos path-overrides failed with "Method not found: 'initialize'".
 Future initialize({
   required FirebaseOptions options,
   ValueChanged<String>? onErrorMessage,
 }) async {
   await Firebase.initializeApp(options: options);
 
+  FlutterError.onError = (errorDetails) {
+    onErrorMessage?.call(
+      'Diagnostic node: '
+      '${errorDetails.summary.name.toString()}',
+    );
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    onErrorMessage?.call(error.toString());
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+}
+
+Future initializeFirebaseCore({
+  required FirebaseOptions options,
+}) async {
+  await Firebase.initializeApp(options: options);
+}
+
+Future initializeCrashlytics({
+  ValueChanged<String>? onErrorMessage,
+}) async {
   FlutterError.onError = (errorDetails) {
     onErrorMessage?.call(
       'Diagnostic node: '

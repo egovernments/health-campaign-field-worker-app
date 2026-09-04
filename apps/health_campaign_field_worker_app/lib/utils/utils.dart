@@ -6,13 +6,13 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
-import 'package:attendance_management/attendance_management.dart';
-import 'package:complaints/complaints.dart';
-import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
-import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -20,38 +20,39 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
+import '../widgets/download_progress/download_progress_content.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart'
-    as referral_reconciliation_mappers;
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
+import 'package:recase/recase.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:sync_service/data/sync_service.dart' show SyncLock;
+import 'package:sync_service/utils/utils.dart' as sync_utils;
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
+import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../models/app_config/app_config_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'environment_config.dart';
 import 'extensions/extensions.dart';
+import 'i18_key_constants.dart' as i18;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -107,8 +108,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-      connectivityResult.firstOrNull == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -135,6 +136,8 @@ performBackgroundService({
           type: ToastType.success,
         );
       }
+    } else if (context != null && context.mounted) {
+      debugPrint('Background service not started: isRunning=$isRunning, isOnline=$isOnline');
     }
   }
 }
@@ -148,10 +151,6 @@ String maskString(String input) {
       List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
-}
-
-List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
-  return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
 
 Timer makePeriodicTimer(
@@ -243,7 +242,7 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<double>? downloadProgressController,
+  ValueNotifier<DownloadProgressData?>? downloadProgressController,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -252,43 +251,180 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-      DigitSyncDialog.show(
-        context,
-        type: DialogType.failed,
-        label: model.title,
-        primaryAction: DigitDialogActions(
-          label: model.primaryButtonLabel ?? '',
-          action: (ctx) {
-            if (dialogType == DigitProgressDialogType.failed ||
-                dialogType == DigitProgressDialogType.checkFailed) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
-            } else {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([HomeRoute()]);
-            }
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: model.secondaryButtonLabel ?? '',
-          action: (ctx) {
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          type: PopUpType.alert,
+          title: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckData),
+          titleIcon: Icon(
+            Icons.warning,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          description: AppLocalizations.of(context)
+              .translate(i18.common.coreCommonFailedToCheckDataDesc),
+          onCrossTap: () {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.replaceAll([HomeRoute()]);
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
           },
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectModel: model.projectModel,
+                        boundaries: model.boundaries,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                      ),
+                    );
+              },
+            ),
+            DigitButton(
+              label: model.secondaryButtonLabel ?? '',
+              capitalizeLetters: false,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.replaceAll([HomeRoute()]);
+              },
+            ),
+          ],
         ),
       );
     case DigitProgressDialogType.dataFound:
+      if ((model.totalCount ?? 0) == 0) {
+        showCustomPopup(
+          barrierDismissible: false,
+          context: context,
+          builder: (ctx) => Popup(
+            type: PopUpType.alert,
+            title: model.title,
+            description: model.content,
+            onCrossTap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    const DownSyncResetStateEvent(),
+                  );
+            },
+            titleIcon: Icon(
+              Icons.warning,
+              size: spacer8,
+              color: Theme.of(context).colorTheme.alert.error,
+            ),
+            actions: [
+              DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () async {
+                  await LocalSecureStore.instance
+                      .setManualSyncTrigger(false);
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.replaceAll([HomeRoute()]);
+                  }
+                },
+              ),
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                capitalizeLetters: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+      showCustomPopup(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
+          titleIcon: Icon(
+            Icons.info_outline_rounded,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
+          ),
+          titleIconAlignment: CrossAxisAlignment.center,
+          onCrossTap: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.read<BeneficiaryDownSyncBloc>().add(
+                  const DownSyncResetStateEvent(),
+                );
+          },
+          description: model.content,
+          additionalWidgets: (model.infoCardTitle != null &&
+                  model.infoCardDescription != null)
+              ? [
+                  InfoCard(
+                    type: InfoType.info,
+                    title: model.infoCardTitle!,
+                    description: model.infoCardDescription!,
+                    // The description is already sentence-cased server-side and
+                    // spans two sentences; InfoCard's default sentence-case
+                    // transform lowercases every word after the first, which
+                    // would turn "... records. Keep the app open" into "keep".
+                    capitalizedLetter: false,
+                  ),
+                ]
+              : null,
+          actions: [
+            DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                onPressed: () {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncDownloadAllEvent(
+                          projectModel: model.projectModel,
+                          boundaries: model.boundaries,
+                          batchSize: model.batchSize ?? 1,
+                          boundaryCounts: model.boundaryCounts,
+                        ),
+                      );
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.medium),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                  label: model.secondaryButtonLabel ?? '',
+                  onPressed: () async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
+                  },
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium),
+          ],
+        ),
+      );
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
@@ -296,37 +432,17 @@ void showDownloadDialog(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
-            color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? Theme.of(context).colorTheme.alert.error
-                : Theme.of(context).colorTheme.text.primary,
+            size: spacer8,
+            color: Theme.of(context).colorTheme.alert.error,
           ),
+          titleIconAlignment: CrossAxisAlignment.center,
           description: model.content,
           actions: [
             DigitButton(
                 label: model.primaryButtonLabel ?? '',
                 onPressed: () {
-                  if (dialogType == DigitProgressDialogType.pendingSync) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.replaceAll([HomeRoute()]);
-                  } else {
-                    if ((model.totalCount ?? 0) > 0) {
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncBeneficiaryEvent(
-                              projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              // Batch Size need to be defined based on Internet speed.
-                              batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName,
-                            ),
-                          );
-                    } else {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            const DownSyncResetStateEvent(),
-                          );
-                    }
-                  }
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
                 },
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.medium),
@@ -347,21 +463,20 @@ void showDownloadDialog(
       );
     case DigitProgressDialogType.inProgress:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<double>(
-            stream: downloadProgressController?.stream,
-            builder: (context, snapshot) {
-              return ProgressIndicatorContainer(
-                label: '',
-                prefixLabel: '',
-                suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
-                value: snapshot.data ?? 0,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorTheme.primary.primary1,
-                ),
-                subLabel: model.title,
+          ValueListenableBuilder<DownloadProgressData?>(
+            valueListenable: downloadProgressController!,
+            builder: (context, data, _) {
+              final progress = data?.progress ?? 0;
+              final totalCount = data?.totalCount ?? model.totalCount ?? 0;
+              final syncedCount = data?.syncedCount ?? 0;
+
+              return DownloadProgressContent(
+                title: model.title,
+                progress: progress,
+                countLabel: '$syncedCount/$totalCount',
               );
             },
           ),
@@ -370,6 +485,52 @@ void showDownloadDialog(
     default:
       return;
   }
+}
+
+void showHFReferralProgressDialog(
+  BuildContext context, {
+  required String title,
+  required StreamController<HFReferralProgressData> progressController,
+  required HFReferralProgressData initialData,
+}) {
+  Navigator.of(context, rootNavigator: true)
+      .popUntil((route) => route is! PopupRoute);
+
+  showCustomPopup(
+    barrierDismissible: false,
+    context: context,
+    builder: (ctx) => Popup(title: "", additionalWidgets: [
+      StreamBuilder<HFReferralProgressData>(
+        stream: progressController.stream,
+        initialData: initialData,
+        builder: (context, snapshot) {
+          final data = snapshot.data;
+          final progress = data?.progress ?? 0;
+          final totalCount = data?.totalCount ?? 0;
+          final syncedCount = data?.syncedCount ?? 0;
+
+          return DownloadProgressContent(
+            title: title,
+            progress: progress,
+            countLabel: '$syncedCount/$totalCount',
+            showProgressBar: false,
+          );
+        },
+      ),
+    ]),
+  );
+}
+
+class HFReferralProgressData {
+  final double progress;
+  final int syncedCount;
+  final int totalCount;
+
+  const HFReferralProgressData({
+    required this.progress,
+    required this.syncedCount,
+    required this.totalCount,
+  });
 }
 
 // Existing _findLeastLevelBoundaryCode method remains unchanged
@@ -463,10 +624,21 @@ List<dss_mappers.DashboardConfigSchema?> filterDashboardConfig(
       [];
 }
 
+/// Returns English if present in [languages], otherwise the first language.
+Languages getDefaultLanguage(List<Languages> languages) {
+  return languages.firstWhere(
+    (lang) =>
+        lang.label.toLowerCase() == 'english' ||
+        lang.value.toLowerCase().startsWith('en'),
+    orElse: () => languages.first,
+  );
+}
+
 getSelectedLanguage(AppInitialized state, int index) {
-  if (AppSharedPreferences().getSelectedLocale == null) {
-    AppSharedPreferences()
-        .setSelectedLocale(state.appConfiguration.languages!.last.value);
+  final languages = state.appConfiguration.languages!;
+  if (AppSharedPreferences().getSelectedLocale == null &&
+      languages.isNotEmpty) {
+    AppSharedPreferences().setSelectedLocale(getDefaultLanguage(languages).value);
   }
   final selectedLanguage = AppSharedPreferences().getSelectedLocale;
   final isSelected =
@@ -478,20 +650,59 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => attendance_mappers.initializeMappers()),
-    Future(() => referral_reconciliation_mappers.initializeMappers()),
-    Future(() => inventory_mappers.initializeMappers()),
+    // Future(() => attendance_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
-    Future(() => survey_form_mappers.initializeMappers()),
-    Future(() => complaints_mappers.initializeMappers())
+    Future(() => survey_form_mappers.initializeMappers())
   ];
   await Future.wait(initializations);
 }
 
 void attemptSyncUp(BuildContext context) async {
-  await LocalSecureStore.instance.setManualSyncTrigger(true);
+  // Check for internet connectivity first
+  final connectivityResult = await Connectivity().checkConnectivity();
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
+
+  if (!isOnline) {
+    if (context.mounted) {
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: AppLocalizations.of(context).translate(
+            i18.common.connectionLabel,
+          ),
+          description: AppLocalizations.of(context).translate(
+            i18.common.connectionContent,
+          ),
+          actions: [
+            DigitButton(
+              label: AppLocalizations.of(context).translate(
+                i18.common.coreCommonOk,
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+          ],
+        ),
+      );
+    }
+    return;
+  }
+
+  if (await SyncLock.isLocked()) {
+    if (context.mounted) {
+      Toast.showToast(
+        context,
+        message: AppLocalizations.of(context).translate(
+          i18.common.coreCommonSyncInProgress,
+        ),
+        type: ToastType.success,
+      );
+    }
+    return;
+  }
 
   if (context.mounted) {
     context.read<SyncBloc>().add(
@@ -499,8 +710,6 @@ void attemptSyncUp(BuildContext context) async {
             userId: context.loggedInUserUuid,
             localRepositories: [
               // INFO : Need to add local repo of package Here
-              context.read<
-                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
               context.read<
                   LocalRepository<IndividualModel, IndividualSearchModel>>(),
               context.read<
@@ -528,8 +737,10 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   LocalRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
+              context.read<UserActionLocalRepository>(),
               context.read<
-                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                  LocalRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -561,8 +772,10 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   RemoteRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
+              context.read<UserActionRemoteRepository>(),
               context.read<
-                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                  RemoteRepository<FaceAuthEventModel,
+                      FaceAuthEventSearchModel>>(),
             ],
           ),
         );
@@ -626,6 +839,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
       'version': inputJson['version'],
       'pages': <String, dynamic>{},
       'summary': inputJson['summary'],
+      'summaryDetails': inputJson['summaryDetails'],
+      'showAlertPopUp': inputJson['showAlertPopUp'],
       'templates': <String, dynamic>{},
     };
 
@@ -673,6 +888,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
+        'visibilityCondition': pageMap['visibilityCondition'],
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo']
       };
 
       if (type == 'template') {
@@ -695,42 +912,92 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 
 Future<void> triggerLocalizationIfUpdated({
   required BuildContext context,
-  required String moduleKey, // e.g., 'REGISTRATIONFLOW'
+  required String moduleKey, // e.g., 'REGISTRATIONFLOW,DELIVERYFLOW'
   required String projectReferenceId,
   required String locale,
 }) async {
-  final prefs = await SharedPreferences.getInstance();
-  final rawSchemas = prefs.getString('app_config_schemas');
-  if (rawSchemas == null) return;
+  final keys = moduleKey.split(',').map((e) => e.trim()).toList();
 
-  final allSchemas = json.decode(rawSchemas) as Map<String, dynamic>;
-  final schemaEntry = allSchemas[moduleKey] as Map<String, dynamic>?;
+  final moduleNames = keys
+      .map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId')
+      .toList();
 
-  if (schemaEntry == null) return;
+  final fullModuleString = moduleNames.join(',');
 
-  final currentVersion = schemaEntry['currentVersion'];
-  final previousVersion = schemaEntry['previousVersion'];
-  final schemaData = schemaEntry['data'] as Map<String, dynamic>?;
-
-  if (schemaData == null) return;
-
-  final moduleName =
-      'hcm-${schemaData['name'].toLowerCase()}-$projectReferenceId';
-
-  ///TODO; removing check to check current and previous version will refetch localization every time
-  // if (currentVersion != previousVersion) {
   context
       .read<LocalizationBloc>()
       .add(LocalizationEvent.onRemoteLoadLocalization(
-        module: moduleName,
+        module: fullModuleString,
         tenantId: envConfig.variables.tenantId,
         locale: AppSharedPreferences().getSelectedLocale!,
         path: Constants.localizationApiPath,
       ));
+}
 
-  // Update stored previous version
-  schemaEntry['previousVersion'] = currentVersion;
-  allSchemas[moduleKey] = schemaEntry;
-  await prefs.setString('app_config_schemas', json.encode(allSchemas));
-  // }
+Future<Set<String>> generateUniqueMaterialNoteNumber({
+  required String loggedInUserId,
+  required bool returnCombinedIds,
+}) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+  String androidId = androidInfo.serialNumber == 'unknown'
+      ? androidInfo.id.replaceAll('.', '')
+      : androidInfo.serialNumber;
+
+  int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+  String combinedId = '$loggedInUserId$androidId$timestamp';
+
+  // Generate SHA-256 hash
+  List<int> bytes = utf8.encode(combinedId);
+  Digest sha256Hash = sha256.convert(bytes);
+
+  // Convert the hash to a 12-character string and make it uppercase
+  String hashString = sha256Hash.toString();
+  String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+  // Add a hyphen every 4 characters
+  String formattedUniqueId = uniqueId.replaceAllMapped(
+    RegExp(r'.{1,4}'),
+    (match) => '${match.group(0)}-',
+  );
+
+  // Remove the last hyphen
+  formattedUniqueId =
+      formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+  if (kDebugMode) {
+    print('uniqueId : $formattedUniqueId');
+  }
+
+  return returnCombinedIds
+      ? {formattedUniqueId, combinedId}
+      : {formattedUniqueId};
+}
+
+/// Reports the entity currently being synced/downloaded so any open sync
+/// dialog listening on [sync_utils.SyncServiceSingleton.progressStream] can
+/// display it (e.g. the post-login project setup downloads).
+void reportSyncProgress(String entityType, {String operation = 'syncDown'}) {
+  sync_utils.SyncServiceSingleton().reportProgress(
+    sync_utils.SyncProgress(entityType: entityType, operation: operation),
+  );
+}
+
+/// Formats a [sync_utils.SyncProgress] event into a user-facing label for the
+/// sync dialogs, e.g. "Syncing Household Member (5)".
+///
+/// Entity types arrive as camelCase model names (`householdMember`), sometimes
+/// with a record count suffix (`task (5)`); multi-word phase banners from the
+/// sync service ("Downloading from server...") are shown as-is.
+String formatSyncProgressLabel(sync_utils.SyncProgress progress) {
+  final raw = progress.entityType;
+  final match = RegExp(r'^(\S+)( \(\d+\))?$').firstMatch(raw);
+  if (match == null) return raw;
+
+  final name = ReCase(match.group(1)!).titleCase;
+  final count = match.group(2) ?? '';
+
+  return 'Syncing $name$count';
 }

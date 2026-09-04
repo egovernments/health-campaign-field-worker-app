@@ -84,7 +84,8 @@ class ServiceAttributesModel extends EntityModel
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
-      additionalDetails: Value(jsonEncode(additionalDetails)),
+      additionalDetails: Value(
+          additionalDetails != null ? jsonEncode(additionalDetails) : null),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       serviceClientReferenceId: Value(serviceClientReferenceId),

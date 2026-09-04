@@ -110,18 +110,22 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No boundary is selected');
     }
     // INFO: Set Boundary for packages
-    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
-    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
-    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
-    InventorySingleton().setBoundary(boundary: selectedBoundary);
-    ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
-    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     TransitPostSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
+  }
+
+  void setBoundary(BoundaryModel selectedBoundary) {
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
   }
 
   BoundaryModel? get boundaryOrNull {
@@ -162,6 +166,45 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return individualUUID;
+  }
+
+  /// Nullable alias for [loggedInIndividualId], used by the face-auth flow.
+  String? get loggedInIndividualIdOrNull => loggedInIndividualId;
+
+  /// True when the logged-in user holds the team-supervisor role (face-auth
+  /// re-verification of non-mobile co-workers).
+  bool get isTeamSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.teamSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// True when the logged-in user holds the district-supervisor role.
+  bool get isDistrictSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.districtSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  String? get currentRegisteredToken {
+    final authBloc = _get<PushNotificationBloc>();
+    final fcmToken = authBloc.state.whenOrNull(
+      initialized: (fcmToken) {
+        return fcmToken;
+      },
+    );
+
+    if (fcmToken == null) {
+      return null;
+    }
+
+    return fcmToken;
   }
 
   UserModel? get loggedInUserModel {

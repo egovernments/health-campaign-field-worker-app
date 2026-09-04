@@ -1,0 +1,233 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
+
+class StockLocalRepository
+    extends LocalRepository<StockModel, StockSearchModel> {
+  StockLocalRepository(super.sql, super.opLogManager);
+
+  void listenToChanges({
+    required StockSearchModel query,
+    required void Function(List<StockModel> data) listener,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final select = sql.select(sql.stock)
+        ..where(
+          (tbl) => buildAnd([
+            if (query.receiverId != null)
+              tbl.receiverId.equals(query.receiverId!),
+            if (query.senderId != null) tbl.senderId.equals(query.senderId!),
+            if (query.productVariantId != null)
+              tbl.productVariantId.isIn(query.productVariantId!),
+            if (query.transactionType != null)
+              tbl.transactionType.isIn(query.transactionType!),
+            if (query.referenceId != null)
+              tbl.referenceId.equals(query.referenceId!),
+          ]),
+        );
+
+      select.watch().listen((event) {
+        final data = event.map((e) {
+          final createdBy = e.auditCreatedBy;
+          final createdTime = e.auditCreatedTime;
+
+          return StockModel(
+            id: e.id,
+            tenantId: e.tenantId,
+            facilityId: e.facilityId,
+            productVariantId: e.productVariantId,
+            receiverId: e.receiverId,
+            senderId: e.senderId,
+            receiverType: e.receiverType,
+            senderType: e.senderType,
+            referenceId: e.referenceId,
+            referenceIdType: e.referenceIdType,
+            transactionType: e.transactionType,
+            transactionReason: e.transactionReason,
+            transactingPartyId: e.transactingPartyId,
+            transactingPartyType: e.transactingPartyType,
+            quantity: e.quantity,
+            waybillNumber: e.waybillNumber,
+            clientReferenceId: e.clientReferenceId,
+            isDeleted: e.isDeleted,
+            rowVersion: e.rowVersion,
+            additionalFields: _parseAdditionalFields(e.additionalFields),
+            auditDetails: createdTime == null || createdBy == null
+                ? null
+                : AuditDetails(createdTime: createdTime, createdBy: createdBy),
+            clientAuditDetails: createdTime == null || createdBy == null
+                ? null
+                : ClientAuditDetails(
+                    createdTime: e.clientCreatedTime!,
+                    createdBy: e.clientCreatedBy!,
+                    lastModifiedBy: e.clientModifiedBy,
+                    lastModifiedTime: e.clientModifiedTime,
+                  ),
+          );
+        }).toList();
+
+        listener(data);
+      });
+    });
+  }
+
+  @override
+  FutureOr<void> create(
+    StockModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final stockCompanion = entity.companion.copyWith(
+        transactionType: Value(entity.companion.transactionType.value),
+      );
+      await sql.batch((batch) {
+        batch.insert(sql.stock, stockCompanion);
+      });
+      await super.create(entity);
+    });
+  }
+
+  @override
+  FutureOr<List<StockModel>> search(
+    StockSearchModel query, [
+    String? userId,
+  ]) async {
+    return retryLocalCallOperation<List<StockModel>>(() async {
+      var results = [];
+      final selectQuery = sql.select(sql.stock).join([]);
+      results = await (selectQuery
+            ..where(
+              buildAnd(
+                [
+                  if (query.id != null) sql.stock.id.equals(query.id!),
+                  if (query.receiverId != null)
+                    sql.stock.receiverId.equals(query.receiverId!),
+                  if (query.senderId != null)
+                    sql.stock.senderId.equals(query.senderId!),
+                  if (query.productVariantId != null)
+                    sql.stock.productVariantId.isIn(
+                      query.productVariantId!,
+                    ),
+                  if (query.clientReferenceId != null)
+                    sql.stock.clientReferenceId.isIn(
+                      query.clientReferenceId!,
+                    ),
+                  if (userId != null)
+                    sql.stock.auditCreatedBy.equals(
+                      userId,
+                    ),
+                  if (query.transactionType != null)
+                    sql.stock.transactionType.isIn(
+                      query.transactionType!,
+                    ),
+                  if (query.transactionReason != null &&
+                      query.transactionReason!.isNotEmpty)
+                    sql.stock.transactionReason.isIn(
+                      query.transactionReason!,
+                    ),
+                  if (query.referenceId != null)
+                    sql.stock.referenceId.equals(query.referenceId!),
+                ],
+              ),
+            ))
+          .get();
+      return results.map((e) {
+        final data = e.readTable(sql.stock);
+
+        final createdBy = data.auditCreatedBy;
+        final createdTime = data.auditCreatedTime;
+
+        return StockModel(
+          id: data.id,
+          tenantId: data.tenantId,
+          facilityId: data.facilityId,
+          productVariantId: data.productVariantId,
+          receiverId: data.receiverId,
+          senderId: data.senderId,
+          receiverType: data.receiverType,
+          senderType: data.senderType,
+          referenceId: data.referenceId,
+          referenceIdType: data.referenceIdType,
+          transactionType: data.transactionType,
+          transactionReason: data.transactionReason,
+          transactingPartyId: data.transactingPartyId,
+          transactingPartyType: data.transactingPartyType,
+          quantity: data.quantity,
+          waybillNumber: data.waybillNumber,
+          clientReferenceId: data.clientReferenceId,
+          isDeleted: data.isDeleted,
+          rowVersion: data.rowVersion,
+          additionalFields: _parseAdditionalFields(data.additionalFields),
+          auditDetails: createdTime == null || createdBy == null
+              ? null
+              : AuditDetails(createdTime: createdTime, createdBy: createdBy),
+          clientAuditDetails: createdTime == null || createdBy == null
+              ? null
+              : ClientAuditDetails(
+                  createdTime: data.clientCreatedTime!,
+                  createdBy: data.clientCreatedBy!,
+                  lastModifiedBy: data.clientModifiedBy,
+                  lastModifiedTime: data.clientModifiedTime,
+                ),
+        );
+      }).toList();
+    });
+  }
+
+  @override
+  FutureOr<void> update(
+    StockModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final stockCompanion = entity.companion;
+
+      await sql.batch((batch) {
+        batch.update(
+          sql.stock,
+          stockCompanion,
+          where: (table) => table.clientReferenceId.equals(
+            entity.clientReferenceId,
+          ),
+        );
+      });
+
+      return super.update(entity, createOpLog: createOpLog);
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<StockModel> entities,
+  ) async {
+    return retryLocalCallOperation(() async {
+      final stockCompanions = entities.map((e) => e.companion).toList();
+
+      await sql.batch((batch) async {
+        batch.insertAll(
+          sql.stock,
+          stockCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+    });
+  }
+
+  StockAdditionalFields? _parseAdditionalFields(String? jsonStr) {
+    if (jsonStr == null || jsonStr.isEmpty) return null;
+    try {
+      final map = jsonDecode(jsonStr);
+      if (map is Map<String, dynamic>) {
+        return StockAdditionalFieldsMapper.fromMap(map);
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  @override
+  DataModelType get type => DataModelType.stock;
+}

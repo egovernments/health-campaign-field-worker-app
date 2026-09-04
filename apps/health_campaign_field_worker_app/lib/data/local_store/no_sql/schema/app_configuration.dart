@@ -24,6 +24,9 @@ class AppConfiguration {
   @Name("LANGUAGES")
   late List<Languages>? languages;
 
+  @Name("STATE_LOGO_URL")
+  String? stateLogoUrl;
+
   @Name("BACKEND_INTERFACE")
   late BackendInterface? backendInterface;
 
@@ -87,11 +90,23 @@ class AppConfiguration {
   @Name('TRANSIT_POST_TYPE')
   late List<TransitPostType>? transitPostType;
 
+  @Name('DEVICE_CHANGE_REASONS')
+  late List<DeviceChangeReasons>? deviceChangeReasons;
+
+  @Name('SINGLE_USER_LOGIN')
+  late List<SingleUserLogin>? singleUserLogin;
+
   late List<ReferralReasons>? referralReasons;
   late List<ManualAttendanceReasons>? manualAttendanceReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
+
+  @Name("BOUNDARY_LAST_LEVEL_MAX_SELECTION")
+  late int? boundaryLastLevelMaxSelection;
+
+  @Name('STOCK_THRESHOLD_CONFIG')
+  StockThresholdConfig? stockThresholdConfig;
 }
 
 @embedded
@@ -212,6 +227,18 @@ class TransitPostType {
 }
 
 @embedded
+class DeviceChangeReasons {
+  late String name;
+  late String code;
+}
+
+@embedded
+class SingleUserLogin {
+  late bool enabled;
+  late int id;
+}
+
+@embedded
 class SearchCLFFilters {
   late String name;
   late String code;
@@ -252,8 +279,9 @@ class ReferralReasons {
   late String name;
   late bool active;
 }
+
 @embedded
-class ManualAttendanceReasons{
+class ManualAttendanceReasons {
   late String code;
   late String name;
   late bool active;
@@ -301,4 +329,13 @@ class SubDescription {
   late String? type;
   late bool? isBold;
   late bool? isSpaceRequired;
+}
+
+@embedded
+class StockThresholdConfig {
+  @Name('MIN_THRESHOLD')
+  late double minThreshold; // Below this = red
+  @Name('MAX_THRESHOLD')
+  late double maxThreshold; // Above this = green
+// Between min and max = blue
 }

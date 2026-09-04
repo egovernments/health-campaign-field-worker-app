@@ -30,18 +30,42 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    AuthenticatedRouteWrapper.name: (routeData) {
-      final args = routeData.argsAs<AuthenticatedRouteWrapperArgs>(
-          orElse: () => const AuthenticatedRouteWrapperArgs());
+    AttendanceDigitScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<AttendanceDigitScannerRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: AuthenticatedPageWrapper(key: args.key),
+        child: AttendanceDigitScannerPage(
+          key: args.key,
+          enableDynamicQRScanning: args.enableDynamicQRScanning,
+          attendees: args.attendees,
+          onScanResult: args.onScanResult,
+          quantity: args.quantity,
+          singleValue: args.singleValue,
+          isGS1code: args.isGS1code,
+        ),
+      );
+    },
+    AuthenticatedRouteWrapper.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AuthenticatedPageWrapper(),
       );
     },
     BeneficiariesReportRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const BeneficiariesReportPage(),
+      );
+    },
+    BeneficiaryIdDownSyncRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryIdDownSyncRouteArgs>(
+          orElse: () => const BeneficiaryIdDownSyncRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryIdDownSyncPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     BoundarySelectionRoute.name: (routeData) {
@@ -52,6 +76,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: BoundarySelectionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CurrentBoundaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CurrentBoundaryRouteArgs>(
+          orElse: () => const CurrentBoundaryRouteArgs());
+      return AutoRoutePage<BoundaryModel>(
+        routeData: routeData,
+        child: CurrentBoundaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          onBoundarySelected: args.onBoundarySelected,
         ),
       );
     },
@@ -83,6 +119,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DeviceChangeReasonRoute.name: (routeData) {
+      final args = routeData.argsAs<DeviceChangeReasonRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeviceChangeReasonPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          username: args.username,
+          password: args.password,
+        ),
+      );
+    },
     DevicesListRoute.name: (routeData) {
       final args = routeData.argsAs<DevicesListRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -90,6 +138,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: DevicesListPage(
           key: args.key,
           deviceType: args.deviceType,
+        ),
+      );
+    },
+    FaceAuthHistoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FaceAuthHistoryPage(),
+      );
+    },
+    FaceGateRoute.name: (routeData) {
+      final args = routeData.argsAs<FaceGateRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FaceGatePage(
+          key: args.key,
+          onVerified: args.onVerified,
         ),
       );
     },
@@ -121,6 +185,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    NonMobileFaceEnrollRoute.name: (routeData) {
+      final args = routeData.argsAs<NonMobileFaceEnrollRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: NonMobileFaceEnrollPage(
+          key: args.key,
+          individualId: args.individualId,
+          individualName: args.individualName,
+        ),
+      );
+    },
     NonMobileUserListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -131,6 +206,22 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(child: const PeerToPeerWrapperPage()),
+      );
+    },
+    PermissionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PermissionsPage(),
+      );
+    },
+    PinFallbackRoute.name: (routeData) {
+      final args = routeData.argsAs<PinFallbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PinFallbackPage(
+          key: args.key,
+          onVerified: args.onVerified,
+        ),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -182,17 +273,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...InventoryRoute().pagesMap,
-    ...AttendanceRoute().pagesMap,
-    ...ReferralReconciliationRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
-    ...RegistrationDeliveryRoute().pagesMap,
-    ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
-    ...ComplaintsRoute().pagesMap,
     ...TransitPostRoute().pagesMap,
     ...FormsRoute().pagesMap,
+    ...FlowBuilderRoute().pagesMap,
   };
 }
 
@@ -255,33 +341,87 @@ class AcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [AuthenticatedPageWrapper]
-class AuthenticatedRouteWrapper
-    extends PageRouteInfo<AuthenticatedRouteWrapperArgs> {
-  AuthenticatedRouteWrapper({
+/// [AttendanceDigitScannerPage]
+class AttendanceDigitScannerRoute
+    extends PageRouteInfo<AttendanceDigitScannerRouteArgs> {
+  AttendanceDigitScannerRoute({
     Key? key,
+    required bool enableDynamicQRScanning,
+    required List<AttendeeModel> attendees,
+    required void Function(
+      ScannedIndividualDataModel,
+      AttendanceValidationResult,
+    ) onScanResult,
+    int quantity = 1,
+    bool singleValue = false,
+    bool isGS1code = false,
     List<PageRouteInfo>? children,
   }) : super(
+          AttendanceDigitScannerRoute.name,
+          args: AttendanceDigitScannerRouteArgs(
+            key: key,
+            enableDynamicQRScanning: enableDynamicQRScanning,
+            attendees: attendees,
+            onScanResult: onScanResult,
+            quantity: quantity,
+            singleValue: singleValue,
+            isGS1code: isGS1code,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AttendanceDigitScannerRoute';
+
+  static const PageInfo<AttendanceDigitScannerRouteArgs> page =
+      PageInfo<AttendanceDigitScannerRouteArgs>(name);
+}
+
+class AttendanceDigitScannerRouteArgs {
+  const AttendanceDigitScannerRouteArgs({
+    this.key,
+    required this.enableDynamicQRScanning,
+    required this.attendees,
+    required this.onScanResult,
+    this.quantity = 1,
+    this.singleValue = false,
+    this.isGS1code = false,
+  });
+
+  final Key? key;
+
+  final bool enableDynamicQRScanning;
+
+  final List<AttendeeModel> attendees;
+
+  final void Function(
+    ScannedIndividualDataModel,
+    AttendanceValidationResult,
+  ) onScanResult;
+
+  final int quantity;
+
+  final bool singleValue;
+
+  final bool isGS1code;
+
+  @override
+  String toString() {
+    return 'AttendanceDigitScannerRouteArgs{key: $key, enableDynamicQRScanning: $enableDynamicQRScanning, attendees: $attendees, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
+  }
+}
+
+/// generated route for
+/// [AuthenticatedPageWrapper]
+class AuthenticatedRouteWrapper extends PageRouteInfo<void> {
+  const AuthenticatedRouteWrapper({List<PageRouteInfo>? children})
+      : super(
           AuthenticatedRouteWrapper.name,
-          args: AuthenticatedRouteWrapperArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'AuthenticatedRouteWrapper';
 
-  static const PageInfo<AuthenticatedRouteWrapperArgs> page =
-      PageInfo<AuthenticatedRouteWrapperArgs>(name);
-}
-
-class AuthenticatedRouteWrapperArgs {
-  const AuthenticatedRouteWrapperArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AuthenticatedRouteWrapperArgs{key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -296,6 +436,45 @@ class BeneficiariesReportRoute extends PageRouteInfo<void> {
   static const String name = 'BeneficiariesReportRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BeneficiaryIdDownSyncPage]
+class BeneficiaryIdDownSyncRoute
+    extends PageRouteInfo<BeneficiaryIdDownSyncRouteArgs> {
+  BeneficiaryIdDownSyncRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryIdDownSyncRoute.name,
+          args: BeneficiaryIdDownSyncRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryIdDownSyncRoute';
+
+  static const PageInfo<BeneficiaryIdDownSyncRouteArgs> page =
+      PageInfo<BeneficiaryIdDownSyncRouteArgs>(name);
+}
+
+class BeneficiaryIdDownSyncRouteArgs {
+  const BeneficiaryIdDownSyncRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryIdDownSyncRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for
@@ -333,6 +512,49 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CurrentBoundaryPage]
+class CurrentBoundaryRoute extends PageRouteInfo<CurrentBoundaryRouteArgs> {
+  CurrentBoundaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    dynamic Function(BuildContext)? onBoundarySelected,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CurrentBoundaryRoute.name,
+          args: CurrentBoundaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            onBoundarySelected: onBoundarySelected,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CurrentBoundaryRoute';
+
+  static const PageInfo<CurrentBoundaryRouteArgs> page =
+      PageInfo<CurrentBoundaryRouteArgs>(name);
+}
+
+class CurrentBoundaryRouteArgs {
+  const CurrentBoundaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.onBoundarySelected,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final dynamic Function(BuildContext)? onBoundarySelected;
+
+  @override
+  String toString() {
+    return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations, onBoundarySelected: $onBoundarySelected}';
   }
 }
 
@@ -437,6 +659,55 @@ class DataTransferRouteArgs {
 }
 
 /// generated route for
+/// [DeviceChangeReasonPage]
+class DeviceChangeReasonRoute
+    extends PageRouteInfo<DeviceChangeReasonRouteArgs> {
+  DeviceChangeReasonRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required String username,
+    required String password,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeviceChangeReasonRoute.name,
+          args: DeviceChangeReasonRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            username: username,
+            password: password,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeviceChangeReasonRoute';
+
+  static const PageInfo<DeviceChangeReasonRouteArgs> page =
+      PageInfo<DeviceChangeReasonRouteArgs>(name);
+}
+
+class DeviceChangeReasonRouteArgs {
+  const DeviceChangeReasonRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.username,
+    required this.password,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final String username;
+
+  final String password;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, username: $username, password: $password}';
+  }
+}
+
+/// generated route for
 /// [DevicesListPage]
 class DevicesListRoute extends PageRouteInfo<DevicesListRouteArgs> {
   DevicesListRoute({
@@ -471,6 +742,58 @@ class DevicesListRouteArgs {
   @override
   String toString() {
     return 'DevicesListRouteArgs{key: $key, deviceType: $deviceType}';
+  }
+}
+
+/// generated route for
+/// [FaceAuthHistoryPage]
+class FaceAuthHistoryRoute extends PageRouteInfo<void> {
+  const FaceAuthHistoryRoute({List<PageRouteInfo>? children})
+      : super(
+          FaceAuthHistoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceAuthHistoryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FaceGatePage]
+class FaceGateRoute extends PageRouteInfo<FaceGateRouteArgs> {
+  FaceGateRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FaceGateRoute.name,
+          args: FaceGateRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FaceGateRoute';
+
+  static const PageInfo<FaceGateRouteArgs> page =
+      PageInfo<FaceGateRouteArgs>(name);
+}
+
+class FaceGateRouteArgs {
+  const FaceGateRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
+
+  @override
+  String toString() {
+    return 'FaceGateRouteArgs{key: $key, onVerified: $onVerified}';
   }
 }
 
@@ -563,6 +886,50 @@ class LoginRouteArgs {
 }
 
 /// generated route for
+/// [NonMobileFaceEnrollPage]
+class NonMobileFaceEnrollRoute
+    extends PageRouteInfo<NonMobileFaceEnrollRouteArgs> {
+  NonMobileFaceEnrollRoute({
+    Key? key,
+    required String individualId,
+    required String individualName,
+    List<PageRouteInfo>? children,
+  }) : super(
+          NonMobileFaceEnrollRoute.name,
+          args: NonMobileFaceEnrollRouteArgs(
+            key: key,
+            individualId: individualId,
+            individualName: individualName,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'NonMobileFaceEnrollRoute';
+
+  static const PageInfo<NonMobileFaceEnrollRouteArgs> page =
+      PageInfo<NonMobileFaceEnrollRouteArgs>(name);
+}
+
+class NonMobileFaceEnrollRouteArgs {
+  const NonMobileFaceEnrollRouteArgs({
+    this.key,
+    required this.individualId,
+    required this.individualName,
+  });
+
+  final Key? key;
+
+  final String individualId;
+
+  final String individualName;
+
+  @override
+  String toString() {
+    return 'NonMobileFaceEnrollRouteArgs{key: $key, individualId: $individualId, individualName: $individualName}';
+  }
+}
+
+/// generated route for
 /// [NonMobileUserListPage]
 class NonMobileUserListRoute extends PageRouteInfo<void> {
   const NonMobileUserListRoute({List<PageRouteInfo>? children})
@@ -588,6 +955,58 @@ class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
   static const String name = 'PeerToPeerWrapperRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PermissionsPage]
+class PermissionsRoute extends PageRouteInfo<void> {
+  const PermissionsRoute({List<PageRouteInfo>? children})
+      : super(
+          PermissionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PermissionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PinFallbackPage]
+class PinFallbackRoute extends PageRouteInfo<PinFallbackRouteArgs> {
+  PinFallbackRoute({
+    Key? key,
+    required void Function() onVerified,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PinFallbackRoute.name,
+          args: PinFallbackRouteArgs(
+            key: key,
+            onVerified: onVerified,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PinFallbackRoute';
+
+  static const PageInfo<PinFallbackRouteArgs> page =
+      PageInfo<PinFallbackRouteArgs>(name);
+}
+
+class PinFallbackRouteArgs {
+  const PinFallbackRouteArgs({
+    this.key,
+    required this.onVerified,
+  });
+
+  final Key? key;
+
+  final void Function() onVerified;
+
+  @override
+  String toString() {
+    return 'PinFallbackRouteArgs{key: $key, onVerified: $onVerified}';
+  }
 }
 
 /// generated route for

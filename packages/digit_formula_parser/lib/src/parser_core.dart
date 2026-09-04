@@ -2,133 +2,138 @@ import 'package:petitparser/petitparser.dart';
 
 import 'math_functions.dart';
 
-/// Creates a function based on the given left, value, and right arguments
-/// if the expression is ADD(2,3) then this function will receive,
-/// left = [ADD, (]
-/// value = [2, 3] can be a List
-/// right = [)]
-/// and will return 5
-///
-/// If the expression is a math function with only one argument like POWER(5.6) or SQRT(9) then,
-/// left = [ROUND, (] or [SQRT, (]
-/// value = 5.6 or 9 // can be a number (int / double / num)
-/// right = [)]
+/// Helper function to convert values to boolean
+bool _toBoolean(dynamic value) {
+  if (value == null) return false;
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) return value.isNotEmpty;
+  return true;
+}
+
+/// Function wrapper handler
 dynamic _createFunction(left, value, right) {
   if (left is List) {
     String functionName = left[0].toLowerCase();
 
     if (value is List) {
-      // Convert to List<num> safely
-      List<num> args = [];
-      for (var item in value) {
-        if (item is num) {
-          args.add(item);
-        } else {
-          throw "Function $functionName requires numeric arguments";
-        }
+      bool allNumeric = value.every((item) => item is num);
+      if (allNumeric) {
+        return mathFunction(functionName, value.cast<num>());
       }
-      return mathFunction(functionName, args);
+      return mathFunction(functionName, value);
     }
 
-    if (value is num) {
-      return mathFunction(functionName, [value]);
-    }
-
-    throw "Function $functionName requires numeric arguments";
+    if (value is num) return mathFunction(functionName, [value]);
+    return mathFunction(functionName, [value]);
   }
   return value;
 }
 
-/// Creates a parser using PetitParser library
+/// MAIN PARSER
 final parser = () {
+  // ---------- PRIMITIVES ----------
   final number = (digit().plus() &
-          (digit().plus() & char('.') & digit().plus()).optional() &
           (char('.') & digit().plus()).optional() &
           (pattern('eE') & pattern('+-').optional() & digit().plus())
               .optional())
-      .flatten('number expected')
+      .flatten()
       .trim()
       .map(double.parse);
-  final boolean = (string('true') &
-          string('True').optional() &
-          string('false').optional() &
-          string('False').optional())
-      .flatten('true or false expected')
-      .trim()
-      .optional();
 
+  // Double-quoted strings: "..."
+  final doubleQuoteString =
+      (char('"') & (char('\\') & any() | char('"').neg()).star() & char('"'))
+          .flatten()
+          .trim()
+          .map((v) => v.substring(1, v.length - 1));
+
+  // Single-quoted strings: '...'
+  final singleQuoteString =
+      (char("'") & (char('\\') & any() | char("'").neg()).star() & char("'"))
+          .flatten()
+          .trim()
+          .map((v) => v.substring(1, v.length - 1));
+
+  // Combined string literal (supports both single and double quotes)
+  final stringLiteral = doubleQuoteString | singleQuoteString;
+
+  final identifier =
+      (letter() & (letter() | digit() | char('_')).star()).flatten().trim();
+
+  final booleanLiteral = (string('TRUE') | string('FALSE'))
+      .flatten()
+      .trim()
+      .map((v) => v == 'TRUE');
+
+  // ---------- EXPRESSION BUILDER ----------
   final builder = ExpressionBuilder();
 
-  builder.group().primitive(number.or(boolean));
+  // PRIMITIVES
+  builder
+      .group()
+      .primitive(number.or(stringLiteral).or(booleanLiteral).or(identifier));
 
-  builder.group().wrapper(word().star().trim().flatten().seq(char('(').trim()),
-      char(')').trim(), _createFunction);
+  // ---------- FUNCTION CALLS ----------
+  // Only identifiers followed by '(' should be treated as functions
+  builder.group().wrapper(
+      identifier.seq(char('(').trim()), char(')').trim(), _createFunction);
 
+  // ---------- PARENTHESIS GROUPING ----------
+  builder.group().wrapper(char('(').trim(), char(')').trim(), (l, v, r) {
+    return v is bool ? v : _toBoolean(v);
+  });
+
+  // ---------- PREFIX OPERATORS ----------
   builder.group()
     ..prefix(char('+').trim(), (op, a) => a)
-    ..prefix(char('-').trim(), (op, a) {
-      return -1 * (a as num);
-    })
-    ..postfix(string('false').trim(), (op, a) => false)
-    ..postfix(string('true').trim(), (op, a) => false);
+    ..prefix(char('-').trim(), (op, a) => -(a as num))
+    ..prefix(char('!').trim(), (op, a) {
+      bool val = _toBoolean(a);
+      return !val;
+    });
 
-  /// Rule gets applied in this order
-  /// 1. First apply in this order ^, *, /, +, -
-  /// 2. check comparison operators <=, >=, ==, !=, <, >
-  /// 3. Apply negation operator !
-  builder.group().left(char('^').trim(),
+  // ---------- POWER ----------
+  builder.group().right(char('^').trim(),
       (a, op, b) => mathFunction('POWER', [a as num, b as num]));
 
+  // ---------- MULTIPLY / DIVIDE ----------
   builder.group()
     ..left(char('*').trim(),
         (a, op, b) => mathFunction('MUL', [a as num, b as num]))
     ..left(char('/').trim(),
         (a, op, b) => mathFunction('DIVI', [a as num, b as num]));
 
+  // ---------- ADD / SUBTRACT ----------
   builder.group()
     ..left(char('+').trim(),
         (a, op, b) => mathFunction('ADD', [a as num, b as num]))
     ..left(char('-').trim(),
         (a, op, b) => mathFunction('SUB', [a as num, b as num]));
 
-  /// TODO: fix this to support ! operator
-  /// this might fail in few scenarios and yet to be tested thoroughly
-  builder.group().prefix(char('!').trim(), (op, a) {
-    print(a.runtimeType);
-    if (a.runtimeType == bool) {
-      print(a.toString().toLowerCase());
-      return !(a as bool);
-    } else {
-      print(a.toString().toLowerCase());
-      if (['false', '0', '0.0', 'null', 'Null']
-          .contains(a.toString().toLowerCase())) {
-        return true; // return the opposite
-      }
-      return false;
-    }
+  // ---------- COMPARISON OPERATORS ----------
+  builder.group()
+    ..left(string("<=").trim(), (a, op, b) => mathFunction('LTE', [a, b]))
+    ..left(string(">=").trim(), (a, op, b) => mathFunction('GTE', [a, b]))
+    ..left(string("==").trim(), (a, op, b) => mathFunction('EQ', [a, b]))
+    ..left(string("!=").trim(), (a, op, b) => mathFunction('NE', [a, b]))
+    ..left(char('<').trim(), (a, op, b) => mathFunction('LT', [a, b]))
+    ..left(char('>').trim(), (a, op, b) => mathFunction('GT', [a, b]));
+
+  // ---------- LOGICAL AND ----------
+  builder.group().left(string("&&").trim(), (a, op, b) {
+    return _toBoolean(a) && _toBoolean(b);
   });
 
-  builder.group()
-    ..left(char('<').seq(char('=')).trim(),
-        (a, op, b) => mathFunction('LTE', [a as num, b as num]))
-    ..left(string('>=').trim(),
-        (a, op, b) => mathFunction('GTE', [a as num, b as num]))
-    ..left(string('==').trim(),
-        (a, op, b) => mathFunction('EQ', [a as num, b as num]))
-    ..left(string('!=').trim(),
-        (a, op, b) => mathFunction('NE', [a as num, b as num]))
-    ..left(char('<').trim(),
-        (a, op, b) => mathFunction('LT', [a as num, b as num]))
-    ..left(char('>').trim(),
-        (a, op, b) => mathFunction('GT', [a as num, b as num]));
+  // ---------- LOGICAL OR ----------
+  builder.group().left(string("||").trim(), (a, op, b) {
+    return _toBoolean(a) || _toBoolean(b);
+  });
 
-  // FIXED: Comma operator to create flat lists
+  // ---------- COMMA LIST BUILDER ----------
   builder.group().left(char(',').trim(), (a, op, b) {
-    if (a is List) {
-      return [...a, b]; // Flatten nested lists
-    } else {
-      return [a, b];
-    }
+    if (a is List) return [...a, b];
+    return [a, b];
   });
 
   return builder.build().end();

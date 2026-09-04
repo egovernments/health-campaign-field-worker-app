@@ -48,7 +48,7 @@ class ServiceTestConstants {
     required: true,
     isActive: true,
     regex: null,
-    order: 1,
+    order: '1',
   );
 
   static final mockAttributesModel2 = AttributesModel(
@@ -59,7 +59,7 @@ class ServiceTestConstants {
     required: true,
     isActive: true,
     regex: null,
-    order: 1,
+    order: '1',
   );
 
   static final mockServiceDefinitionModel = ServiceDefinitionModel(

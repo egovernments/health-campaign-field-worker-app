@@ -1,3 +1,12 @@
+## 1.0.3+1
+
+* Bumped package versions and refreshed CHANGELOG against pub.dev
+* Aligned yaml with Nigeria product-changes integration
+
+## 1.0.3
+
+* Updated to latest package versions
+
 ## 1.0.2+1
 
 * Updated to latest package versions

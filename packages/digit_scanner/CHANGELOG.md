@@ -1,3 +1,71 @@
+## 1.1.0
+
+* Add two subclass hooks on `DigitScannerPageState` for host apps that need a prerequisite step or extra UI on the manual-entry surface:
+    * `onEnterManualCodePressed()` — intercept the "Enter Manual Code" tap; return `false` to cancel entering manual-code mode (e.g. after cancelling a required pre-entry dialog). Default: proceed.
+    * `extraManualEntryContent(theme, textTheme)` — inject an additional widget beneath the manual-code link (e.g. a sibling manual-marking action). Default: `null`.
+* Both hooks are non-breaking; existing subclasses inherit the no-op defaults.
+
+## 1.0.7+2
+
+* Scanned QR payloads that parse as JSON objects are now rendered as label:value pairs on the result card (mirroring the GS1 branch); non-JSON payloads fall back to the existing trimmed-text row
+* QR scanner page UI revamp aligned with Figma; added SVG flash-on icon
+* Added scanner pluralization and `sentenceCaseEnabled` prop
+* Added GS1 barcode edit support with helper serialize/deserialize methods
+* Added scroll for scanned-data UI; validation checks for scanned types
+* Fixed continuous-error display when scanning reaches quantity limit; removed second max-limit alert
+* Fixed back-state and permission-handler issues in scanner
+* Atomic localization cache swap; O(1) `translate()` lookup
+* Added duplicate-scanner check based on stock entry type, product variant, sender id and receiver id (`qr_scanner.dart`, `scanner_utils.dart`)
+* Surface duplicate-check errors via `debugPrint` instead of swallowing exceptions
+* Multiple scanner crash fixes and validation guards
+* Removed unused imports in `vision_detector_views/camera_view.dart` and `detector_view.dart`
+
+## 1.0.7+1
+
+* Updated digit_ui_components package version
+
+## 1.0.7
+
+* Refactored scanner bloc — simplified `DigitScannerBloc` with cleaner state management
+* Added `ScannerValidation` model for config-driven validation rules (scanLimit, isGS1, pattern)
+    * Exported from `digit_scanner.dart` barrel file
+    * Added `ScannerValidationListExt` extension for convenient access to validation values
+* Updated `DigitScannerPage` with new parameters:
+    * `validations` — list of `ScannerValidation` for dynamic config-driven rules
+    * `initialQrCodes` and `initialBarcodeData` — support for edit mode with pre-populated data
+    * `scannerId` — unique identifier to prevent multiple scanner fields from conflicting
+    * Added effective getters (`effectiveQuantity`, `effectiveIsGS1code`, `effectiveRegex`,
+      `effectiveSingleValue`) that resolve from validations or legacy params
+* Added GS1 barcode edit support with inline editing of scanned data
+* Added camera permission handling with `permission_handler`
+    * Added permission denied dialog with "Open Settings" action
+    * New i18n keys: `cameraPermissionDenied`, `cameraPermissionDeniedDesc`, `openSettings`,
+      `cameraPermissionRequired`, `unableToScan`
+* Improved camera initialization with error handling and fallback to first available camera
+* Added `WidgetsBindingObserver` to scanner page for lifecycle-aware permission re-checking
+* Added scrollable UI for scanned data display
+* Added helper methods for GS1 barcode serialization and deserialization
+* Refactored `scanner_utils.dart` — simplified GS1 normalization and AI parsing
+* Fixed scanner crash issues and back state navigation
+* Added `sentenceCaseEnabled` prop support
+* Updated dependencies:
+    * Added `collection: ^1.17.0`
+    * Added `permission_handler: ^11.3.1`
+    * Updated `digit_ui_components` to `^0.3.0`
+
+## 0.0.2-console
+
+* Improved error handling to show validation errors only once
+* Fixed continuous error display issue when scanning reaches quantity limit
+* Moved i18n constants for scanner error messages (scan limit, duplicate, pattern mismatch, invalid
+  GS1)
+* Optimized scanner to stop processing after reaching maximum quantity
+* Enhanced bloc state management to prevent duplicate error emissions
+
+## 0.0.1-console
+
+* Added dynamic validations
+
 ## 1.0.6+2
 
 * Updated component of input with DigitInput

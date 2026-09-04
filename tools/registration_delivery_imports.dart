@@ -298,7 +298,7 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate for localization
   var importStatement =
       "import 'package:registration_delivery/blocs/app_localization.dart' as registration_delivery_localization;";
-  var delegate = ''' 
+  var delegate = '''
       registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
       getLocalizationString(

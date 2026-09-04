@@ -12,7 +12,7 @@ class TemplateConfig with _$TemplateConfig {
     required int order,
     Map<String, TemplateProperty>? properties,
     Map<String, bool>? features,
-    NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
   }) = _TemplateConfig;
 
   factory TemplateConfig.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +36,16 @@ class TemplateProperty with _$TemplateProperty {
 
   factory TemplateProperty.fromJson(Map<String, dynamic> json) =>
       _$TemplatePropertyFromJson(json);
+}
+
+NavigateToConfig? _navigateToConfigOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null; // Treat {} as null
+  }
+  if (value is Map<String, dynamic>) {
+    return NavigateToConfig.fromJson(value);
+  }
+  return null;
 }
 
 @freezed

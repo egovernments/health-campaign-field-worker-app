@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/request_info/request_info_model.dart';
 import '../../utils/constants.dart';
@@ -49,11 +50,19 @@ class ApiLoggerInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    if (options.data is Map || options.data is List) {
-      AppLogger.instance.info(
-        _getIndentedJson(json.encode(options.data)),
-        title: '[REQUEST] ${options.uri.toString()}',
-      );
+    if (kDebugMode) {
+      // Skip request-body logging for the same paths whose responses we
+      // silence below — the request bodies for these are large auto-generated
+      // payloads (module lists, boundary codes) that don't add debug value.
+      final path = options.path;
+      final isNoisyEndpoint = path.contains('boundarys') ||
+          path.contains(Constants.localizationApiPath);
+      if (!isNoisyEndpoint && (options.data is Map || options.data is List)) {
+        AppLogger.instance.info(
+          _getIndentedJson(json.encode(options.data)),
+          title: '[REQUEST] ${options.uri.toString()}',
+        );
+      }
     }
     super.onRequest(options, handler);
   }
@@ -61,8 +70,17 @@ class ApiLoggerInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
+    if (!kDebugMode) return;
 
-    if (response.requestOptions.path.contains('boundarys')) return;
+    final path = response.requestOptions.path;
+    if (path.contains('boundarys')) return;
+    // Localization responses carry the full translation payload for every
+    // requested module (often thousands of entries) — pretty-printing that
+    // JSON on every app-open cache miss floods the logs and slows the UI
+    // thread doing the encode/decode/indent. The response is already
+    // persisted to the local DB by LocalizationLocalRepository.create(),
+    // so tracing it in the interceptor adds no debug value.
+    if (path.contains(Constants.localizationApiPath)) return;
 
     try {
       AppLogger.instance.info(

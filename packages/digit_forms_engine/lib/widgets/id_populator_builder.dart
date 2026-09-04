@@ -26,16 +26,15 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
   Widget build(BuildContext context) {
     const idKey = 'idNumber';
     const idTypeKey = 'idType';
+    const idAutoFilledKey = 'idAutoFilled';
 
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
 
-    // Access defaultValues via Provider
     final defaultValues = context.read<Map<String, dynamic>>();
-
     final identifiers = defaultValues['availableIDs'];
 
-    // Register additional controls if not already present
+    /// Register controls
     if (!form.contains(idKey)) {
       form.addAll({
         idKey: FormControl<String>(validators: [Validators.required]),
@@ -50,34 +49,87 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       });
     }
 
-    // Extract initial combined value and populate idType and idNumber
+    if (!form.contains(idAutoFilledKey)) {
+      form.addAll({
+        idAutoFilledKey: FormControl<bool>(value: false),
+      });
+    }
+
+    /// Populate from defaultValues using formControlName key (first priority)
+    final defaultValue = defaultValues[formControlName];
+
+    // Parse the original edit-flow combined value once so that
+    // onSelect can restore the beneficiary's existing ID number when the
+    // user toggles idType away and then back to whatever type it was
+    // originally saved with. Without this, switching to DEFAULT and back
+    // leaves the ID number field empty because the availableIDs map
+    // typically doesn't re-include the type currently on the record.
+    String? originalEditIdType;
+    String? originalEditIdNumber;
+    final originalCombinedForEdit = defaultValue;
+    if (originalCombinedForEdit is String &&
+        originalCombinedForEdit.contains(',')) {
+      final origParts = originalCombinedForEdit.split(',');
+      if (origParts.length >= 2) {
+        originalEditIdType = origParts[0].trim();
+        originalEditIdNumber = origParts.sublist(1).join(',').trim();
+        if (originalEditIdNumber.isEmpty) originalEditIdNumber = null;
+      }
+    }
+
+    // Check if this field has a direct value from navigationParams
+    // (e.g., UNIQUE_BENEFICIARY_ID from navigation data)
+    String? navParamValue;
+    try {
+      final navigationParams = context.read<Map<String, dynamic>?>();
+      if (navigationParams != null &&
+          navigationParams.containsKey(formControlName)) {
+        navParamValue = navigationParams[formControlName] as String?;
+      }
+    } catch (_) {}
+
+    // Use navParamValue if defaultValue doesn't have type format
+    final valueToUse = (defaultValue is String && defaultValue.contains(','))
+        ? defaultValue
+        : (navParamValue ?? defaultValue as String?);
+
+    if (valueToUse != null &&
+        valueToUse is String &&
+        form.control(idTypeKey).value == null &&
+        form.control(idKey).value == null) {
+      final parts = valueToUse.split(',');
+      if (parts.length >= 2) {
+        final type = parts[0].trim();
+        final number = parts.sublist(1).join(',').trim();
+
+        form.control(idTypeKey).value = type;
+        if (type != 'DEFAULT') {
+          form.control(idKey).value = number;
+          form.control(idAutoFilledKey).value = true;
+        }
+        form.control(formControlName).value = valueToUse;
+      }
+    }
+
+    /// Populate from combined value (edit case)
     final combinedValue = form.control(formControlName).value;
     if (combinedValue != null && combinedValue is String) {
       final parts = combinedValue.split(' ');
       if (parts.length >= 2) {
         final type = parts[0];
-        final number =
-            parts.sublist(1).join(' '); // In case idNumber contains spaces
+        final number = parts.sublist(1).join(' ');
 
         if (form.control(idTypeKey).value == null) {
           form.control(idTypeKey).value = type;
         }
         if (form.control(idKey).value == null && type != 'DEFAULT') {
           form.control(idKey).value = number;
+          form.control(idAutoFilledKey).value = true;
         }
       }
     }
 
-    final mainControl = form.control(formControlName);
-    final isMainInvalid = mainControl.invalid && mainControl.touched;
-
-    // Determine missing subfields
-    final isIdTypeMissing = (form.control(idTypeKey).value == null ||
-        form.control(idTypeKey).value.toString().trim().isEmpty);
-    final isIdNumberMissing = (form.control(idKey).value == null ||
-        form.control(idKey).value.toString().trim().isEmpty);
-
-    // Helper to update the combined identifier string
+    /// Helper to update combined value
     void updateCombinedIdentifier() {
       final idType = form.control(idTypeKey).value;
       final idNumber = form.control(idKey).value;
@@ -91,8 +143,15 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       }
     }
 
+    final isIdTypeMissing =
+        (form.control(idTypeKey).value?.toString().trim().isEmpty ?? true);
+
+    final isIdNumberMissing =
+        (form.control(idKey).value?.toString().trim().isEmpty ?? true);
+
     return Column(
       children: [
+        /// ID TYPE DROPDOWN
         ReactiveWrapperField(
           formControlName: formControlName,
           validationMessages: validationMessages,
@@ -113,54 +172,88 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
                             .firstWhere(
                               (e) => e.code == form.control(idTypeKey).value,
                               orElse: () => Option(
-                                  code: form.control(idTypeKey).value,
-                                  name: form.control(idTypeKey).value!),
+                                code: form.control(idTypeKey).value,
+                                name: form.control(idTypeKey).value!,
+                              ),
                             )
                             .name,
                       ),
                     )
                   : null,
               items: (enums ?? [])
-                  .map((e) =>
-                      DropdownItem(code: e.code, name: loc.translate(e.name)))
+                  .map(
+                    (e) => DropdownItem(
+                      code: e.code,
+                      name: loc.translate(e.name),
+                    ),
+                  )
                   .toList(),
               onSelect: (value) {
                 form.control(formControlName).markAsTouched();
-                final defaultIdentifier = identifiers?[value.code];
 
-                if (defaultIdentifier != null && defaultIdentifier is String) {
-                  final type = value.code;
-                  final number = defaultIdentifier;
-
-                  form.control(idTypeKey).value = type;
-                  form.control(idKey).value = number;
-                  form.control(formControlName).value = '$type, $number';
+                // Restore priority when the user picks a type:
+                //   1. The beneficiary's original ID for this type (edit
+                //      flow) — so toggling type away and back doesn't
+                //      wipe an ID the record already carries.
+                //   2. An availableIDs / navigationParams entry for this
+                //      type (e.g. a freshly-allocated pool ID).
+                //   3. Blank the number field.
+                String? restoredNumber;
+                if (originalEditIdType == value.code &&
+                    originalEditIdNumber != null) {
+                  restoredNumber = originalEditIdNumber;
                 } else {
-                  form.control(idKey).value = null;
+                  final navigationParams =
+                      context.read<Map<String, dynamic>?>();
+                  final autoIdentifier = identifiers?[value.code] ??
+                      navigationParams?[value.code];
+                  if (autoIdentifier is String && autoIdentifier.isNotEmpty) {
+                    restoredNumber = autoIdentifier;
+                  }
+                }
+
+                if (restoredNumber != null) {
                   form.control(idTypeKey).value = value.code;
+                  form.control(idKey).value = restoredNumber;
+                  form.control(idAutoFilledKey).value = true;
+
+                  form.control(formControlName).value =
+                      '${value.code}, $restoredNumber';
+                } else {
+                  form.control(idTypeKey).value = value.code;
+                  form.control(idKey).value = null;
+                  form.control(idAutoFilledKey).value = false;
                   form.control(formControlName).value = null;
                 }
               },
               onChange: (value) {
-                form.control(formControlName).markAsTouched();
                 if (value.isEmpty) {
                   form.control(idTypeKey).value = null;
                   form.control(idKey).value = null;
+                  form.control(idAutoFilledKey).value = false;
                   form.control(formControlName).value = null;
                 }
               },
             ),
           ),
         ),
+
         if (form.control(idTypeKey).value != null &&
             form.control(idTypeKey).value != 'DEFAULT')
-          const SizedBox(
-            height: spacer4,
-          ),
+          const SizedBox(height: spacer4),
+
+        /// ID NUMBER FIELD
         if (form.control(idTypeKey).value != null &&
             form.control(idTypeKey).value != 'DEFAULT')
           ReactiveFormConsumer(
             builder: (context, formGroup, child) {
+              // UNIQUE_BENEFICIARY_ID must come from the downloaded pool
+              // (via availableIDs / navigationParams). If the user skipped
+              // the download the ID field would previously fall through
+              // to editable free-text — locking it here so an operator
+              // can't type an arbitrary value against a pool-sourced type.
+              final isPoolSourcedType =
+                  form.control(idTypeKey).value == 'UNIQUE_BENEFICIARY_ID';
               return ReactiveWrapperField(
                 formControlName: formControlName,
                 validationMessages: validationMessages,
@@ -171,13 +264,17 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
                   isRequired: true,
                   child: DigitTextFormInput(
                     initialValue: form.control(idKey).value,
-                    readOnly: form.control(idKey).value != null,
+                    readOnly: form.control(idAutoFilledKey).value == true ||
+                        isPoolSourcedType,
                     onChange: (value) {
                       form.control(formControlName).markAsTouched();
+                      form.control(idAutoFilledKey).value = false;
                       form.control(idKey).value = value;
-                      updateCombinedIdentifier(); // Keep sync
+                      updateCombinedIdentifier();
                     },
-                    errorMessage: isIdNumberMissing ? field.errorText : null,
+                    errorMessage: isPoolSourcedType && isIdNumberMissing
+                        ? loc.translate('BENEFICIARY_ID_POOL_EMPTY_ERROR')
+                        : (isIdNumberMissing ? field.errorText : null),
                   ),
                 ),
               );

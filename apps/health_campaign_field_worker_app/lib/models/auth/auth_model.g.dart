@@ -25,6 +25,20 @@ Map<String, dynamic> _$$AuthModelImplToJson(_$AuthModelImpl instance) =>
       'UserRequest': instance.userRequestModel,
     };
 
+_$ValidateResponseModelImpl _$$ValidateResponseModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ValidateResponseModelImpl(
+      isDuplicateLogin: json['isDuplicateLogin'] as bool,
+      existingDeviceToken: json['existingDeviceToken'] as String?,
+    );
+
+Map<String, dynamic> _$$ValidateResponseModelImplToJson(
+        _$ValidateResponseModelImpl instance) =>
+    <String, dynamic>{
+      'isDuplicateLogin': instance.isDuplicateLogin,
+      'existingDeviceToken': instance.existingDeviceToken,
+    };
+
 _$LoginModelImpl _$$LoginModelImplFromJson(Map<String, dynamic> json) =>
     _$LoginModelImpl(
       username: json['username'] as String,

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
@@ -19,8 +21,21 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
+  static const dbEncryptionKeyKey = 'dbEncryptionKey';
+  static const currentFaceUserIdKey = 'currentFaceUserId';
+  static const faceEnrollmentCompleteKey = 'faceEnrollmentComplete';
+  static const isFaceGatePassedKey = 'isFaceGatePassed';
+  static const lastReVerificationScheduleKey = 'lastReVerificationSchedule';
+  static const userVsDeviceTokenMapKey = 'userVsDeviceTokenMapKey';
+  static const deviceSwitchReasonKey = 'deviceSwitchReasonKey';
+  static const existingDeviceTokenKey = 'existingDeviceTokenKey';
 
-  final storage = const FlutterSecureStorage();
+  // SECURITY: Use EncryptedSharedPreferences (Android Keystore-backed AES-256)
+  // explicitly. Without this option some older flutter_secure_storage versions
+  // fall back to a less-secure KeyStore-only mechanism.
+  final storage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
 
   static LocalSecureStore get instance => _instance;
   static final LocalSecureStore _instance = LocalSecureStore._();
@@ -85,6 +100,19 @@ class LocalSecureStore {
     }
   }
 
+  Future<ProjectType?> get selectedProjectType async {
+    final projectBody = await storage.read(key: selectedProjectTypeKey);
+    if (projectBody == null) return null;
+
+    try {
+      final projectType = ProjectType.fromJson(json.decode(projectBody));
+
+      return projectType;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> get isAppInActive async {
     final hasRun = await storage.read(key: isAppInActiveKey);
 
@@ -133,10 +161,97 @@ class LocalSecureStore {
     }
   }
 
+  Future<String?> getDeviceToken(String username) async {
+    final userTokenMapString = await storage.read(key: userVsDeviceTokenMapKey);
+
+    if (userTokenMapString == null) return null;
+
+    try {
+      Map<String, dynamic> userTokenMap = json.decode(userTokenMapString);
+
+      return userTokenMap[username] != null
+          ? userTokenMap[username] as String
+          : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setUserDeviceToken(String deviceToken) async {
+    final userBody = await storage.read(key: userObjectKey);
+    if (userBody == null) return;
+
+    try {
+      final user = UserRequestModel.fromJson(json.decode(userBody));
+      if (user.userName == null) return;
+      final userTokenMapString =
+          await storage.read(key: userVsDeviceTokenMapKey);
+
+      Map<String, dynamic> userTokenMap = {};
+      if (userTokenMapString != null) {
+        try {
+          userTokenMap = json.decode(userTokenMapString);
+        } catch (_) {}
+      }
+
+      userTokenMap[user.userName!] = deviceToken;
+
+      await storage.write(
+        key: userVsDeviceTokenMapKey,
+        value: json.encode(userTokenMap),
+      );
+    } catch (_) {
+      return;
+    }
+  }
+
+  Future<String?> get deviceSwitchReason async {
+    final reason = await storage.read(key: deviceSwitchReasonKey);
+    return reason;
+  }
+
+  Future<void> setDeviceSwitchReason(String deviceSwitchReason) async {
+    await storage.write(
+      key: deviceSwitchReasonKey,
+      value: deviceSwitchReason,
+    );
+  }
+
+  Future<void> deleteDeviceSwitchReason() async {
+    await storage.delete(
+      key: deviceSwitchReasonKey,
+    );
+  }
+
+  Future<String?> get existingDeviceToken async {
+    final token = await storage.read(key: existingDeviceTokenKey);
+    return token;
+  }
+
+  Future<void> setExistingDeviceToken(String existingDeviceToken) async {
+    await storage.write(
+      key: existingDeviceTokenKey,
+      value: existingDeviceToken,
+    );
+  }
+
+  Future<void> deleteExistingDeviceToken() async {
+    await storage.delete(
+      key: existingDeviceTokenKey,
+    );
+  }
+
   Future<void> setSelectedProject(ProjectModel projectModel) async {
     await storage.write(
       key: selectedProjectKey,
       value: projectModel.toJson(),
+    );
+  }
+
+  Future<void> setSelectedProjectType(ProjectType? projectType) async {
+    await storage.write(
+      key: selectedProjectTypeKey,
+      value: json.encode(projectType),
     );
   }
 
@@ -203,7 +318,22 @@ class LocalSecureStore {
   }
 
   Future<void> deleteAll() async {
+    // Preserve the database encryption key before deleting all
+    final encryptionKey = await storage.read(key: dbEncryptionKeyKey);
+    final userTokenMapString = await storage.read(key: userVsDeviceTokenMapKey);
+
     await storage.deleteAll();
+
+    // Restore the encryption key if it existed
+    if (encryptionKey != null) {
+      await storage.write(key: dbEncryptionKeyKey, value: encryptionKey);
+    }
+    if (userTokenMapString != null) {
+      await storage.write(
+        key: userVsDeviceTokenMapKey,
+        value: userTokenMapString,
+      );
+    }
   }
 
   /*Sets the bool value of project setup as true once project data is downloaded*/
@@ -224,5 +354,67 @@ class LocalSecureStore {
       default:
         return false;
     }
+  }
+
+  /// Generates a cryptographically secure random encryption key for the database.
+  /// Returns a 32-character hex string (128-bit key).
+  String _generateEncryptionKey() {
+    final random = Random.secure();
+    final values = List<int>.generate(32, (i) => random.nextInt(256));
+    return values.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  // ── Face Auth accessors ──
+
+  Future<String?> get currentFaceUserId {
+    return storage.read(key: currentFaceUserIdKey);
+  }
+
+  Future<void> setCurrentFaceUserId(String? userId) async {
+    if (userId == null) {
+      await storage.delete(key: currentFaceUserIdKey);
+    } else {
+      await storage.write(key: currentFaceUserIdKey, value: userId);
+    }
+  }
+
+  Future<bool> get isFaceEnrollmentComplete async {
+    final value = await storage.read(key: faceEnrollmentCompleteKey);
+    return value == 'true';
+  }
+
+  Future<void> setFaceEnrollmentComplete(bool complete) async {
+    await storage.write(
+      key: faceEnrollmentCompleteKey,
+      value: complete.toString(),
+    );
+  }
+
+  Future<bool> get isFaceGatePassed async {
+    final value = await storage.read(key: isFaceGatePassedKey);
+    return value == 'true';
+  }
+
+  Future<void> setFaceGatePassed(bool passed) async {
+    await storage.write(key: isFaceGatePassedKey, value: passed.toString());
+  }
+
+  Future<String?> get lastReVerificationSchedule {
+    return storage.read(key: lastReVerificationScheduleKey);
+  }
+
+  Future<void> setLastReVerificationSchedule(String schedule) async {
+    await storage.write(key: lastReVerificationScheduleKey, value: schedule);
+  }
+
+  /// Gets the database encryption key from secure storage.
+  /// If no key exists, generates and stores a new one.
+  Future<String> getOrCreateDbEncryptionKey() async {
+    String? key = await storage.read(key: dbEncryptionKeyKey);
+    if (key == null) {
+      key = _generateEncryptionKey();
+      await storage.write(key: dbEncryptionKeyKey, value: key);
+    }
+    return key;
   }
 }

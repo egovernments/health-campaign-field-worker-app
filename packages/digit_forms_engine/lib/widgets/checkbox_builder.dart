@@ -28,6 +28,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             DigitCheckbox(
+              capitalizeFirstLetter: false,
               isRequired: isRequired ?? false,
               readOnly: readOnly,
               label: label,
@@ -35,9 +36,6 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
               onChanged: (value) {
                 form.control(formControlName).markAsTouched();
                 field.control.value = value;
-                if (value != true && hasRequiredValidation(validations)) {
-                  form.control(formControlName).setErrors({'required': true});
-                }
               },
             ),
             if (field.errorText != null) const SizedBox(width: spacer3),

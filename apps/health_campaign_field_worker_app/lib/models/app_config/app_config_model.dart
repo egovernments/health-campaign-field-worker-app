@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../manual_attendance_reasons/manual_attendance_reasons_model.dart';
 import '../privacy_notice/privacy_notice_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
@@ -24,33 +23,14 @@ class MdmsRequestModel with _$MdmsRequestModel {
 class MdmsCriteriaModel with _$MdmsCriteriaModel {
   const factory MdmsCriteriaModel({
     required String tenantId,
-    required List<MdmsModuleDetailModel> moduleDetails,
+    required String schemaCode,
+    Map<String, dynamic>? filters,
+    int? limit,
+    bool? isActive,
   }) = _MdmsCriteriaModel;
 
   factory MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =>
       _$MdmsCriteriaModelFromJson(json);
-}
-
-@freezed
-class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
-  const factory MdmsModuleDetailModel({
-    required String moduleName,
-    required List<MdmsMasterDetailModel> masterDetails,
-  }) = _MdmsModuleDetailModel;
-
-  factory MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsModuleDetailModelFromJson(json);
-}
-
-@freezed
-class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
-  const factory MdmsMasterDetailModel(
-      String name, {
-        String? filter,
-      }) = _MdmsMasterDetailModel;
-
-  factory MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$MdmsMasterDetailModelFromJson(json);
 }
 
 @freezed
@@ -85,6 +65,10 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<BackgroundServiceConfig>? backgroundServiceConfig,
     @JsonKey(name: 'CHECKLIST_TYPES')
     required List<CheckListTypes> checklistTypes,
+    @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+    required List<DeviceChangeReasons> deviceChangeReasons,
+    @JsonKey(name: 'SINGLE_USER_LOGIN')
+    required List<SingleUserLogin> singleUserLogin,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -167,6 +151,7 @@ class StateInfoModel with _$StateInfoModel {
     @JsonKey(name: 'code') required String code,
     @JsonKey(name: 'languages') required List<Languages> languages,
     @JsonKey(name: 'localizationModules') List<Languages>? localizationModules,
+    @JsonKey(name: 'logoUrl') String? logoUrl,
   }) = _StateInfoModel;
 
   factory StateInfoModel.fromJson(
@@ -196,6 +181,8 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+    @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+    final int? boundaryLastLevelMaxSelection,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -405,6 +392,29 @@ class TransitPostType with _$TransitPostType {
 }
 
 @freezed
+class DeviceChangeReasons with _$DeviceChangeReasons {
+  factory DeviceChangeReasons({
+    required String name,
+    required String code,
+  }) = _DeviceChangeReasons;
+
+  factory DeviceChangeReasons.fromJson(Map<String, dynamic> json) =>
+      _$DeviceChangeReasonsFromJson(json);
+}
+
+
+@freezed
+class SingleUserLogin with _$SingleUserLogin {
+  factory SingleUserLogin({
+    required bool enabled,
+    required int id,
+  }) = _SingleUserLogin;
+
+  factory SingleUserLogin.fromJson(Map<String, dynamic> json) =>
+      _$SingleUserLoginFromJson(json);
+}
+
+@freezed
 class TransportTypes with _$TransportTypes {
   factory TransportTypes({
     required String name,
@@ -436,3 +446,4 @@ class FirebaseConfig with _$FirebaseConfig {
   factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
       _$FirebaseConfigFromJson(json);
 }
+

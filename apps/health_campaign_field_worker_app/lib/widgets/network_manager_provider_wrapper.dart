@@ -1,26 +1,54 @@
 import 'dart:io';
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:complaints/complaints.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/local/attendance_register.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/registration_delivery_address.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/task.dart';
+import 'package:digit_data_model/data/repositories/package_repository/local/unique_id_pool.dart';
+import 'package:digit_data_model/data/repositories/package_repository/oplog/oplog.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_logs.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/attendance_register.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/hf_referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/household_member.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/project_beneficiary.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/referral.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/side_effect.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/stock_reconciliation.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/task.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/unique_id_pool.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
-import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
-import 'package:registration_delivery/models/entities/unique_id_pool.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/local/face_auth_event.dart';
+import 'package:digit_face_verification/data/repositories/oplog/face_auth_event_oplog.dart';
+import 'package:digit_face_verification/data/repositories/remote/face_auth_event.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
@@ -57,16 +85,37 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: DigitTheme.instance.mobileTheme,
             home: Scaffold(
-              appBar: AppBar(),
+              // AppBar is intentionally omitted for the loading branch so the
+              // pre-init view reads as a splash. Non-loading branches (the
+              // maybeWhen falls through to orElse/failed) get an AppBar via
+              // the per-branch Scaffold below.
+              appBar: state.maybeWhen<PreferredSizeWidget?>(
+                orElse: () => AppBar(),
+                loading: () => null,
+              ),
               body: state.maybeWhen(
                 orElse: () => const Center(
                   child: Text('Unable to initialize the application'),
                 ),
-                /*Returns Loading state while app initialization is in progress*/
-                loading: () => const Center(
-                  child: Text('Loading'),
+                /*Splash-style placeholder while AppInitializationBloc runs —
+                  matches the native splash so the transition doesn't flash
+                  a bare 'Loading' text.*/
+                loading: () => Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/icons/app_icon.png',
+                        width: 140,
+                        height: 140,
+                      ),
+                      const SizedBox(height: 24),
+                      DigitLoaders.inlineLoader(size: 48),
+                    ],
+                  ),
                 ),
                 /*Returns No Internet Connection warning if its failed to initialize after all retries
                   and shows a button to close the app*/
@@ -276,9 +325,9 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
       RepositoryProvider<
           LocalRepository<UserActionModel, UserActionSearchModel>>(
-        create: (_) => LocationTrackerLocalBaseRepository(
+        create: (_) => UserActionLocalRepository(
           sql,
-          LocationTrackerOpLogManager(isar),
+          UserActionOpLogManager(isar),
         ),
       ),
       // INFO Need to add packages here
@@ -288,11 +337,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           UserActionOpLogManager(isar),
         ),
       ),
+
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
         create: (_) => PgrServiceLocalRepository(
           sql,
           PgrServiceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+        create: (_) => FaceAuthEventLocalRepository(
+          sql,
+          FaceAuthEventOpLogManager(isar),
         ),
       ),
     ];
@@ -520,6 +577,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
+        if (value == DataModelType.faceAuthEvent)
+          RepositoryProvider<
+              RemoteRepository<FaceAuthEventModel, FaceAuthEventSearchModel>>(
+            create: (_) =>
+                FaceAuthEventRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.userAction)
           RepositoryProvider<UserActionRemoteRepository>(
             create: (_) => UserActionRemoteRepository(dio, actionMap: actions),

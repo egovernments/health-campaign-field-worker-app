@@ -22,6 +22,22 @@ mixin _$AuthEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,6 +45,20 @@ mixin _$AuthEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,6 +66,20 @@ mixin _$AuthEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -44,6 +88,14 @@ mixin _$AuthEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +103,13 @@ mixin _$AuthEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,6 +117,13 @@ mixin _$AuthEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -168,6 +234,22 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
   }) {
     return login(userId, password, tenantId);
   }
@@ -178,6 +260,20 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
   }) {
     return login?.call(userId, password, tenantId);
   }
@@ -188,6 +284,20 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -202,6 +312,14 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
   }) {
     return login(this);
   }
@@ -212,6 +330,13 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
   }) {
     return login?.call(this);
   }
@@ -222,6 +347,13 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -315,6 +447,22 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
   }) {
     return autoLogin(tenantId);
   }
@@ -325,6 +473,20 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
   }) {
     return autoLogin?.call(tenantId);
   }
@@ -335,6 +497,20 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (autoLogin != null) {
@@ -349,6 +525,14 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
   }) {
     return autoLogin(this);
   }
@@ -359,6 +543,13 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
   }) {
     return autoLogin?.call(this);
   }
@@ -369,6 +560,13 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (autoLogin != null) {
@@ -430,6 +628,22 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
   }) {
     return logout();
   }
@@ -440,6 +654,20 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
   }) {
     return logout?.call();
   }
@@ -450,6 +678,20 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -464,6 +706,14 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
   }) {
     return logout(this);
   }
@@ -474,6 +724,13 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
   }) {
     return logout?.call(this);
   }
@@ -484,6 +741,13 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -498,11 +762,1116 @@ abstract class AuthLogoutEvent implements AuthEvent {
 }
 
 /// @nodoc
+abstract class _$$AuthCheckOtherDeviceLoginEventImplCopyWith<$Res> {
+  factory _$$AuthCheckOtherDeviceLoginEventImplCopyWith(
+          _$AuthCheckOtherDeviceLoginEventImpl value,
+          $Res Function(_$AuthCheckOtherDeviceLoginEventImpl) then) =
+      __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String username, String tenantId, String apiEndPoint});
+}
+
+/// @nodoc
+class __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthCheckOtherDeviceLoginEventImpl>
+    implements _$$AuthCheckOtherDeviceLoginEventImplCopyWith<$Res> {
+  __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl(
+      _$AuthCheckOtherDeviceLoginEventImpl _value,
+      $Res Function(_$AuthCheckOtherDeviceLoginEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? username = null,
+    Object? tenantId = null,
+    Object? apiEndPoint = null,
+  }) {
+    return _then(_$AuthCheckOtherDeviceLoginEventImpl(
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      apiEndPoint: null == apiEndPoint
+          ? _value.apiEndPoint
+          : apiEndPoint // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AuthCheckOtherDeviceLoginEventImpl
+    implements AuthCheckOtherDeviceLoginEvent {
+  const _$AuthCheckOtherDeviceLoginEventImpl(
+      {required this.username,
+      required this.tenantId,
+      required this.apiEndPoint});
+
+  @override
+  final String username;
+  @override
+  final String tenantId;
+  @override
+  final String apiEndPoint;
+
+  @override
+  String toString() {
+    return 'AuthEvent.checkOtherDeviceLogin(username: $username, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthCheckOtherDeviceLoginEventImpl &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId) &&
+            (identical(other.apiEndPoint, apiEndPoint) ||
+                other.apiEndPoint == apiEndPoint));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, username, tenantId, apiEndPoint);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AuthCheckOtherDeviceLoginEventImplCopyWith<
+          _$AuthCheckOtherDeviceLoginEventImpl>
+      get copyWith => __$$AuthCheckOtherDeviceLoginEventImplCopyWithImpl<
+          _$AuthCheckOtherDeviceLoginEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return checkOtherDeviceLogin(username, tenantId, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return checkOtherDeviceLogin?.call(username, tenantId, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (checkOtherDeviceLogin != null) {
+      return checkOtherDeviceLogin(username, tenantId, apiEndPoint);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return checkOtherDeviceLogin(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return checkOtherDeviceLogin?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (checkOtherDeviceLogin != null) {
+      return checkOtherDeviceLogin(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthCheckOtherDeviceLoginEvent implements AuthEvent {
+  const factory AuthCheckOtherDeviceLoginEvent(
+          {required final String username,
+          required final String tenantId,
+          required final String apiEndPoint}) =
+      _$AuthCheckOtherDeviceLoginEventImpl;
+
+  String get username;
+  String get tenantId;
+  String get apiEndPoint;
+  @JsonKey(ignore: true)
+  _$$AuthCheckOtherDeviceLoginEventImplCopyWith<
+          _$AuthCheckOtherDeviceLoginEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<$Res> {
+  factory _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith(
+          _$AuthSwitchDeviceEventSwitchDeviceImpl value,
+          $Res Function(_$AuthSwitchDeviceEventSwitchDeviceImpl) then) =
+      __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String selectedReason,
+      String? deviceSwitchComment,
+      String username,
+      String password,
+      String tenantId,
+      String apiEndPoint});
+}
+
+/// @nodoc
+class __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res,
+        _$AuthSwitchDeviceEventSwitchDeviceImpl>
+    implements _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<$Res> {
+  __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl(
+      _$AuthSwitchDeviceEventSwitchDeviceImpl _value,
+      $Res Function(_$AuthSwitchDeviceEventSwitchDeviceImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? selectedReason = null,
+    Object? deviceSwitchComment = freezed,
+    Object? username = null,
+    Object? password = null,
+    Object? tenantId = null,
+    Object? apiEndPoint = null,
+  }) {
+    return _then(_$AuthSwitchDeviceEventSwitchDeviceImpl(
+      selectedReason: null == selectedReason
+          ? _value.selectedReason
+          : selectedReason // ignore: cast_nullable_to_non_nullable
+              as String,
+      deviceSwitchComment: freezed == deviceSwitchComment
+          ? _value.deviceSwitchComment
+          : deviceSwitchComment // ignore: cast_nullable_to_non_nullable
+              as String?,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      apiEndPoint: null == apiEndPoint
+          ? _value.apiEndPoint
+          : apiEndPoint // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AuthSwitchDeviceEventSwitchDeviceImpl
+    implements AuthSwitchDeviceEventSwitchDevice {
+  const _$AuthSwitchDeviceEventSwitchDeviceImpl(
+      {required this.selectedReason,
+      required this.deviceSwitchComment,
+      required this.username,
+      required this.password,
+      required this.tenantId,
+      required this.apiEndPoint});
+
+  @override
+  final String selectedReason;
+  @override
+  final String? deviceSwitchComment;
+  @override
+  final String username;
+  @override
+  final String password;
+  @override
+  final String tenantId;
+  @override
+  final String apiEndPoint;
+
+  @override
+  String toString() {
+    return 'AuthEvent.switchDevice(selectedReason: $selectedReason, deviceSwitchComment: $deviceSwitchComment, username: $username, password: $password, tenantId: $tenantId, apiEndPoint: $apiEndPoint)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthSwitchDeviceEventSwitchDeviceImpl &&
+            (identical(other.selectedReason, selectedReason) ||
+                other.selectedReason == selectedReason) &&
+            (identical(other.deviceSwitchComment, deviceSwitchComment) ||
+                other.deviceSwitchComment == deviceSwitchComment) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId) &&
+            (identical(other.apiEndPoint, apiEndPoint) ||
+                other.apiEndPoint == apiEndPoint));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, selectedReason,
+      deviceSwitchComment, username, password, tenantId, apiEndPoint);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<
+          _$AuthSwitchDeviceEventSwitchDeviceImpl>
+      get copyWith => __$$AuthSwitchDeviceEventSwitchDeviceImplCopyWithImpl<
+          _$AuthSwitchDeviceEventSwitchDeviceImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return switchDevice(selectedReason, deviceSwitchComment, username, password,
+        tenantId, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return switchDevice?.call(selectedReason, deviceSwitchComment, username,
+        password, tenantId, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (switchDevice != null) {
+      return switchDevice(selectedReason, deviceSwitchComment, username,
+          password, tenantId, apiEndPoint);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return switchDevice(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return switchDevice?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (switchDevice != null) {
+      return switchDevice(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthSwitchDeviceEventSwitchDevice implements AuthEvent {
+  const factory AuthSwitchDeviceEventSwitchDevice(
+          {required final String selectedReason,
+          required final String? deviceSwitchComment,
+          required final String username,
+          required final String password,
+          required final String tenantId,
+          required final String apiEndPoint}) =
+      _$AuthSwitchDeviceEventSwitchDeviceImpl;
+
+  String get selectedReason;
+  String? get deviceSwitchComment;
+  String get username;
+  String get password;
+  String get tenantId;
+  String get apiEndPoint;
+  @JsonKey(ignore: true)
+  _$$AuthSwitchDeviceEventSwitchDeviceImplCopyWith<
+          _$AuthSwitchDeviceEventSwitchDeviceImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AuthResetEventImplCopyWith<$Res> {
+  factory _$$AuthResetEventImplCopyWith(_$AuthResetEventImpl value,
+          $Res Function(_$AuthResetEventImpl) then) =
+      __$$AuthResetEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthResetEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthResetEventImpl>
+    implements _$$AuthResetEventImplCopyWith<$Res> {
+  __$$AuthResetEventImplCopyWithImpl(
+      _$AuthResetEventImpl _value, $Res Function(_$AuthResetEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthResetEventImpl implements AuthResetEvent {
+  const _$AuthResetEventImpl();
+
+  @override
+  String toString() {
+    return 'AuthEvent.reset()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$AuthResetEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return reset();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return reset?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (reset != null) {
+      return reset();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return reset(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return reset?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (reset != null) {
+      return reset(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthResetEvent implements AuthEvent {
+  const factory AuthResetEvent() = _$AuthResetEventImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthAllowEventImplCopyWith<$Res> {
+  factory _$$AuthAllowEventImplCopyWith(_$AuthAllowEventImpl value,
+          $Res Function(_$AuthAllowEventImpl) then) =
+      __$$AuthAllowEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthAllowEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthAllowEventImpl>
+    implements _$$AuthAllowEventImplCopyWith<$Res> {
+  __$$AuthAllowEventImplCopyWithImpl(
+      _$AuthAllowEventImpl _value, $Res Function(_$AuthAllowEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthAllowEventImpl implements AuthAllowEvent {
+  const _$AuthAllowEventImpl();
+
+  @override
+  String toString() {
+    return 'AuthEvent.allow()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$AuthAllowEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return allow();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return allow?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return allow(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return allow?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthAllowEvent implements AuthEvent {
+  const factory AuthAllowEvent() = _$AuthAllowEventImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthSwitchDeviceUserActionEventImplCopyWith<$Res> {
+  factory _$$AuthSwitchDeviceUserActionEventImplCopyWith(
+          _$AuthSwitchDeviceUserActionEventImpl value,
+          $Res Function(_$AuthSwitchDeviceUserActionEventImpl) then) =
+      __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({UserActionModel userActionModel, String apiEndPoint});
+}
+
+/// @nodoc
+class __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthSwitchDeviceUserActionEventImpl>
+    implements _$$AuthSwitchDeviceUserActionEventImplCopyWith<$Res> {
+  __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl(
+      _$AuthSwitchDeviceUserActionEventImpl _value,
+      $Res Function(_$AuthSwitchDeviceUserActionEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? userActionModel = null,
+    Object? apiEndPoint = null,
+  }) {
+    return _then(_$AuthSwitchDeviceUserActionEventImpl(
+      userActionModel: null == userActionModel
+          ? _value.userActionModel
+          : userActionModel // ignore: cast_nullable_to_non_nullable
+              as UserActionModel,
+      apiEndPoint: null == apiEndPoint
+          ? _value.apiEndPoint
+          : apiEndPoint // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AuthSwitchDeviceUserActionEventImpl
+    implements AuthSwitchDeviceUserActionEvent {
+  const _$AuthSwitchDeviceUserActionEventImpl(
+      {required this.userActionModel, required this.apiEndPoint});
+
+  @override
+  final UserActionModel userActionModel;
+  @override
+  final String apiEndPoint;
+
+  @override
+  String toString() {
+    return 'AuthEvent.switchDeviceUserAction(userActionModel: $userActionModel, apiEndPoint: $apiEndPoint)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthSwitchDeviceUserActionEventImpl &&
+            (identical(other.userActionModel, userActionModel) ||
+                other.userActionModel == userActionModel) &&
+            (identical(other.apiEndPoint, apiEndPoint) ||
+                other.apiEndPoint == apiEndPoint));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, userActionModel, apiEndPoint);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AuthSwitchDeviceUserActionEventImplCopyWith<
+          _$AuthSwitchDeviceUserActionEventImpl>
+      get copyWith => __$$AuthSwitchDeviceUserActionEventImplCopyWithImpl<
+          _$AuthSwitchDeviceUserActionEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function(
+            String username, String tenantId, String apiEndPoint)
+        checkOtherDeviceLogin,
+    required TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)
+        switchDevice,
+    required TResult Function() reset,
+    required TResult Function() allow,
+    required TResult Function(
+            UserActionModel userActionModel, String apiEndPoint)
+        switchDeviceUserAction,
+  }) {
+    return switchDeviceUserAction(userActionModel, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult? Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult? Function()? reset,
+    TResult? Function()? allow,
+    TResult? Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+  }) {
+    return switchDeviceUserAction?.call(userActionModel, apiEndPoint);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function(String username, String tenantId, String apiEndPoint)?
+        checkOtherDeviceLogin,
+    TResult Function(
+            String selectedReason,
+            String? deviceSwitchComment,
+            String username,
+            String password,
+            String tenantId,
+            String apiEndPoint)?
+        switchDevice,
+    TResult Function()? reset,
+    TResult Function()? allow,
+    TResult Function(UserActionModel userActionModel, String apiEndPoint)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (switchDeviceUserAction != null) {
+      return switchDeviceUserAction(userActionModel, apiEndPoint);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthCheckOtherDeviceLoginEvent value)
+        checkOtherDeviceLogin,
+    required TResult Function(AuthSwitchDeviceEventSwitchDevice value)
+        switchDevice,
+    required TResult Function(AuthResetEvent value) reset,
+    required TResult Function(AuthAllowEvent value) allow,
+    required TResult Function(AuthSwitchDeviceUserActionEvent value)
+        switchDeviceUserAction,
+  }) {
+    return switchDeviceUserAction(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult? Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult? Function(AuthResetEvent value)? reset,
+    TResult? Function(AuthAllowEvent value)? allow,
+    TResult? Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+  }) {
+    return switchDeviceUserAction?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthCheckOtherDeviceLoginEvent value)?
+        checkOtherDeviceLogin,
+    TResult Function(AuthSwitchDeviceEventSwitchDevice value)? switchDevice,
+    TResult Function(AuthResetEvent value)? reset,
+    TResult Function(AuthAllowEvent value)? allow,
+    TResult Function(AuthSwitchDeviceUserActionEvent value)?
+        switchDeviceUserAction,
+    required TResult orElse(),
+  }) {
+    if (switchDeviceUserAction != null) {
+      return switchDeviceUserAction(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthSwitchDeviceUserActionEvent implements AuthEvent {
+  const factory AuthSwitchDeviceUserActionEvent(
+          {required final UserActionModel userActionModel,
+          required final String apiEndPoint}) =
+      _$AuthSwitchDeviceUserActionEventImpl;
+
+  UserActionModel get userActionModel;
+  String get apiEndPoint;
+  @JsonKey(ignore: true)
+  _$$AuthSwitchDeviceUserActionEventImplCopyWith<
+          _$AuthSwitchDeviceUserActionEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$AuthState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -511,12 +1880,15 @@ mixin _$AuthState {
             String? individualId)
         authenticated,
     required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -525,12 +1897,15 @@ mixin _$AuthState {
             String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -539,6 +1914,8 @@ mixin _$AuthState {
             String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -546,24 +1923,33 @@ mixin _$AuthState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -629,6 +2015,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -637,6 +2024,8 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             String? individualId)
         authenticated,
     required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
   }) {
     return unauthenticated();
   }
@@ -646,6 +2035,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -654,6 +2044,8 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
   }) {
     return unauthenticated?.call();
   }
@@ -663,6 +2055,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -671,6 +2064,8 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
     required TResult orElse(),
   }) {
     if (unauthenticated != null) {
@@ -684,8 +2079,11 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
   }) {
     return unauthenticated(this);
   }
@@ -695,8 +2093,11 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
   }) {
     return unauthenticated?.call(this);
   }
@@ -706,8 +2107,11 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
     required TResult orElse(),
   }) {
     if (unauthenticated != null) {
@@ -761,6 +2165,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -769,6 +2174,8 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             String? individualId)
         authenticated,
     required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
   }) {
     return loading();
   }
@@ -778,6 +2185,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -786,6 +2194,8 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
   }) {
     return loading?.call();
   }
@@ -795,6 +2205,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -803,6 +2214,8 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -816,8 +2229,11 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
   }) {
     return loading(this);
   }
@@ -827,8 +2243,11 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
   }) {
     return loading?.call(this);
   }
@@ -838,8 +2257,11 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -851,6 +2273,157 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
 
 abstract class AuthLoadingState implements AuthState {
   const factory AuthLoadingState() = _$AuthLoadingStateImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthLoggingOutStateImplCopyWith<$Res> {
+  factory _$$AuthLoggingOutStateImplCopyWith(_$AuthLoggingOutStateImpl value,
+          $Res Function(_$AuthLoggingOutStateImpl) then) =
+      __$$AuthLoggingOutStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthLoggingOutStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoggingOutStateImpl>
+    implements _$$AuthLoggingOutStateImplCopyWith<$Res> {
+  __$$AuthLoggingOutStateImplCopyWithImpl(_$AuthLoggingOutStateImpl _value,
+      $Res Function(_$AuthLoggingOutStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthLoggingOutStateImpl implements AuthLoggingOutState {
+  const _$AuthLoggingOutStateImpl();
+
+  @override
+  String toString() {
+    return 'AuthState.loggingOut()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthLoggingOutStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unauthenticated,
+    required TResult Function() loading,
+    required TResult Function() loggingOut,
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
+        authenticated,
+    required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
+  }) {
+    return loggingOut();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unauthenticated,
+    TResult? Function()? loading,
+    TResult? Function()? loggingOut,
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
+  }) {
+    return loggingOut?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unauthenticated,
+    TResult Function()? loading,
+    TResult Function()? loggingOut,
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
+    required TResult orElse(),
+  }) {
+    if (loggingOut != null) {
+      return loggingOut();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
+    required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
+    required TResult Function(AuthAuthenticatedState value) authenticated,
+    required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
+  }) {
+    return loggingOut(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
+    TResult? Function(AuthAuthenticatedState value)? authenticated,
+    TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
+  }) {
+    return loggingOut?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
+    TResult Function(AuthAuthenticatedState value)? authenticated,
+    TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
+    required TResult orElse(),
+  }) {
+    if (loggingOut != null) {
+      return loggingOut(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthLoggingOutState implements AuthState {
+  const factory AuthLoggingOutState() = _$AuthLoggingOutStateImpl;
 }
 
 /// @nodoc
@@ -990,6 +2563,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -998,6 +2572,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             String? individualId)
         authenticated,
     required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
   }) {
     return authenticated(
         accessToken, refreshToken, userModel, actionsWrapper, individualId);
@@ -1008,6 +2584,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -1016,6 +2593,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
   }) {
     return authenticated?.call(
         accessToken, refreshToken, userModel, actionsWrapper, individualId);
@@ -1026,6 +2605,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -1034,6 +2614,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
@@ -1048,8 +2630,11 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
   }) {
     return authenticated(this);
   }
@@ -1059,8 +2644,11 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
   }) {
     return authenticated?.call(this);
   }
@@ -1070,8 +2658,11 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
@@ -1166,6 +2757,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
+    required TResult Function() loggingOut,
     required TResult Function(
             String accessToken,
             String refreshToken,
@@ -1174,6 +2766,8 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             String? individualId)
         authenticated,
     required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
   }) {
     return error(this.error);
   }
@@ -1183,6 +2777,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
+    TResult? Function()? loggingOut,
     TResult? Function(
             String accessToken,
             String refreshToken,
@@ -1191,6 +2786,8 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
   }) {
     return error?.call(this.error);
   }
@@ -1200,6 +2797,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
+    TResult Function()? loggingOut,
     TResult Function(
             String accessToken,
             String refreshToken,
@@ -1208,6 +2806,8 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1221,8 +2821,11 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult map<TResult extends Object?>({
     required TResult Function(AuthUnauthenticatedState value) unauthenticated,
     required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
     required TResult Function(AuthAuthenticatedState value) authenticated,
     required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
   }) {
     return error(this);
   }
@@ -1232,8 +2835,11 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
     TResult? Function(AuthAuthenticatedState value)? authenticated,
     TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
   }) {
     return error?.call(this);
   }
@@ -1243,8 +2849,11 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthUnauthenticatedState value)? unauthenticated,
     TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
     TResult Function(AuthAuthenticatedState value)? authenticated,
     TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1261,4 +2870,305 @@ abstract class AuthErrorState implements AuthState {
   @JsonKey(ignore: true)
   _$$AuthErrorStateImplCopyWith<_$AuthErrorStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AuthOtherDeviceStateImplCopyWith<$Res> {
+  factory _$$AuthOtherDeviceStateImplCopyWith(_$AuthOtherDeviceStateImpl value,
+          $Res Function(_$AuthOtherDeviceStateImpl) then) =
+      __$$AuthOtherDeviceStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthOtherDeviceStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthOtherDeviceStateImpl>
+    implements _$$AuthOtherDeviceStateImplCopyWith<$Res> {
+  __$$AuthOtherDeviceStateImplCopyWithImpl(_$AuthOtherDeviceStateImpl _value,
+      $Res Function(_$AuthOtherDeviceStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthOtherDeviceStateImpl implements AuthOtherDeviceState {
+  const _$AuthOtherDeviceStateImpl();
+
+  @override
+  String toString() {
+    return 'AuthState.otherDevice()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthOtherDeviceStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unauthenticated,
+    required TResult Function() loading,
+    required TResult Function() loggingOut,
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
+        authenticated,
+    required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
+  }) {
+    return otherDevice();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unauthenticated,
+    TResult? Function()? loading,
+    TResult? Function()? loggingOut,
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
+  }) {
+    return otherDevice?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unauthenticated,
+    TResult Function()? loading,
+    TResult Function()? loggingOut,
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
+    required TResult orElse(),
+  }) {
+    if (otherDevice != null) {
+      return otherDevice();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
+    required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
+    required TResult Function(AuthAuthenticatedState value) authenticated,
+    required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
+  }) {
+    return otherDevice(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
+    TResult? Function(AuthAuthenticatedState value)? authenticated,
+    TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
+  }) {
+    return otherDevice?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
+    TResult Function(AuthAuthenticatedState value)? authenticated,
+    TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
+    required TResult orElse(),
+  }) {
+    if (otherDevice != null) {
+      return otherDevice(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthOtherDeviceState implements AuthState {
+  const factory AuthOtherDeviceState() = _$AuthOtherDeviceStateImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthAllowStateImplCopyWith<$Res> {
+  factory _$$AuthAllowStateImplCopyWith(_$AuthAllowStateImpl value,
+          $Res Function(_$AuthAllowStateImpl) then) =
+      __$$AuthAllowStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthAllowStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthAllowStateImpl>
+    implements _$$AuthAllowStateImplCopyWith<$Res> {
+  __$$AuthAllowStateImplCopyWithImpl(
+      _$AuthAllowStateImpl _value, $Res Function(_$AuthAllowStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthAllowStateImpl implements AuthAllowState {
+  const _$AuthAllowStateImpl();
+
+  @override
+  String toString() {
+    return 'AuthState.allow()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$AuthAllowStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unauthenticated,
+    required TResult Function() loading,
+    required TResult Function() loggingOut,
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
+        authenticated,
+    required TResult Function(String? error) error,
+    required TResult Function() otherDevice,
+    required TResult Function() allow,
+  }) {
+    return allow();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unauthenticated,
+    TResult? Function()? loading,
+    TResult? Function()? loggingOut,
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult? Function(String? error)? error,
+    TResult? Function()? otherDevice,
+    TResult? Function()? allow,
+  }) {
+    return allow?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unauthenticated,
+    TResult Function()? loading,
+    TResult Function()? loggingOut,
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
+        authenticated,
+    TResult Function(String? error)? error,
+    TResult Function()? otherDevice,
+    TResult Function()? allow,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthUnauthenticatedState value) unauthenticated,
+    required TResult Function(AuthLoadingState value) loading,
+    required TResult Function(AuthLoggingOutState value) loggingOut,
+    required TResult Function(AuthAuthenticatedState value) authenticated,
+    required TResult Function(AuthErrorState value) error,
+    required TResult Function(AuthOtherDeviceState value) otherDevice,
+    required TResult Function(AuthAllowState value) allow,
+  }) {
+    return allow(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult? Function(AuthLoadingState value)? loading,
+    TResult? Function(AuthLoggingOutState value)? loggingOut,
+    TResult? Function(AuthAuthenticatedState value)? authenticated,
+    TResult? Function(AuthErrorState value)? error,
+    TResult? Function(AuthOtherDeviceState value)? otherDevice,
+    TResult? Function(AuthAllowState value)? allow,
+  }) {
+    return allow?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthUnauthenticatedState value)? unauthenticated,
+    TResult Function(AuthLoadingState value)? loading,
+    TResult Function(AuthLoggingOutState value)? loggingOut,
+    TResult Function(AuthAuthenticatedState value)? authenticated,
+    TResult Function(AuthErrorState value)? error,
+    TResult Function(AuthOtherDeviceState value)? otherDevice,
+    TResult Function(AuthAllowState value)? allow,
+    required TResult orElse(),
+  }) {
+    if (allow != null) {
+      return allow(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthAllowState implements AuthState {
+  const factory AuthAllowState() = _$AuthAllowStateImpl;
 }

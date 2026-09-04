@@ -63,9 +63,13 @@ class BoundaryLocalRepository
       final r = result.read(sql.boundary.boundaryNum);
 
       if (query.isSingle == true) {
+        // Local table is empty (e.g. cold restart with selectedProject in
+        // secure store but boundaries not yet downloaded). Return [] instead
+        // of crashing on r!.
+        if (r == null) return <BoundaryModel>[];
         (selectQuery
               ..where(buildAnd([
-                sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
+                sql.boundary.boundaryNum.isSmallerOrEqualValue(r),
               ])))
             .limit(r);
       } else {

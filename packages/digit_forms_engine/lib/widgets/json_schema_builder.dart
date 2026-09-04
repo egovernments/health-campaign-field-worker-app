@@ -1,13 +1,21 @@
 library json_schema_builder;
 
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_forms_engine/blocs/app_localization.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:digit_forms_engine/helper/validator_helper.dart';
-import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/helper/visibility_manager.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/models/scanner_validation.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:digit_scanner/utils/scanner_utils.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -15,16 +23,20 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/utils/utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/forms/forms.dart';
 import '../helper/validation_message_helper.dart';
+import '../helper/visibility_manager.dart';
 import '../utils/utils.dart';
 import 'localized.dart';
 
@@ -41,6 +53,7 @@ part 'radio_builder.dart';
 part 'scanner_builder.dart';
 part 'selection_builder.dart';
 part 'string_builder.dart';
+part 'text_area_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;

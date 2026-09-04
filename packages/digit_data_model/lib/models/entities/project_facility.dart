@@ -12,12 +12,14 @@ class ProjectFacilitySearchModel extends EntitySearchModel
   final List<String>? facilityId;
   final List<String>? projectId;
   final String? tenantId;
+  final List<String>? boundaryTypes;
 
   ProjectFacilitySearchModel({
     this.id,
     this.facilityId,
     this.projectId,
     this.tenantId,
+    this.boundaryTypes,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -28,6 +30,7 @@ class ProjectFacilitySearchModel extends EntitySearchModel
     this.facilityId,
     this.projectId,
     this.tenantId,
+    this.boundaryTypes,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
