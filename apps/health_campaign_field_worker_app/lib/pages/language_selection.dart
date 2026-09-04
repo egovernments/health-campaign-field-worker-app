@@ -76,7 +76,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                       DigitSyncDialog.show(
                         context,
                         type: DialogType.failed,
-                        label: i18.common.failedToFetch,
+                        label: AppLocalizations.of(context)
+                            .translate(i18.common.failedToFetch),
                         primaryAction: DigitDialogActions(
                           label: AppLocalizations.of(context).translate(
                             i18.common.coreCommonRetry,
