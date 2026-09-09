@@ -49,7 +49,14 @@ class RowWidget extends ResolvedFlowWidget {
             compositeKey: resolved.compositeKey),
       );
 
-      if (flex != null) child = Expanded(flex: flex, child: child);
+      if (flex != null) {
+        child = Expanded(flex: flex, child: child);
+      } else if (rawChild['format'] == 'searchBar') {
+        // DigitSearchBar sizes itself to infinite width; unconstrained inside
+        // a Row it fails layout and blanks the whole row, so default to
+        // Expanded when the config doesn't specify flex.
+        child = Expanded(child: child);
+      }
       return child;
     }).toList();
 
