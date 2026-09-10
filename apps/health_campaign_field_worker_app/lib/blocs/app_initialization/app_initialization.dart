@@ -158,30 +158,16 @@ class AppInitializationBloc
           isar,
         );
         try {
-          final dashboardMdmsRes = await mdmsRepository.searchMDMS(
+          final dashboardList = await mdmsRepository.searchMDMS(
             envConfig.variables.mdmsApiPath,
-            MdmsRequestModel(
-              mdmsCriteria: MdmsCriteriaModel(
-                tenantId: envConfig.variables.tenantId,
-                moduleDetails: [
-                  MdmsModuleDetailModel(
-                    moduleName: ModuleEnums.hcm.toValue(),
-                    masterDetails: [
-                      MdmsMasterDetailModel(
-                        MasterEnums.dashboardConfig.toValue(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ).toJson(),
+            tenantId: envConfig.variables.tenantId,
+            schemaCode:
+                '${ModuleEnums.hcm.toValue()}.${MasterEnums.dashboardConfig.toValue()}',
           );
-          final hcmModule =
-              dashboardMdmsRes?[ModuleEnums.hcm.toValue().toString()];
-          if (hcmModule != null) {
-            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-              Map<String, dynamic>.from(hcmModule),
-            ).dashboardConfigWrapper;
+          if (dashboardList.isNotEmpty) {
+            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson({
+              MasterEnums.dashboardConfig.toValue().toString(): dashboardList,
+            }).dashboardConfigWrapper;
 
             if (dashboardConfigs.isNotEmpty) {
               await dashboardRemoteRepository.writeToDashboardConfigDB(

@@ -219,12 +219,38 @@ class MdmsRepository {
     }
   }
 
-  Future<dynamic> searchMDMS(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
+  /// Generic v2 search that returns `List<dynamic>` of data objects directly.
+  /// Used for FormConfig, dashboard config, enum values, and other ad-hoc
+  /// MDMS lookups.
+  Future<List<dynamic>> searchMDMS(
+    String apiEndPoint, {
+    required String tenantId,
+    required String schemaCode,
+    Map<String, dynamic>? filters,
+    int limit = 5000,
+  }) async {
     try {
-      return await _searchMdmsResV2(apiEndPoint, body);
+      final response = await _client.post(apiEndPoint, data: {
+        'MdmsCriteria': {
+          'tenantId': tenantId,
+          'schemaCode': schemaCode,
+          if (filters != null) 'filters': filters,
+          'limit': limit,
+          'isActive': true,
+        },
+      });
+
+      final responseData = response.data is String
+          ? json.decode(response.data as String)
+          : response.data;
+      final mdmsList = responseData is List
+          ? responseData
+          : (responseData?['mdms'] as List? ?? []);
+
+      return mdmsList
+          .where((e) => e is Map && e['isActive'] != false)
+          .map((e) => e['data'])
+          .toList();
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',

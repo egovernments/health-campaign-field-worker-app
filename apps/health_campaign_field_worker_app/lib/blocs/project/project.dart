@@ -33,7 +33,6 @@ import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/roles_type.dart';
-import '../../utils/background_service.dart';
 import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
@@ -196,7 +195,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
-    final batchSize = await _getBatchSize();
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -267,17 +265,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-      try {
-        await _loadFacilities(projects, batchSize);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.facilities,
-          ),
-        );
-        return;
-      }
+      // Facility fetch moved: `_loadFacilities` used to fire a tenant-wide
+      // search here (unfiltered by project), pulling every facility in the
+      // environment. That's wasteful on large tenants — we only need the
+      // facilities referenced by the selected project's project-facility
+      // mappings. It now runs from inside `_loadProjectFacilities` after
+      // the project is selected, using the specific `facilityId`s
+      // returned there.
 
       try {
         await _loadProductVariants(projects);
@@ -425,6 +419,37 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
+    // Fetch only the facilities referenced by this project's
+    // project-facility mappings, instead of pulling every facility in the
+    // tenant. Chunk the id list so the query-string / body stays within a
+    // sensible size for the search API.
+    final facilityIds = projectFacilities
+        .map((pf) => pf.facilityId)
+        .whereType<String>()
+        .toSet()
+        .toList();
+    if (facilityIds.isNotEmpty) {
+      const chunkSize = 100;
+      for (var i = 0; i < facilityIds.length; i += chunkSize) {
+        final end = (i + chunkSize < facilityIds.length)
+            ? i + chunkSize
+            : facilityIds.length;
+        final chunk = facilityIds.sublist(i, end);
+        try {
+          final facilities = await facilityRemoteRepository.search(
+            FacilitySearchModel(
+              tenantId: envConfig.variables.tenantId,
+              id: chunk,
+            ),
+          );
+          await facilityLocalRepository.bulkCreate(facilities);
+        } catch (e) {
+          debugPrint(
+              'facility fetch failed for chunk starting at $i: $e');
+        }
+      }
+    }
+
     // Register notification token with current level facility IDs
     final currentFacilityIds = projectFacilities
         .where((pf) {
@@ -455,16 +480,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             );
       }
     }
-  }
-
-  FutureOr<void> _loadFacilities(
-      List<ProjectModel> projects, int batchSize) async {
-    final facilities = await facilityRemoteRepository.search(
-      FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: batchSize,
-    );
-
-    await facilityLocalRepository.bulkCreate(facilities);
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
@@ -725,28 +740,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
-        final formConfigResult = await mdmsRepository.searchMDMS(
+        final formConfigs = await mdmsRepository.searchMDMS(
           envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: 'HCM-ADMIN-CONSOLE',
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                      'FormConfig',
-                      filter:
-                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
+          tenantId: envConfig.variables.tenantId,
+          schemaCode: 'HCM-ADMIN-CONSOLE.FormConfig',
+          filters: {
+            'project': event.model.referenceID,
+            'isSelected': true,
+          },
         );
-
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);
@@ -1424,25 +1426,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    // Prepare module details for MDMS request
-    final moduleDetails = moduleToMasters.entries.map((entry) {
-      return MdmsModuleDetailModel(
-        moduleName: entry.key,
-        masterDetails:
-            entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
-      );
-    }).toList();
-
-    // Fetch all master data in a single MDMS call
-    final mdmsResponse = await mdmsRepository.searchMDMS(
-      envConfig.variables.mdmsApiPath,
-      MdmsRequestModel(
-        mdmsCriteria: MdmsCriteriaModel(
+    // Fetch enum data per schemaCode via v2 calls. MDMS v2 `_search`
+    // returns a flat list per schemaCode, so we loop and reassemble into
+    // the nested {module: {master: [data]}} map the enrichment step below
+    // reads from.
+    final Map<String, Map<String, List<dynamic>>> mdmsResponse = {};
+    for (final entry in moduleToMasters.entries) {
+      final module = entry.key;
+      for (final master in entry.value) {
+        final dataList = await mdmsRepository.searchMDMS(
+          envConfig.variables.mdmsApiPath,
           tenantId: envConfig.variables.tenantId,
-          moduleDetails: moduleDetails,
-        ),
-      ).toJson(),
-    );
+          schemaCode: '$module.$master',
+        );
+        mdmsResponse.putIfAbsent(module, () => {})[master] = dataList;
+      }
+    }
 
     // ✅ Now enrich all FORM screens with enums
     for (final formConfig in formTypeConfigs) {
@@ -1474,25 +1473,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // ✅ Finally, store the full formConfigs (including updated FORM ones)
     await storeSchema(formConfigs);
-  }
-
-  FutureOr<int> _getBatchSize() async {
-    try {
-      final configs = await isar.appConfigurations.where().findAll();
-
-      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
-        bandWidthCheckModel: null,
-      );
-
-      int configuredBatchSize = getBatchSizeToBandwidth(
-        speed,
-        configs,
-        isDownSync: true,
-      );
-      return configuredBatchSize;
-    } catch (e) {
-      rethrow;
-    }
   }
 
   Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {

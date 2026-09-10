@@ -260,18 +260,15 @@ class Constants {
     final config = appConfigs.firstOrNull;
 
     // Always initialize Firebase Core (required for FCM, analytics, etc.)
-    await firebase_services.initialize(
+    await firebase_services.initializeFirebaseCore(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      await firebase_services.initialize(
+      await firebase_services.initializeFirebaseCore(
         options: DefaultFirebaseOptions.currentPlatform,
-        onErrorMessage: (value) {
-          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-        },
       );
     }
 
@@ -394,7 +391,7 @@ class Constants {
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) =>
-    element.entityName == entityName && element.action == action)
+            element.entityName == entityName && element.action == action)
         ?.path;
 
     return actionResult ?? '';
