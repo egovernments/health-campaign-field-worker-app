@@ -422,6 +422,7 @@ final jsonConfig = {
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
+        "skipFirst": 0,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -1834,44 +1835,42 @@ final jsonConfig = {
       }
     }
   },
-  "lqaClusterData": {
+  "clfSession": {
     "models": {
       "UserActionModel": {
         "mappings": {
           "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:POLIO_CLF_SESSION",
           "resourceTag": "__ref:UserActionModel.clientReferenceId",
-          "projectId": "__context:projectId",
-          "boundaryCode": "__context:selectedBoundaryCode",
-          "tenantId": "__context:tenantId",
-          "action": "__value:LOCATION_CAPTURE",
-          "latitude": "clusterInfo.gpsStart[0]",
-          "longitude": "clusterInfo.gpsStart[1]",
-          "locationAccuracy": "clusterInfo.gpsStart[2]",
+          "latitude": "sessionSetup.gpsStart[0]",
+          "longitude": "sessionSetup.gpsStart[1]",
+          "locationAccuracy": "sessionSetup.gpsStart[2]",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "form": "__value:POLIO_LQA",
-            "formType": "__value:LQA_CLUSTER_DATA",
-            "surveyDate": "clusterInfo.surveyDate",
-            "settlementArea": "clusterInfo.settlementArea",
-            "lotNumber": "clusterInfo.lotNumber",
-            "clusterNumber": "clusterInfo.clusterNumber",
-            "surveyorName": "clusterInfo.surveyorName",
-            "surveyorPhone": "clusterInfo.surveyorPhone",
-            "lqasCoordinatorName": "clusterInfo.lqasCoordinatorName",
-            "settlementType": "clusterInfo.settlementType",
-            "settlementSmall": "clusterInfo.settlementSmall",
-            "gpsStartLat": "clusterInfo.gpsStart[0]",
-            "gpsStartLng": "clusterInfo.gpsStart[1]",
+            "form": "__value:POLIO_CLF_VACCINATION",
+            "formType": "__value:GROUP_VAC_SESSION",
+            "sessionType": "__value:CLF",
+            "clfLocationType": "sessionSetup.clfLocationType",
+            "locationName": "sessionSetup.locationName",
+            "responsiblePerson": "sessionSetup.responsiblePerson",
+            "contactNumber": "sessionSetup.contactNumber",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea",
+            "workerName": "sessionSetup.workerName",
+            "workerPhone": "sessionSetup.workerPhone",
             "locality": "__context:selectedBoundaryCode"
           }
         }
       }
     }
   },
-  "lqaChildData": {
+  "transitSession": {
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1879,122 +1878,88 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LOCATION_CAPTURE",
-          "resourceTag": "__context:ClusterClientReferenceId",
-          "latitude": "__value:0.0",
-          "longitude": "__value:0.0",
-          "locationAccuracy": "__value:0.0",
+          "action": "__value:POLIO_TRANSIT_SESSION",
+          "resourceTag": "__ref:UserActionModel.clientReferenceId",
+          "latitude": "sessionSetup.gpsStart[0]",
+          "longitude": "sessionSetup.gpsStart[1]",
+          "locationAccuracy": "sessionSetup.gpsStart[2]",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "form": "__value:POLIO_LQA",
-            "formType": "__value:LQA_CHILD_DATA",
-            "childrenUnder5": "childDetails.childrenUnder5",
-            "childAgeMonths": "childDetails.childAgeMonths",
+            "form": "__value:POLIO_TRANSIT_VACCINATION",
+            "formType": "__value:GROUP_VAC_SESSION",
+            "sessionType": "__value:TRANSIT",
+            "transitLocationType": "sessionSetup.transitLocationType",
+            "locationName": "sessionSetup.locationName",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea",
+            "workerName": "sessionSetup.workerName",
+            "workerPhone": "sessionSetup.workerPhone",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
+  "groupVacChild": {
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:VACCINATION_ADMINISTERED",
+          "resourceTag": "__context:SessionClientReferenceId",
+          "latitude": "childDetails.gpsChild[0]",
+          "longitude": "childDetails.gpsChild[1]",
+          "locationAccuracy": "childDetails.gpsChild[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "formType": "__value:GROUP_VAC_CHILD",
+            "childName": "childDetails.childName",
             "childSex": "childDetails.childSex",
-            "fingerMarked": "childDetails.fingerMarked",
-            "reasonNotMarked": "childDetails.reasonNotMarked",
-            "reasonNotMarkedOther": "childDetails.reasonNotMarkedOther",
-            "refusalReason": "childDetails.refusalReason",
-            "refusalReasonOther": "childDetails.refusalReasonOther",
-            "absenceReason": "childDetails.absenceReason",
-            "absenceReasonOther": "childDetails.absenceReasonOther",
-            "caregiverInformed": "childDetails.caregiverInformed",
-            "campaignAwareness": "childDetails.campaignAwareness",
-            "awarenessOther": "childDetails.awarenessOther",
-            "opvDosesFromBirth": "childDetails.opvDosesFromBirth",
-            "afpAwareness": "childDetails.afpAwareness",
-            "afpCaseCount": "childDetails.afpCaseCount",
+            "ageBand": "childDetails.ageBand",
+            "directionOfTravel": "childDetails.directionOfTravel",
+            "nationality": "childDetails.nationality",
+            "opvPrior": "childDetails.opvPrior",
+            "ipvPrior": "childDetails.ipvPrior",
+            "twoDropsAdministered": "confirmVaccination.twoDropsAdministered",
+            "fingerMarked": "confirmVaccination.fingerMarked",
             "locality": "__context:selectedBoundaryCode"
           }
         }
       }
     }
   },
-  "lqaCloseoutData": {
+  "groupVacReferral": {
     "models": {
       "UserActionModel": {
         "mappings": {
           "clientReferenceId": "__generate:uuid",
+          "latitude": "referralDetails.gpsReferral[0]",
+          "longitude": "referralDetails.gpsReferral[1]",
+          "locationAccuracy": "referralDetails.gpsReferral[2]",
           "projectId": "__context:projectId",
           "boundaryCode": "__context:selectedBoundaryCode",
           "tenantId": "__context:tenantId",
-          "action": "__value:LOCATION_CAPTURE",
-          "resourceTag": "__context:ClusterClientReferenceId",
-          "latitude": "closeout.gpsFinal[0]",
-          "longitude": "closeout.gpsFinal[1]",
-          "locationAccuracy": "closeout.gpsFinal[2]",
+          "action": "__value:REFERRAL_RECORDED",
+          "resourceTag": "__context:SessionClientReferenceId",
           "timestamp": "__value:DATETIME.NOW",
           "isSync": "__value:false",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "form": "__value:POLIO_LQA",
-            "formType": "__value:LQA_CLOSEOUT",
-            "gpsFinalLat": "closeout.gpsFinal[0]",
-            "gpsFinalLng": "closeout.gpsFinal[1]",
-            "finalComments": "closeout.finalComments",
-            "locality": "__context:selectedBoundaryCode"
-          }
-        }
-      }
-    }
-  },
-  "polioInsideHousehold": {
-    "models": {
-      "UserActionModel": {
-        "mappings": {
-          "clientReferenceId": "__generate:uuid",
-          "projectId": "__context:projectId",
-          "boundaryCode": "__context:selectedBoundaryCode",
-          "tenantId": "__context:tenantId",
-          "action": "__value:LOCATION_CAPTURE",
-          "latitude": "firstHouseholdLocation.gpsFirstHousehold[0]",
-          "longitude": "firstHouseholdLocation.gpsFirstHousehold[1]",
-          "locationAccuracy": "firstHouseholdLocation.gpsFirstHousehold[2]",
-          "timestamp": "__value:DATETIME.NOW",
-          "isSync": "__value:false",
-          "clientAuditDetails": "__generate:clientAudit",
-          "auditDetails": "__generate:audit",
-          "additionalFields": {
-            "form": "__value:POLIO_INSIDE_MONITORING",
-            "formType": "__value:INSIDE_HOUSEHOLD_DATA",
-            "gpsFirstHouseholdLat":
-                "firstHouseholdLocation.gpsFirstHousehold[0]",
-            "gpsFirstHouseholdLng":
-                "firstHouseholdLocation.gpsFirstHousehold[1]",
-            "monitorDesignation": "monitoringDetails.monitorDesignation",
-            "designationOther": "monitoringDetails.designationOther",
-            "monitoringType": "monitoringDetails.monitoringType",
-            "monitoringDate": "monitoringDetails.monitoringDate",
-            "settlementArea": "monitoringDetails.settlementArea",
-            "monitorName": "monitoringDetails.monitorName",
-            "monitorPhone": "monitoringDetails.monitorPhone",
-            "teamVisited": "monitoringDetails.teamVisited",
-            "houseMarked": "monitoringDetails.houseMarked",
-            "childrenPresent": "monitoringDetails.childrenPresent",
-            "childrenVaccinated": "monitoringDetails.childrenVaccinated",
-            "vaccinationLocation": "monitoringDetails.vaccinationLocation",
-            "missedAbsent": "monitoringDetails.missedAbsent",
-            "missedRefusal": "monitoringDetails.missedRefusal",
-            "missedNotVisited": "monitoringDetails.missedNotVisited",
-            "missedNotRevisited": "monitoringDetails.missedNotRevisited",
-            "missedAsleep": "monitoringDetails.missedAsleep",
-            "missedRoutine": "monitoringDetails.missedRoutine",
-            "missedOther": "monitoringDetails.missedOther",
-            "caregiverInformed": "monitoringDetails.caregiverInformed",
-            "campaignInfoSource": "monitoringDetails.campaignInfoSource",
-            "infoSourceOther": "monitoringDetails.infoSourceOther",
-            "afpLimbWeakness": "monitoringDetails.afpLimbWeakness",
-            "afpSuddenWeakness": "monitoringDetails.afpSuddenWeakness",
-            "caregiverName": "monitoringDetails.caregiverName",
-            "caregiverPhone": "monitoringDetails.caregiverPhone",
-            "gpsLastHouseholdLat": "closeout.gpsLastHousehold[0]",
-            "gpsLastHouseholdLng": "closeout.gpsLastHousehold[1]",
-            "poorlyCoveredAreas": "closeout.poorlyCoveredAreas",
-            "finalComments": "closeout.finalComments",
+            "formType": "__value:GROUP_VAC_REFERRAL",
+            "contactPerson": "referralDetails.contactPerson",
+            "contactNumber": "referralDetails.contactNumber",
+            "address": "referralDetails.address",
+            "referralReason": "referralDetails.referralReason",
             "locality": "__context:selectedBoundaryCode"
           }
         }

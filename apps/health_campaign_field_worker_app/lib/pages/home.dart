@@ -57,8 +57,10 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_clf_vaccination.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+import '../sampleJsonConfigs/polio_transit_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
@@ -2478,23 +2480,34 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      /// TODO: NEED TO UPDATE CLF
+      // --- CLF (Communal Living Facilities) — polio group vaccination ---
+      if (isPolio)
+        i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+          child: HomeItemCard(
+            icon: Icons.account_balance,
+            label: i18.home.clfLabel,
+            onPressed: () async {
+              context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) async {
+                  // NOTE: intentionally not calling triggerLocalization for
+                  // the CLF vaccination module until the MDMS entry
+                  // `hcm-clf-vaccination-<projectRefId>` is registered.
+                  // Without the MDMS stub, the localization loader can hang
+                  // (isLocalizationLoadCompleted stays false), blocking render.
+                  isTriggerLocalisation = false;
 
-      // i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.account_balance,
-      //     label: i18.home.clfLabel,
-      //     onPressed: () async {
-      //       RegistrationDeliverySingleton()
-      //           .setHouseholdType(HouseholdType.community);
-      //       if (isTriggerLocalisation) {
-      //         triggerLocalization();
-      //         isTriggerLocalisation = false;
-      //       }
-      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
-      //     },
-      //   ),
-      // ),
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'CLF_VACCINATION',
+                      sampleFlows: sampleClfVaccinationFlows,
+                    ),
+                  );
+                },
+              ));
+            },
+          ),
+        ),
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
@@ -3082,12 +3095,30 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
         icon: Icons.local_shipping_outlined,
         label: i18.home.transitPostLabel,
-        onPressed: () => _openModule(() async {
-          const module = "hcm-transit-post";
-          // if (isTriggerLocalisation) {
-          triggerLocalization(module: module);
-          context.router.push(const TransitPostWrapperRoute());
-        }),
+        onPressed: () async {
+          if (isPolio) {
+            await context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                // NOTE: intentionally not calling triggerLocalization for
+                // the transit vaccination module until the MDMS entry
+                // `hcm-transit-vaccination-<projectRefId>` is registered.
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'TRANSIT_VACCINATION',
+                    sampleFlows: sampleTransitVaccinationFlows,
+                  ),
+                );
+              },
+            ));
+          } else {
+            const module = "hcm-transit-post";
+            triggerLocalization(module: module);
+            context.router.push(const TransitPostWrapperRoute());
+          }
+        },
       )),
     };
 
@@ -3122,7 +3153,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
-      // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
+      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3132,7 +3163,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
-      // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
+      i18.home.clfLabel,
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,
@@ -3159,7 +3190,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            (isPolio && element == i18.home.clfLabel))
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
