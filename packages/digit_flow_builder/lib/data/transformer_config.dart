@@ -1214,8 +1214,13 @@ final jsonConfig = {
             "landmark": "locationDetails.landmark",
             "pincode": "locationDetails.pincode",
             "type": "locationDetails.typeOfAddress",
+            // Explicitly typed: a bare {} here infers as Map<dynamic, dynamic>
+            // inside this Map<String, dynamic> config, which fails the
+            // engine's `is Map<String, dynamic>` nested-object check and
+            // throws when it falls through to the String-only value path.
+            "geoLocation": <String, dynamic>{},
             "locality": {
-              "code": "__context:selectedBoundaryCode",
+              "code": "__context:selectedBoundaryHierarchyCode",
               "name": "__context:selectedBoundaryName",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion"
@@ -1230,7 +1235,8 @@ final jsonConfig = {
             "supervisorName": "complaintDetails.supervisorName",
             "supervisorContactNumber":
                 "complaintDetails.supervisorContactNumber ",
-            "otherComplaintDescription": "complaintType.otherReason"
+            "otherComplaintDescription": "complaintType.otherReason",
+            "boundaryCode": "__context:selectedBoundaryHierarchyCode"
           },
           "clientAuditDetails": "__generate:clientAudit"
         }
