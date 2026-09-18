@@ -1,0 +1,38 @@
+sequenceDiagram
+    autonumber
+    actor U as Field worker
+    participant HP as Home / background service
+    participant SS as SyncService
+    participant OP as OpLog (Isar)
+    participant FR as FaceAuthEventRemoteRepository
+    participant AW as AuthenticatedPageWrapper
+    participant WR as WorkerRegistryService
+    participant GW as DIGIT Gateway
+    participant BE as health-attendance /<br/>worker registry
+
+    rect rgb(240,248,255)
+    Note over U,BE: 7.1 — FaceAuthEvent audit events (oplog path)
+    U->>HP: Sync Data (or background timer)
+    HP->>SS: performSync (SyncLock acquired)
+    SS->>OP: getPendingUpSync(createdBy = user)
+    OP-->>SS: pendingUp = {faceAuthEvent}
+    SS->>FR: bulkCreate(events)
+    FR->>GW: POST /health-attendance/face-auth/v1/bulk/_create
+    GW->>BE: authorized (service-registry entry §5.2)
+    BE-->>FR: HTTP 202 (async persister)
+    SS->>OP: markSyncedUp
+    end
+
+    rect rgb(245,255,245)
+    Note over AW,BE: 7.2 — worker-registry retry drain (offline enrollments)
+    AW->>AW: mount / offline→online transition
+    AW->>WR: for each queued individualId
+    WR->>GW: POST /worker/v1/_search
+    WR->>GW: POST /worker/v1/bulk/_update (embedding payload)
+    alt role mapped in access control (§5.3)
+        GW->>BE: update worker additionalDetails
+        BE-->>WR: success → dequeue
+    else mapping missing
+        GW-->>WR: HTTP 401 → stays queued
+    end
+    end

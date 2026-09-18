@@ -1,0 +1,819 @@
+import 'dart:async';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
+import 'package:digit_flow_builder/widgets/localization_context.dart';
+import 'package:digit_flow_builder/widgets/localized.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/digit_tag_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
+import 'package:digit_ui_components/widgets/atoms/text_block.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:flutter/material.dart';
+
+import 'action_handler/action_config.dart';
+import 'action_handler/action_handler.dart';
+import 'blocs/flow_crud_bloc.dart';
+import 'widget_registry.dart';
+
+class LayoutRendererPage extends LocalizedStatefulWidget {
+  final Map<String, dynamic> config;
+  final List<String>? watchedScreenKeys;
+  final String? compositeKey;
+
+  const LayoutRendererPage({
+    super.key,
+    super.appLocalizations,
+    required this.config,
+    this.watchedScreenKeys,
+    this.compositeKey,
+  });
+
+  @override
+  State<LayoutRendererPage> createState() => LayoutRendererPageState();
+}
+
+class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
+    with WidgetsBindingObserver {
+  // Whether the on-screen keyboard is currently open. Updated via
+  // didChangeMetrics so the fixed footer can be hidden while typing.
+  bool _keyboardVisible = false;
+
+  // Scroll listener state
+  Timer? _debounceTimer;
+  bool _hasTriggeredAtBottom = false;
+  bool _hasTriggeredAtTop = false;
+
+  // Track the last wrapper reference to detect when new data arrives.
+  // When the wrapper changes (new list created after data load), we
+  // reset scroll trigger flags so the next scroll to edge can trigger.
+  List<dynamic>? _lastWrapper;
+
+  // Cached from _handleScrollNotification for use in the deferred
+  // _executeScrollActions Timer callback.
+  String? _currentCompositeKey;
+
+  // Scroll listener configuration (parsed from config)
+  late final String _triggerMode;
+  late final double _threshold;
+  late final int _debounceMs;
+  late final bool _showLoadingIndicator;
+  late final List<dynamic>? _onScrollDownActions;
+  late final List<dynamic>? _onScrollUpActions;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    // Parse scroll listener configuration from screen config
+    final scrollListenerConfig =
+        widget.config['scrollListener'] as Map<String, dynamic>? ?? {};
+
+    _triggerMode = scrollListenerConfig['triggerMode'] as String? ?? 'end';
+    _threshold = (scrollListenerConfig['threshold'] as num?)?.toDouble() ?? 0.9;
+    _debounceMs = scrollListenerConfig['debounceMs'] as int? ?? 300;
+    _showLoadingIndicator =
+        scrollListenerConfig['showLoadingIndicator'] as bool? ?? true;
+
+    // For bidirectional mode, we have separate actions for up and down
+    // For backwards compatibility, 'onScroll' is treated as 'onScrollDown'
+    if (_triggerMode == 'bidirectional') {
+      _onScrollDownActions =
+          scrollListenerConfig['onScrollDown'] as List<dynamic>? ??
+              scrollListenerConfig['onScroll'] as List<dynamic>?;
+      _onScrollUpActions = scrollListenerConfig['onScrollUp'] as List<dynamic>?;
+    } else {
+      _onScrollDownActions = scrollListenerConfig['onScroll'] as List<dynamic>?;
+      _onScrollUpActions = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    if (!mounted) return;
+    // Read the RAW keyboard inset from the view. The app-shell Scaffold
+    // (authenticated.dart) sets resizeToAvoidBottomInset, which consumes
+    // viewInsets so MediaQuery below it always reports 0. Reading the view
+    // directly bypasses that and reflects the true keyboard height.
+    final bool isVisible = View.of(context).viewInsets.bottom > 0.0;
+    if (isVisible != _keyboardVisible) {
+      setState(() => _keyboardVisible = isVisible);
+    }
+  }
+
+  /// Handles scroll notifications from the page
+  bool _handleScrollNotification(
+      ScrollNotification notification, String compositeKey) {
+    // Only handle scroll updates, not start/end
+    if (notification is! ScrollUpdateNotification) return false;
+
+    final metrics = notification.metrics;
+
+    // Skip if not scrollable or already loading
+    final isLoading =
+        FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
+    debugPrint(
+        'ScrollListener: ScrollUpdate - maxExtent=${metrics.maxScrollExtent}, '
+        'pixels=${metrics.pixels}, isLoading=$isLoading, triggerMode=$_triggerMode, '
+        'compositeKey=$compositeKey');
+    if (metrics.maxScrollExtent == 0 || isLoading) return false;
+
+    // Cache for the deferred Timer callback in _executeScrollActions
+    _currentCompositeKey = compositeKey;
+
+    if (_triggerMode == 'bidirectional') {
+      _handleBidirectionalScroll(metrics);
+    } else {
+      _handleUnidirectionalScroll(metrics);
+    }
+
+    return false; // Don't consume the notification
+  }
+
+  void _handleBidirectionalScroll(ScrollMetrics metrics) {
+    final maxExtent = metrics.maxScrollExtent;
+
+    // When content barely overflows the viewport (small cards), the normal
+    // buffer-based trigger zone is unreachable.  Auto-trigger DOWN so more
+    // data loads until there is enough scroll room for normal interaction.
+    if (maxExtent > 0 && maxExtent < 200) {
+      if (!_hasTriggeredAtBottom && _onScrollDownActions != null) {
+        debugPrint(
+            'ScrollListener: Auto-triggering DOWN (small extent: ${maxExtent.toInt()}px)');
+        _hasTriggeredAtBottom = true;
+        _triggerScrollActions('down');
+      }
+      return; // Skip normal logic — not enough room for buffer zones
+    }
+
+    const buffer = 50.0; // pixels from edge to trigger load
+    const resetBuffer = 150.0; // pixels from edge to reset trigger flag
+
+    // Check if near bottom
+    final nearBottom = metrics.pixels >= (maxExtent - buffer);
+    // Check if near top
+    final nearTop = metrics.pixels <= buffer;
+
+    // Trigger load down when reaching bottom
+    if (nearBottom && !_hasTriggeredAtBottom && _onScrollDownActions != null) {
+      debugPrint('ScrollListener: Triggering scroll DOWN');
+      _hasTriggeredAtBottom = true;
+      _triggerScrollActions('down');
+    } else if (!nearBottom && metrics.pixels < (maxExtent - resetBuffer)) {
+      // Reset bottom trigger when scrolled away from bottom (past resetBuffer)
+      _hasTriggeredAtBottom = false;
+    }
+
+    // Trigger load up when reaching top
+    if (nearTop && !_hasTriggeredAtTop && _onScrollUpActions != null) {
+      debugPrint('ScrollListener: Triggering scroll UP');
+      _hasTriggeredAtTop = true;
+      _triggerScrollActions('up');
+    } else if (!nearTop && metrics.pixels > resetBuffer) {
+      // Reset top trigger when scrolled away from top (past resetBuffer)
+      _hasTriggeredAtTop = false;
+    }
+  }
+
+  void _handleUnidirectionalScroll(ScrollMetrics metrics) {
+    // Skip if no scroll actions configured
+    if (_onScrollDownActions == null || _onScrollDownActions.isEmpty) return;
+
+    final maxExtent = metrics.maxScrollExtent;
+
+    // Auto-load more content when scroll extent is very small.
+    if (maxExtent > 0 && maxExtent < 200) {
+      if (!_hasTriggeredAtBottom) {
+        debugPrint(
+            'ScrollListener: Auto-triggering DOWN (small extent: ${maxExtent.toInt()}px)');
+        _hasTriggeredAtBottom = true;
+        _triggerScrollActions('down');
+      }
+      return;
+    }
+
+    bool shouldTrigger = false;
+
+    if (_triggerMode == 'end') {
+      const buffer = 50.0; // pixels from bottom
+      shouldTrigger = metrics.pixels >= (maxExtent - buffer);
+    } else if (_triggerMode == 'threshold') {
+      // Trigger when scroll position exceeds threshold percentage
+      final scrollPercentage = metrics.pixels / maxExtent;
+      shouldTrigger = scrollPercentage >= _threshold;
+    }
+
+    // Prevent duplicate triggers at the same scroll position
+    if (shouldTrigger && !_hasTriggeredAtBottom) {
+      _hasTriggeredAtBottom = true;
+      _triggerScrollActions('down');
+    } else if (!shouldTrigger && metrics.pixels < (maxExtent - 150.0)) {
+      // Reset trigger flag when scrolled away from bottom (150px buffer)
+      _hasTriggeredAtBottom = false;
+    }
+  }
+
+  void _triggerScrollActions(String direction) {
+    // Cancel any pending debounce timer
+    _debounceTimer?.cancel();
+
+    // Debounce the action execution
+    _debounceTimer = Timer(Duration(milliseconds: _debounceMs), () {
+      if (!mounted) return;
+      _executeScrollActions(direction);
+    });
+  }
+
+  void _executeScrollActions(String direction) {
+    final scrollActions =
+        direction == 'up' ? _onScrollUpActions : _onScrollDownActions;
+    if (scrollActions == null || scrollActions.isEmpty) return;
+
+    debugPrint(
+        'ScrollListener: _executeScrollActions direction=$direction, compositeKey=$_currentCompositeKey');
+
+    // Execute all configured scroll actions with direction context
+    // Loading state is managed by FlowCrudBloc
+    for (final actionJson in scrollActions) {
+      if (actionJson is Map<String, dynamic>) {
+        // Inject direction into action properties
+        final actionWithDirection = Map<String, dynamic>.from(actionJson);
+        final properties = Map<String, dynamic>.from(
+            actionWithDirection['properties'] as Map<String, dynamic>? ?? {});
+        properties['direction'] = direction;
+        actionWithDirection['properties'] = properties;
+
+        final action = ActionConfig.fromJson(actionWithDirection);
+        ActionHandler.execute(action, context, {
+          'wrappers': const [],
+          'scrollDirection': direction,
+          if (_currentCompositeKey != null)
+            '_compositeKey': _currentCompositeKey,
+        });
+      }
+    }
+  }
+
+  /// Resets scroll listener state (call when new data is loaded)
+  void resetScrollState() {
+    _hasTriggeredAtBottom = false;
+    _hasTriggeredAtTop = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<dynamic> body = widget.config['body'] ?? [];
+    final List<dynamic> actions = widget.config['footer'] ?? [];
+    final List<dynamic> headers = widget.config['header'] ?? [];
+
+    final screenKey =
+        getScreenKeyFromArgs(context) ?? context.router.currentPath;
+    // Use widget.compositeKey if provided (from ScreenBuilder), otherwise fallback to computing it
+    final compositeKey = widget.compositeKey ??
+        getCompositeKey(context, screenKey: screenKey) ??
+        screenKey;
+
+    return ValueListenableBuilder(
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
+      builder: (context, flowState, __) {
+        final stateData = extractCrudStateData(compositeKey);
+        final isLoading = flowState?.isLoading ?? false;
+        final currentWrapper = flowState?.stateWrapper;
+        final currentWrapperLength = currentWrapper?.length ?? 0;
+
+        // Reset scroll trigger flags when the data changes (new wrapper
+        // list created after load). This allows the next scroll to edge
+        // to trigger another page load without needing to scroll away first.
+        // Using object identity (not length) since bidirectional trim+add
+        // can keep the same length while replacing data.
+        if (_lastWrapper != null && !identical(currentWrapper, _lastWrapper)) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) resetScrollState();
+          });
+        }
+        _lastWrapper = currentWrapper;
+
+        debugPrint('LayoutRenderer: REBUILD - screenKey=$screenKey, '
+            'wrapperLength=$currentWrapperLength, isLoading=$isLoading');
+
+        // Pre-materialize header/footer/body widget lists in local variables
+        // to keep the widget tree below readable and to make the body's
+        // trailing-spacer removal (see removeLast below) safe when every
+        // body entry evaluates hidden.
+        final headerWidgets = headers.isNotEmpty
+            ? headers
+                .map((e) => LayoutMapper.map(
+                      preprocessConfigWithState(e, stateData),
+                      stateData,
+                      context,
+                      screenKey: screenKey,
+                      compositeKey: compositeKey,
+                      (action) {
+                        ActionHandler.execute(action, context, {
+                          'wrappers': const [],
+                          '_compositeKey': compositeKey,
+                        });
+                      },
+                    ))
+                .toList()
+            : const <Widget>[];
+
+        final footerWidgets = actions.isNotEmpty
+            ? actions
+                .map((e) => LayoutMapper.map(
+                      preprocessConfigWithState(e, stateData),
+                      stateData,
+                      context,
+                      screenKey: screenKey,
+                      compositeKey: compositeKey,
+                      (action) {
+                        ActionHandler.execute(action, context, {
+                          'wrappers': const [],
+                          '_compositeKey': compositeKey,
+                        });
+                      },
+                    ))
+                .toList()
+            : const <Widget>[];
+
+        final bodyEntries = body
+            .asMap()
+            .entries
+            .map<MapEntry<bool, CrudItemContext>>((entry) {
+          final e = entry.value;
+          final processed = preprocessConfigWithState(e, stateData);
+          final isVisible =
+              _checkWidgetVisibility(processed, stateData, screenKey);
+
+          return MapEntry(
+            isVisible,
+            CrudItemContext(
+              stateData: stateData,
+              screenKey: screenKey,
+              compositeKey: compositeKey,
+              child: LayoutMapper.map(
+                processed,
+                stateData,
+                context,
+                (action) {
+                  ActionHandler.execute(action, context, {
+                    'wrappers': const [],
+                    '_compositeKey': compositeKey,
+                  });
+                },
+                compositeKey: compositeKey,
+              ),
+            ),
+          );
+        }).toList();
+
+        // Interleave visible body widgets with spacer4 separators, then
+        // drop the trailing spacer. Guarded against the empty list — a
+        // config where every body entry evaluates hidden would RangeError
+        // on unconditional removeLast().
+        final bodyWidgets = bodyEntries.expand((entry) {
+          if (!entry.key) return <Widget>[];
+          return <Widget>[
+            entry.value,
+            const SizedBox(height: spacer4),
+          ];
+        }).toList();
+        if (bodyWidgets.isNotEmpty) bodyWidgets.removeLast();
+
+        // Hide the fixed footer while the keyboard is open so it doesn't
+        // float above it; it reappears when the keyboard is dismissed.
+        // _keyboardVisible is driven by didChangeMetrics (see above).
+        final bool showFooter = actions.isNotEmpty && !_keyboardVisible;
+
+        return LocalizationContext(
+          localization: localizations,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) =>
+                _handleScrollNotification(notification, compositeKey),
+            child: Stack(
+              children: [
+                Scaffold(
+                  body: ScrollableContent(
+                    header: headerWidgets.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                top: spacer4, left: spacer4),
+                            child: Row(children: headerWidgets),
+                          )
+                        : null,
+                    enableFixedDigitButton: showFooter,
+                    footer: showFooter
+                        ? DigitCard(
+                            spacing: spacer2,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(radius4),
+                              topRight: Radius.circular(radius4),
+                            ),
+                            children: footerWidgets,
+                          )
+                        : null,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(spacer4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Per-screen override via config "showLocationTag"
+                            // (defaults to true when absent).
+                            if (widget.config['showLocationTag'] != false) ...[
+                              Tag(
+                                label: localizations.translate(
+                                    FlowBuilderSingleton().boundary?.code ??
+                                        ""),
+                                isIcon: true,
+                                isStroke: true,
+                                borderColor: Theme.of(context)
+                                    .colorTheme
+                                    .primary
+                                    .primary2,
+                                customTextStyle: Theme.of(context)
+                                    .digitTextTheme(context)
+                                    .bodyS
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorTheme
+                                            .alert
+                                            .info),
+                                type: TagType.monochrome,
+                                customIcon: Icon(
+                                  Icons.location_on_outlined,
+                                  color:
+                                      Theme.of(context).colorTheme.alert.info,
+                                  size: 16,
+                                ),
+                                themeData: TagThemeData(
+                                    monochromeBackgroundColor: Theme.of(context)
+                                        .colorTheme
+                                        .alert
+                                        .infoBg,
+                                    iconLabelGap: spacer1,
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderWidth: 0.5),
+                              ),
+                              const SizedBox(height: spacer4),
+                            ],
+                            Builder(builder: (context) {
+                              final headingActionsConfig =
+                                  (widget.config['headingActions'] as List?) ??
+                                      [];
+                              final resolvedHeading = _resolveHeading(
+                                  widget.config['heading'], screenKey);
+                              final resolvedDescription = _resolveDescription(
+                                  widget.config['description'], screenKey);
+                              // Per-screen override via config "headingStyle"
+                              // (e.g. "headingL"); defaults to headingXl.
+                              final baseHeadingStyle =
+                                  widget.config['headingStyle'] == 'headingL'
+                                      ? Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .headingL
+                                      : Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .headingXl;
+                              final headingStyle = baseHeadingStyle.copyWith(
+                                  color: Theme.of(context)
+                                      .colorTheme
+                                      .primary
+                                      .primary2);
+
+                              if (headingActionsConfig.isEmpty) {
+                                return DigitTextBlock(
+                                  padding: EdgeInsets.zero,
+                                  heading: resolvedHeading,
+                                  headingStyle: headingStyle,
+                                  description: resolvedDescription,
+                                );
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    // Align actions with the FIRST line of the
+                                    // heading so they stay in place when the
+                                    // title wraps to multiple lines.
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          resolvedHeading ?? '',
+                                          style: headingStyle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: spacer2),
+                                      ...headingActionsConfig.map((e) =>
+                                          Container(
+                                            height: spacer7,
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: spacer2),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorTheme
+                                                  .paper
+                                                  .primary,
+                                              borderRadius: BorderRadius.circular(spacer1),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorTheme
+                                                    .primary
+                                                    .primary1,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: LayoutMapper.map(
+                                              preprocessConfigWithState(
+                                                  e, stateData),
+                                              stateData,
+                                              context,
+                                              screenKey: screenKey,
+                                              (action) {
+                                                ActionHandler.execute(
+                                                    action, context, {
+                                                  'wrappers': const [],
+                                                  '_compositeKey':
+                                                      compositeKey,
+                                                });
+                                              },
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                  if (resolvedDescription?.isNotEmpty ==
+                                      true) ...[
+                                    const SizedBox(height: spacer1),
+                                    Text(
+                                      resolvedDescription!,
+                                      style: Theme.of(context)
+                                          .digitTextTheme(context)
+                                          .bodyS
+                                          .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .text
+                                                .secondary,
+                                          ),
+                                    ),
+                                  ],
+                                ],
+                              );
+                            }),
+                            // Only space below the heading block when it
+                            // actually renders something. On screens with no
+                            // heading or description (e.g. the success panels)
+                            // this spacer used to stack with the one above,
+                            // leaving a 32dp gap under the location tag instead
+                            // of the intended 16dp.
+                            if ((_resolveHeading(widget.config['heading'],
+                                            screenKey)
+                                        ?.isNotEmpty ??
+                                    false) ||
+                                (_resolveDescription(
+                                            widget.config['description'],
+                                            screenKey)
+                                        ?.isNotEmpty ??
+                                    false) ||
+                                ((widget.config['headingActions'] as List?)
+                                        ?.isNotEmpty ??
+                                    false))
+                              const SizedBox(height: spacer4),
+                            // Build body widgets with trailing spacers, then
+                            // drop the last spacer ONLY when the visible list
+                            // is non-empty. The previous unconditional
+                            // ..removeLast() RangeError'd whenever every body
+                            // entry evaluated hidden (a common case for
+                            // role-gated screens).
+                            ...(() {
+                              final widgets = body
+                                  .asMap()
+                                  .entries
+                                  .map<MapEntry<bool, CrudItemContext>>(
+                                      (entry) {
+                                final e = entry.value;
+                                final processed =
+                                    preprocessConfigWithState(e, stateData);
+                                final isVisible = _checkWidgetVisibility(
+                                    processed, stateData, screenKey);
+
+                                return MapEntry(
+                                  isVisible,
+                                  CrudItemContext(
+                                    stateData: stateData,
+                                    screenKey: screenKey,
+                                    compositeKey: compositeKey,
+                                    child: LayoutMapper.map(
+                                      processed,
+                                      stateData,
+                                      context,
+                                      (action) {
+                                        ActionHandler.execute(action, context, {
+                                          'wrappers': const [],
+                                          '_compositeKey': compositeKey,
+                                        });
+                                      },
+                                      compositeKey: compositeKey,
+                                    ),
+                                  ),
+                                );
+                              }).expand((entry) {
+                                if (!entry.key) return <Widget>[];
+                                return <Widget>[
+                                  entry.value,
+                                  const SizedBox(height: spacer4),
+                                ];
+                              }).toList();
+                              if (widgets.isNotEmpty) widgets.removeLast();
+                              return widgets;
+                            })(),
+                            // Scroll loading indicator at bottom of content
+                            if (_showLoadingIndicator && isLoading)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: spacer4),
+                                child: Center(
+                                  child: DigitLoaders.inlineLoader(),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                // Loading overlay when search/CRUD operation is in progress
+                if (isLoading) DigitLoaders.inlineLoader(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  bool _checkWidgetVisibility(
+      Map<String, dynamic> json, CrudStateData? stateData, String? screenKey) {
+    final modelMap = stateData?.modelMap ?? {};
+    final evalContext = {
+      'item': null,
+      'contextData': stateData?.rawState ?? {},
+      ...modelMap,
+    };
+
+    bool visible = true;
+
+    // Check hidden condition first
+    if (json['hidden'] != null) {
+      final hiddenResult = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (hiddenResult == true) {
+        visible = false;
+      }
+    }
+
+    // If not hidden, check visible condition
+    if (visible && json['visible'] != null) {
+      final visibleResult = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (visibleResult == false) {
+        visible = false;
+      }
+    }
+
+    return visible;
+  }
+
+  String? _resolveHeading(dynamic heading, String screenKey) {
+    if (heading == null) return null;
+
+    // Resolve templates like {{navigation.reportType}}
+    final headingStr = heading.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams =
+        FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved =
+        resolveTemplate(headingStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
+  }
+
+  String? _resolveDescription(dynamic description, String screenKey) {
+    if (description == null) return null;
+
+    // Resolve templates
+    final descriptionStr = description.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams =
+        FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved =
+        resolveTemplate(descriptionStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
+  }
+
+  Future<void> _handleBackNavigation(BuildContext context) async {
+    final backNavigationConfig =
+        widget.config['header'] as Map<String, dynamic>?;
+
+    if (backNavigationConfig != null) {
+      // Execute configured back navigation action
+      final actionConfig = ActionConfig.fromJson(backNavigationConfig);
+      await ActionHandler.execute(actionConfig, context, {});
+    } else {
+      // Default behavior - single pop
+      final actionConfig = ActionConfig.fromJson({
+        'actionType': 'BACK_NAVIGATION',
+        'properties': {},
+      });
+
+      await ActionHandler.execute(actionConfig, context, {});
+    }
+  }
+}
+
+class LayoutMapper {
+  static Widget map(
+    Map<String, dynamic> json,
+    CrudStateData? stateData,
+    BuildContext context,
+    void Function(ActionConfig) onAction, {
+    Map<String, dynamic>? item,
+    int? listIndex,
+    String? screenKey,
+    String? compositeKey,
+  }) {
+    final effectiveScreenKey =
+        screenKey ?? CrudItemContext.of(context)?.screenKey;
+    final effectiveCompositeKey = compositeKey ??
+        CrudItemContext.of(context)?.compositeKey ??
+        effectiveScreenKey;
+
+    // When there is no key to listen to (popups/dialogs that pass neither
+    // compositeKey nor screenKey), don't register a ValueNotifier under "" —
+    // disposeByCompositeKey is keyed by composite, so an empty-string entry
+    // would never be cleaned up and would accumulate one leaked notifier per
+    // such render.
+    final Widget child = (effectiveCompositeKey == null ||
+            effectiveCompositeKey.isEmpty)
+        ? WidgetRegistry.build(json, context, onAction)
+        : ValueListenableBuilder(
+            valueListenable:
+                FlowCrudStateRegistry().listen(effectiveCompositeKey),
+            builder: (context, _, __) {
+              return WidgetRegistry.build(json, context, onAction);
+            },
+          );
+
+    return CrudItemContext(
+      stateData: stateData,
+      listIndex: listIndex,
+      item: item,
+      screenKey: effectiveScreenKey,
+      compositeKey: effectiveCompositeKey,
+      child: child,
+    );
+  }
+}

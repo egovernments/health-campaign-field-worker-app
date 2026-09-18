@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart';
 
 
+@TableIndex(name: 'product_variant_productid', columns: {#productId})
 class ProductVariant extends Table {
   TextColumn get id => text()();
   TextColumn get productId => text().nullable()();

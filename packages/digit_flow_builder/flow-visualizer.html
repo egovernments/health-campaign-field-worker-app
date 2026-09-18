@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow Builder - Live Visualizer</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --orange: #d29922;
+    --red: #f85149;
+    --purple: #bc8cff;
+    --pink: #f778ba;
+    --cyan: #39d2c0;
+    --yellow: #e3b341;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'SF Mono','Fira Code','Cascadia Code',monospace; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+  .app { display: grid; grid-template-columns: 420px 1fr; grid-template-rows: 48px 1fr; height: 100vh; }
+  .header { grid-column: 1/-1; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 16px; }
+  .header h1 { font-size: 14px; font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .header .subtitle { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .header .actions { margin-left: auto; display: flex; gap: 8px; }
+  .btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+  .btn.primary:hover { background: #388bfd; }
+  .editor-panel { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .panel-header { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); flex-shrink: 0; }
+  .panel-header .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .json-editor { flex: 1; resize: none; background: var(--bg); color: var(--text); border: none; padding: 12px; font-family: inherit; font-size: 11px; line-height: 1.5; tab-size: 2; outline: none; overflow: auto; }
+  .json-editor::placeholder { color: var(--text-muted); }
+  .error-bar { padding: 6px 12px; font-size: 11px; color: var(--red); background: rgba(248,81,73,0.1); border-top: 1px solid rgba(248,81,73,0.3); display: none; flex-shrink: 0; }
+  .error-bar.visible { display: block; }
+  .viz-panel { display: flex; flex-direction: column; overflow: hidden; }
+  .tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; overflow-x: auto; }
+  .tab { padding: 8px 14px; font-size: 11px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .viz-content { flex: 1; overflow: auto; padding: 16px; }
+  .viz-content::-webkit-scrollbar { width: 8px; }
+  .viz-content::-webkit-scrollbar-track { background: var(--bg); }
+  .viz-content::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
+  .flow-header { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+  .flow-header h2 { font-size: 15px; color: var(--accent); margin-bottom: 4px; }
+  .flow-header .meta { font-size: 11px; color: var(--text-muted); }
+  .flow-header .meta span { margin-right: 12px; }
+  .screen-list { display: flex; flex-direction: column; gap: 12px; }
+  .screen-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
+  .screen-card:hover { border-color: var(--accent); }
+  .screen-card.initial { border-color: var(--green); }
+  .screen-card-header { padding: 10px 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+  .screen-card-header .icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .screen-card-header .icon.form { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .screen-card-header .icon.template { background: rgba(188,140,255,0.15); color: var(--purple); }
+  .screen-card-header .name { font-size: 12px; font-weight: 600; }
+  .screen-card-header .type-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--surface2); color: var(--text-muted); margin-left: auto; }
+  .screen-card-header .initial-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(63,185,80,0.15); color: var(--green); }
+  .screen-card-body { border-top: 1px solid var(--border); padding: 10px 14px; display: none; }
+  .screen-card.expanded .screen-card-body { display: block; }
+  .section-title { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 10px 0 4px; }
+  .section-title:first-child { margin-top: 0; }
+  .action-chain { position: relative; padding-left: 18px; }
+  .action-chain::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .action-node { position: relative; margin-bottom: 6px; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; cursor: pointer; transition: all 0.15s; }
+  .action-node:hover { border-color: var(--accent); background: var(--surface2); }
+  .action-node.active { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .action-node::before { content: ''; position: absolute; left: -14px; top: 50%; width: 8px; height: 2px; background: var(--border); }
+  .action-node::after { content: ''; position: absolute; left: -18px; top: calc(50% - 4px); width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); }
+  .action-node.NAVIGATION::after { border-color: var(--green); background: rgba(63,185,80,0.3); }
+  .action-node.SEARCH_EVENT::after { border-color: var(--accent); background: rgba(88,166,255,0.3); }
+  .action-node.CREATE_EVENT::after, .action-node.UPDATE_EVENT::after { border-color: var(--orange); background: rgba(210,153,34,0.3); }
+  .action-node.FETCH_TRANSFORMER_CONFIG::after { border-color: var(--purple); background: rgba(188,140,255,0.3); }
+  .action-node.REVERSE_TRANSFORM::after { border-color: var(--pink); background: rgba(247,120,186,0.3); }
+  .action-node.SHOW_TOAST::after { border-color: var(--yellow); background: rgba(227,179,65,0.3); }
+  .action-node.BACK_NAVIGATION::after { border-color: var(--red); background: rgba(248,81,73,0.3); }
+  .action-node.CLEAR_STATE::after { border-color: var(--cyan); background: rgba(57,210,192,0.3); }
+  .action-node.OPEN_SCANNER::after { border-color: var(--yellow); background: rgba(227,179,65,0.3); }
+  .action-node.REFRESH_SEARCH::after { border-color: var(--accent); background: rgba(88,166,255,0.3); }
+  .action-node.CLOSE_POPUP::after { border-color: var(--red); background: rgba(248,81,73,0.3); }
+  .action-node.CONDITIONAL_GROUP::after { border-color: var(--orange); background: rgba(210,153,34,0.3); }
+  .action-type { font-weight: 600; margin-bottom: 1px; font-size: 11px; }
+  .action-type.NAVIGATION { color: var(--green); }
+  .action-type.SEARCH_EVENT { color: var(--accent); }
+  .action-type.CREATE_EVENT, .action-type.UPDATE_EVENT { color: var(--orange); }
+  .action-type.FETCH_TRANSFORMER_CONFIG { color: var(--purple); }
+  .action-type.REVERSE_TRANSFORM { color: var(--pink); }
+  .action-type.SHOW_TOAST { color: var(--yellow); }
+  .action-type.BACK_NAVIGATION { color: var(--red); }
+  .action-type.CLEAR_STATE { color: var(--cyan); }
+  .action-type.OPEN_SCANNER { color: var(--yellow); }
+  .action-type.REFRESH_SEARCH { color: var(--accent); }
+  .action-type.CLOSE_POPUP { color: var(--red); }
+  .action-type.CONDITIONAL_GROUP { color: var(--orange); }
+  .action-summary { font-size: 10px; color: var(--text-muted); }
+  .condition-badge { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 3px; background: rgba(210,153,34,0.15); color: var(--orange); margin-top: 3px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .action-detail { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-top: 12px; position: sticky; top: 0; }
+  .action-detail h3 { font-size: 13px; margin-bottom: 10px; color: var(--accent); }
+  .detail-grid { display: grid; grid-template-columns: 110px 1fr; gap: 3px 10px; font-size: 11px; }
+  .detail-label { color: var(--text-muted); font-weight: 600; }
+  .detail-value { color: var(--text); word-break: break-all; }
+  .detail-value.nav-target { color: var(--green); cursor: pointer; text-decoration: underline dotted; }
+  .detail-value.nav-target:hover { color: #56d364; }
+
+  /* Widget tree */
+  .widget-tree { padding-left: 14px; border-left: 1px dashed var(--border); }
+  .widget-node { margin: 4px 0; padding: 4px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 10px; }
+  .widget-node .wn-format { color: var(--cyan); font-weight: 600; }
+  .widget-node .wn-field { color: var(--text-muted); }
+  .widget-node .wn-label { color: var(--purple); }
+  .widget-node .wn-actions { color: var(--green); font-size: 9px; margin-top: 2px; }
+  .widget-node.has-actions { border-color: rgba(63,185,80,0.4); }
+
+  /* Wrapper config */
+  .relation-graph { display: flex; flex-direction: column; gap: 4px; }
+  .relation-row { display: flex; align-items: center; gap: 6px; font-size: 11px; padding: 3px 8px; background: var(--bg); border-radius: 4px; }
+  .relation-row .entity { color: var(--accent); font-weight: 600; }
+  .relation-row .rname { color: var(--purple); }
+  .relation-row .match-info { color: var(--text-muted); font-size: 10px; }
+  .computed-item { padding: 4px 8px; background: var(--bg); border-radius: 4px; font-size: 10px; margin-bottom: 3px; }
+  .computed-item .cname { color: var(--pink); font-weight: 600; }
+  .computed-item .cdetail { color: var(--text-muted); }
+
+  /* Form pages */
+  .form-page { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+  .form-page .fp-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .form-page .fp-name { color: var(--accent); font-weight: 600; font-size: 12px; }
+  .form-page .fp-nav { color: var(--green); font-size: 10px; }
+  .form-field { font-size: 10px; padding: 2px 0; display: flex; gap: 8px; }
+  .form-field .ff-name { color: var(--cyan); min-width: 120px; }
+  .form-field .ff-format { color: var(--purple); min-width: 60px; }
+  .form-field .ff-req { color: var(--orange); font-size: 9px; }
+
+  /* Navigation map */
+  .nav-conn { padding: 5px 10px; margin-bottom: 3px; background: var(--bg); border-radius: 4px; display: flex; align-items: center; gap: 6px; font-size: 11px; flex-wrap: wrap; }
+  .nav-conn .from { color: var(--accent); }
+  .nav-conn .arrow { color: var(--text-muted); }
+  .nav-conn .to { color: var(--green); }
+  .nav-conn .trigger { color: var(--text-muted); font-size: 9px; }
+  .nav-conn .source-info { color: var(--purple); font-size: 9px; }
+  .nav-conn .mode-badge { font-size: 9px; padding: 1px 4px; border-radius: 3px; background: var(--surface2); color: var(--text-muted); }
+
+  /* Simulation */
+  .sim-container { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
+  .sim-flow { display: flex; flex-direction: column; gap: 8px; }
+  .sim-step { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; transition: all 0.3s; opacity: 0.4; }
+  .sim-step.reached { opacity: 1; }
+  .sim-step.current { opacity: 1; border-color: var(--accent); background: rgba(88,166,255,0.05); }
+  .sim-step .step-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .sim-step .step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+  .sim-step.current .step-num { background: var(--accent); color: #fff; }
+  .sim-step.reached .step-num { background: var(--green); color: #fff; }
+  .sim-step .step-title { font-size: 11px; font-weight: 600; }
+  .sim-step .step-desc { font-size: 10px; color: var(--text-muted); margin-left: 26px; }
+  .sim-state { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; overflow: auto; }
+  .sim-state h4 { font-size: 11px; color: var(--accent); margin-bottom: 6px; }
+  .state-entry { font-size: 10px; padding: 2px 0; border-bottom: 1px solid var(--border); }
+  .state-entry:last-child { border-bottom: none; }
+  .state-key { color: var(--purple); }
+  .state-val { color: var(--green); }
+  .sim-controls { display: flex; gap: 6px; margin-bottom: 12px; flex-shrink: 0; align-items: center; }
+
+  /* Data flow */
+  .data-flow-container { display: flex; flex-direction: column; gap: 12px; }
+  .data-flow-row { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+  .data-box { flex: 1; min-width: 180px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+  .data-box h4 { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .data-arrow-h { display: flex; align-items: center; color: var(--text-muted); font-size: 16px; flex-shrink: 0; }
+  .data-arrow-v { display: flex; justify-content: center; color: var(--text-muted); font-size: 16px; padding: 3px 0; }
+  .data-field { font-size: 10px; padding: 1px 0; }
+  .data-field .field-key { color: var(--accent); }
+  .data-field .field-val { color: var(--text-muted); }
+
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 40px; }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+  .empty-state p { font-size: 13px; max-width: 400px; line-height: 1.6; }
+
+  .preset-select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 11px; font-family: inherit; cursor: pointer; outline: none; }
+  .preset-select:focus { border-color: var(--accent); }
+
+  .collapsible { cursor: pointer; }
+  .collapsible-content { display: none; }
+  .collapsible-content.open { display: block; }
+  .collapse-toggle { font-size: 9px; color: var(--text-muted); margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>Flow Builder Visualizer</h1>
+    <span class="subtitle">digit_flow_builder</span>
+    <div class="actions">
+      <select class="preset-select" id="presetSelect" onchange="loadPreset(this.value)">
+        <option value="">Load Example...</option>
+        <option value="simpleRegistration">Simple Registration</option>
+        <option value="simpleSearch">Search + Deliver</option>
+      </select>
+      <button class="btn" onclick="formatJson()">Format</button>
+      <button class="btn primary" onclick="visualize()">Visualize</button>
+    </div>
+  </div>
+  <div class="editor-panel">
+    <div class="panel-header"><div class="dot"></div> JSON Configuration</div>
+    <textarea class="json-editor" id="jsonEditor" placeholder='Paste your flow JSON config here... Supports:
+- Full flow config with flows array
+- Single screen config
+- Action array
+- Single action object
+
+Ctrl+Enter to visualize' spellcheck="false"></textarea>
+    <div class="error-bar" id="errorBar"></div>
+  </div>
+  <div class="viz-panel">
+    <div class="tab-bar">
+      <div class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</div>
+      <div class="tab" data-tab="widgets" onclick="switchTab('widgets')">Widget Tree</div>
+      <div class="tab" data-tab="actions" onclick="switchTab('actions')">Action Inspector</div>
+      <div class="tab" data-tab="simulation" onclick="switchTab('simulation')">Simulation</div>
+      <div class="tab" data-tab="dataflow" onclick="switchTab('dataflow')">Data Flow</div>
+      <div class="tab" data-tab="wrapper" onclick="switchTab('wrapper')">Wrapper Config</div>
+      <div class="tab" data-tab="connections" onclick="switchTab('connections')">Navigation Map</div>
+    </div>
+    <div class="viz-content" id="vizContent">
+      <div class="empty-state">
+        <div class="icon">{ }</div>
+        <p>Paste a flow JSON config on the left and click <strong>Visualize</strong> to see the interactive flow diagram, widget trees, action chains, and data flow.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ───────────────────────────────────────────────────────────────
+let parsedConfig = null;
+let currentTab = 'overview';
+let simState = { step: 0, steps: [] };
+let allActions = []; // Flat list of all extracted actions for search
+
+// ── Presets ─────────────────────────────────────────────────────────────
+const presets = {
+  simpleRegistration: {"name":"beneficiaryRegistration","initialPage":"registrationForm","project":"health-campaign","version":1.0,"flows":[{"name":"registrationForm","screenType":"FORM","heading":"Register Beneficiary","pages":[{"page":"beneficiaryDetails","label":"Beneficiary Details","order":1,"navigateTo":{"name":"confirmation","type":"template"},"properties":[{"fieldName":"nameOfIndividual","format":"text","type":"string","mandatory":true,"label":"Name"},{"fieldName":"dobPicker","format":"dob","type":"string","mandatory":true,"label":"Date of Birth"},{"fieldName":"gender","format":"select","type":"string","mandatory":true,"label":"Gender","enums":[{"code":"MALE","name":"MALE"},{"code":"FEMALE","name":"FEMALE"}]}]}],"onAction":[{"actionType":"FETCH_TRANSFORMER_CONFIG","properties":{"configName":"beneficiaryRegistration"}},{"actionType":"CREATE_EVENT","properties":{"entity":"HOUSEHOLD, INDIVIDUAL"}},{"actionType":"NAVIGATION","properties":{"name":"confirmationScreen","navigationMode":"replace","data":[{"key":"beneficiaryName","value":"{{formData.name}}"}]}}]},{"name":"confirmationScreen","screenType":"TEMPLATE","heading":"Registration Complete","body":[{"type":"template","format":"panelCard","label":"Registration Successful","heading":"REGISTRATION_SUCCESS","fieldName":"successCard","properties":{"type":"success"},"primaryAction":{"type":"template","label":"View Details","format":"button","onAction":[{"actionType":"NAVIGATION","properties":{"name":"registrationForm","type":"FORM"}}]},"secondaryAction":{"type":"template","label":"Go Home","format":"button","onAction":[{"actionType":"BACK_NAVIGATION","properties":{"name":"HOME"}}]}}],"initActions":[{"actionType":"SEARCH_EVENT","properties":{"name":"beneficiarySearch","data":[{"key":"clientReferenceId","value":"{{navigation.clientRefId}}"}]}}]}]},
+  simpleSearch: {"name":"searchAndDeliver","initialPage":"searchScreen","flows":[{"name":"searchScreen","screenType":"TEMPLATE","heading":"Search Beneficiary","body":[{"type":"template","format":"searchBar","label":"Search","fieldName":"searchBar","onAction":[{"actionType":"SEARCH_EVENT","properties":{"data":[{"key":"givenName","value":"field.value","operation":"contains"}],"name":"name"}}]},{"type":"template","format":"listView","fieldName":"listView","data":"members","child":{"type":"template","format":"card","children":[{"type":"template","format":"textTemplate","value":"{{item.name}}","fieldName":"name"},{"type":"template","format":"button","label":"OPEN","fieldName":"openBtn","onAction":[{"actionType":"NAVIGATION","properties":{"data":[{"key":"id","value":"{{item.clientReferenceId}}"}],"name":"detailScreen","type":"TEMPLATE"}}]}]}}],"footer":[{"type":"template","format":"button","label":"Register New","fieldName":"registerBtn","onAction":[{"actionType":"NAVIGATION","properties":{"name":"registerForm","type":"FORM"}}]}],"initActions":[{"actionType":"SEARCH_EVENT","properties":{"name":"householdSearch","data":[{"key":"boundaryCode","value":"{{singleton.boundary.code}}"}],"awaitResults":true}}],"wrapperConfig":{"wrapperName":"HouseholdWrapper","rootEntity":"HouseholdModel","relations":[{"name":"members","entity":"HouseholdMemberModel","match":{"field":"householdClientReferenceId","equalsFrom":"clientReferenceId"}},{"name":"individuals","entity":"IndividualModel","match":{"field":"clientReferenceId","inFrom":"members.individualClientReferenceId"}}],"searchConfig":{"select":["household","individual","householdMember"],"primary":"household","pagination":{"limit":5}}}},{"name":"detailScreen","screenType":"TEMPLATE","heading":"Details","initActions":[{"actionType":"SEARCH_EVENT","properties":{"name":"detail","data":[{"key":"clientReferenceId","value":"{{navigation.id}}"}]}}],"body":[{"type":"template","format":"labelPairList","data":[{"key":"Name","value":"{{contextData.0.name}}"}]}],"footer":[{"type":"template","format":"button","label":"Back","onAction":[{"actionType":"BACK_NAVIGATION","properties":{"name":"searchScreen"}}]}]}]}
+};
+
+// ── Deep Widget/Action Extraction ────────────────────────────────────────
+
+function extractAllActionsFromWidget(widget, path, screenName) {
+  let results = [];
+  if (!widget || typeof widget !== 'object') return results;
+
+  // Direct onAction
+  if (widget.onAction && Array.isArray(widget.onAction)) {
+    widget.onAction.forEach((action, i) => {
+      results.push(...flattenAction(action, `${path}.onAction[${i}]`, screenName, widget.fieldName || widget.label || ''));
+    });
+  }
+
+  // primaryAction / secondaryAction (panelCard)
+  ['primaryAction', 'secondaryAction'].forEach(key => {
+    if (widget[key]) {
+      results.push(...extractAllActionsFromWidget(widget[key], `${path}.${key}`, screenName));
+    }
+  });
+
+  // Children array
+  if (widget.children && Array.isArray(widget.children)) {
+    widget.children.forEach((child, i) => {
+      results.push(...extractAllActionsFromWidget(child, `${path}.children[${i}]`, screenName));
+    });
+  }
+
+  // Single child
+  if (widget.child && typeof widget.child === 'object') {
+    results.push(...extractAllActionsFromWidget(widget.child, `${path}.child`, screenName));
+  }
+
+  // Popup config
+  if (widget.properties?.popupConfig) {
+    const popup = widget.properties.popupConfig;
+    if (popup.body && Array.isArray(popup.body)) {
+      popup.body.forEach((w, i) => {
+        results.push(...extractAllActionsFromWidget(w, `${path}.popup.body[${i}]`, screenName));
+      });
+    }
+    if (popup.footerActions && Array.isArray(popup.footerActions)) {
+      popup.footerActions.forEach((w, i) => {
+        results.push(...extractAllActionsFromWidget(w, `${path}.popup.footer[${i}]`, screenName));
+      });
+    }
+  }
+
+  // Scanner onSuccess/onError
+  if (widget.properties?.onSuccess) {
+    widget.properties.onSuccess.forEach((a, i) => {
+      results.push(...flattenAction(a, `${path}.onSuccess[${i}]`, screenName, widget.fieldName || ''));
+    });
+  }
+  if (widget.properties?.onError) {
+    widget.properties.onError.forEach((a, i) => {
+      results.push(...flattenAction(a, `${path}.onError[${i}]`, screenName, widget.fieldName || ''));
+    });
+  }
+
+  return results;
+}
+
+function flattenAction(action, path, screenName, widgetName) {
+  let results = [];
+  const type = action.actionType || (action.actions ? 'CONDITIONAL_GROUP' : 'UNKNOWN');
+
+  results.push({
+    action,
+    type,
+    path,
+    screenName,
+    widgetName,
+    condition: action.condition?.expression || action.condition?.type || null
+  });
+
+  // Nested actions (conditional group)
+  if (action.actions && Array.isArray(action.actions)) {
+    action.actions.forEach((nested, i) => {
+      results.push(...flattenAction(nested, `${path}.actions[${i}]`, screenName, widgetName));
+    });
+  }
+
+  // onSuccess / onError inside properties
+  if (action.properties?.onSuccess && Array.isArray(action.properties.onSuccess)) {
+    action.properties.onSuccess.forEach((a, i) => {
+      results.push(...flattenAction(a, `${path}.onSuccess[${i}]`, screenName, widgetName));
+    });
+  }
+  if (action.properties?.onError && Array.isArray(action.properties.onError)) {
+    action.properties.onError.forEach((a, i) => {
+      results.push(...flattenAction(a, `${path}.onError[${i}]`, screenName, widgetName));
+    });
+  }
+
+  return results;
+}
+
+function extractAllScreenActions(screen) {
+  let results = [];
+  const sn = screen.name;
+
+  // initActions
+  (screen.initActions || []).forEach((a, i) => {
+    results.push(...flattenAction(a, `initActions[${i}]`, sn, ''));
+  });
+
+  // onAction (screen-level)
+  (screen.onAction || []).forEach((a, i) => {
+    results.push(...flattenAction(a, `onAction[${i}]`, sn, ''));
+  });
+
+  // body widgets
+  (screen.body || []).forEach((w, i) => {
+    results.push(...extractAllActionsFromWidget(w, `body[${i}]`, sn));
+  });
+
+  // header widgets
+  (screen.header || []).forEach((w, i) => {
+    results.push(...extractAllActionsFromWidget(w, `header[${i}]`, sn));
+  });
+
+  // footer widgets
+  (screen.footer || []).forEach((w, i) => {
+    results.push(...extractAllActionsFromWidget(w, `footer[${i}]`, sn));
+  });
+
+  // scrollListener
+  if (screen.scrollListener) {
+    (screen.scrollListener.onScrollUp || []).forEach((a, i) => {
+      results.push(...flattenAction(a, `scrollListener.onScrollUp[${i}]`, sn, 'scrollListener'));
+    });
+    (screen.scrollListener.onScrollDown || []).forEach((a, i) => {
+      results.push(...flattenAction(a, `scrollListener.onScrollDown[${i}]`, sn, 'scrollListener'));
+    });
+  }
+
+  return results;
+}
+
+function extractAllNavConnections(config) {
+  let connections = [];
+  config.flows.forEach(screen => {
+    const actions = extractAllScreenActions(screen);
+    actions.forEach(a => {
+      if (a.type === 'NAVIGATION' && a.action.properties?.name) {
+        connections.push({
+          from: screen.name,
+          to: a.action.properties.name,
+          mode: a.action.properties.navigationMode || 'push',
+          condition: a.condition,
+          path: a.path,
+          widget: a.widgetName,
+          data: a.action.properties.data,
+          popUntil: a.action.properties.popUntilPageName
+        });
+      }
+      if (a.type === 'BACK_NAVIGATION') {
+        connections.push({
+          from: screen.name,
+          to: a.action.properties?.name || '(previous)',
+          mode: 'pop',
+          condition: a.condition,
+          path: a.path,
+          widget: a.widgetName,
+          data: null
+        });
+      }
+    });
+  });
+  return connections;
+}
+
+// ── Core Functions ──────────────────────────────────────────────────────
+
+function loadPreset(name) {
+  if (!name) return;
+  document.getElementById('jsonEditor').value = JSON.stringify(presets[name], null, 2);
+  document.getElementById('presetSelect').value = '';
+  visualize();
+}
+
+function formatJson() {
+  const ed = document.getElementById('jsonEditor');
+  try { ed.value = JSON.stringify(JSON.parse(ed.value), null, 2); hideError(); }
+  catch (e) { showError('Invalid JSON: ' + e.message); }
+}
+
+function showError(msg) { const b = document.getElementById('errorBar'); b.textContent = msg; b.classList.add('visible'); }
+function hideError() { document.getElementById('errorBar').classList.remove('visible'); }
+
+function visualize() {
+  const raw = document.getElementById('jsonEditor').value.trim();
+  if (!raw) { showError('No JSON provided'); return; }
+  try {
+    parsedConfig = normalizeConfig(JSON.parse(raw));
+    hideError();
+    // Build flat action index
+    allActions = [];
+    parsedConfig.flows.forEach(s => { allActions.push(...extractAllScreenActions(s)); });
+    renderTab(currentTab);
+  } catch (e) { showError('JSON Parse Error: ' + e.message); }
+}
+
+function normalizeConfig(p) {
+  if (p.flows && Array.isArray(p.flows)) return p;
+  if (p.screenType || (p.name && (p.body || p.pages || p.onAction))) return { name: p.name || 'flow', initialPage: p.name || 'screen', flows: [p] };
+  if (Array.isArray(p)) return { name: 'actions', initialPage: 'screen', flows: [{ name: 'screen', screenType: 'CUSTOM', onAction: p }] };
+  if (p.actionType) return { name: 'action', initialPage: 'screen', flows: [{ name: 'screen', screenType: 'CUSTOM', onAction: [p] }] };
+  return { name: 'unknown', initialPage: '', flows: [] };
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`)?.classList.add('active');
+  if (parsedConfig) renderTab(tab);
+}
+
+function renderTab(tab) {
+  const c = document.getElementById('vizContent');
+  switch(tab) {
+    case 'overview': c.innerHTML = renderOverview(); break;
+    case 'widgets': c.innerHTML = renderWidgetTrees(); break;
+    case 'actions': c.innerHTML = renderActions(); break;
+    case 'simulation': c.innerHTML = renderSimulation(); break;
+    case 'dataflow': c.innerHTML = renderDataFlow(); break;
+    case 'wrapper': c.innerHTML = renderWrapperTab(); break;
+    case 'connections': c.innerHTML = renderConnections(); break;
+  }
+  attachListeners();
+}
+
+function esc(s) { return s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Overview Tab ────────────────────────────────────────────────────────
+
+function renderOverview() {
+  const c = parsedConfig;
+  const totalActions = allActions.length;
+  const navConns = extractAllNavConnections(c);
+
+  let html = `<div class="flow-header">
+    <h2>${esc(c.name)}</h2>
+    <div class="meta">
+      <span>Initial: <strong>${esc(c.initialPage)}</strong></span>
+      <span>Screens: <strong>${c.flows.length}</strong></span>
+      <span>Total actions: <strong>${totalActions}</strong></span>
+      <span>Nav edges: <strong>${navConns.length}</strong></span>
+      ${c.project ? `<span>Project: <strong>${esc(c.project)}</strong></span>` : ''}
+    </div>
+  </div><div class="screen-list">`;
+
+  c.flows.forEach((screen, i) => {
+    const isInitial = screen.name === c.initialPage;
+    const type = screen.screenType || 'UNKNOWN';
+    const screenActions = extractAllScreenActions(screen);
+    const widgetActionCount = screenActions.filter(a => a.widgetName).length;
+    const initLen = (screen.initActions||[]).length;
+    const onLen = (screen.onAction||[]).length;
+    const hasPages = screen.pages && screen.pages.length > 0;
+    const hasBody = screen.body && screen.body.length > 0;
+
+    html += `<div class="screen-card ${isInitial?'initial':''}" data-screen="${i}">
+      <div class="screen-card-header" onclick="toggleScreen(${i})">
+        <div class="icon ${type==='FORM'?'form':'template'}">${type==='FORM'?'F':'T'}</div>
+        <span class="name">${esc(screen.name)}</span>
+        ${isInitial?'<span class="initial-badge">INITIAL</span>':''}
+        <span class="type-badge">${type} | ${initLen} init | ${onLen} submit | ${widgetActionCount} widget actions${hasPages?' | '+screen.pages.length+' pages':''}</span>
+      </div>
+      <div class="screen-card-body">
+        ${screen.heading ? `<div style="font-size:11px;margin-bottom:6px;color:var(--text-muted)">Heading: <strong>${esc(screen.heading)}</strong></div>` : ''}
+        ${screen.wrapperConfig ? renderWrapperBadge(screen.wrapperConfig) : ''}
+        ${screen.scrollListener ? `<div style="font-size:10px;padding:4px 8px;background:rgba(57,210,192,0.08);border:1px solid rgba(57,210,192,0.2);border-radius:4px;margin-bottom:6px;color:var(--cyan);">Scroll Listener: ${screen.scrollListener.triggerMode||'down'} | debounce: ${screen.scrollListener.debounceMs||0}ms</div>` : ''}
+        ${hasPages ? renderFormPagesCompact(screen.pages) : ''}
+        ${initLen > 0 ? `<div class="section-title">initActions (page load)</div><div class="action-chain">${renderActionChain(screen.initActions, i, 'init')}</div>` : ''}
+        ${onLen > 0 ? `<div class="section-title">onAction (submit)</div><div class="action-chain">${renderActionChain(screen.onAction, i, 'submit')}</div>` : ''}
+        ${hasBody ? `<div class="section-title">Body Widgets (${screen.body.length}) <span style="font-size:9px;color:var(--green)">${widgetActionCount} embedded actions</span></div>${renderWidgetListCompact(screen.body)}` : ''}
+      </div>
+    </div>`;
+  });
+
+  return html + '</div>';
+}
+
+function renderWrapperBadge(wc) {
+  const relCount = wc.relations ? wc.relations.length : 0;
+  const compCount = wc.computed ? Object.keys(wc.computed).length : 0;
+  const compListCount = wc.computedList ? Object.keys(wc.computedList).length : 0;
+  return `<div style="font-size:10px;padding:5px 8px;background:rgba(188,140,255,0.08);border:1px solid rgba(188,140,255,0.2);border-radius:4px;margin-bottom:6px;">
+    <span style="color:var(--purple);font-weight:600">Wrapper:</span>
+    <span style="color:var(--text-muted)">${esc(wc.wrapperName||'')} | root: ${esc(wc.rootEntity||'')} | ${relCount} relations${compCount?' | '+compCount+' computed':''}${compListCount?' | '+compListCount+' computedList':''}</span>
+  </div>`;
+}
+
+function renderFormPagesCompact(pages) {
+  let html = '<div class="section-title">Form Pages</div>';
+  pages.forEach(p => {
+    const fieldCount = (p.properties||[]).length;
+    const nav = p.navigateTo;
+    html += `<div style="font-size:10px;padding:3px 8px;background:var(--bg);border-radius:4px;margin-bottom:3px;">
+      <span style="color:var(--accent);font-weight:600">${esc(p.page)}</span>
+      <span style="color:var(--text-muted)"> (${fieldCount} fields)</span>
+      ${nav ? `<span style="color:var(--green)"> -> ${esc(nav.name)}</span>` : ''}
+      ${p.submitCondition ? `<span style="color:var(--orange);font-size:9px"> [submit if: ${esc(p.submitCondition.expression?.[0]?.condition||'')}]</span>` : ''}
+    </div>`;
+  });
+  return html;
+}
+
+function renderWidgetListCompact(widgets) {
+  if (!widgets || !widgets.length) return '';
+  let html = '';
+  widgets.forEach(w => {
+    const format = w.format || w.type || '?';
+    const field = w.fieldName || '';
+    const hasActions = w.onAction && w.onAction.length > 0;
+    const hasPopup = w.properties?.popupConfig;
+    const hasChild = w.child || (w.children && w.children.length > 0);
+    html += `<div style="font-size:10px;padding:2px 8px;color:var(--text-muted);">
+      <span style="color:var(--cyan)">${esc(format)}</span>${field?' <span style="color:var(--text-muted)">'+esc(field)+'</span>':''}${hasActions?' <span style="color:var(--green);font-size:9px">'+w.onAction.length+' actions</span>':''}${hasPopup?' <span style="color:var(--orange);font-size:9px">popup</span>':''}${hasChild?' <span style="color:var(--purple);font-size:9px">nested</span>':''}
+    </div>`;
+  });
+  return html;
+}
+
+// ── Widget Tree Tab ─────────────────────────────────────────────────────
+
+function renderWidgetTrees() {
+  const c = parsedConfig;
+  let html = '';
+  c.flows.forEach(screen => {
+    const hasBody = screen.body && screen.body.length > 0;
+    const hasHeader = screen.header && screen.header.length > 0;
+    const hasFooter = screen.footer && screen.footer.length > 0;
+    const hasPages = screen.pages && screen.pages.length > 0;
+    if (!hasBody && !hasHeader && !hasFooter && !hasPages) return;
+
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;">${esc(screen.name)} <span style="color:var(--text-muted);font-size:10px">(${screen.screenType})</span></div>`;
+
+    if (hasHeader) {
+      html += `<div class="section-title">Header</div><div class="widget-tree">${renderWidgetTreeDeep(screen.header)}</div>`;
+    }
+    if (hasBody) {
+      html += `<div class="section-title">Body</div><div class="widget-tree">${renderWidgetTreeDeep(screen.body)}</div>`;
+    }
+    if (hasFooter) {
+      html += `<div class="section-title">Footer</div><div class="widget-tree">${renderWidgetTreeDeep(screen.footer)}</div>`;
+    }
+    if (hasPages) {
+      html += `<div class="section-title">Form Pages</div>`;
+      screen.pages.forEach(p => {
+        html += renderFormPageDetail(p);
+      });
+    }
+    html += '</div>';
+  });
+  return html || '<div class="empty-state"><p>No widget trees found in this config.</p></div>';
+}
+
+function renderWidgetTreeDeep(widgets) {
+  if (!widgets || !widgets.length) return '';
+  let html = '';
+  widgets.forEach(w => {
+    const format = w.format || w.type || '?';
+    const field = w.fieldName || '';
+    const label = w.label || '';
+    const hasActions = w.onAction && w.onAction.length > 0;
+    const hasPopup = w.properties?.popupConfig;
+    const visible = w.visible;
+    const hidden = w.hidden;
+
+    html += `<div class="widget-node ${hasActions?'has-actions':''}">
+      <span class="wn-format">${esc(format)}</span>
+      ${field?` <span class="wn-field">${esc(field)}</span>`:''}
+      ${label?` <span class="wn-label">"${esc(label)}"</span>`:''}
+      ${visible?` <span style="color:var(--orange);font-size:9px">visible: ${esc(String(visible).slice(0,50))}</span>`:''}
+      ${hidden===true?' <span style="color:var(--red);font-size:9px">hidden</span>':''}
+      ${w.mandatory?' <span style="color:var(--orange);font-size:9px">required</span>':''}
+      ${hasActions?`<div class="wn-actions">${w.onAction.length} action(s): ${w.onAction.map(a=>esc(a.actionType||(a.actions?'COND_GROUP':'?'))).join(', ')}</div>`:''}
+    </div>`;
+
+    // Recurse into children
+    if (w.children && w.children.length > 0) {
+      html += `<div class="widget-tree">${renderWidgetTreeDeep(w.children)}</div>`;
+    }
+    if (w.child) {
+      html += `<div class="widget-tree">${renderWidgetTreeDeep([w.child])}</div>`;
+    }
+    // Popup body/footer
+    if (hasPopup) {
+      const pc = w.properties.popupConfig;
+      html += `<div class="widget-tree" style="border-color:var(--orange);">`;
+      html += `<div style="font-size:9px;color:var(--orange);margin:2px 0;">Popup: ${esc(pc.title||'')}</div>`;
+      if (pc.body) html += renderWidgetTreeDeep(pc.body);
+      if (pc.footerActions) {
+        html += `<div style="font-size:9px;color:var(--text-muted);margin:2px 0;">Footer Actions:</div>`;
+        html += renderWidgetTreeDeep(pc.footerActions);
+      }
+      html += `</div>`;
+    }
+    // primaryAction / secondaryAction
+    ['primaryAction','secondaryAction'].forEach(k => {
+      if (w[k]) {
+        html += `<div class="widget-tree">${renderWidgetTreeDeep([{...w[k], _label: k}])}</div>`;
+      }
+    });
+  });
+  return html;
+}
+
+function renderFormPageDetail(page) {
+  const fields = page.properties || [];
+  const nav = page.navigateTo;
+  let html = `<div class="form-page">
+    <div class="fp-header">
+      <span class="fp-name">${esc(page.page)}</span>
+      <span style="font-size:10px;color:var(--text-muted)">order: ${page.order || '?'}</span>
+      ${nav ? `<span class="fp-nav">-> ${esc(nav.name)} (${esc(nav.type||'')})</span>` : ''}
+    </div>
+    ${page.label ? `<div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">${esc(page.label)}</div>` : ''}`;
+
+  fields.forEach(f => {
+    html += `<div class="form-field">
+      <span class="ff-name">${esc(f.fieldName||'')}</span>
+      <span class="ff-format">${esc(f.format||f.type||'')}</span>
+      ${f.mandatory?'<span class="ff-req">required</span>':''}
+      ${f.hidden?' <span style="color:var(--text-muted);font-size:9px">hidden</span>':''}
+      ${f.readOnly?' <span style="color:var(--text-muted);font-size:9px">readOnly</span>':''}
+      ${f.systemDate?' <span style="color:var(--cyan);font-size:9px">systemDate</span>':''}
+    </div>`;
+  });
+
+  if (page.showAlertPopUp) {
+    html += `<div style="margin-top:4px;font-size:9px;color:var(--orange);">Alert popup with ${(page.showAlertPopUp.conditions||[]).length} conditions</div>`;
+  }
+  if (page.submitCondition) {
+    html += `<div style="margin-top:4px;font-size:9px;color:var(--orange);">Submit condition: ${esc(page.submitCondition.expression?.[0]?.condition||'')}</div>`;
+  }
+
+  return html + '</div>';
+}
+
+// ── Actions Tab ─────────────────────────────────────────────────────────
+
+function renderActionChain(actions, screenIdx, phase) {
+  if (!actions) return '';
+  return actions.map((action, i) => {
+    const type = action.actionType || (action.actions ? 'CONDITIONAL_GROUP' : 'UNKNOWN');
+    const summary = getActionSummary(action);
+    const cond = action.condition?.expression || (action.condition?.type ? action.condition.type+': '+JSON.stringify(action.condition).slice(0,40) : '');
+
+    let nested = '';
+    if (action.actions && action.actions.length > 0) {
+      nested = `<div style="margin-top:4px;padding-left:12px;border-left:2px solid var(--border);">
+        ${action.actions.map((a,j) => {
+          const nt = a.actionType||'?';
+          return `<div style="font-size:10px;margin:2px 0;"><span class="action-type ${nt}">${esc(nt)}</span> <span style="color:var(--text-muted)">${esc(getActionSummary(a))}</span></div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    return `<div class="action-node ${type}" data-screen="${screenIdx}" data-phase="${phase}" data-action="${i}" onclick="selectAction(${screenIdx},'${phase}',${i})">
+      <div class="action-type ${type}">${esc(type)}</div>
+      <div class="action-summary">${esc(summary)}</div>
+      ${cond ? `<div class="condition-badge" title="${esc(cond)}">IF: ${esc(cond.length>60?cond.slice(0,60)+'...':cond)}</div>` : ''}
+      ${nested}
+    </div>`;
+  }).join('');
+}
+
+function renderActions() {
+  const c = parsedConfig;
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+
+  html += '<div style="overflow:auto;max-height:calc(100vh - 120px);">';
+  c.flows.forEach((screen, si) => {
+    const screenActions = extractAllScreenActions(screen);
+    html += `<div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px;">${esc(screen.name)} <span style="color:var(--text-muted);font-size:10px">(${screenActions.length} total actions)</span></div>`;
+
+    const init = screen.initActions || [];
+    const onAct = screen.onAction || [];
+
+    if (init.length > 0) {
+      html += `<div class="section-title">initActions</div><div class="action-chain">${renderActionChain(init, si, 'init')}</div>`;
+    }
+    if (onAct.length > 0) {
+      html += `<div class="section-title">onAction (submit)</div><div class="action-chain">${renderActionChain(onAct, si, 'submit')}</div>`;
+    }
+
+    // Widget-level actions
+    const widgetActions = screenActions.filter(a => a.widgetName && !a.path.startsWith('initActions') && !a.path.startsWith('onAction'));
+    if (widgetActions.length > 0) {
+      // Group by widget
+      const byWidget = {};
+      widgetActions.forEach(a => {
+        const wn = a.widgetName || a.path;
+        if (!byWidget[wn]) byWidget[wn] = [];
+        byWidget[wn].push(a);
+      });
+      html += `<div class="section-title">Widget Actions (${widgetActions.length})</div>`;
+      for (const [wn, acts] of Object.entries(byWidget)) {
+        html += `<div style="font-size:10px;color:var(--purple);margin:4px 0 2px;">${esc(wn)}</div>`;
+        html += `<div class="action-chain">`;
+        acts.forEach(a => {
+          const type = a.type;
+          html += `<div class="action-node ${type}">
+            <div class="action-type ${type}">${esc(type)}</div>
+            <div class="action-summary">${esc(getActionSummary(a.action))}</div>
+            ${a.condition ? `<div class="condition-badge">IF: ${esc(String(a.condition).slice(0,50))}</div>` : ''}
+            <div style="font-size:9px;color:var(--text-muted);margin-top:2px;">${esc(a.path)}</div>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += `<div id="actionDetailPanel" style="position:sticky;top:0;">
+    <div class="empty-state" style="height:auto;padding:30px"><p style="font-size:11px">Click an action node to see full details, execution steps, and contextData impact.</p></div>
+  </div></div>`;
+  return html;
+}
+
+function selectAction(screenIdx, phase, actionIdx) {
+  const screen = parsedConfig.flows[screenIdx];
+  const actions = phase === 'init' ? (screen.initActions||[]) : (screen.onAction||[]);
+  const action = actions[actionIdx];
+  if (!action) return;
+
+  document.querySelectorAll('.action-node').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll(`.action-node[data-screen="${screenIdx}"][data-phase="${phase}"][data-action="${actionIdx}"]`).forEach(n => n.classList.add('active'));
+
+  const panel = document.getElementById('actionDetailPanel');
+  if (panel) panel.innerHTML = renderActionDetail(action, screen.name, phase, actionIdx);
+}
+
+function renderActionDetail(action, screenName, phase, idx) {
+  const props = action.properties || {};
+  const type = action.actionType || (action.actions ? 'CONDITIONAL_GROUP' : 'UNKNOWN');
+
+  let html = `<div class="action-detail">
+    <h3>${esc(type)}</h3>
+    <div class="detail-grid">
+      <span class="detail-label">Screen</span><span class="detail-value">${esc(screenName)}</span>
+      <span class="detail-label">Phase</span><span class="detail-value">${phase==='init'?'initActions':'onAction'}</span>
+      <span class="detail-label">Step</span><span class="detail-value">${idx+1}</span>
+    </div>`;
+
+  if (action.condition) {
+    html += `<div class="section-title">Condition</div>
+      <div style="font-size:11px;padding:6px;background:var(--bg);border-radius:4px;color:var(--orange);word-break:break-all;">
+        ${esc(action.condition.expression || JSON.stringify(action.condition))}
+      </div>`;
+  }
+
+  if (Object.keys(props).length > 0) {
+    html += `<div class="section-title">Properties</div><div class="detail-grid">`;
+    for (const [key, val] of Object.entries(props)) {
+      if (key === 'data' && Array.isArray(val)) {
+        html += `<span class="detail-label">${esc(key)}</span><span class="detail-value">`;
+        val.forEach(d => {
+          html += `<div style="margin-bottom:1px"><span style="color:var(--purple)">${esc(d.key||'')}</span>`;
+          if (d.value != null) html += ` = <span style="color:var(--green)">${esc(String(d.value).slice(0,80))}</span>`;
+          if (d.operation) html += ` <span style="color:var(--orange)">(${esc(d.operation)})</span>`;
+          if (d.root) html += ` <span style="color:var(--text-muted)">root:${esc(d.root)}</span>`;
+          html += '</div>';
+        });
+        html += '</span>';
+      } else if ((key === 'onSuccess' || key === 'onError') && Array.isArray(val)) {
+        html += `<span class="detail-label">${esc(key)}</span><span class="detail-value" style="color:var(--text-muted)">${val.length} action(s): ${val.map(a=>a.actionType||'?').join(', ')}</span>`;
+      } else if (key === 'modify' && Array.isArray(val)) {
+        html += `<span class="detail-label">${esc(key)}</span><span class="detail-value">`;
+        val.forEach(m => { html += `<div><span style="color:var(--purple)">${esc(m.key||'')}</span> = <span style="color:var(--green)">${esc(String(m.value||''))}</span></div>`; });
+        html += '</span>';
+      } else {
+        const isNav = key === 'name' && type === 'NAVIGATION';
+        html += `<span class="detail-label">${esc(key)}</span>
+          <span class="detail-value${isNav?' nav-target':''}" ${isNav?`onclick="scrollToScreen('${esc(String(val))}')"`:''}>${esc(typeof val==='object'?JSON.stringify(val):String(val))}</span>`;
+      }
+    }
+    html += '</div>';
+  }
+
+  html += `<div class="section-title">What happens</div><div style="font-size:11px;color:var(--text-muted);line-height:1.5;">${getActionExplanation(action)}</div>`;
+  html += `<div class="section-title">contextData impact</div><div style="font-size:10px;line-height:1.5;">${getContextDataImpact(action)}</div>`;
+
+  if (action.actions && action.actions.length > 0) {
+    html += `<div class="section-title">Nested Actions (${action.actions.length})</div><div class="action-chain">`;
+    action.actions.forEach(a => {
+      const nt = a.actionType||'?';
+      html += `<div class="action-node ${nt}"><div class="action-type ${nt}">${esc(nt)}</div><div class="action-summary">${esc(getActionSummary(a))}</div></div>`;
+    });
+    html += '</div>';
+  }
+
+  return html + '</div>';
+}
+
+function getActionSummary(action) {
+  const p = action.properties || {};
+  switch (action.actionType) {
+    case 'NAVIGATION': return `-> "${p.name||'?'}" (${p.navigationMode||'push'})${p.popUntilPageName?' popUntil:'+p.popUntilPageName:''}`;
+    case 'SEARCH_EVENT': return `Search "${p.name||''}" [${(p.data||[]).map(d=>d.key).join(',')}]${p.awaitResults?' (await)':''}`;
+    case 'CREATE_EVENT': return `Create ${p.entity||'entities'}`;
+    case 'UPDATE_EVENT': return `Update ${p.entity||'entities'}${p.modify?' +modify':''}`;
+    case 'FETCH_TRANSFORMER_CONFIG': return `Transform "${p.configName||''}"`;
+    case 'REVERSE_TRANSFORM': return `Reverse "${p.configName||''}" [${(p.entityTypes||[]).join(',')}]`;
+    case 'SHOW_TOAST': return `"${(p.message||'').slice(0,40)}"`;
+    case 'BACK_NAVIGATION': return `Back to "${p.name||'prev'}"`;
+    case 'CLEAR_STATE': return p.clearAll?'Clear ALL':`Clear [${(p.filterKeys||[]).join(',')}]`;
+    case 'REFRESH_SEARCH': return `Refresh ${p.direction||'down'}`;
+    case 'OPEN_SCANNER': return `Scan ${p.scanType||'qr'} -> ${p.fieldName||'?'}`;
+    case 'CLOSE_POPUP': return `Close popup${p.parentScreenKey?' ('+p.parentScreenKey+')':''}`;
+    default:
+      if (action.actions) return `Conditional group (${action.actions.length} actions)`;
+      return JSON.stringify(p).slice(0,50);
+  }
+}
+
+function getActionExplanation(action) {
+  const p = action.properties || {};
+  const type = action.actionType || '';
+  switch (type) {
+    case 'NAVIGATION': return `<b>1.</b> Resolves templates in data<br><b>2.</b> Generates new instanceId for target<br><b>3.</b> Stores navParams in registry<br><b>4.</b> Pre-populates target state<br><b>5.</b> Navigates to <code>${esc(p.name||'?')}</code> via <code>${esc(p.navigationMode||'push')}</code>${p.popUntilPageName?'<br><b>6.</b> Pops until <code>'+esc(p.popUntilPageName)+'</code> first':''}`;
+    case 'SEARCH_EVENT': return `<b>1.</b> Resolves filter templates<br><b>2.</b> Evaluates applyIf on each filter<br><b>3.</b> Accumulates in SearchStateManager("${esc(p.name||'')}")<br><b>4.</b> Dispatches via FlowCrudBloc<br>${p.awaitResults?'<b>5.</b> Awaits results (Completer)':'<b>5.</b> Non-blocking'}`;
+    case 'CREATE_EVENT': return `<b>1.</b> Reads contextData['entities']<br><b>2.</b> Dispatches CREATE via FlowCrudBloc<br><b>3.</b> Persists to local DB`;
+    case 'UPDATE_EVENT': return `<b>1.</b> Reads entities, filters to <code>${esc(p.entity||'all')}</code><br><b>2.</b> Change detection vs stateWrapper<br><b>3.</b> Dispatches UPDATE for changed entities${p.modify?'<br><b>4.</b> Applies modify overrides: '+p.modify.map(m=>esc(m.key+'='+m.value)).join(', '):''}`;
+    case 'FETCH_TRANSFORMER_CONFIG': return `<b>1.</b> Loads config "<code>${esc(p.configName||'')}</code>"<br><b>2.</b> Maps formData -> entity fields<br><b>3.</b> Handles __generate:uuid, __context:*, __ref:*<br><b>4.</b> Stores in contextData['entities']`;
+    case 'REVERSE_TRANSFORM': return `<b>1.</b> Extracts entities from stateWrapper<br><b>2.</b> Reverse maps to form fields<br><b>3.</b> Stores as formData in registry`;
+    case 'SHOW_TOAST': return `Shows toast: "${esc(p.message||'')}"`;
+    case 'BACK_NAVIGATION': return p.name==='HOME'?'Pops all routes to home':`Pops back to "${esc(p.name||'previous')}"`;
+    case 'CLEAR_STATE': return `Clears ${p.clearAll?'ALL':'['+((p.filterKeys||[]).join(',')+']')} from SearchStateManager${p.triggerSearch?' + triggers search refresh':''}`;
+    case 'OPEN_SCANNER': return `Opens ${p.scanType||'QR'} scanner. Limit: ${p.scanLimit||1}. Stores in "${esc(p.fieldName||'')}"${p.onSuccess?' -> '+p.onSuccess.length+' success actions':''}`;
+    case 'CLOSE_POPUP': return `Closes popup dialog${p.parentScreenKey?' for screen '+esc(p.parentScreenKey):''}`;
+    case 'REFRESH_SEARCH': return `Refreshes search ${p.direction||'down'} with pagination`;
+    default:
+      if (action.actions) return `Conditional group: evaluates condition, then runs ${action.actions.length} nested action(s): ${action.actions.map(a=>a.actionType||'?').join(' -> ')}`;
+      return 'Executes action with configured properties';
+  }
+}
+
+function getContextDataImpact(action) {
+  const t = action.actionType || '';
+  switch (t) {
+    case 'NAVIGATION': return `<span style="color:var(--green)">Reads:</span> contextData.stateWrapper, .formData, .entities<br><span style="color:var(--orange)">Writes:</span> Target FlowCrudStateRegistry`;
+    case 'SEARCH_EVENT': return `<span style="color:var(--green)">Reads:</span> contextData.navigation.*, .formData.*<br><span style="color:var(--orange)">Writes:</span> SearchStateManager filters`;
+    case 'CREATE_EVENT': return `<span style="color:var(--green)">Reads:</span> contextData['entities']<br><span style="color:var(--orange)">Writes:</span> FlowCrudBloc CREATE`;
+    case 'UPDATE_EVENT': return `<span style="color:var(--green)">Reads:</span> contextData['entities'], stateWrapper<br><span style="color:var(--orange)">Writes:</span> FlowCrudBloc UPDATE`;
+    case 'FETCH_TRANSFORMER_CONFIG': return `<span style="color:var(--green)">Reads:</span> contextData.formData, .navigation<br><span style="color:var(--orange)">Writes:</span> contextData['entities']`;
+    case 'REVERSE_TRANSFORM': return `<span style="color:var(--green)">Reads:</span> stateWrapper entities<br><span style="color:var(--orange)">Writes:</span> FlowCrudStateRegistry.formData`;
+    case 'CLEAR_STATE': return `<span style="color:var(--orange)">Clears:</span> SearchStateManager entries`;
+    default: return `<span style="color:var(--text-muted)">No direct contextData change</span>`;
+  }
+}
+
+// ── Wrapper Config Tab ──────────────────────────────────────────────────
+
+function renderWrapperTab() {
+  const c = parsedConfig;
+  let html = '';
+
+  c.flows.forEach(screen => {
+    const wc = screen.wrapperConfig;
+    if (!wc) return;
+
+    html += `<div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;">${esc(screen.name)}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+        <span style="color:var(--purple);font-weight:600">${esc(wc.wrapperName||'')}</span> | root: <strong>${esc(wc.rootEntity||'')}</strong>
+      </div>`;
+
+    // Search config
+    if (wc.searchConfig) {
+      const sc = wc.searchConfig;
+      html += `<div style="font-size:10px;padding:5px 8px;background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);border-radius:4px;margin-bottom:8px;">
+        <span style="color:var(--accent);font-weight:600">SearchConfig:</span>
+        primary: ${esc(sc.primary||'')} | select: [${(sc.select||[]).map(s=>esc(s)).join(', ')}]
+        ${sc.pagination?' | limit:'+sc.pagination.limit+(sc.pagination.maxItems?' max:'+sc.pagination.maxItems:''):''}
+      </div>`;
+    }
+
+    // Filters
+    if (wc.filters && wc.filters.length > 0) {
+      html += `<div class="section-title">Filters</div>`;
+      wc.filters.forEach(f => {
+        html += `<div style="font-size:10px;padding:2px 8px;background:var(--bg);border-radius:3px;margin-bottom:2px;">
+          <span style="color:var(--orange)">${esc(f.field||'')}</span> ${f.equals!=null?'= '+esc(String(f.equals)):''} ${f.equalsFrom?'equalsFrom: '+esc(f.equalsFrom):''}
+        </div>`;
+      });
+    }
+
+    // Relations
+    if (wc.relations && wc.relations.length > 0) {
+      html += `<div class="section-title">Relations (${wc.relations.length})</div><div class="relation-graph">`;
+      wc.relations.forEach(r => {
+        html += `<div class="relation-row">
+          <span class="rname">${esc(r.name||'')}</span>
+          <span style="color:var(--text-muted)">-></span>
+          <span class="entity">${esc(r.entity||'')}</span>
+          <span class="match-info">${renderMatchInfo(r.match)}</span>
+          ${r.filters?` <span style="color:var(--orange);font-size:9px">filtered</span>`:''}
+        </div>`;
+        // Nested relations
+        if (r.relations && r.relations.length > 0) {
+          html += `<div style="padding-left:16px;border-left:2px solid var(--border);">`;
+          r.relations.forEach(nr => {
+            html += `<div class="relation-row">
+              <span class="rname">${esc(nr.name||'')}</span>
+              <span style="color:var(--text-muted)">-></span>
+              <span class="entity">${esc(nr.entity||'')}</span>
+              <span class="match-info">${renderMatchInfo(nr.match)}</span>
+            </div>`;
+          });
+          html += `</div>`;
+        }
+      });
+      html += '</div>';
+    }
+
+    // Fields
+    if (wc.fields && typeof wc.fields === 'object') {
+      html += `<div class="section-title">Fields (extracted)</div>`;
+      for (const [name, def] of Object.entries(wc.fields)) {
+        html += `<div class="computed-item">
+          <span class="cname">${esc(name)}</span>
+          <span class="cdetail"> from: ${esc(def.from||'')} | select: ${esc(def.select||'')}${def.default!=null?' | default: '+esc(String(def.default)):''}${def.takeLast?' | takeLast':''}</span>
+        </div>`;
+      }
+    }
+
+    // Computed
+    if (wc.computed && typeof wc.computed === 'object') {
+      const entries = Object.entries(wc.computed).sort((a,b) => (a[1].order||0)-(b[1].order||0));
+      html += `<div class="section-title">Computed (${entries.length})</div>`;
+      entries.forEach(([name, def]) => {
+        let detail = `order:${def.order||'?'}`;
+        if (def.from) detail += ` | from: ${def.from}`;
+        if (def.condition) detail += ' | conditional';
+        if (def.fallback != null) detail += ` | fallback: ${JSON.stringify(def.fallback).slice(0,30)}`;
+        html += `<div class="computed-item"><span class="cname">${esc(name)}</span> <span class="cdetail">${esc(detail)}</span></div>`;
+      });
+    }
+
+    // ComputedList
+    if (wc.computedList && typeof wc.computedList === 'object') {
+      const entries = Object.entries(wc.computedList).sort((a,b) => (a[1].order||0)-(b[1].order||0));
+      html += `<div class="section-title">ComputedList (${entries.length})</div>`;
+      entries.forEach(([name, def]) => {
+        let detail = `order:${def.order||'?'}`;
+        if (def.from) detail += ` | from: ${def.from}`;
+        if (def.where) detail += ' | filtered';
+        if (def.skip) detail += ' | skip';
+        if (def.evaluateCondition) detail += ' | evaluateCondition';
+        if (def.fallback != null) detail += ` | fallback: ${JSON.stringify(def.fallback).slice(0,20)}`;
+        html += `<div class="computed-item"><span class="cname">${esc(name)}</span> <span class="cdetail">${esc(detail)}</span></div>`;
+      });
+    }
+
+    html += '</div>';
+  });
+
+  return html || '<div class="empty-state"><p>No wrapperConfig found in any screen.</p></div>';
+}
+
+function renderMatchInfo(match) {
+  if (!match) return '';
+  if (match.equalsFrom) return `${match.field} = ${match.equalsFrom}`;
+  if (match.inFrom) return `${match.field} IN ${match.inFrom}`;
+  return JSON.stringify(match).slice(0,60);
+}
+
+// ── Simulation Tab ──────────────────────────────────────────────────────
+
+function renderSimulation() {
+  const c = parsedConfig;
+  let steps = [];
+  const initial = c.flows.find(f => f.name === c.initialPage) || c.flows[0];
+  if (!initial) return '<div class="empty-state"><p>No screens</p></div>';
+
+  steps.push({ type:'PAGE_LOAD', screen:initial.name, title:`Page Load: ${initial.name}`, desc:`${initial.screenType}. Creates compositeKey, registers in FlowCrudStateRegistry + SearchStateManager.`, ctx:{}, reg:[`register("${initial.name}", instanceId)`] });
+
+  (initial.initActions||[]).forEach(a => steps.push(buildSimStep(a, initial.name)));
+
+  if (initial.screenType === 'FORM') {
+    steps.push({ type:'USER', screen:initial.name, title:'User fills form & submits', desc:'FormsBloc -> FormSubmissionRegistry routes to handler. contextData = {formData, navigation}', ctx:{formData:'{...}',navigation:'{...}'}, reg:['clearForm(schemaKey)'] });
+  } else {
+    steps.push({ type:'USER', screen:initial.name, title:'User interacts with template', desc:'Taps button/item. contextData = {item}', ctx:{item:'{...}'}, reg:[] });
+  }
+
+  (initial.onAction||[]).forEach(a => steps.push(buildSimStep(a, initial.name)));
+
+  // Follow first navigation
+  const firstNav = (initial.onAction||[]).find(a => a.actionType==='NAVIGATION') || allActions.find(a => a.type==='NAVIGATION' && a.screenName===initial.name);
+  if (firstNav) {
+    const targetName = (firstNav.action||firstNav).properties?.name;
+    const target = c.flows.find(f => f.name === targetName);
+    if (target) {
+      steps.push({ type:'PAGE_LOAD', screen:target.name, title:`Page Load: ${target.name}`, desc:`Navigated from ${initial.name}. New instanceId.`, ctx:{}, reg:[`register("${target.name}", newId)`] });
+      (target.initActions||[]).forEach(a => steps.push(buildSimStep(a, target.name)));
+    }
+  }
+
+  simState.steps = steps;
+  simState.step = 0;
+
+  let html = `<div class="sim-controls">
+    <button class="btn" onclick="simReset()">Reset</button>
+    <button class="btn" onclick="simPrev()">Prev</button>
+    <button class="btn primary" onclick="simNext()">Next</button>
+    <button class="btn" onclick="simAutoPlay()">Auto</button>
+    <span style="font-size:11px;color:var(--text-muted);margin-left:6px;" id="simCounter">Step 1 / ${steps.length}</span>
+  </div><div class="sim-container"><div class="sim-flow">`;
+
+  steps.forEach((s,i) => {
+    html += `<div class="sim-step ${i===0?'current':''}" id="simStep${i}">
+      <div class="step-header"><div class="step-num">${i+1}</div><div class="step-title">${esc(s.title)}</div></div>
+      <div class="step-desc">${esc(s.desc)}</div>
+      ${s.reg.length?`<div style="margin-left:26px;margin-top:2px;font-size:9px;color:var(--purple);">${s.reg.map(r=>'<div>'+esc(r)+'</div>').join('')}</div>`:''}
+    </div>`;
+  });
+
+  html += `</div><div class="sim-state"><h4>contextData</h4><div id="simCtx">${renderSimCtx(steps[0])}</div></div></div>`;
+  return html;
+}
+
+function buildSimStep(action, screen) {
+  const type = action.actionType || (action.actions?'COND_GROUP':'?');
+  const p = action.properties || {};
+  const cond = action.condition?.expression;
+  let reg = [], ctx = {};
+
+  switch(type) {
+    case 'SEARCH_EVENT': reg.push(`SearchStateManager.accumulate("${p.name||''}")`); reg.push('FlowCrudBloc.add(Search)'); break;
+    case 'FETCH_TRANSFORMER_CONFIG': ctx.entities = 'List<EntityModel>'; break;
+    case 'CREATE_EVENT': reg.push('FlowCrudBloc.add(Create)'); break;
+    case 'UPDATE_EVENT': reg.push(`FlowCrudBloc.add(Update) for ${p.entity||'entities'}`); break;
+    case 'NAVIGATION': reg.push(`setNavParams("${p.name||''}")`); break;
+    case 'REVERSE_TRANSFORM': reg.push('FlowCrudStateRegistry.update(formData)'); break;
+    case 'CLEAR_STATE': reg.push(`SearchStateManager.clear(${p.clearAll?'ALL':(p.filterKeys||[]).join(',')})`); break;
+  }
+
+  return { type, screen, title:`${type}${cond?' [IF: '+cond.slice(0,40)+']':''}`, desc:getActionSummary(action), ctx, reg };
+}
+
+function renderSimCtx(step) {
+  if (!step) return '';
+  let html = '';
+  const entries = Object.entries(step.ctx||{});
+  if (entries.length) entries.forEach(([k,v]) => { html += `<div class="state-entry"><span class="state-key">${esc(k)}</span>: <span class="state-val">${esc(String(v))}</span></div>`; });
+  else html = '<div style="font-size:10px;color:var(--text-muted)">Empty</div>';
+  return html;
+}
+
+function simNext() { if (simState.step < simState.steps.length-1) { simState.step++; updateSim(); } }
+function simPrev() { if (simState.step > 0) { simState.step--; updateSim(); } }
+function simReset() { simState.step = 0; updateSim(); }
+function simAutoPlay() { const iv = setInterval(() => { if (simState.step >= simState.steps.length-1) { clearInterval(iv); return; } simState.step++; updateSim(); }, 800); }
+
+function updateSim() {
+  document.querySelectorAll('.sim-step').forEach((el,i) => { el.className = 'sim-step'+(i<simState.step?' reached':(i===simState.step?' current':'')); });
+  const c = simState.steps[simState.step];
+  const ctx = document.getElementById('simCtx');
+  if (ctx && c) {
+    let acc = {};
+    for (let i=0;i<=simState.step;i++) Object.assign(acc, simState.steps[i].ctx||{});
+    let html = '';
+    for (const [k,v] of Object.entries(acc)) html += `<div class="state-entry"><span class="state-key">${esc(k)}</span>: <span class="state-val">${esc(String(v))}</span></div>`;
+    if (!html) html = '<div style="font-size:10px;color:var(--text-muted)">No data yet</div>';
+    html += `<h4 style="margin-top:8px;">Registry</h4>`;
+    if (c.reg.length) c.reg.forEach(r => { html += `<div class="state-entry" style="color:var(--purple)">${esc(r)}</div>`; });
+    else html += '<div style="font-size:10px;color:var(--text-muted)">No changes</div>';
+    ctx.innerHTML = html;
+  }
+  document.getElementById(`simStep${simState.step}`)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const counter = document.getElementById('simCounter');
+  if (counter) counter.textContent = `Step ${simState.step+1} / ${simState.steps.length}`;
+}
+
+// ── Data Flow Tab ───────────────────────────────────────────────────────
+
+function renderDataFlow() {
+  const c = parsedConfig;
+  let html = '<div class="data-flow-container">';
+
+  c.flows.forEach(screen => {
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;">${esc(screen.name)} <span style="color:var(--text-muted);font-size:10px">(${screen.screenType})</span></div>`;
+
+    // Collect all action types for this screen
+    const allActs = extractAllScreenActions(screen);
+    const hasSearch = allActs.some(a => a.type === 'SEARCH_EVENT');
+    const hasTransform = allActs.some(a => a.type === 'FETCH_TRANSFORMER_CONFIG');
+    const hasCreate = allActs.some(a => a.type === 'CREATE_EVENT');
+    const hasUpdate = allActs.some(a => a.type === 'UPDATE_EVENT');
+    const hasReverse = allActs.some(a => a.type === 'REVERSE_TRANSFORM');
+    const hasNav = allActs.some(a => a.type === 'NAVIGATION');
+    const wc = screen.wrapperConfig;
+
+    html += '<div class="data-flow-row">';
+
+    if (screen.screenType === 'FORM') {
+      html += `<div class="data-box"><h4>Form Pages</h4>`;
+      (screen.pages||[]).forEach(p => {
+        html += `<div class="data-field"><span class="field-key">${esc(p.page)}</span> <span class="field-val">(${(p.properties||[]).length} fields)</span></div>`;
+      });
+      html += `</div>`;
+    }
+
+    if (hasSearch) {
+      const searches = allActs.filter(a => a.type === 'SEARCH_EVENT');
+      html += `${screen.screenType==='FORM'?'<div class="data-arrow-h">+</div>':''}
+        <div class="data-box"><h4>Search Events (${searches.length})</h4>`;
+      searches.forEach(s => {
+        const p = s.action.properties||{};
+        html += `<div class="data-field"><span class="field-key">${esc(p.name||'')}</span> <span class="field-val">[${(p.data||[]).map(d=>d.key).join(',')}]</span></div>`;
+      });
+      html += `</div>`;
+    }
+
+    if (wc) {
+      html += `<div class="data-arrow-h">-></div>
+        <div class="data-box"><h4>WrapperBuilder</h4>
+        <div class="data-field"><span class="field-key">${esc(wc.wrapperName||'')}</span></div>
+        <div class="data-field"><span class="field-val">root: ${esc(wc.rootEntity||'')}</span></div>
+        <div class="data-field"><span class="field-val">${(wc.relations||[]).length} relations</span></div>
+      </div>`;
+    }
+
+    if (hasTransform || hasReverse) {
+      html += `<div class="data-arrow-h">-></div><div class="data-box"><h4>Transform</h4>`;
+      allActs.filter(a => a.type==='FETCH_TRANSFORMER_CONFIG'||a.type==='REVERSE_TRANSFORM').forEach(a => {
+        html += `<div class="data-field"><span class="field-key">${esc(a.type)}</span> <span class="field-val">${esc(a.action.properties?.configName||'')}</span></div>`;
+      });
+      html += `</div>`;
+    }
+
+    if (hasCreate || hasUpdate) {
+      html += `<div class="data-arrow-h">-></div><div class="data-box"><h4>CRUD</h4>`;
+      if (hasCreate) html += `<div class="data-field"><span class="field-key">CREATE</span></div>`;
+      if (hasUpdate) allActs.filter(a=>a.type==='UPDATE_EVENT').forEach(a => {
+        html += `<div class="data-field"><span class="field-key">UPDATE</span> <span class="field-val">${esc(a.action.properties?.entity||'')}</span></div>`;
+      });
+      html += `</div>`;
+    }
+
+    if (hasNav) {
+      html += `<div class="data-arrow-h">-></div><div class="data-box"><h4>Navigate</h4>`;
+      const navs = allActs.filter(a=>a.type==='NAVIGATION');
+      const unique = [...new Set(navs.map(n=>n.action.properties?.name))];
+      unique.forEach(n => { html += `<div class="data-field"><span class="field-key">-> ${esc(n||'')}</span></div>`; });
+      html += `</div>`;
+    }
+
+    html += '</div></div>';
+  });
+
+  return html + '</div>';
+}
+
+// ── Navigation Map Tab ──────────────────────────────────────────────────
+
+function renderConnections() {
+  const c = parsedConfig;
+  const connections = extractAllNavConnections(c);
+
+  let html = `<div style="margin-bottom:16px;">
+    <div style="font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;">Navigation Map</div>
+    <div style="font-size:11px;color:var(--text-muted);">${connections.length} navigation edges found (including widget-level actions)</div>
+  </div>`;
+
+  // Screen nodes
+  html += '<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;">';
+  c.flows.forEach(screen => {
+    const isInitial = screen.name === c.initialPage;
+    const outgoing = connections.filter(c => c.from === screen.name).length;
+    const incoming = connections.filter(c => c.to === screen.name).length;
+    html += `<div style="background:var(--surface);border:2px solid ${isInitial?'var(--green)':screen.screenType==='FORM'?'var(--accent)':'var(--purple)'};border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;${isInitial?'box-shadow:0 0 0 3px rgba(63,185,80,0.15);':''}">
+      <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;">${screen.screenType}${isInitial?' (initial)':''}</div>
+      <div style="font-size:12px;font-weight:600;">${esc(screen.name)}</div>
+      <div style="font-size:9px;color:var(--text-muted);">${outgoing} out / ${incoming} in</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Connections grouped by source
+  const bySource = {};
+  connections.forEach(conn => {
+    if (!bySource[conn.from]) bySource[conn.from] = [];
+    bySource[conn.from].push(conn);
+  });
+
+  for (const [source, conns] of Object.entries(bySource)) {
+    html += `<div class="section-title">${esc(source)} (${conns.length} edges)</div>`;
+    conns.forEach(conn => {
+      html += `<div class="nav-conn">
+        <span class="from">${esc(conn.from)}</span>
+        <span class="arrow">-></span>
+        <span class="to">${esc(conn.to)}</span>
+        <span class="mode-badge">${esc(conn.mode)}</span>
+        ${conn.popUntil?`<span class="mode-badge">popUntil:${esc(conn.popUntil)}</span>`:''}
+        ${conn.widget?`<span class="source-info">widget:${esc(conn.widget)}</span>`:''}
+        ${conn.condition?`<span class="trigger">IF: ${esc(String(conn.condition).slice(0,50))}</span>`:''}
+      </div>`;
+      if (conn.data && conn.data.length) {
+        html += `<div style="margin-left:20px;padding:2px 6px;font-size:9px;color:var(--text-muted);">Data: ${conn.data.map(d=>esc(d.key)+'='+esc(String(d.value||'').slice(0,30))).join(', ')}</div>`;
+      }
+    });
+  }
+
+  // Orphan detection
+  const allTargets = new Set(connections.map(c=>c.to));
+  const orphans = c.flows.filter(s => s.name !== c.initialPage && !allTargets.has(s.name));
+  if (orphans.length > 0) {
+    html += `<div class="section-title" style="color:var(--orange);">Potentially Unreachable (${orphans.length})</div>
+      <div style="font-size:11px;color:var(--orange);">${orphans.map(o=>esc(o.name)).join(', ')}</div>`;
+  }
+
+  return html;
+}
+
+// ── Utilities ────────────────────────────────────────────────────────────
+
+function toggleScreen(idx) { document.querySelector(`.screen-card[data-screen="${idx}"]`)?.classList.toggle('expanded'); }
+
+function scrollToScreen(name) {
+  const idx = parsedConfig.flows.findIndex(f => f.name === name);
+  if (idx >= 0) { switchTab('overview'); setTimeout(() => { const card = document.querySelector(`.screen-card[data-screen="${idx}"]`); if (card) { card.classList.add('expanded'); card.scrollIntoView({behavior:'smooth',block:'start'}); } }, 100); }
+}
+
+function attachListeners() {
+  if (currentTab === 'overview' && parsedConfig) {
+    const idx = parsedConfig.flows.findIndex(f => f.name === parsedConfig.initialPage);
+    if (idx >= 0) document.querySelector(`.screen-card[data-screen="${idx}"]`)?.classList.add('expanded');
+  }
+}
+
+// ── Auto-visualize & keyboard ────────────────────────────────────────────
+
+document.getElementById('jsonEditor').addEventListener('input', debounce(() => {
+  const v = document.getElementById('jsonEditor').value.trim();
+  if (v.length > 10) { try { JSON.parse(v); visualize(); } catch(e) {} }
+}, 600));
+
+function debounce(fn,ms) { let t; return function(...a) { clearTimeout(t); t = setTimeout(()=>fn.apply(this,a),ms); }; }
+document.addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') visualize(); });
+</script>
+</body>
+</html>

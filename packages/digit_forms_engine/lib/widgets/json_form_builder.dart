@@ -1,0 +1,841 @@
+part of 'json_schema_builder.dart';
+
+class JsonFormBuilder extends LocalizedStatefulWidget {
+  final String formControlName;
+  final PropertySchema schema;
+  final List<Map<String, Widget>>? components;
+  final String pageName;
+  final String currentSchemaKey;
+  final Map<String, dynamic>? navigationParams;
+
+  const JsonFormBuilder({
+    super.key,
+    super.appLocalizations,
+    required this.formControlName,
+    required this.schema,
+    this.components,
+    required this.pageName,
+    required this.currentSchemaKey,
+    this.navigationParams,
+  });
+
+  @override
+  State<JsonFormBuilder> createState() => _JsonFormBuilderState();
+}
+
+class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
+  bool _autoReadOnly = false; // ← runtime overlay
+
+  @override
+  Widget build(BuildContext context) {
+    final form = ReactiveForm.of(context) as FormGroup;
+
+    // Handle conditional display logic
+    if (_shouldHideField(form, widget.schema, widget.formControlName)) {
+      return const SizedBox.shrink();
+    }
+
+    _checkAutoFill(form);
+
+    return _buildByType(form);
+  }
+
+  bool get _isReadOnly => (widget.schema.readOnly ?? false) || _autoReadOnly;
+
+  void _checkAutoFill(FormGroup form) {
+    final autoFillConditions = widget.schema.autoFillCondition;
+
+    if (autoFillConditions == null || autoFillConditions.isEmpty) return;
+
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (!form.contains(widget.formControlName)) return;
+
+    final formState = context.read<FormsBloc>().state;
+    final currentPageKey = widget.pageName;
+    final currentSchemaKey = widget.currentSchemaKey;
+
+    final values = buildVisibilityEvaluationContext(
+      currentPageKey: currentPageKey,
+      currentForm: form,
+      pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+      navigationParams: widget.navigationParams,
+    );
+
+    bool matched = false;
+
+    for (final condition in autoFillConditions) {
+      // Resolve dynamic variables in expression before evaluation
+      final resolvedExpression = _resolveDynamicVariables(condition.expression);
+      final result = evaluateSingleCondition(resolvedExpression, values);
+      if (result) {
+        matched = true;
+
+        // Access defaultValues via Provider
+        final defaultValues = context.read<Map<String, dynamic>>();
+
+        final key = _stripCurlyBraces(condition.value);
+
+        // Resolve value from both form controls and defaultValues
+        // Supports array index notation: "scannedData_$tabIndex[0]"
+        // nested paths: "stockProductDetails.scannedData_0"
+        // and defaultValues: "selectedProduct"
+        final filledValue = _resolveAutoFillValue(key, form, defaultValues);
+
+        if (filledValue != null && filledValue != "") {
+          dynamic valueToSet = filledValue;
+
+          // If filledValue is a string like "20 Jun 2025", convert to DateTime
+          if (filledValue is String) {
+            try {
+              final currentLocale = Localizations.localeOf(context).toString();
+              valueToSet = DateFormat("dd MMM yyyy", currentLocale)
+                  .parseStrict(filledValue);
+            } catch (_) {
+              // Not a date string → keep as string
+              valueToSet = filledValue;
+            }
+          }
+
+          // Only set value if it's different from current to prevent rebuild loops
+          final currentValue = form.control(widget.formControlName).value;
+          if (currentValue != valueToSet) {
+            form.control(widget.formControlName).value = valueToSet;
+          }
+          _autoReadOnly = true;
+        }
+
+        /// make field as non editable
+
+        break;
+      }
+    }
+
+    if (!matched && _autoReadOnly) {
+      // Condition not met — reset to default
+      // Only set value if it's different from current to prevent rebuild loops
+      final currentValue = form.control(widget.formControlName).value;
+      if (currentValue != widget.schema.value) {
+        form.control(widget.formControlName).value = widget.schema.value;
+      }
+      _autoReadOnly = widget.schema.readOnly ?? false; // ← back to editable
+    }
+  }
+
+  String _stripCurlyBraces(String value) {
+    final regex = RegExp(r'^\{\{(.+)\}\}$'); // Matches {{...}}
+    final match = regex.firstMatch(value.trim());
+    return match != null
+        ? match.group(1)!
+        : value; // Return inside if matched, else original
+  }
+
+  /// Resolve dynamic variables in the path (e.g., $tabIndex, $entityIndex)
+  String _resolveDynamicVariables(String path) {
+    String resolvedPath = path;
+
+    // Get current entity index from navigationParams if available
+    final currentEntityIndex = widget.navigationParams?['currentEntityIndex'];
+
+    // Replace $tabIndex or $entityIndex with actual index
+    // Uses '_item_N' suffix to match form control naming convention
+    // Example: scanResource_$tabIndex -> scanResource_item_0
+    if (currentEntityIndex != null) {
+      resolvedPath = resolvedPath
+          .replaceAll(r'_$tabIndex', '_item_$currentEntityIndex')
+          .replaceAll(r'_$entityIndex', '_item_$currentEntityIndex')
+          .replaceAll(r'_$index', '_item_$currentEntityIndex');
+    }
+
+    return resolvedPath;
+  }
+
+  /// Unified autoFill value resolver supporting both form controls and defaultValues
+  /// Supports:
+  /// - Array index: "scannedData_0[1]" to access index 1 of comma-separated string
+  /// - Nested paths from form: "stockProductDetails.scannedData_0"
+  /// - Nested paths from defaultValues: "formData.selectedProduct"
+  /// - Dynamic variables: "scannedData_$tabIndex[0]"
+  /// - Simple keys from defaultValues: "selectedProduct"
+  dynamic _resolveAutoFillValue(
+    String path,
+    FormGroup form,
+    Map<String, dynamic> defaultValues,
+  ) {
+    // First resolve dynamic variables
+    final resolvedPath = _resolveDynamicVariables(path);
+
+    // Regex to match something like:  abc[0]  or  stockProductDetails_0[2]
+    final arrayIndexPattern = RegExp(r'^(.*)\[(\d+)\]$');
+    final match = arrayIndexPattern.firstMatch(resolvedPath);
+
+    if (match != null) {
+      final key = match.group(1)!; // before [ ]
+      final index = int.parse(match.group(2)!); // inside [ ]
+
+      // 1️⃣ Get the raw value from form (NO dot resolution)
+      dynamic raw;
+      if (form.contains(key)) {
+        raw = form.control(key).value;
+      } else {
+        raw = defaultValues[key];
+      }
+
+      // 2️⃣ If the raw value is a list → return list[index]
+      if (raw is List) {
+        if (index < raw.length) return raw[index];
+        return null;
+      }
+
+      // 3️⃣ If raw is a string (comma-separated) → split and return index
+      if (raw is String) {
+        final parts = raw.split(',');
+        if (index < parts.length) return parts[index].trim();
+        return null;
+      }
+
+      return null;
+    }
+
+    // If no [index], return directly (NO dot resolution)
+    if (form.contains(resolvedPath)) {
+      return form.control(resolvedPath).value;
+    }
+
+    return defaultValues[resolvedPath];
+  }
+
+  /// Resolve a nested path from form controls (e.g., "stockProductDetails.scannedData_0")
+  dynamic _resolveNestedPathFromForm(String path, FormGroup form) {
+    final parts = path.split('.');
+    dynamic current = form;
+
+    for (final part in parts) {
+      if (current is FormGroup && current.contains(part)) {
+        current = current.control(part);
+      } else {
+        return null;
+      }
+    }
+
+    // Return the value of the final control
+    return current is AbstractControl ? current.value : null;
+  }
+
+  /// Resolve a nested path from a map (e.g., "scannedData.01 (GTIN)")
+  /// Supports dynamic variables like scannedData_$tabIndex.fieldName
+  dynamic _resolveNestedPath(String path, Map<String, dynamic> data) {
+    // First resolve any dynamic variables in the path
+    final resolvedPath = _resolveDynamicVariables(path);
+
+    // Handle dotted paths by splitting on dots
+    final parts = resolvedPath.split('.');
+    dynamic current = data;
+
+    for (final part in parts) {
+      if (current is Map<String, dynamic>) {
+        current = current[part];
+        if (current == null) return null;
+      } else if (current is Map) {
+        // Handle Map (non-String keys) - convert to Map<String, dynamic>
+        current = current[part];
+        if (current == null) return null;
+      } else {
+        return null;
+      }
+    }
+
+    // Convert DateTime to string format if needed
+    if (current is DateTime) {
+      return DateFormat('yyyy-MM-dd').format(current);
+    }
+
+    return current;
+  }
+
+  /// Resolves a label key: translates it, then substitutes named placeholders
+  /// from [widget.schema.labelPlaceHolders] using navigation params.
+  String? _resolveLabel(String? labelKey) {
+    final translated = translateIfPresent(labelKey, localizations);
+    if (translated == null || translated.isEmpty) return translated;
+    final placeholders = widget.schema.labelPlaceHolders;
+    if (placeholders == null || placeholders.isEmpty) return translated;
+    return _applyPlaceHolders(translated, placeholders);
+  }
+
+  /// Resolves a description key: translates it, then substitutes named placeholders
+  /// from [widget.schema.descriptionPlaceHolders] using navigation params.
+  String? _resolveDescription(String? descKey) {
+    final translated = translateIfPresent(descKey, localizations);
+    if (translated == null || translated.isEmpty) return translated;
+    final placeholders = widget.schema.descriptionPlaceHolders;
+    if (placeholders == null || placeholders.isEmpty) return translated;
+    return _applyPlaceHolders(translated, placeholders);
+  }
+
+  /// Replaces each `{KEY}` in [template] with the resolved value from
+  /// the placeholder list. Placeholder values like `{{navigation.fieldName}}`
+  /// are resolved from [widget.navigationParams].
+  String _applyPlaceHolders(
+      String template, List<LabelPlaceHolder> placeholders) {
+    String result = template;
+    for (final ph in placeholders) {
+      final resolvedValue = _resolvePlaceholderValue(ph.value);
+      result = result.replaceAll('{${ph.key}}', resolvedValue);
+    }
+    return result;
+  }
+
+  /// Resolves a placeholder value template.
+  /// Supports `{{navigation.fieldName}}` patterns resolved from multiple sources:
+  /// 1. [widget.navigationParams] (direct flat access)
+  /// 2. [widget.navigationParams\['navigation'\]] (nested access)
+  /// 3. defaultValues from Provider (includes parent flow builder context)
+  String _resolvePlaceholderValue(String template) {
+    final regex = RegExp(r'\{\{\s*navigation\.(.+?)\s*\}\}');
+    return template.replaceAllMapped(regex, (match) {
+      final fieldName = match.group(1)!;
+      final navParams = widget.navigationParams;
+
+      // 1. Direct flat access on navigationParams
+      if (navParams != null && navParams.containsKey(fieldName)) {
+        return navParams[fieldName]?.toString() ?? '';
+      }
+
+      // 2. Nested under 'navigation' key
+      if (navParams != null) {
+        final nested = navParams['navigation'];
+        if (nested is Map && nested.containsKey(fieldName)) {
+          return nested[fieldName]?.toString() ?? '';
+        }
+      }
+
+      // 3. Fallback: defaultValues from Provider (includes merged
+      //    navigation params from the flow builder parent context)
+      try {
+        final defaultValues = context.read<Map<String, dynamic>>();
+        if (defaultValues.containsKey(fieldName)) {
+          return defaultValues[fieldName]?.toString() ?? '';
+        }
+      } catch (_) {
+        // Provider not available
+      }
+
+      return match.group(0)!; // keep original if not found
+    });
+  }
+
+  /// Conditionally hide based on display behavior
+  bool _shouldHideField(
+      FormGroup form, PropertySchema schema, String formName) {
+    final hidden = schema.hidden;
+    if (hidden != null && hidden == true) return true;
+
+    final visibility = schema.visibilityCondition;
+    if (visibility != null && visibility.expression.isNotEmpty) {
+      final formState = context.read<FormsBloc>().state;
+      final currentPageKey = widget.pageName;
+
+      final currentSchemaKey = widget.currentSchemaKey;
+
+      final values = buildVisibilityEvaluationContext(
+        currentPageKey: currentPageKey,
+        currentForm: form,
+        pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+        navigationParams: widget.navigationParams,
+      );
+
+      final result =
+          evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(
+        schemaMap: {formName: schema},
+        formData: form.rawValue,
+        form: form,
+        navigationParams: widget.navigationParams,
+      ).toggleControlVisibility(formName, result, schema);
+
+      return !result;
+    }
+
+    return false;
+  }
+
+  /// Dispatch to builder based on property type
+  Widget _buildByType(FormGroup form) {
+    switch (widget.schema.type) {
+      case PropertySchemaType.string:
+        return _buildStringType(form);
+      case PropertySchemaType.integer:
+        return _buildIntegerType(form);
+      case PropertySchemaType.boolean:
+        return _buildBooleanType(form);
+      case PropertySchemaType.object:
+        return _buildObjectType(form);
+      case PropertySchemaType.dynamic:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+    }
+  }
+
+  int? _safeTimestamp(String type) {
+    final v = widget.schema.validations
+        ?.firstWhereOrNull((item) => item.type == type)
+        ?.value;
+
+    if (v == null) return null;
+    if (v is! int) return null; // avoid type mismatch
+
+    return v;
+  }
+
+  /// Handle `string` type formats
+  Widget _buildStringType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.select:
+        return LabeledField(
+          infoText: translateIfPresent(widget.schema.tooltip, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          child: JsonSchemaSelectionBuilder(
+            form: form,
+            isMultiSelect: widget.schema.isMultiSelect,
+            formControlName: widget.formControlName,
+            enums: widget.schema.enums ?? [],
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.idPopulator:
+        return JsonSchemaIdPopulatorBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          formControlName: widget.formControlName,
+          enums: widget.schema.enums ?? [],
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.dropdown:
+        return JsonSchemaDropdownBuilder(
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          enums: widget.schema.enums ?? [],
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          isMultiselect: widget.schema.isMultiSelect ?? false,
+          readOnly: _isReadOnly,
+        );
+
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+        );
+
+      case PropertySchemaFormat.dob:
+        return JsonSchemaDOBBuilder(
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+          navigationParams: widget.navigationParams,
+          initialDate: _safeTimestamp("startDate") != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
+              : null,
+        );
+
+      case PropertySchemaFormat.scanner:
+        return JsonSchemaScannerBuilder(
+          form: form,
+          value: widget.schema.value as String?,
+          formControlName: widget.formControlName,
+          label: _resolveLabel(widget.schema.label),
+          validations: widget.schema.validations,
+          summaryData: widget.schema.includeInSummary ?? true,
+        );
+
+      case PropertySchemaFormat.date:
+        return JsonSchemaDatePickerBuilder(
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          readOnly: _isReadOnly,
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          start: _safeTimestamp("startDate") != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
+              : null,
+          end: _safeTimestamp("endDate") != null
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
+              : null,
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        );
+
+      case PropertySchemaFormat.locality:
+        return JsonSchemaStringBuilder(
+          form: form,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          value: widget.schema.value as String?,
+          formControlName: widget.formControlName,
+          readOnly: true,
+          label: _resolveLabel(widget.schema.label),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        );
+
+      case PropertySchemaFormat.radio:
+        final boldLabel = widget.schema.conditions?['boldLabel'] == true;
+        final separateCard = widget.schema.conditions?['separateCard'] == true;
+        return JsonSchemaRadioBuilder(
+          form: form,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          label: _resolveLabel(widget.schema.label),
+          enums: widget.schema.enums ?? [],
+          labelStyle: separateCard
+              ? Theme.of(context).digitTextTheme(context).headingS.copyWith(
+                    color: Theme.of(context).colorTheme.text.primary,
+                  )
+              : boldLabel
+                  ? Theme.of(context).digitTextTheme(context).label.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorTheme.text.primary,
+                      )
+                  : null,
+        );
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      case PropertySchemaFormat.latLng:
+        return JsonSchemaLatLngBuilder(
+          formControlName: widget.formControlName,
+          form: form,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+        );
+
+      case PropertySchemaFormat.textArea:
+        return JsonSchemaTextAreaBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: _isReadOnly,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaStringBuilder(
+          form: form,
+          inputType: TextInputType.number,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: _isReadOnly,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      default:
+        return JsonSchemaStringBuilder(
+          form: form,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: _isReadOnly,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
+        );
+    }
+  }
+
+  /// Handle `integer` type formats
+  Widget _buildIntegerType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.text:
+        return JsonSchemaNumberBuilder(
+          form: form,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaNumberBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.date:
+        return JsonSchemaDatePickerBuilder(
+          readOnly: _isReadOnly,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          start: _safeTimestamp("startDate") != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
+              : null,
+          end: _safeTimestamp("endDate") != null
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
+              : null,
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+        );
+
+      case PropertySchemaFormat.numeric:
+        return JsonSchemaIntegerBuilder(
+          form: form,
+          value: parseIntValue(widget.schema.value) ?? 0,
+          formControlName: widget.formControlName,
+          label: _resolveLabel(widget.schema.label),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          minValue: minFromValidations(widget.schema.validations ?? []),
+          maxValue: maxFromValidations(widget.schema.validations ?? []),
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        );
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      default:
+        return JsonSchemaNumberBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        );
+    }
+  }
+
+  /// Handle `boolean` type
+  Widget _buildBooleanType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.checkbox:
+        return JsonSchemaCheckboxBuilder(
+          form: form,
+          formControlName: widget.formControlName,
+          label: _resolveLabel(widget.schema.label),
+          validations: widget.schema.validations,
+          readOnly: widget.schema.readOnly ?? false,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+        );
+
+      case PropertySchemaFormat.radio:
+        return JsonSchemaRadioBuilder(
+          form: form,
+          isBoolean: true,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          label: _resolveLabel(widget.schema.label),
+          enums: widget.schema.enums ?? [],
+          readOnly: widget.schema.readOnly ?? false,
+        );
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      default:
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: _resolveLabel(widget.schema.label),
+          formControlName: widget.formControlName,
+          value: widget.schema.value as String?,
+          readOnly: _isReadOnly,
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+          capitalizeWords: widget.schema.textCapitalization == 'words',
+        );
+    }
+  }
+
+  /// Handle `object` type
+  Widget _buildObjectType(FormGroup form) {
+    final entries = widget.schema.properties?.entries.toList() ?? [];
+
+    // Check if any field has visibility conditions
+    final hasVisibilityConditions = entries.any(
+      (entry) => entry.value.visibilityCondition != null,
+    );
+
+    // If there are visibility conditions, wrap in ReactiveFormConsumer
+    // to ensure fields rebuild when dependent values change
+    if (hasVisibilityConditions) {
+      return ReactiveFormConsumer(
+        builder: (context, formGroup, child) {
+          return _buildObjectFields(formGroup, entries);
+        },
+      );
+    }
+
+    return _buildObjectFields(form, entries);
+  }
+
+  /// Build the object fields column
+  Widget _buildObjectFields(
+      FormGroup form, List<MapEntry<String, PropertySchema>> entries) {
+    final visibleEntries = entries.where((entry) {
+      final subSchema = entry.value;
+      if (subSchema.displayOnly == true) return false;
+      return !_shouldHideField(form, subSchema, entry.key);
+    }).toList();
+
+    final bool showDividers = widget.schema.conditions?['showDividers'] == true;
+    final dividerColor =
+        Theme.of(context).colorTheme.generic.divider;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: visibleEntries.asMap().entries.map((entry) {
+        final index = entry.key;
+        final mapEntry = entry.value;
+
+        final subSchema = mapEntry.value;
+        final subName = mapEntry.key;
+
+        final field = JsonFormBuilder(
+          key: ValueKey(subName),
+          pageName: widget.pageName,
+          currentSchemaKey: widget.currentSchemaKey,
+          formControlName: subName,
+          schema: subSchema,
+          components: widget.components,
+          navigationParams: widget.navigationParams,
+        );
+
+        final bool wrapInCard = subSchema.conditions?['wrapInCard'] == true;
+        final Widget fieldWidget = wrapInCard
+            ? DigitCard(
+                cardType: CardType.secondary,
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(
+                    spacer4 - 2, spacer4, spacer4 - 2, spacer4 - 2),
+                children: [field],
+              )
+            : field;
+
+        final isLast = index == visibleEntries.length - 1;
+        final nextIsDependent = !isLast &&
+            visibleEntries[index + 1].value.visibilityCondition != null;
+
+        if (showDividers && !isLast && !nextIsDependent) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: spacer4),
+                child: fieldWidget,
+              ),
+              Divider(height: 1, thickness: 1, color: dividerColor),
+              const SizedBox(height: spacer4),
+            ],
+          );
+        }
+
+        return isLast
+            ? fieldWidget
+            : Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: fieldWidget,
+              );
+      }).toList(),
+    );
+  }
+
+  /// Handle `custom` format
+  Widget? _buildCustomComponent() {
+    if (widget.components == null || widget.components!.isEmpty) return null;
+    for (var component in widget.components!) {
+      if (component.containsKey(widget.formControlName)) {
+        return component[widget.formControlName]!;
+      }
+    }
+    return null;
+  }
+}

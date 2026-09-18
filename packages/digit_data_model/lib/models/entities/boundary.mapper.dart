@@ -280,13 +280,13 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
   static AuditDetails? _$auditDetails(BoundaryModel v) => v.auditDetails;
   static const Field<BoundaryModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
-  static bool? _$isDeleted(BoundaryModel v) => v.isDeleted;
-  static const Field<BoundaryModel, bool> _f$isDeleted =
-      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static ClientAuditDetails? _$clientAuditDetails(BoundaryModel v) =>
       v.clientAuditDetails;
   static const Field<BoundaryModel, ClientAuditDetails> _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  static bool? _$isDeleted(BoundaryModel v) => v.isDeleted;
+  static const Field<BoundaryModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
 
   @override
   final MappableFields<BoundaryModel> fields = const {
@@ -302,8 +302,8 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
     #children: _f$children,
     #boundaryType: _f$boundaryType,
     #auditDetails: _f$auditDetails,
-    #isDeleted: _f$isDeleted,
     #clientAuditDetails: _f$clientAuditDetails,
+    #isDeleted: _f$isDeleted,
   };
   @override
   final bool ignoreNull = true;
@@ -322,6 +322,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
         children: data.dec(_f$children),
         boundaryType: data.dec(_f$boundaryType),
         auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
   }
 
@@ -383,6 +384,9 @@ abstract class BoundaryModelCopyWith<$R, $In extends BoundaryModel, $Out>
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
       {String? code,
       String? name,
@@ -396,6 +400,7 @@ abstract class BoundaryModelCopyWith<$R, $In extends BoundaryModel, $Out>
       List<BoundaryModel>? children,
       String? boundaryType,
       AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
   BoundaryModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -417,6 +422,10 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
           {Object? code = $none,
           Object? name = $none,
@@ -430,6 +439,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
           List<BoundaryModel>? children,
           Object? boundaryType = $none,
           Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (code != $none) #code: code,
@@ -444,6 +454,8 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
         if (children != null) #children: children,
         if (boundaryType != $none) #boundaryType: boundaryType,
         if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none)
+          #clientAuditDetails: clientAuditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
@@ -461,6 +473,8 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
       children: data.get(#children, or: $value.children),
       boundaryType: data.get(#boundaryType, or: $value.boundaryType),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override

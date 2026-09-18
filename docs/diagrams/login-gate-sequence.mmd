@@ -1,0 +1,41 @@
+sequenceDiagram
+    autonumber
+    actor U as Field worker
+    participant FG as FaceGatePage
+    participant GB as FaceGateBloc
+    participant ER as FaceEmbeddingRepository
+    participant WR as WorkerRegistryService
+    participant MD as MDMS
+    participant LOG as FaceAuthEventLogger
+
+    U->>FG: HCM login succeeded
+    FG->>GB: checkEnrollment
+    GB->>MD: HCM.FACE_AUTH_CONFIG (threshold, maxAttempts)
+    GB->>ER: embedding for logged-in individualId only
+    alt no local embedding
+        GB->>WR: syncEnrollmentFromRegistry
+        alt restored
+            WR-->>GB: profile saved locally
+        else offline / not enrolled
+            GB-->>FG: route to enrollment (§3)
+        end
+    end
+    loop up to MAX_FACE_ATTEMPTS
+        U->>GB: face scan
+        alt cosine ≥ threshold
+            GB->>LOG: LOGIN / FACE_SUCCESS (confidence)
+            GB-->>U: proceed to Home
+        else below threshold
+            GB->>LOG: LOGIN / FACE_REJECTED
+        end
+    end
+    opt attempts exhausted
+        U->>FG: backup PIN
+        alt SHA-256(salt:pin) matches own profile
+            FG->>LOG: LOGIN / PIN_FALLBACK
+            FG-->>U: proceed
+        else PIN wrong
+            FG->>LOG: LOGIN / HCM_FALLBACK
+            FG-->>U: HCM password re-auth
+        end
+    end

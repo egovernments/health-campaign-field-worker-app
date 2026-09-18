@@ -38,6 +38,10 @@ class ProjectFacilityLocalRepository
           rowVersion: projectFacility.rowVersion,
           id: projectFacility.id,
           isDeleted: projectFacility.isDeleted,
+          additionalFields: projectFacility.additionalFields != null
+              ? ProjectFacilityAdditionalFieldsMapper.fromJson(
+                  projectFacility.additionalFields!)
+              : null,
         );
       }).toList();
     });

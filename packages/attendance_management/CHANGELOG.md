@@ -1,3 +1,29 @@
+## 1.0.6+2
+
+* Added role-based filter on attendance actions
+* Accepted transactions now key off `clientReferenceId` instead of server-generated ids
+* Added wastage and partial-used fields to returns; included wastage in `stock_calculation_utils.dart`
+* Added SQL ordering and improved inventory stock grouping
+* Removed unused models/data from the package (moved to consumer app) and fixed the attendance QR scan flow
+* DB encryption integration; localized `db_error` page and button/text/tag widgets
+* Atomic localization cache swap and O(1) `translate()` lookup
+
+## 1.0.6+1
+
+* Removed unused models, blocs, freezed files, and manage_attendance page from the package (moved to consumer app)
+* Updated remote repositories (`attendance_logs`, `attendance_register`) to use new data repository shape
+* Accepted transactions now key off `clientReferenceId` instead of server-generated ids
+* Fixed attendance QR scan flow
+
+## 1.0.6
+
+* Updated scanner and data_model package
+
+## 1.0.5+2
+
+* Updated Readme
+* Modified unwanted field from Register Model
+
 ## 1.0.5+1
 
 * Accommodated single sessions for registers

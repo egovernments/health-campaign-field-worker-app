@@ -227,11 +227,10 @@ class IdentifierModelMapper extends SubClassMapperBase<IdentifierModel> {
   static String? _$individualId(IdentifierModel v) => v.individualId;
   static const Field<IdentifierModel, String> _f$individualId =
       Field('individualId', _$individualId, opt: true);
-  static String? _$individualClientReferenceId(IdentifierModel v) =>
+  static String _$individualClientReferenceId(IdentifierModel v) =>
       v.individualClientReferenceId;
   static const Field<IdentifierModel, String> _f$individualClientReferenceId =
-      Field('individualClientReferenceId', _$individualClientReferenceId,
-          opt: true);
+      Field('individualClientReferenceId', _$individualClientReferenceId);
   static String? _$identifierType(IdentifierModel v) => v.identifierType;
   static const Field<IdentifierModel, String> _f$identifierType =
       Field('identifierType', _$identifierType, opt: true);
@@ -412,7 +411,7 @@ class _IdentifierModelCopyWithImpl<$R, $Out>
           {Object? additionalFields = $none,
           Object? id = $none,
           Object? individualId = $none,
-          Object? individualClientReferenceId = $none,
+          String? individualClientReferenceId,
           Object? identifierType = $none,
           Object? identifierId = $none,
           Object? nonRecoverableError = $none,
@@ -426,7 +425,7 @@ class _IdentifierModelCopyWithImpl<$R, $Out>
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (individualId != $none) #individualId: individualId,
-        if (individualClientReferenceId != $none)
+        if (individualClientReferenceId != null)
           #individualClientReferenceId: individualClientReferenceId,
         if (identifierType != $none) #identifierType: identifierType,
         if (identifierId != $none) #identifierId: identifierId,

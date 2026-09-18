@@ -41,7 +41,7 @@ class IdentifierModel extends EntityModel with IdentifierModelMappable {
 
   final String? id;
   final String? individualId;
-  final String? individualClientReferenceId;
+  final String individualClientReferenceId;
   final String? identifierType;
   final String? identifierId;
   final bool? nonRecoverableError;
@@ -54,7 +54,7 @@ class IdentifierModel extends EntityModel with IdentifierModelMappable {
     this.additionalFields,
     this.id,
     this.individualId,
-    this.individualClientReferenceId,
+    required this.individualClientReferenceId,
     this.identifierType,
     this.identifierId,
     this.nonRecoverableError = false,
@@ -80,7 +80,7 @@ class IdentifierModel extends EntityModel with IdentifierModelMappable {
       isDeleted: Value(isDeleted),
       id: Value(id),
       individualId: Value(individualId),
-      individualClientReferenceId: Value(individualClientReferenceId!),
+      individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
       nonRecoverableError: Value(nonRecoverableError),

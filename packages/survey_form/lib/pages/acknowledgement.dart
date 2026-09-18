@@ -58,6 +58,10 @@ class AcknowledgementPageState
           child: DigitCard(
               cardType: CardType.primary,
               margin: const EdgeInsets.only(top: spacer2),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(radius4),
+                topRight: Radius.circular(radius4),
+              ),
               children: [
                 Column(
                   children: [

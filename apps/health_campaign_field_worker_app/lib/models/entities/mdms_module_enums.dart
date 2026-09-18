@@ -15,4 +15,8 @@ enum ModuleEnums {
   moduleVersion,
   @MappableValue("RAINMAKER-PGR")
   rainmakerPgr,
+  @MappableValue("HCM-ADMIN-CONSOLE")
+  hcmAdminConsole,
+  @MappableValue("HCM-PROJECT-TYPES")
+  hcmProjectTypes,
 }

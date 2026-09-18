@@ -268,6 +268,182 @@ abstract class _AuthModel implements AuthModel {
       throw _privateConstructorUsedError;
 }
 
+ValidateResponseModel _$ValidateResponseModelFromJson(
+    Map<String, dynamic> json) {
+  return _ValidateResponseModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ValidateResponseModel {
+  @JsonKey(name: 'isDuplicateLogin')
+  bool get isDuplicateLogin => throw _privateConstructorUsedError;
+  @JsonKey(name: 'existingDeviceToken')
+  String? get existingDeviceToken => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ValidateResponseModelCopyWith<ValidateResponseModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ValidateResponseModelCopyWith<$Res> {
+  factory $ValidateResponseModelCopyWith(ValidateResponseModel value,
+          $Res Function(ValidateResponseModel) then) =
+      _$ValidateResponseModelCopyWithImpl<$Res, ValidateResponseModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'isDuplicateLogin') bool isDuplicateLogin,
+      @JsonKey(name: 'existingDeviceToken') String? existingDeviceToken});
+}
+
+/// @nodoc
+class _$ValidateResponseModelCopyWithImpl<$Res,
+        $Val extends ValidateResponseModel>
+    implements $ValidateResponseModelCopyWith<$Res> {
+  _$ValidateResponseModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isDuplicateLogin = null,
+    Object? existingDeviceToken = freezed,
+  }) {
+    return _then(_value.copyWith(
+      isDuplicateLogin: null == isDuplicateLogin
+          ? _value.isDuplicateLogin
+          : isDuplicateLogin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      existingDeviceToken: freezed == existingDeviceToken
+          ? _value.existingDeviceToken
+          : existingDeviceToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ValidateResponseModelImplCopyWith<$Res>
+    implements $ValidateResponseModelCopyWith<$Res> {
+  factory _$$ValidateResponseModelImplCopyWith(
+          _$ValidateResponseModelImpl value,
+          $Res Function(_$ValidateResponseModelImpl) then) =
+      __$$ValidateResponseModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'isDuplicateLogin') bool isDuplicateLogin,
+      @JsonKey(name: 'existingDeviceToken') String? existingDeviceToken});
+}
+
+/// @nodoc
+class __$$ValidateResponseModelImplCopyWithImpl<$Res>
+    extends _$ValidateResponseModelCopyWithImpl<$Res,
+        _$ValidateResponseModelImpl>
+    implements _$$ValidateResponseModelImplCopyWith<$Res> {
+  __$$ValidateResponseModelImplCopyWithImpl(_$ValidateResponseModelImpl _value,
+      $Res Function(_$ValidateResponseModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isDuplicateLogin = null,
+    Object? existingDeviceToken = freezed,
+  }) {
+    return _then(_$ValidateResponseModelImpl(
+      isDuplicateLogin: null == isDuplicateLogin
+          ? _value.isDuplicateLogin
+          : isDuplicateLogin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      existingDeviceToken: freezed == existingDeviceToken
+          ? _value.existingDeviceToken
+          : existingDeviceToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ValidateResponseModelImpl implements _ValidateResponseModel {
+  const _$ValidateResponseModelImpl(
+      {@JsonKey(name: 'isDuplicateLogin') required this.isDuplicateLogin,
+      @JsonKey(name: 'existingDeviceToken') required this.existingDeviceToken});
+
+  factory _$ValidateResponseModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ValidateResponseModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'isDuplicateLogin')
+  final bool isDuplicateLogin;
+  @override
+  @JsonKey(name: 'existingDeviceToken')
+  final String? existingDeviceToken;
+
+  @override
+  String toString() {
+    return 'ValidateResponseModel(isDuplicateLogin: $isDuplicateLogin, existingDeviceToken: $existingDeviceToken)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ValidateResponseModelImpl &&
+            (identical(other.isDuplicateLogin, isDuplicateLogin) ||
+                other.isDuplicateLogin == isDuplicateLogin) &&
+            (identical(other.existingDeviceToken, existingDeviceToken) ||
+                other.existingDeviceToken == existingDeviceToken));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, isDuplicateLogin, existingDeviceToken);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ValidateResponseModelImplCopyWith<_$ValidateResponseModelImpl>
+      get copyWith => __$$ValidateResponseModelImplCopyWithImpl<
+          _$ValidateResponseModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ValidateResponseModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ValidateResponseModel implements ValidateResponseModel {
+  const factory _ValidateResponseModel(
+      {@JsonKey(name: 'isDuplicateLogin') required final bool isDuplicateLogin,
+      @JsonKey(name: 'existingDeviceToken')
+      required final String?
+          existingDeviceToken}) = _$ValidateResponseModelImpl;
+
+  factory _ValidateResponseModel.fromJson(Map<String, dynamic> json) =
+      _$ValidateResponseModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'isDuplicateLogin')
+  bool get isDuplicateLogin;
+  @override
+  @JsonKey(name: 'existingDeviceToken')
+  String? get existingDeviceToken;
+  @override
+  @JsonKey(ignore: true)
+  _$$ValidateResponseModelImplCopyWith<_$ValidateResponseModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 LoginModel _$LoginModelFromJson(Map<String, dynamic> json) {
   return _LoginModel.fromJson(json);
 }

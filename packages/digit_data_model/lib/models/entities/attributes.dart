@@ -62,7 +62,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final bool? isActive;
   final bool? required;
   final String? regex;
-  final int? order;
+  final String? order;
   final bool? nonRecoverableError;
   final int? rowVersion;
   final AttributesAdditionalFields? additionalFields;
@@ -109,7 +109,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
       isActive: Value(isActive),
       required: Value(required),
       regex: Value(regex),
-      order: Value(order),
+      order: Value(int.parse(order ?? '0')),
       nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
       additionalDetails: Value(jsonEncode(additionalDetails)),

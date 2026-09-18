@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
+import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
@@ -37,6 +39,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
+    on(_onCheckOtherDeviceLogin);
+    on(_onDeviceSwitch);
+    on(_onDeviceSwitchUserAction);
+    on(_onReset);
+    on(_onAllow);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -142,14 +149,157 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //_onLogout event logs out the user and deletes the saved user details from local storage
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
+    emit(const AuthLoggingOutState());
+    final accessToken = await localSecureStore.accessToken;
+    if (accessToken != null) {
+      try {
+        await authRepository.logOutUser(
+          logoutPath: Constants.logoutUserPath,
+          queryParameters: {
+            'tenantId': envConfig.variables.tenantId,
+          },
+          body: {'access_token': accessToken},
+        );
+      } catch (_) {
+        // Best-effort: proceed with local logout even if server call fails
+      }
+    }
+    await localSecureStore.deleteAll();
+    await localSecureStore.setBoundaryRefetch(true);
+    DigitDataModelSingleton().setHierarchyType(null);
+    emit(const AuthUnauthenticatedState());
+  }
+
+  FutureOr<void> _onReset(AuthResetEvent event, AuthEmitter emit) async {
+    await localSecureStore.deleteAll();
+    await localSecureStore.setBoundaryRefetch(true);
+    DigitDataModelSingleton().setHierarchyType(null);
+    emit(const AuthUnauthenticatedState());
+  }
+
+  FutureOr<void> _onAllow(AuthAllowEvent event, AuthEmitter emit) async {
+    emit(const AuthAllowState());
+  }
+
+  FutureOr<void> _onDeviceSwitch(
+      AuthSwitchDeviceEventSwitchDevice event, AuthEmitter emit) async {
     try {
       emit(const AuthLoadingState());
-      await localSecureStore.deleteAll();
+      final result = await authRepository.switchDevice(
+        endpoint: event.apiEndPoint, // Use the endpoint from the event
+        payload: {
+          "deviceSwitchReason": event.selectedReason,
+          "username": event.username,
+          "tenantId": event.tenantId,
+          "password": event.password,
+          "deviceSwitchComment": event.deviceSwitchComment,
+        },
+      );
+
+      await localSecureStore.setAuthCredentials(result);
       await localSecureStore.setBoundaryRefetch(true);
-    } catch (error) {
+      await localSecureStore.setDeviceSwitchReason(
+          (event.deviceSwitchComment != null &&
+                  event.deviceSwitchComment!.isNotEmpty)
+              ? event.deviceSwitchComment!
+              : event.selectedReason);
+
+      final actionsWrapper = await mdmsRepository
+          .searchRoleActions(envConfig.variables.actionMapApiPath, {
+        "roleCodes": result.userRequestModel.roles.map((e) => e.code).toList(),
+        "tenantId": envConfig.variables.tenantId,
+        "actionMaster": "actions-test",
+        "enabled": true,
+      });
+
+      await localSecureStore.setBoundaryRefetch(true);
+
+      await localSecureStore.setRoleActions(actionsWrapper);
+      if (result.userRequestModel.roles
+          .where((role) =>
+              role.code == RolesType.districtSupervisor.toValue() ||
+              role.code ==
+                  RolesType.distributor
+                      .toValue()) // NOTE: Savings distributor user details for fetching non mobile users
+          .toList()
+          .isNotEmpty) {
+        final loggedInIndividual = await individualRemoteRepository.search(
+          IndividualSearchModel(
+            userUuid: [result.userRequestModel.uuid],
+          ),
+        );
+        await localSecureStore
+            .setSelectedIndividual(loggedInIndividual.firstOrNull?.id);
+      }
+
+      emit(
+        AuthAuthenticatedState(
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          userModel: result.userRequestModel,
+          actionsWrapper: actionsWrapper,
+          individualId: await localSecureStore.userIndividualId,
+        ),
+      );
+    } on DioException catch (error) {
+      emit(const AuthErrorState());
+      AppLogger.instance.error(
+        title: 'Login error',
+        message: error.response?.data.toString(),
+      );
+    } catch (_) {
+      emit(const AuthErrorState());
       rethrow;
     }
-    emit(const AuthUnauthenticatedState());
+  }
+
+  FutureOr<void> _onCheckOtherDeviceLogin(
+      AuthCheckOtherDeviceLoginEvent event, AuthEmitter emit) async {
+    emit(const AuthLoadingState());
+    final deviceToken = await localSecureStore.getDeviceToken(event.username);
+    final payload = {
+      'username': event.username,
+      "tenantId": event.tenantId,
+      "deviceToken": deviceToken,
+    };
+
+    try {
+      final validateResponseModel =
+          await authRepository.isLoggedInOnOtherDevice(
+        endpoint: event.apiEndPoint, // Use dynamic endpoint from event
+        payload: payload,
+      );
+
+      if (validateResponseModel.isDuplicateLogin) {
+        if (validateResponseModel.existingDeviceToken != null) {
+          await localSecureStore.setExistingDeviceToken(
+              validateResponseModel.existingDeviceToken!);
+        }
+        emit(const AuthState.otherDevice());
+      } else {
+        emit(const AuthState.allow());
+      }
+    } catch (e) {
+      emit(const AuthState.allow());
+    }
+  }
+
+  FutureOr<void> _onDeviceSwitchUserAction(
+      AuthSwitchDeviceUserActionEvent event, AuthEmitter emit) async {
+    try {
+      await authRepository.switchDeviceUserAction(
+        endpoint: event.apiEndPoint, // Use dynamic endpoint from event
+        userActionModel: event.userActionModel,
+      );
+
+      await localSecureStore.deleteDeviceSwitchReason();
+      await localSecureStore.deleteExistingDeviceToken();
+    } catch (e) {
+      AppLogger.instance.error(
+        title: 'User Action error',
+        message: '$e',
+      );
+    }
   }
 }
 
@@ -166,6 +316,30 @@ class AuthEvent with _$AuthEvent {
   }) = AuthAutoLoginEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
+
+  const factory AuthEvent.checkOtherDeviceLogin({
+    required String username,
+    required String tenantId,
+    required String apiEndPoint,
+  }) = AuthCheckOtherDeviceLoginEvent;
+
+  const factory AuthEvent.switchDevice({
+    required String selectedReason,
+    required String? deviceSwitchComment,
+    required String username,
+    required String password,
+    required String tenantId,
+    required String apiEndPoint,
+  }) = AuthSwitchDeviceEventSwitchDevice;
+
+  const factory AuthEvent.reset() = AuthResetEvent;
+
+  const factory AuthEvent.allow() = AuthAllowEvent;
+
+  const factory AuthEvent.switchDeviceUserAction({
+    required UserActionModel userActionModel,
+    required String apiEndPoint,
+  }) = AuthSwitchDeviceUserActionEvent;
 }
 
 @freezed
@@ -173,6 +347,11 @@ class AuthState with _$AuthState {
   const factory AuthState.unauthenticated() = AuthUnauthenticatedState;
 
   const factory AuthState.loading() = AuthLoadingState;
+
+  // Distinct from `loading` so the top-level `BlocListener` can drive a
+  // global overlay loader for logout without colliding with the login /
+  // device-switch pages which already handle `loading` themselves.
+  const factory AuthState.loggingOut() = AuthLoggingOutState;
 
   const factory AuthState.authenticated({
     required String accessToken,
@@ -183,4 +362,8 @@ class AuthState with _$AuthState {
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;
+
+  const factory AuthState.otherDevice() = AuthOtherDeviceState;
+
+  const factory AuthState.allow() = AuthAllowState;
 }

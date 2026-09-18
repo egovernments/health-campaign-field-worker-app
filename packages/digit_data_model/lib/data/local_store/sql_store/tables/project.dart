@@ -13,7 +13,7 @@ class Project extends Table {
   TextColumn get name => text()();
   TextColumn get department => text().nullable()();
   TextColumn get description => text().nullable()();
-  TextColumn get referenceId => text().nullable()();
+  TextColumn get referenceID => text().nullable()();
   TextColumn get projectHierarchy => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError =>

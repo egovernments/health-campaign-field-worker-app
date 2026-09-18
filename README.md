@@ -1554,4 +1554,3 @@ Documentation
 -------------
 
 For more detailed documentation, visit the [DIGIT Health Platform](https://health.digit.org/).
-

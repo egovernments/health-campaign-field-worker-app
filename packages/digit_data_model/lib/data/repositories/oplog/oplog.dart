@@ -46,6 +46,42 @@ abstract class OpLogManager<T extends EntityModel> {
         .createdByEqualTo(createdBy)
         .findAllSync();
 
+    // Handle update operations with null serverGeneratedId by copying from create record
+    final updateOpLogsWithNullServerId = isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.update)
+        .serverGeneratedIdIsNull()
+        .nonRecoverableErrorEqualTo(false)
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .findAllSync();
+
+    final opLogsToUpdate = <OpLog>[];
+    for (final updateOpLog in updateOpLogsWithNullServerId) {
+      final createOpLog = isar.opLogs
+          .filter()
+          .clientReferenceIdEqualTo(updateOpLog.clientReferenceId)
+          .operationEqualTo(DataOperation.create)
+          .serverGeneratedIdIsNotNull()
+          .findFirstSync();
+
+      if (createOpLog != null && createOpLog.serverGeneratedId != null) {
+        final entry = OpLogEntry.fromOpLog<T>(updateOpLog);
+        final updatedEntry = entry.copyWith(
+          serverGeneratedId: createOpLog.serverGeneratedId,
+          rowVersion: createOpLog.rowVersion,
+        );
+        opLogsToUpdate.add(updatedEntry.oplog);
+      }
+    }
+    if (opLogsToUpdate.isNotEmpty) {
+      isar.writeTxnSync(() {
+        isar.opLogs.putAllSync(opLogsToUpdate);
+      });
+    }
+
     final updateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -134,7 +170,6 @@ abstract class OpLogManager<T extends EntityModel> {
         .where(
           (element) =>
               element.entityType != DataModelType.userLocation &&
-              element.entityType != DataModelType.userAction &&
               element.entityType != DataModelType.complaints,
         )
         .toList();
@@ -170,53 +205,46 @@ abstract class OpLogManager<T extends EntityModel> {
     String? clientReferenceId,
     bool? nonRecoverableError,
   }) async {
+    final now = DateTime.now();
+
     if (nonRecoverableError == true && id != null && entry != null) {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
-      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      oplog.syncedUp = true;
+      oplog.syncedDown = true;
+      oplog.syncedDownOn = now;
+      oplog.syncedUpOn = now;
       isar.writeTxnSync(() {
-        isar.opLogs.putSync(fetchedEntry
-            .copyWith(
-              syncedUp: true,
-              syncedDown: true,
-              syncedDownOn: DateTime.now(),
-              syncedUpOn: DateTime.now(),
-            )
-            .oplog);
+        isar.opLogs.putSync(oplog);
       });
     } else if (entry != null) {
-      await put(
-        entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),
-      );
-    } else if (id != null) {
-      OpLog? oplog;
-
-      oplog = await isar.opLogs.get(id);
+      if (entry.id == null) return;
+      final oplog = await isar.opLogs.get(entry.id!);
       if (oplog == null) return;
-      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
-
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ) as OpLogEntry<T>,
-      );
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
+    } else if (id != null) {
+      final oplog = await isar.opLogs.get(id);
+      if (oplog == null) return;
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
     } else if (clientReferenceId != null) {
       final oplog = await isar.opLogs
           .filter()
           .clientReferenceIdEqualTo(clientReferenceId)
           .findFirst();
-
       if (oplog == null) return;
-
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
-
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ) as OpLogEntry<T>,
-      );
+      oplog.syncedUp = true;
+      oplog.syncedUpOn = now;
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(oplog);
+      });
     } else {
       throw AppException('Invalid arguments');
     }
@@ -232,6 +260,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAllSync();
 
+    final updatedOpLogs = <OpLog>[];
     for (final oplog in opLogs) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
@@ -249,10 +278,11 @@ abstract class OpLogManager<T extends EntityModel> {
         );
       }
 
-      final updatedOplog = updatedEntry.oplog;
-
+      updatedOpLogs.add(updatedEntry.oplog);
+    }
+    if (updatedOpLogs.isNotEmpty) {
       isar.writeTxnSync(() {
-        isar.opLogs.putSync(updatedOplog);
+        isar.opLogs.putAllSync(updatedOpLogs);
       });
     }
 
@@ -299,6 +329,7 @@ abstract class OpLogManager<T extends EntityModel> {
       throw AppException('OpLog not found for id: $clientReferenceId');
     }
     bool markAsNonRecoverable = false;
+    final retryOpLogs = <OpLog>[];
     for (final oplog in oplogs) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
       final syncDownRetryCount =
@@ -312,19 +343,23 @@ abstract class OpLogManager<T extends EntityModel> {
         updatedEntry = updatedEntry.copyWith(nonRecoverableError: true);
       }
 
+      retryOpLogs.add(updatedEntry.oplog);
+    }
+    if (retryOpLogs.isNotEmpty) {
       isar.writeTxnSync(() {
-        isar.opLogs.putSync(updatedEntry.oplog);
+        isar.opLogs.putAllSync(retryOpLogs);
       });
     }
 
-    // [TODO] need to cross check only first records is failing
+    // Use the incremented retry count for delay calculation
+    final newRetryCount =
+        (oplogs.first.syncDownRetryCount < 0 ? 0 : oplogs.first.syncDownRetryCount) + 1;
 
-    if (oplogs.first.syncDownRetryCount == 1) {
+    if (newRetryCount <= 1) {
       await Future.delayed(const Duration(seconds: 1));
     } else {
       await Future.delayed(Duration(
-        seconds: DigitDataModelSingleton().retryTimeInterval *
-            oplogs.first.syncDownRetryCount,
+        seconds: DigitDataModelSingleton().retryTimeInterval * newRetryCount,
       ));
     }
 

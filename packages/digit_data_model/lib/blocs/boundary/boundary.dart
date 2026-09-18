@@ -22,6 +22,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     on(_handleReset);
     on(_handleSearch);
     on(_handleSelect);
+    on(_handleMultiSelect);
     on(_handleSubmit);
     on(_handlefind);
   }
@@ -68,7 +69,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
         codes: event.code,
@@ -121,6 +121,17 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
 
     emit(state.copyWith(
       selectedBoundaryMap: selectedBoundaryMap,
+      selectedLastLevelBoundaries: [],
+      hasSubmitted: false,
+    ));
+  }
+
+  FutureOr<void> _handleMultiSelect(
+    BoundaryMultiSelectEvent event,
+    BoundaryEmitter emit,
+  ) async {
+    emit(state.copyWith(
+      selectedLastLevelBoundaries: event.selectedBoundaries,
       hasSubmitted: false,
     ));
   }
@@ -129,7 +140,19 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySubmitEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(hasSubmitted: true));
+    // Merge current session's selections into accumulated list (deduplicate by code)
+    final existingCodes = state.selectedLastLevelBoundaries
+        .map((b) => b.code)
+        .toSet();
+    final merged = [
+      ...state.selectedLastLevelBoundaries,
+      ...state.allSelectedLastLevelBoundaries
+          .where((b) => !existingCodes.contains(b.code)),
+    ];
+    emit(state.copyWith(
+      hasSubmitted: true,
+      allSelectedLastLevelBoundaries: merged,
+    ));
   }
 }
 
@@ -148,6 +171,11 @@ class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.findBoundary({required String code}) =
       BoundaryFindEvent;
 
+  const factory BoundaryEvent.selectMultipleBoundaries({
+    required String label,
+    required List<BoundaryModel> selectedBoundaries,
+  }) = BoundaryMultiSelectEvent;
+
   const factory BoundaryEvent.submit() = BoundarySubmitEvent;
 }
 
@@ -160,6 +188,8 @@ class BoundaryState with _$BoundaryState {
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<BoundaryModel> projectBoundaryList,
     @Default({}) Map<String, BoundaryModel?> selectedBoundaryMap,
+    @Default([]) List<BoundaryModel> selectedLastLevelBoundaries,
+    @Default([]) List<BoundaryModel> allSelectedLastLevelBoundaries,
     @Default(false) bool hasSubmitted,
   }) = _BoundaryState;
 

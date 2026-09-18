@@ -1,6 +1,5 @@
-import 'package:complaints/data/repositories/remote/pgr_service.dart';
-import 'package:complaints/models/pgr_complaints.dart';
-import 'package:complaints/models/pgr_complaints_response.dart';
+import 'package:collection/collection.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +16,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkUpdate(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -26,6 +26,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkDelete(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -35,9 +36,9 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleCreate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
-
 
   @override
   Future<void> singleUpdate(EntityModel entity, LocalRepository local) async {
@@ -45,6 +46,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleUpdate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -74,18 +76,20 @@ class CustomSyncRegistry implements SyncUpOperation {
                 continue;
               }
 
-              PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
-              PgrComplaintResponseModel pgrComplaintModel;
-              try {
-                pgrServiceCreateResponseModel =
-                    PgrServiceCreateResponseModelMapper.fromMap(
-                  responseData,
+              final pgrServiceCreateResponseModel =
+                  PgrServiceCreateResponseModelMapper.fromMap(
+                responseData,
+              );
+              if (pgrServiceCreateResponseModel.serviceWrappers.isEmpty) {
+                AppLogger.instance.error(
+                  title: 'NetworkManager : PgrServiceRemoteRepository',
+                  message: 'Empty serviceWrappers in response',
+                  stackTrace: StackTrace.current,
                 );
-                pgrComplaintModel =
-                    pgrServiceCreateResponseModel.serviceWrappers.first;
-              } catch (e) {
-                rethrow;
+                continue;
               }
+              final pgrComplaintModel =
+                  pgrServiceCreateResponseModel.serviceWrappers.first;
 
               final service = pgrComplaintModel.service;
               final serviceRequestId = service.serviceRequestId;
@@ -99,9 +103,19 @@ class CustomSyncRegistry implements SyncUpOperation {
                 continue;
               }
 
+              final matchingEntry = entry.firstWhereOrNull((element) =>
+                  element.clientReferenceId == entity.clientReferenceId);
+              if (matchingEntry == null) {
+                AppLogger.instance.error(
+                  title: 'NetworkManager : PgrServiceRemoteRepository',
+                  message:
+                      'No matching OpLog entry for clientReferenceId: ${entity.clientReferenceId}',
+                  stackTrace: StackTrace.current,
+                );
+                continue;
+              }
               await local.markSyncedUp(
-                entry: entry.firstWhere((element) =>
-                    element.clientReferenceId == entity.clientReferenceId),
+                entry: matchingEntry,
                 clientReferenceId: entity.clientReferenceId,
                 nonRecoverableError: entity.nonRecoverableError,
               );
@@ -131,6 +145,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       }
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
