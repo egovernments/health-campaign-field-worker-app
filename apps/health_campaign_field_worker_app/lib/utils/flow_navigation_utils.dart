@@ -84,13 +84,24 @@ class FlowNavigationUtils {
         }
       }
 
+      // Sample-flow fallback. Accept both the legacy top-level shape
+      // (`{flows, initialPage}`) and the MDMS-shaped shape
+      // (`{data: {flows, initialPage, ...}, ...}`) so samples that are
+      // authored to mirror what the server would return still load.
+      final sampleRoot = config.sampleFlows["data"] is Map
+          ? config.sampleFlows["data"] as Map
+          : config.sampleFlows;
+      final rawFlows = sampleRoot["flows"] as List?;
       FlowRegistry.setConfig(
-        config.sampleFlows["flows"] as List<Map<String, dynamic>>,
+        rawFlows
+                ?.map((e) => Map<String, dynamic>.from(e as Map))
+                .toList() ??
+            <Map<String, dynamic>>[],
       );
       NavigationRegistry.setupNavigation(context);
 
       context.router.push(
-        FlowBuilderHomeRoute(pageName: config.sampleFlows["initialPage"]),
+        FlowBuilderHomeRoute(pageName: sampleRoot["initialPage"]),
       );
     } catch (e) {
       debugPrint('FlowNavigationUtils error: $e');

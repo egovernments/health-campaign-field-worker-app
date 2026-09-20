@@ -2481,29 +2481,26 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       // --- CLF (Communal Living Facilities) — polio group vaccination ---
+      // Uses `polioClfLabel` so MDMS can localize the polio variant
+      // independently of the default institution/CLF label.
       if (isPolio)
-        i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+        i18.home.polioClfLabel: homeShowcaseData.clf.buildWith(
           child: HomeItemCard(
             icon: Icons.account_balance,
-            label: i18.home.clfLabel,
+            label: i18.home.polioClfLabel,
             onPressed: () async {
               context.router.push(CurrentBoundaryRoute(
-                onBoundarySelected: (ctx) async {
-                  // NOTE: intentionally not calling triggerLocalization for
-                  // the CLF vaccination module until the MDMS entry
-                  // `hcm-clf-vaccination-<projectRefId>` is registered.
-                  // Without the MDMS stub, the localization loader can hang
-                  // (isLocalizationLoadCompleted stays false), blocking render.
-                  isTriggerLocalisation = false;
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  triggerLocalization(module: 'hcm-base-clf-polio');
 
                   await FlowNavigationUtils.navigateToFlowModule(
                     context: ctx,
                     config: FlowModuleConfig(
-                      schemaKey: 'CLF_VACCINATION',
+                      schemaKey: 'CLF',
                       sampleFlows: sampleClfVaccinationFlows,
                     ),
                   );
-                },
+                }),
               ));
             },
           ),
@@ -3098,20 +3095,20 @@ class _HomePageState extends LocalizedState<HomePage> {
         onPressed: () async {
           if (isPolio) {
             await context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) async {
-                // NOTE: intentionally not calling triggerLocalization for
-                // the transit vaccination module until the MDMS entry
-                // `hcm-transit-vaccination-<projectRefId>` is registered.
-                isTriggerLocalisation = false;
+              onBoundarySelected: (ctx) => _openModule(() async {
+                // DEMO: localization for this module is bundled in
+                // `lib/localization.json` and intercepted in the
+                // LocalizationBloc (`_bundledModules`).
+                triggerLocalization(module: 'hcm-base-transit_post-polio');
 
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(
-                    schemaKey: 'TRANSIT_VACCINATION',
+                    schemaKey: 'TRANSIT_POST',
                     sampleFlows: sampleTransitVaccinationFlows,
                   ),
                 );
-              },
+              }),
             ));
           } else {
             const module = "hcm-transit-post";
@@ -3154,6 +3151,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      i18.home.polioClfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3164,6 +3162,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
       i18.home.clfLabel,
+      i18.home.polioClfLabel,
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,
@@ -3190,8 +3189,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            (isPolio && element == i18.home.clfLabel))
+            element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .toList();
