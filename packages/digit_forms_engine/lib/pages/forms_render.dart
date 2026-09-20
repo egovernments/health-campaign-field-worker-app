@@ -691,12 +691,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   pages[currentPageKey]?.order ?? 0;
 
 // Find the next page with an integer order > currentOrder.floor()
+// Skip all-hidden pages — those exist only for the summary/submission
+// payload and shouldn't be navigated to in the form flow.
                               final nextPageEntry = pages.entries.where((e) {
                                 final order = e.value.order;
-                                return order != null &&
-                                    order > currentOrder &&
-                                    order % 1 ==
-                                        0; // Only integers (e.g. 6.0, not 5.1)
+                                if (order == null ||
+                                    order <= currentOrder ||
+                                    order % 1 != 0) return false;
+                                final props = e.value.properties?.values;
+                                if (props == null || props.isEmpty) return false;
+                                return props.any((p) => p.hidden != true);
                               }).toList()
                                 ..sort((a, b) =>
                                     a.value.order!.compareTo(b.value.order!));
@@ -1561,13 +1565,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final shownPages = schemaObject.pages.entries.where((entry) {
       final pageSchema = entry.value;
 
-      final values = pageSchema.properties?.values.map((field) => field.value);
+      final props = pageSchema.properties?.values;
+      if (props == null || props.isEmpty) return false;
 
-      return values?.any((v) => v != null && v.toString().trim().isNotEmpty) ??
-          false;
+      // Skip pages where no property can appear on the summary. Mirrors the
+      // field-level rule: `includeInSummary: true` explicitly overrides
+      // `hidden: true`, so a page whose fields are all hidden but explicitly
+      // opted into summary (e.g. a checklist card) still renders.
+      final hasSummarizableProp = props.any((p) =>
+          p.includeInSummary == true ||
+          (p.includeInSummary != false && p.hidden != true));
+      if (!hasSummarizableProp) return false;
+
+      return props.any(
+          (p) => p.value != null && p.value.toString().trim().isNotEmpty);
     }).toList();
 
-    return ScrollableContent(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        // Back-nav from summary: reset the form so the next entry starts
+        // fresh (not pre-filled with the just-abandoned values), and pop
+        // all form pages off the router so the user lands on the screen
+        // that launched the form.
+        context
+            .read<FormsBloc>()
+            .add(FormsClearFormEvent(schemaKey: widget.currentSchemaKey));
+        context.router.popUntil((route) {
+          return route.settings.name != FormsRenderRoute.name;
+        });
+      },
+      child: ScrollableContent(
         enableFixedDigitButton: true,
         // Same inset as the form pages' back header (no bottom padding), so
         // the gap between Back and the first card matches the previous page.
@@ -1647,7 +1676,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   ),
             ),
           ),
-        ]);
+        ]),
+    );
   }
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
@@ -1656,11 +1686,61 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final dateFormatter = DateFormat('dd MMM yyyy', currentLocale);
 
     return properties.entries
-        .where((entry) =>
-            entry.value.includeInSummary != false && entry.value.hidden != true)
-        .map((entry) {
+        .where((entry) {
+      // Show if either:
+      // - explicitly opted in (`includeInSummary: true`) — this overrides `hidden`
+      //   so a field can live on the form as hidden (with `includeInForm: true`
+      //   to preserve its value) and surface only on the summary page.
+      // - not opted out AND not hidden.
+      if (entry.value.includeInSummary == true) return true;
+      return entry.value.includeInSummary != false &&
+          entry.value.hidden != true;
+    }).where((entry) {
+      // Skip fields with no captured value — they render as "--" noise and
+      // are usually conditionally-visible fields the user never saw.
+      final v = entry.value.value;
+      if (v == null) return false;
+      if (v is String && v.trim().isEmpty) return false;
+      if (v is List && v.isEmpty) return false;
+      return true;
+    }).map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
+
+      // Boolean checkboxes render as `☑ Label` (icon on the left of the
+      // field's label) — matches the prototype's checklist visual. The
+      // LabelValueItem's label column is collapsed via `labelFlex: 0` and
+      // the whole `icon + label` row is stuffed into the `value` slot.
+      if (rawValue is bool &&
+          entry.value.format == PropertySchemaFormat.checkbox) {
+        final theme = Theme.of(context);
+        return LabelValueItem(
+          label: '',
+          labelFlex: 0,
+          value: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                rawValue ? Icons.check_box : Icons.check_box_outline_blank,
+                color: theme.colorTheme.primary.primary2,
+              ),
+              const SizedBox(width: spacer2),
+              Flexible(
+                child: Text(
+                  label,
+                  style: theme.digitTextTheme(context).bodyL.copyWith(
+                        color: theme.colorTheme.text.primary,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          isInline: true,
+          maxLines: 5,
+          padding: const EdgeInsets.symmetric(vertical: spacer1),
+        );
+      }
 
       String displayValue;
 

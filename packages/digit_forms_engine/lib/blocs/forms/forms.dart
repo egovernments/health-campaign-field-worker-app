@@ -104,7 +104,17 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
       filteredPages.removeWhere((_, page) {
         final props = page.properties;
-        return props == null || props.values.every((p) => p.hidden == true);
+        if (props == null) return true;
+        // Drop a page only if none of its props are usable. A prop is usable
+        // when it's visible on the form (`hidden != true`) OR explicitly
+        // opted into the submission payload (`includeInForm: true`) OR
+        // opted into the auto-summary (`includeInSummary: true`). This lets
+        // a config declare a summary-only page (all hidden, opted in) to get
+        // its own summary card without the form flow navigating to it.
+        return !props.values.any((p) =>
+            p.hidden != true ||
+            p.includeInForm == true ||
+            p.includeInSummary == true);
       });
 
       final finalSchema = schema.copyWith(pages: filteredPages);
