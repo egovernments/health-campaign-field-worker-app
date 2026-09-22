@@ -2481,13 +2481,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       // --- CLF (Communal Living Facilities) — polio group vaccination ---
-      // Uses `polioClfLabel` so MDMS can localize the polio variant
-      // independently of the default institution/CLF label.
       if (isPolio)
-        i18.home.polioClfLabel: homeShowcaseData.clf.buildWith(
+        i18.home.clfLabel: homeShowcaseData.clf.buildWith(
           child: HomeItemCard(
             icon: Icons.account_balance,
-            label: i18.home.polioClfLabel,
+            label: i18.home.clfLabel,
             onPressed: () async {
               context.router.push(CurrentBoundaryRoute(
                 onBoundarySelected: (ctx) => _openModule(() async {
@@ -3099,19 +3097,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                 // DEMO: localization for this module is bundled in
                 // `lib/localization.json` and intercepted in the
                 // LocalizationBloc (`_bundledModules`).
-                triggerLocalization(module: 'hcm-base-transit_post-polio');
+                triggerLocalization(module: 'hcm-base-transitpost-polio');
 
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(
-                    schemaKey: 'TRANSIT_POST',
+                    schemaKey: 'TRANSITPOST',
                     sampleFlows: sampleTransitVaccinationFlows,
                   ),
                 );
               }),
             ));
           } else {
-            const module = "hcm-transit-post";
+            const module = "hcm-transitpost";
             triggerLocalization(module: module);
             context.router.push(const TransitPostWrapperRoute());
           }
@@ -3151,7 +3149,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
-      i18.home.polioClfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3162,7 +3159,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
       i18.home.clfLabel,
-      i18.home.polioClfLabel,
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,

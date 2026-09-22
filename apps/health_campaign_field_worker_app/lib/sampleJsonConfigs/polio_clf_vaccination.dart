@@ -32,11 +32,25 @@ final dynamic sampleClfVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "value":
-                      "{{item.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                  "format": "textTemplate",
+                  "format": "row",
                   "fieldName": "sessionSubtitle",
-                  "properties": {"bottomGap": 12}
+                  "properties": {"mainAxisAlignment": "start", "bottomGap": 12},
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "textTemplate",
+                      "fieldName": "sessionTypeText",
+                      "value":
+                          "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                    },
+                    {
+                      "type": "template",
+                      "format": "textTemplate",
+                      "fieldName": "sessionDateText",
+                      "value":
+                          "{{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}"
+                    }
+                  ]
                 },
                 {
                   "type": "template",
@@ -75,6 +89,7 @@ final dynamic sampleClfVaccinationFlows = {
                     }
                   ],
                   "fieldName": "resumeSession",
+                  "mandatory": true,
                   "properties": {
                     "size": "medium",
                     "type": "secondary",
@@ -110,6 +125,7 @@ final dynamic sampleClfVaccinationFlows = {
               }
             ],
             "fieldName": "startSession",
+            "mandatory": true,
             "properties": {
               "size": "large",
               "type": "primary",
@@ -152,6 +168,12 @@ final dynamic sampleClfVaccinationFlows = {
                   "root": "userAction",
                   "value": "{{singleton.selectedProject.id}}",
                   "operation": "equals"
+                },
+                {
+                  "key": "boundaryCode",
+                  "root": "userAction",
+                  "value": "{{singleton.boundary.code}}",
+                  "operation": "equals"
                 }
               ],
               "name": "sessions",
@@ -172,7 +194,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"}
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
               ]
             },
             {
@@ -183,7 +208,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"},
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
                 {"field": "additionalFields.fields.childSex", "equals": "MALE"}
               ]
             },
@@ -195,7 +223,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"},
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
                 {
                   "field": "additionalFields.fields.childSex",
                   "equals": "FEMALE"
@@ -210,7 +241,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_REFERRAL"}
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
               ]
             }
           ],
@@ -298,6 +332,11 @@ final dynamic sampleClfVaccinationFlows = {
                     "type": "required",
                     "value": true,
                     "message": "GV_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 200,
+                    "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
                 "errorMessage": "",
@@ -318,7 +357,13 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [],
+                "validations": [
+                  {
+                    "type": "maxLength",
+                    "value": 200,
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
                 "errorMessage": "",
                 "isMultiSelect": false
               },
@@ -327,7 +372,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "label": "GV_CONTACT_NUMBER_LABEL",
                 "order": 4,
                 "value": "",
-                "format": "phone",
+                "format": "mobileNumber",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
@@ -337,9 +382,30 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [],
+                "validations": [
+                  {
+                    "type": "pattern",
+                    "value": "^[1-9]\\d*\$",
+                    "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  }
+                ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                }
               },
               {
                 "type": "string",
@@ -536,11 +602,34 @@ final dynamic sampleClfVaccinationFlows = {
               },
               {
                 "type": "template",
-                "value":
-                    "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                "format": "textTemplate",
+                "format": "row",
                 "fieldName": "sessionSubtitle",
-                "properties": {"style": "captionS"}
+                "properties": {"mainAxisAlignment": "start"},
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "textTemplate",
+                    "fieldName": "sessionTypeText",
+                    "value":
+                        "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}",
+                    "properties": {"style": "captionS"}
+                  },
+                  {
+                    "type": "template",
+                    "format": "textTemplate",
+                    "fieldName": "sessionSep",
+                    "value": " · ",
+                    "properties": {"style": "captionS"}
+                  },
+                  {
+                    "type": "template",
+                    "format": "textTemplate",
+                    "fieldName": "sessionDateText",
+                    "value":
+                        "{{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                    "properties": {"style": "captionS"}
+                  }
+                ]
               }
             ],
             "fieldName": "sessionCard",
@@ -625,6 +714,7 @@ final dynamic sampleClfVaccinationFlows = {
               }
             ],
             "fieldName": "addVaccination",
+            "mandatory": true,
             "properties": {
               "size": "large",
               "type": "primary",
@@ -709,7 +799,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"}
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
               ],
               "relations": [
                 {
@@ -730,7 +823,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"},
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
                 {"field": "additionalFields.fields.childSex", "equals": "MALE"}
               ]
             },
@@ -742,7 +838,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_CHILD"},
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
                 {
                   "field": "additionalFields.fields.childSex",
                   "equals": "FEMALE"
@@ -757,7 +856,10 @@ final dynamic sampleClfVaccinationFlows = {
               },
               "entity": "UserActionModel",
               "filters": [
-                {"field": "additionalFields.fields.formType", "equals": "GROUP_VAC_REFERRAL"}
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
               ]
             }
           ],
@@ -800,11 +902,24 @@ final dynamic sampleClfVaccinationFlows = {
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
+                "required": true,
                 "fieldName": "childName",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [],
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 200,
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
                 "errorMessage": "",
                 "isMultiSelect": false
               },
@@ -823,7 +938,9 @@ final dynamic sampleClfVaccinationFlows = {
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
+                "required": true,
                 "fieldName": "childSex",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -831,7 +948,7 @@ final dynamic sampleClfVaccinationFlows = {
                   {
                     "type": "required",
                     "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
+                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
                   }
                 ],
                 "errorMessage": "",
@@ -852,7 +969,9 @@ final dynamic sampleClfVaccinationFlows = {
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
+                "required": true,
                 "fieldName": "ageBand",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -860,7 +979,7 @@ final dynamic sampleClfVaccinationFlows = {
                   {
                     "type": "required",
                     "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
+                    "message": "GV_AGE_BAND_LABEL_VALIDATION_REQUIRED"
                   }
                 ],
                 "errorMessage": "",
@@ -876,8 +995,10 @@ final dynamic sampleClfVaccinationFlows = {
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
+                "readOnly": true,
+                "required": true,
                 "fieldName": "gpsChild",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -934,8 +1055,8 @@ final dynamic sampleClfVaccinationFlows = {
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false,
                 "includeInForm": true,
+                "isMultiSelect": false,
                 "includeInSummary": true
               },
               {
@@ -955,8 +1076,8 @@ final dynamic sampleClfVaccinationFlows = {
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false,
                 "includeInForm": true,
+                "isMultiSelect": false,
                 "includeInSummary": true
               }
             ],
@@ -1071,17 +1192,10 @@ final dynamic sampleClfVaccinationFlows = {
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
-                    "data": [
-                      {
-                        "key": "SessionClientReferenceId",
-                        "value": "{{navigation.SessionClientReferenceId}}"
-                      },
-                      {"key": "SessionType", "value": "CLF"}
-                    ],
-                    "name": "clfSessionOverview",
+                    "data": [],
+                    "name": "clfSessionsList",
                     "type": "TEMPLATE",
-                    "category": "CLF_SESSIONS",
-                    "navigationMode": "popUntilAndPush",
+                    "navigationMode": "popUntilAndReplace",
                     "popUntilPageName": "clfSessionsList"
                   }
                 }
@@ -1143,6 +1257,11 @@ final dynamic sampleClfVaccinationFlows = {
                     "type": "required",
                     "value": true,
                     "message": "GV_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 200,
+                    "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
                 "errorMessage": "",
@@ -1153,7 +1272,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "label": "GV_REFERRAL_CONTACT_NUMBER_LABEL",
                 "order": 2,
                 "value": "",
-                "format": "phone",
+                "format": "mobileNumber",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
@@ -1163,9 +1282,30 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [],
+                "validations": [
+                  {
+                    "type": "pattern",
+                    "value": "^[1-9]\\d*\$",
+                    "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  }
+                ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                }
               },
               {
                 "type": "string",
@@ -1232,8 +1372,10 @@ final dynamic sampleClfVaccinationFlows = {
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
+                "readOnly": true,
+                "required": true,
                 "fieldName": "gpsReferral",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1355,16 +1497,10 @@ final dynamic sampleClfVaccinationFlows = {
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
-                    "data": [
-                      {
-                        "key": "SessionClientReferenceId",
-                        "value": "{{navigation.SessionClientReferenceId}}"
-                      },
-                      {"key": "SessionType", "value": "CLF"}
-                    ],
-                    "name": "clfSessionOverview",
+                    "data": [],
+                    "name": "clfSessionsList",
                     "type": "TEMPLATE",
-                    "navigationMode": "popUntilAndPush",
+                    "navigationMode": "popUntilAndReplace",
                     "popUntilPageName": "clfSessionsList"
                   }
                 }
@@ -1398,8 +1534,8 @@ final dynamic sampleClfVaccinationFlows = {
   "isActive": true,
   "auditDetails": {
     "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
-    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
     "createdTime": 1789628239245,
-    "lastModifiedTime": 1789727458603
+    "lastModifiedTime": 1789993507428
   }
 };

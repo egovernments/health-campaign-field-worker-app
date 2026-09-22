@@ -942,8 +942,6 @@ class Home {
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 
-  String get polioClfLabel => "HOME_POLIO_CLF_LABEL";
-
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
