@@ -32,31 +32,11 @@ final dynamic sampleTransitVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "format": "row",
-                  "fieldName": "sessionSubtitle",
-                  "properties": {"mainAxisAlignment": "start", "bottomGap": 12},
-                  "children": [
-                    {
-                      "type": "template",
-                      "format": "textTemplate",
-                      "fieldName": "sessionTypeText",
-                      "value":
-                          "{{item.UserActionModel.additionalFields.fields.transitLocationType}}"
-                    },
-                    {
-                      "type": "template",
-                      "format": "textTemplate",
-                      "fieldName": "sessionSep",
-                      "value": " · "
-                    },
-                    {
-                      "type": "template",
-                      "format": "textTemplate",
-                      "fieldName": "sessionDateText",
-                      "value":
-                          "{{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}"
-                    }
-                  ]
+                  "value":
+                      "{{item.UserActionModel.additionalFields.fields.transitLocationType}} · {{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                  "format": "textTemplate",
+                  "fieldName": "sessionTypeText",
+                  "properties": {"bottomGap": 12}
                 },
                 {
                   "type": "template",
@@ -336,6 +316,11 @@ final dynamic sampleTransitVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -344,7 +329,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -546,34 +531,11 @@ final dynamic sampleTransitVaccinationFlows = {
               },
               {
                 "type": "template",
-                "format": "row",
-                "fieldName": "sessionSubtitle",
-                "properties": {"mainAxisAlignment": "start"},
-                "children": [
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionTypeText",
-                    "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}",
-                    "properties": {"style": "captionS"}
-                  },
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionSep",
-                    "value": " · ",
-                    "properties": {"style": "captionS"}
-                  },
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionDateText",
-                    "value":
-                        "{{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                    "properties": {"style": "captionS"}
-                  }
-                ]
+                "value":
+                    "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}} · {{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                "format": "textTemplate",
+                "fieldName": "sessionTypeText",
+                "properties": {"style": "captionS"}
               }
             ],
             "fieldName": "sessionCard",
@@ -871,7 +833,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -1131,27 +1093,20 @@ final dynamic sampleTransitVaccinationFlows = {
                 "order": 1,
                 "value": true,
                 "format": "checkbox",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
-                "required": true,
+                "readOnly": true,
                 "fieldName": "twoDropsAdministered",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "",
+                "includeInForm": true,
                 "isMultiSelect": false,
-                "includeInSummary": false
+                "includeInSummary": true
               },
               {
                 "type": "boolean",
@@ -1159,27 +1114,20 @@ final dynamic sampleTransitVaccinationFlows = {
                 "order": 2,
                 "value": true,
                 "format": "checkbox",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
-                "required": true,
+                "readOnly": true,
                 "fieldName": "fingerMarked",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "",
+                "includeInForm": true,
                 "isMultiSelect": false,
-                "includeInSummary": false
+                "includeInSummary": true
               }
             ],
             "systemDate": null,
@@ -1368,7 +1316,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -1430,10 +1378,15 @@ final dynamic sampleTransitVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "300",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_300"
+                },
                 "validations": [
                   {
                     "type": "maxLength",
-                    "value": 300,
+                    "value": "300",
                     "message": "GV_VALIDATION_MAX_300"
                   }
                 ],
@@ -1455,6 +1408,11 @@ final dynamic sampleTransitVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "500",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_500"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -1463,7 +1421,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 500,
+                    "value": "500",
                     "message": "GV_VALIDATION_MAX_500"
                   }
                 ],

@@ -31,12 +31,7 @@ final dynamic samplePolioStockDetailsFlows = {
             {
               "actionType": "NAVIGATION",
               "properties": {
-                "data": [
-                  {
-                    "key": "maxReturnable",
-                    "value": "{{fn:computeMaxReturnable()}}"
-                  }
-                ],
+                "data": [],
                 "name": "returnedVials",
                 "type": "FORM"
               }
@@ -131,26 +126,6 @@ final dynamic samplePolioStockDetailsFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "string",
-              "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": true,
-              "tooltip": "",
-              "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "batchLotNumber",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
               "type": "integer",
               "label": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_LABEL",
               "order": 4,
@@ -171,6 +146,78 @@ final dynamic samplePolioStockDetailsFlows = {
                   "type": "required",
                   "value": true,
                   "message": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
+                },
+                {
+                  "type": "max",
+                  "value": 1000000,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_TOTAL_MIXING_SYRINGES_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_TOTAL_MIXING_SYRINGES_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "totalMixingSyringes",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_TOTAL_MIXING_SYRINGES_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
+                },
+                {
+                  "type": "max",
+                  "value": 1000000,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_TOTAL_DILUENTS_ISSUED_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_TOTAL_DILUENTS_ISSUED_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "totalDiluentsIssued",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_TOTAL_DILUENTS_ISSUED_REQUIRED"
                 },
                 {
                   "type": "min",
@@ -291,46 +338,6 @@ final dynamic samplePolioStockDetailsFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "string",
-              "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "text",
-              "hidden": true,
-              "tooltip": "",
-              "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "batchLotNumber",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "POLIO_STOCK_AVAILABLE_TO_RETURN_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "number",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "fieldName": "maxReturnable",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
               "type": "integer",
               "label": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETURNED_LABEL",
               "order": 3,
@@ -342,38 +349,6 @@ final dynamic samplePolioStockDetailsFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "unopenedUsableVialsReturned",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "min",
-                  "value": 0,
-                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
-                },
-                {
-                  "type": "max",
-                  "value": 1000000,
-                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETRIEVED_LABEL",
-              "order": 4,
-              "value": "",
-              "format": "number",
-              "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETRIEVED_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "unopenedUsableVialsRetrieved",
               "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
@@ -426,16 +401,54 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "integer",
-              "label": "POLIO_STOCK_OPENED_VIALS_RETURNED_LABEL",
-              "order": 6,
+              "label": "POLIO_STOCK_TOTAL_RETURNED_LABEL",
+              "order": 7,
               "value": "",
               "format": "number",
               "hidden": false,
               "tooltip": "",
-              "helpText": "POLIO_STOCK_OPENED_VIALS_RETURNED_HELPTEXT",
+              "helpText": "POLIO_STOCK_TOTAL_RETURNED_HELPTEXT",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "openedVialsReturned",
+              "fieldName": "totalReturned",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
+                },
+                {
+                  "type": "max",
+                  "value": 1000000,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                }
+              ],
+              "errorMessage": "",
+              "computedValue": {
+                "sources": [
+                  "unopenedUsableVialsReturned",
+                  "unopenedSpoiltVialsReturned"
+                ],
+                "operation": "sum"
+              },
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_UNUSED_DILUENTS_RETURNED_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_UNUSED_DILUENTS_RETURNED_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "unusedDiluentsReturned",
               "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
@@ -457,47 +470,33 @@ final dynamic samplePolioStockDetailsFlows = {
             },
             {
               "type": "integer",
-              "label": "POLIO_STOCK_TOTAL_RETURNED_LABEL",
-              "order": 7,
+              "label": "POLIO_STOCK_SPOILED_DILUENTS_RETURNED_LABEL",
+              "order": 9,
               "value": "",
               "format": "number",
               "hidden": false,
               "tooltip": "",
-              "helpText": "POLIO_STOCK_TOTAL_RETURNED_HELPTEXT",
+              "helpText": "POLIO_STOCK_SPOILED_DILUENTS_RETURNED_HELPTEXT",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "totalReturned",
-              "mandatory": true,
+              "fieldName": "spoiledDiluentsReturned",
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "POLIO_STOCK_TOTAL_RETURNED_REQUIRED"
-                },
-                {
                   "type": "min",
-                  "value": 1,
+                  "value": 0,
                   "message": "POLIO_STOCK_VALUE_MUST_BE_POSITIVE"
                 },
                 {
                   "type": "max",
-                  "value": "navigation.maxReturnable",
-                  "message": "POLIO_STOCK_TOTAL_RETURNED_EXCEEDS_RECEIVED"
+                  "value": 1000000,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
                 }
               ],
               "errorMessage": "",
-              "computedValue": {
-                "sources": [
-                  "openedVialsReturned",
-                  "unopenedSpoiltVialsReturned",
-                  "unopenedUsableVialsRetrieved",
-                  "unopenedUsableVialsReturned"
-                ],
-                "operation": "sum"
-              },
               "isMultiSelect": false
             }
           ],

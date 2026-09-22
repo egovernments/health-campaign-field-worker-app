@@ -32,25 +32,11 @@ final dynamic sampleClfVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "format": "row",
-                  "fieldName": "sessionSubtitle",
-                  "properties": {"mainAxisAlignment": "start", "bottomGap": 12},
-                  "children": [
-                    {
-                      "type": "template",
-                      "format": "textTemplate",
-                      "fieldName": "sessionTypeText",
-                      "value":
-                          "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
-                    },
-                    {
-                      "type": "template",
-                      "format": "textTemplate",
-                      "fieldName": "sessionDateText",
-                      "value":
-                          "{{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}"
-                    }
-                  ]
+                  "value":
+                      "{{item.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                  "format": "textTemplate",
+                  "fieldName": "sessionTypeText",
+                  "properties": {"bottomGap": 12}
                 },
                 {
                   "type": "template",
@@ -327,6 +313,11 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -335,7 +326,7 @@ final dynamic sampleClfVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -357,10 +348,15 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -602,34 +598,11 @@ final dynamic sampleClfVaccinationFlows = {
               },
               {
                 "type": "template",
-                "format": "row",
-                "fieldName": "sessionSubtitle",
-                "properties": {"mainAxisAlignment": "start"},
-                "children": [
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionTypeText",
-                    "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}",
-                    "properties": {"style": "captionS"}
-                  },
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionSep",
-                    "value": " · ",
-                    "properties": {"style": "captionS"}
-                  },
-                  {
-                    "type": "template",
-                    "format": "textTemplate",
-                    "fieldName": "sessionDateText",
-                    "value":
-                        "{{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                    "properties": {"style": "captionS"}
-                  }
-                ]
+                "value":
+                    "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                "format": "textTemplate",
+                "fieldName": "sessionTypeText",
+                "properties": {"style": "captionS"}
               }
             ],
             "fieldName": "sessionCard",
@@ -908,6 +881,11 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -916,7 +894,7 @@ final dynamic sampleClfVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -1252,6 +1230,11 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -1260,7 +1243,7 @@ final dynamic sampleClfVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 200,
+                    "value": "200",
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
@@ -1322,10 +1305,15 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "300",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_300"
+                },
                 "validations": [
                   {
                     "type": "maxLength",
-                    "value": 300,
+                    "value": "300",
                     "message": "GV_VALIDATION_MAX_300"
                   }
                 ],
@@ -1347,6 +1335,11 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "500",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_500"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -1355,7 +1348,7 @@ final dynamic sampleClfVaccinationFlows = {
                   },
                   {
                     "type": "maxLength",
-                    "value": 500,
+                    "value": "500",
                     "message": "GV_VALIDATION_MAX_500"
                   }
                 ],
