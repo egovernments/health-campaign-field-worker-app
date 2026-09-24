@@ -17,6 +17,7 @@ import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
 import 'executors/open_scanner_executor.dart';
 import 'executors/reverse_transformer_executor.dart';
+import 'executors/snapshot_state_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -43,6 +44,7 @@ class ActionExecutorRegistry {
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
     register('SHOW_TOAST', ToastExecutor());
     register('CLEAR_STATE', ClearStateExecutor());
+    register('SNAPSHOT_STATE', SnapshotStateExecutor());
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
     register('OPEN_POPUP', OpenPopupExecutor());

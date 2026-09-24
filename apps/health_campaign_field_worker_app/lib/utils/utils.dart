@@ -985,19 +985,87 @@ void reportSyncProgress(String entityType, {String operation = 'syncDown'}) {
   );
 }
 
-/// Formats a [sync_utils.SyncProgress] event into a user-facing label for the
-/// sync dialogs, e.g. "Syncing Household Member (5)".
+/// Maps a raw `entityType` token (camelCase [DataModelType] name, plus a
+/// couple of ad-hoc entities reported directly via [reportSyncProgress]) to
+/// its localization key in [i18.syncEntity].
+final Map<String, String> _syncEntityLabelKeys = {
+  'user': i18.syncEntity.user,
+  'facility': i18.syncEntity.facility,
+  'address': i18.syncEntity.address,
+  'household': i18.syncEntity.household,
+  'individual': i18.syncEntity.individual,
+  'projectBeneficiary': i18.syncEntity.projectBeneficiary,
+  'householdMember': i18.syncEntity.householdMember,
+  'product': i18.syncEntity.product,
+  'productVariant': i18.syncEntity.productVariant,
+  'project': i18.syncEntity.project,
+  'projectFacility': i18.syncEntity.projectFacility,
+  'projectProductVariant': i18.syncEntity.projectProductVariant,
+  'projectStaff': i18.syncEntity.projectStaff,
+  'projectResource': i18.syncEntity.projectResource,
+  'projectType': i18.syncEntity.projectType,
+  'stock': i18.syncEntity.stock,
+  'stockReconciliation': i18.syncEntity.stockReconciliation,
+  'task': i18.syncEntity.task,
+  'sideEffect': i18.syncEntity.sideEffect,
+  'referral': i18.syncEntity.referral,
+  'serviceDefinition': i18.syncEntity.serviceDefinition,
+  'service': i18.syncEntity.service,
+  'complaints': i18.syncEntity.complaints,
+  'attributes': i18.syncEntity.attributes,
+  'boundary': i18.syncEntity.boundary,
+  'serviceAttributes': i18.syncEntity.serviceAttributes,
+  'locality': i18.syncEntity.locality,
+  'downsync': i18.syncEntity.downsync,
+  'downsyncCriteria': i18.syncEntity.downsyncCriteria,
+  'hFReferral': i18.syncEntity.hFReferral,
+  'attendanceRegister': i18.syncEntity.attendanceRegister,
+  'attendance': i18.syncEntity.attendance,
+  'userLocation': i18.syncEntity.userLocation,
+  'userAction': i18.syncEntity.userAction,
+  'faceAuthEvent': i18.syncEntity.faceAuthEvent,
+  'uniqueId': i18.syncEntity.uniqueId,
+  'formConfig': i18.syncEntity.formConfig,
+};
+
+/// Multi-word phase banners the sync service reports verbatim (see
+/// sync_down.dart / sync_service.dart), mapped to their localization keys.
+final Map<String, String> _syncPhaseLabelKeys = {
+  'Downloading from server...': i18.syncDialog.downloadingFromServer,
+  'Uploading to server...': i18.syncDialog.uploadingToServer,
+};
+
+/// Formats a [sync_utils.SyncProgress] event into a localized, user-facing
+/// label for the sync dialogs, e.g. "Syncing Household Member (5)".
 ///
 /// Entity types arrive as camelCase model names (`householdMember`), sometimes
 /// with a record count suffix (`task (5)`); multi-word phase banners from the
-/// sync service ("Downloading from server...") are shown as-is.
-String formatSyncProgressLabel(sync_utils.SyncProgress progress) {
+/// sync service ("Downloading from server...") are localized directly. Unknown
+/// entity types fall back to a titleCase rendering of the raw token so newly
+/// added entities never show a raw i18n key.
+String formatSyncProgressLabel(
+  sync_utils.SyncProgress progress,
+  AppLocalizations localizations,
+) {
   final raw = progress.entityType;
+
+  final phaseKey = _syncPhaseLabelKeys[raw];
+  if (phaseKey != null) return localizations.translate(phaseKey);
+
   final match = RegExp(r'^(\S+)( \(\d+\))?$').firstMatch(raw);
   if (match == null) return raw;
 
-  final name = ReCase(match.group(1)!).titleCase;
+  final entityToken = match.group(1)!;
   final count = match.group(2) ?? '';
 
-  return 'Syncing $name$count';
+  final entityKey = _syncEntityLabelKeys[entityToken];
+  final name = entityKey != null
+      ? localizations.translate(entityKey)
+      : ReCase(entityToken).titleCase;
+
+  final template = localizations.translate(i18.syncDialog.syncingModuleTemplate);
+  final label =
+      template.contains('{}') ? template.replaceAll('{}', name) : '$template $name';
+
+  return '$label$count';
 }

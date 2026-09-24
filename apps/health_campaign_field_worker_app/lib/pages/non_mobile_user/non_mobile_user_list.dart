@@ -81,6 +81,23 @@ class _NonMobileUserListPageState
     if (mounted) setState(() {});
   }
 
+  /// Returns to Home. Reuses the existing HomeRoute instance already in the
+  /// stack (via popUntil) instead of always constructing a fresh one — this
+  /// page can be reached from any module, not just Home, so we don't assume
+  /// Home is the previous route, only that it's somewhere below us if it
+  /// hasn't already been evicted by an earlier replaceAll/popUntilAndReplace
+  /// elsewhere. Falls back to a fresh HomeRoute only when it's genuinely not
+  /// in the stack.
+  void _goHome() {
+    final hasHomeInStack =
+        context.router.stack.any((route) => route.name == HomeRoute.name);
+    if (hasHomeInStack) {
+      context.router.popUntil((route) => route.settings.name == HomeRoute.name);
+    } else {
+      context.router.replaceAll([HomeRoute()]);
+    }
+  }
+
   @override
   void dispose() {
     coWorkersVerifiedThisCycleNotifier.removeListener(_onVerifiedCycleChanged);
@@ -273,9 +290,7 @@ class _NonMobileUserListPageState
                 enableFixedDigitButton: true,
                 header: BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  handleback: () {
-                    context.router.replaceAll([HomeRoute()]);
-                  },
+                  handleback: _goHome,
                   defaultPopRoute: false,
                 ),
                 footer: DigitCard(
@@ -288,9 +303,7 @@ class _NonMobileUserListPageState
                         ),
                         type: DigitButtonType.primary,
                         size: DigitButtonSize.large,
-                        onPressed: () {
-                          context.router.replace(HomeRoute());
-                        },
+                        onPressed: _goHome,
                       ),
                     ]),
                 children: [

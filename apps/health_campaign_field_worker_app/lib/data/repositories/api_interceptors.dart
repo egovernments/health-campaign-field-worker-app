@@ -56,6 +56,7 @@ class ApiLoggerInterceptor extends Interceptor {
       // payloads (module lists, boundary codes) that don't add debug value.
       final path = options.path;
       final isNoisyEndpoint = path.contains('boundarys') ||
+          path.contains('boundary-relationships') ||
           path.contains(Constants.localizationApiPath);
       if (!isNoisyEndpoint && (options.data is Map || options.data is List)) {
         AppLogger.instance.info(
@@ -73,7 +74,9 @@ class ApiLoggerInterceptor extends Interceptor {
     if (!kDebugMode) return;
 
     final path = response.requestOptions.path;
-    if (path.contains('boundarys')) return;
+    if (path.contains('boundarys') || path.contains('boundary-relationships')) {
+      return;
+    }
     // Localization responses carry the full translation payload for every
     // requested module (often thousands of entries) — pretty-printing that
     // JSON on every app-open cache miss floods the logs and slows the UI

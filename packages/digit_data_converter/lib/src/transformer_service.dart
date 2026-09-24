@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/foundation.dart';
 
@@ -506,6 +508,20 @@ class FormEntityMapper {
         continue;
       }
 
+      if (targetKey == 'additionalDetail' && sourcePath is Map<String, dynamic>) {
+        /// additionalDetail is a String field on the model (JSON payload as
+        /// text, e.g. PgrServiceModel), unlike other nested-object targets
+        /// (address, user, etc.) which are real object fields. Encode the
+        /// resolved map to a JSON string so it round-trips correctly through
+        /// fromJson(jsonEncode(...)) instead of decaying to Dart's
+        /// Map.toString() ("key: value") when coerced into a String field.
+        final nested = _mapNestedObject(
+            sourcePath, formValues, targetKey, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        mapped[targetKey] = jsonEncode(nested);
+        continue;
+      }
+
       if (sourcePath is Map<String, dynamic>) {
         /// Treat as nested object mapping
         mapped[targetKey] = _mapNestedObject(
@@ -832,6 +848,11 @@ class FormEntityMapper {
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
+    // An explicitly empty mapping config (e.g. "geoLocation": {}) means
+    // "always emit an empty object", distinct from a non-empty mapping
+    // whose fields all resolved to null/absent — that case still collapses
+    // to null so the field is dropped (ignoreNull) as before.
+    if (nestedMappings.isEmpty) return result;
     return result.isNotEmpty ? result : null;
   }
 
