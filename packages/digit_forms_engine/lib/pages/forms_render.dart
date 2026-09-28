@@ -1665,6 +1665,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                   items: _renderSummaryLabelValueItems(entry.value),
                 ),
+                ..._renderSummaryBoolRows(entry.value),
               ],
             ),
           const SizedBox(height: spacer2),
@@ -1703,44 +1704,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       if (v is String && v.trim().isEmpty) return false;
       if (v is List && v.isEmpty) return false;
       return true;
+    }).where((entry) {
+      // Boolean-checkbox rows are rendered separately by
+      // `_renderSummaryBoolRows` as standalone Padding+Row widgets so the
+      // check-icon sits flush with the card's left edge — bypassing
+      // LabelValueItem's fixed 24px inter-column spacer.
+      final v = entry.value.value;
+      return !(v is bool && entry.value.format == PropertySchemaFormat.checkbox);
     }).map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
-
-      // Boolean checkboxes render as `☑ Label` (icon on the left of the
-      // field's label) — matches the prototype's checklist visual. The
-      // LabelValueItem's label column is collapsed via `labelFlex: 0` and
-      // the whole `icon + label` row is stuffed into the `value` slot.
-      if (rawValue is bool &&
-          entry.value.format == PropertySchemaFormat.checkbox) {
-        final theme = Theme.of(context);
-        return LabelValueItem(
-          label: '',
-          labelFlex: 0,
-          value: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                rawValue ? Icons.check_box : Icons.check_box_outline_blank,
-                color: theme.colorTheme.primary.primary2,
-              ),
-              const SizedBox(width: spacer2),
-              Flexible(
-                child: Text(
-                  label,
-                  style: theme.digitTextTheme(context).bodyL.copyWith(
-                        color: theme.colorTheme.text.primary,
-                      ),
-                ),
-              ),
-            ],
-          ),
-          isInline: true,
-          maxLines: 5,
-          padding: const EdgeInsets.symmetric(vertical: spacer1),
-        );
-      }
 
       String displayValue;
 
@@ -1796,6 +1769,48 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         labelFlex: 5,
         maxLines: 5,
         padding: const EdgeInsets.symmetric(vertical: spacer1),
+      );
+    }).toList();
+  }
+
+  /// Renders boolean-checkbox summary rows as standalone `Padding + Row`
+  /// widgets so the check-icon sits at the card's true left edge. Bypassing
+  /// [LabelValueItem] avoids its fixed 24px inter-column spacer that would
+  /// otherwise indent the icon.
+  List<Widget> _renderSummaryBoolRows(PropertySchema schema) {
+    final theme = Theme.of(context);
+    final properties = schema.properties ?? {};
+
+    return properties.entries.where((entry) {
+      if (entry.value.includeInSummary == true) return true;
+      return entry.value.includeInSummary != false &&
+          entry.value.hidden != true;
+    }).where((entry) {
+      final v = entry.value.value;
+      return v is bool && entry.value.format == PropertySchemaFormat.checkbox;
+    }).map<Widget>((entry) {
+      final label = localizations.translate(entry.value.label ?? entry.key);
+      final rawValue = entry.value.value as bool;
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: spacer1),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              rawValue ? Icons.check_box : Icons.check_box_outline_blank,
+              color: theme.colorTheme.primary.primary2,
+            ),
+            const SizedBox(width: spacer2),
+            Expanded(
+              child: Text(
+                label,
+                style: theme.digitTextTheme(context).bodyL.copyWith(
+                      color: theme.colorTheme.text.primary,
+                    ),
+              ),
+            ),
+          ],
+        ),
       );
     }).toList();
   }

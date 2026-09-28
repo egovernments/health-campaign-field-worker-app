@@ -235,6 +235,22 @@ String interpolateWithCrudStates({
     for (final part in path.split('.')) {
       if (value is Map && value.containsKey(part)) {
         value = value[part];
+      } else if (value is List) {
+        // Match resolveValueRaw: `.length` returns count, `.first`/`.last`
+        // return endpoints, numeric parts index into the list.
+        if (part == 'length') {
+          value = value.length;
+        } else if (part == 'first') {
+          if (value.isEmpty) return null;
+          value = value.first;
+        } else if (part == 'last') {
+          if (value.isEmpty) return null;
+          value = value.last;
+        } else {
+          final idx = int.tryParse(part);
+          if (idx == null || idx < 0 || idx >= value.length) return null;
+          value = value[idx];
+        }
       } else {
         return null;
       }

@@ -164,31 +164,31 @@
   {
     "code": "GV_TRANSIT_SESSIONS_DESCRIPTION",
     "locale": "",
-    "message": "Open and past sessions at transit points.",
+    "message": "Open and past sessions at Transit posts.",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_TRANSIT_SESSION_SETUP_LABEL",
     "locale": "",
-    "message": "Set up transit point",
+    "message": "Set up Transit post",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_TRANSIT_SESSION_SETUP_DESC",
     "locale": "",
-    "message": "Enter the transit-point details for this session.",
+    "message": "Enter the Transit post details for this session.",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_TRANSIT_LOCATION_TYPE_LABEL",
     "locale": "",
-    "message": "Type",
+    "message": "Transit post type",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_TRANSIT_SITE_LANDMARK_LABEL",
     "locale": "",
-    "message": "Site name or landmark",
+    "message": "Transit post name",
     "module": "hcm-base-transit_post-polio"
   },
   {
@@ -254,25 +254,37 @@
   {
     "code": "GV_SESSION_OVERVIEW_HEADING",
     "locale": "",
-    "message": "Sessions",
+    "message": "Transit Post Overview",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_SESSION_OVERVIEW_TODAY",
     "locale": "",
-    "message": "Today",
+    "message": "Today's Progress",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_METRIC_VACCINATED_TODAY",
     "locale": "",
-    "message": "Vaccinated today",
+    "message": "Vaccinated Children",
     "module": "hcm-base-transit_post-polio"
   },
   {
     "code": "GV_METRIC_CHILDREN_REFERRED",
     "locale": "",
-    "message": "Children referred",
+    "message": "Referred Children",
+    "module": "hcm-base-transit_post-polio"
+  },
+  {
+    "code": "GV_METRIC_VACCINATED_BY_GENDER",
+    "locale": "",
+    "message": "Vaccinated children by gender",
+    "module": "hcm-base-transit_post-polio"
+  },
+  {
+    "code": "GV_SESSION_LAST_USED_ON",
+    "locale": "",
+    "message": "Last used on",
     "module": "hcm-base-transit_post-polio"
   },
   {
@@ -290,7 +302,7 @@
   {
     "code": "GV_SUMMARY_SESSION_DATE",
     "locale": "",
-    "message": "Date",
+    "message": "Created on",
     "module": "hcm-base-transit_post-polio"
   },
   {
@@ -806,13 +818,13 @@
   {
     "code": "GV_CLF_LOCATION_TYPE_LABEL",
     "locale": "",
-    "message": "Type",
+    "message": "CLF type",
     "module": "hcm-base-clf-polio"
   },
   {
     "code": "GV_LOCATION_NAME_LABEL",
     "locale": "",
-    "message": "Location name",
+    "message": "CLF name",
     "module": "hcm-base-clf-polio"
   },
   {
@@ -884,25 +896,37 @@
   {
     "code": "GV_SESSION_OVERVIEW_HEADING",
     "locale": "",
-    "message": "Sessions",
+    "message": "CLF Overview",
     "module": "hcm-base-clf-polio"
   },
   {
     "code": "GV_SESSION_OVERVIEW_TODAY",
     "locale": "",
-    "message": "Today",
+    "message": "Today's Progress",
     "module": "hcm-base-clf-polio"
   },
   {
     "code": "GV_METRIC_VACCINATED_TODAY",
     "locale": "",
-    "message": "Vaccinated today",
+    "message": "Vaccinated Children",
     "module": "hcm-base-clf-polio"
   },
   {
     "code": "GV_METRIC_CHILDREN_REFERRED",
     "locale": "",
-    "message": "Children referred",
+    "message": "Referred Children",
+    "module": "hcm-base-clf-polio"
+  },
+  {
+    "code": "GV_METRIC_VACCINATED_BY_GENDER",
+    "locale": "",
+    "message": "Vaccinated children by gender",
+    "module": "hcm-base-clf-polio"
+  },
+  {
+    "code": "GV_SESSION_LAST_USED_ON",
+    "locale": "",
+    "message": "Last used on",
     "module": "hcm-base-clf-polio"
   },
   {
@@ -920,7 +944,7 @@
   {
     "code": "GV_SUMMARY_SESSION_DATE",
     "locale": "",
-    "message": "Date",
+    "message": "Created on",
     "module": "hcm-base-clf-polio"
   },
   {
