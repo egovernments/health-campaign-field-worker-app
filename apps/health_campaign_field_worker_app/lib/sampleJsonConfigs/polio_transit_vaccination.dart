@@ -1026,16 +1026,16 @@ final dynamic sampleTransitVaccinationFlows = {
                 "isMultiSelect": false
               },
               {
-                "type": "string",
+                "type": "dynamic",
                 "enums": [
-                  {"code": "0_11_MONTHS", "name": "GV_ENUM_AGE_0_11_MONTHS"},
-                  {"code": "12_59_MONTHS", "name": "GV_ENUM_AGE_12_59_MONTHS"}
+
                 ],
                 "label": "GV_AGE_BAND_LABEL",
                 "order": 3,
                 "value": "",
-                "format": "select",
+                "format": "custom",
                 "hidden": false,
+                "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",

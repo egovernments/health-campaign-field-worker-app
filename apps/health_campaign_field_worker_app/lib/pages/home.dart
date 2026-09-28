@@ -86,6 +86,7 @@ import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
+import '../widgets/polio_group_vaccination/age_band_dropdown.dart';
 import 'package:digit_face_verification/digit_face_verification.dart';
 import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -350,6 +351,20 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const CycleDropDown();
+      },
+    );
+    // Polio group-vaccination age band — options derived from the active
+    // cycle's delivery `doseCriteria.condition` (e.g. `age >= 0 && age < 12`
+    // → "0-11 months"). schemaName is the current form's schemaKey, set by
+    // screen_builder — so ADD_TRANSIT_CHILD and ADD_CLF_CHILD share this
+    // one registration.
+    CustomComponentRegistry().registerBuilder(
+      'ageBand',
+      (context, stateAccessor) {
+        return AgeBandDropDown(
+          schemaName: stateAccessor.currentPageName,
+          formControlName: 'ageBand',
+        );
       },
     );
     CustomComponentRegistry().registerBuilder(
@@ -3191,6 +3206,17 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db,
     ];
 
+    // Second filter (on top of role-action `displayName` gating above):
+    // hide method-bound cards when the current project's cycles don't carry
+    // a delivery for their method. Only the beneficiary / CLF / transit-post
+    // cards are method-bound today. Legacy configs where no cycle carries a
+    // `deliveryMethod` are left alone by `hasDeliveryMethod`.
+    final Map<String, String> labelToDeliveryMethod = {
+      i18.home.beneficiaryLabel: isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION',
+      if (isPolio) i18.home.clfLabel: 'CLF',
+      if (isPolio) i18.home.transitPostLabel: 'TRANSITPOST',
+    };
+
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
             state.actionsWrapper.actions
@@ -3200,6 +3226,11 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
+        .where((element) {
+          final method = labelToDeliveryMethod[element];
+          if (method == null) return true;
+          return FlowBuilderSingleton().hasDeliveryMethod(method);
+        })
         .toList();
 
     final showcaseKeys = filteredLabels

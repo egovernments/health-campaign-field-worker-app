@@ -183,6 +183,25 @@ class FlowBuilderSingleton {
   int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
 
   String? get activeDeliveryMethod => _activeDeliveryMethod;
+
+  /// Whether the current project's cycles contain any delivery tagged with
+  /// [method]. Reads from the untouched [_rawProjectType] so the answer
+  /// doesn't shrink when [setActiveDeliveryMethod] has filtered the visible
+  /// view.
+  ///
+  /// Legacy-safe: when no cycle carries a `deliveryMethod` at all (older
+  /// configs that predate method tagging), returns true — callers use this
+  /// to decide whether to hide a home card, and "no tags" should not hide
+  /// anything.
+  bool hasDeliveryMethod(String method) {
+    final cycles = _rawProjectType?.cycles;
+    if (cycles == null || cycles.isEmpty) return true;
+    final anyTagged = cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
+    if (!anyTagged) return true;
+    return cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod == method));
+  }
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
