@@ -45,6 +45,12 @@ class FlowNavigationUtils {
     required FlowModuleConfig config,
   }) async {
     try {
+      // Scope any downstream delivery-method filtering (registry helpers,
+      // wrapper `where` clauses via `singleton.activeDeliveryMethod`) to the
+      // module the user is entering. Non-delivery modules still set this, but
+      // the value simply won't match any delivery.deliveryMethod.
+      FlowBuilderSingleton().setActiveDeliveryMethod(config.schemaKey);
+
       // Set up CRUD service
       CrudBlocSingleton().setData(
         crudService: DigitCrudService(

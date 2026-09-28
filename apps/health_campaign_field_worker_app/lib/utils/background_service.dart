@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_location_tracker/utils/utils.dart'
     as location_tracker_utils;
 import 'package:dio/dio.dart';
@@ -139,6 +140,13 @@ void onStart(ServiceInstance service) async {
       .setTenantId(tenantId: userRequestModel.tenantId!);
   location_tracker_utils.LocationTrackerSingleton().setInitialData(
       projectId: selectedProject.id, loggedInUserUuid: userRequestModel.uuid);
+
+  // Rehydrate FlowBuilderSingleton.projectId for the background isolate. The
+  // main isolate seeds it via setInitialData() at project-select time, but
+  // singletons don't cross isolate boundaries — so userAction (and any other
+  // mapper that keys off projectId) would otherwise silently bail during
+  // background sync.
+  FlowBuilderSingleton().setProjectId(selectedProject.id);
 
   // LocationTrackerService().processLocationData(
   //     interval: 120, createdBy: userRequestModel.uuid, isar: _isar);

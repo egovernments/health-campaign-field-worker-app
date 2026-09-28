@@ -62,6 +62,38 @@ String _localizeFormattedDate(String formatted, DateTime date) {
   return formatted.replaceFirst(english, localized);
 }
 
+/// Returns the deliveries scoped to the currently active flow module
+/// (see [FlowBuilderSingleton.activeDeliveryMethod]).
+///
+/// A single cycle can carry multiple deliveries — one per method
+/// (TRANSITPOST / CLF / HOUSEHOLDSTRATEGY). Consumers that count doses
+/// or evaluate eligibility must only see the deliveries their flow owns.
+///
+/// The filter is a no-op when: the active method isn't set, or none of the
+/// deliveries carry a `deliveryMethod` (older configs). Non-matching but
+/// method-tagged deliveries are dropped even if that yields an empty list —
+/// misconfigured campaigns should surface, not silently show all doses.
+List _filteredDeliveries(List? deliveries) {
+  if (deliveries == null || deliveries.isEmpty) return deliveries ?? const [];
+  final method = FlowBuilderSingleton().activeDeliveryMethod;
+  if (method == null || method.isEmpty) return deliveries;
+  final anyTagged = deliveries.any((d) {
+    try {
+      return (d as dynamic).deliveryMethod != null;
+    } catch (_) {
+      return false;
+    }
+  });
+  if (!anyTagged) return deliveries;
+  return deliveries.where((d) {
+    try {
+      return (d as dynamic).deliveryMethod == method;
+    } catch (_) {
+      return false;
+    }
+  }).toList();
+}
+
 class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
@@ -438,7 +470,7 @@ void initializeFunctionRegistry() {
       for (final cycle in projectType.cycles ?? []) {
         if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
             (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
-          for (final delivery in cycle.deliveries ?? []) {
+          for (final delivery in _filteredDeliveries(cycle.deliveries)) {
             for (final dc in delivery.doseCriteria ?? []) {
               final condition = dc.condition ?? '';
               if (condition.isEmpty) {
@@ -654,8 +686,8 @@ void initializeFunctionRegistry() {
     );
     if (currentCycle == null) return false;
 
-    final deliveries = currentCycle.deliveries as List?;
-    if (deliveries == null || deliveries.isEmpty) return false;
+    final deliveries = _filteredDeliveries(currentCycle.deliveries as List?);
+    if (deliveries.isEmpty) return false;
 
     // ── 3. Build available variables from all entity maps passed ──────
     // Fully generic: extracts every scalar top-level field and every
@@ -884,10 +916,12 @@ void initializeFunctionRegistry() {
         }).toList() ??
         [];
 
-    // If no valid cycle or cycle has no deliveries, return true (nothing to deliver)
+    // If no valid cycle or cycle has no deliveries (for the active flow),
+    // return true (nothing to deliver in this flow).
+    final selectedDeliveries = _filteredDeliveries(selectedCycle?.deliveries);
     if (selectedCycle == null ||
         selectedCycle.id == 0 ||
-        (selectedCycle.deliveries ?? []).isEmpty) {
+        selectedDeliveries.isEmpty) {
       return true;
     }
 
@@ -946,7 +980,7 @@ void initializeFunctionRegistry() {
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
       if (lastDose != null &&
-          lastDose == selectedCycle.deliveries?.length &&
+          lastDose == selectedDeliveries.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||

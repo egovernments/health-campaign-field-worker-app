@@ -32,6 +32,11 @@ class FlowBuilderSingleton {
   BeneficiaryType? _beneficiaryType;
   ProjectTypeModel? _projectType;
   ProjectModel? _selectedProject;
+  // Untouched copies of the campaign-scoped models used as the source of
+  // truth when the active delivery method changes and we need to re-derive
+  // the filtered [_projectType] / [_selectedProject] from scratch.
+  ProjectTypeModel? _rawProjectType;
+  ProjectModel? _rawSelectedProject;
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
@@ -39,6 +44,7 @@ class FlowBuilderSingleton {
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
   int? _beneficiaryIdMinCount;
+  String? _activeDeliveryMethod;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -64,6 +70,14 @@ class FlowBuilderSingleton {
     _maxRadius = maxRadius;
     _projectId = projectId;
     _beneficiaryType = selectedBeneficiaryType;
+    // Store raw as the source of truth. The delivery-method filter is only
+    // applied later, at module tap, by [setActiveDeliveryMethod] — the schema
+    // isn't known at project-selection time. Clearing the stale method here
+    // prevents a prior module's filter from carrying over across project
+    // re-selects.
+    _rawProjectType = projectType;
+    _rawSelectedProject = selectedProject;
+    _activeDeliveryMethod = null;
     _projectType = projectType;
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
@@ -79,8 +93,66 @@ class FlowBuilderSingleton {
     _tenantId = tenantId;
   }
 
+  // Seed just the projectId. Background isolates don't call setInitialData
+  // (they have no user session), but sync mappers still key requests off
+  // projectId — so the app entrypoint rehydrates it from persistent storage.
+  void setProjectId(String projectId) {
+    _projectId = projectId;
+  }
+
   void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
     _templateConfigs = templateConfigs;
+  }
+
+  // Active delivery method for the module the user is currently inside
+  // (CLF / TRANSITPOST / HOUSEHOLDSTRATEGY for polio, or the module schemaKey
+  // otherwise). Setting this re-derives [_projectType] / [_selectedProject]
+  // from their untouched raw copies so a single cycle with multiple
+  // method-specific deliveries is scoped per flow — all downstream reads
+  // (registry helpers, wrapper builder, direct singleton access) see the
+  // same filtered view.
+  void setActiveDeliveryMethod(String? method) {
+    _activeDeliveryMethod = method;
+    _projectType = _filterProjectTypeByActiveMethod(_rawProjectType);
+    _selectedProject = _filterProjectByActiveMethod(_rawSelectedProject);
+  }
+
+  /// Returns [pt] with each cycle's `deliveries` narrowed to the active
+  /// delivery method. Returns the input unchanged when no method is active,
+  /// or when the campaign predates method-tagged deliveries (any cycle where
+  /// no delivery carries `deliveryMethod` is left as-is).
+  ProjectTypeModel? _filterProjectTypeByActiveMethod(ProjectTypeModel? pt) {
+    if (pt == null) return pt;
+    final method = _activeDeliveryMethod;
+    if (method == null || method.isEmpty) return pt;
+    final cycles = pt.cycles;
+    if (cycles == null || cycles.isEmpty) return pt;
+    final filteredCycles = cycles.map((cycle) {
+      final deliveries = cycle.deliveries;
+      if (deliveries == null || deliveries.isEmpty) return cycle;
+      final anyTagged = deliveries.any((d) => d.deliveryMethod != null);
+      if (!anyTagged) return cycle;
+      return cycle.copyWith(
+        deliveries:
+            deliveries.where((d) => d.deliveryMethod == method).toList(),
+      );
+    }).toList();
+    return pt.copyWith(cycles: filteredCycles);
+  }
+
+  /// Returns [project] with `additionalDetails.projectType` filtered by the
+  /// active delivery method. Copy chain preserves untouched siblings.
+  ProjectModel? _filterProjectByActiveMethod(ProjectModel? project) {
+    if (project == null) return project;
+    final method = _activeDeliveryMethod;
+    if (method == null || method.isEmpty) return project;
+    final ad = project.additionalDetails;
+    if (ad == null) return project;
+    final filteredPt = _filterProjectTypeByActiveMethod(ad.projectType);
+    if (identical(filteredPt, ad.projectType)) return project;
+    return project.copyWith(
+      additionalDetails: ad.copyWith(projectType: filteredPt),
+    );
   }
 
   String? get tenantId => _tenantId;
@@ -109,6 +181,8 @@ class FlowBuilderSingleton {
   List<Map<String, dynamic>>? get userRoles => _userRoles;
 
   int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
+
+  String? get activeDeliveryMethod => _activeDeliveryMethod;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -643,7 +717,8 @@ Map<String, dynamic> singletonToMap() {
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
-    "beneficiaryIdMinCount": s.beneficiaryIdMinCount
+    "beneficiaryIdMinCount": s.beneficiaryIdMinCount,
+    "activeDeliveryMethod": s.activeDeliveryMethod,
   };
 }
 

@@ -2445,6 +2445,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
+                // Scope delivery-method filter to this module. For polio the
+                // beneficiary card is the HOUSEHOLDSTRATEGY flow; non-polio
+                // apps use REGISTRATION (no method-tagged deliveries expected).
+                FlowBuilderSingleton().setActiveDeliveryMethod(
+                    isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION');
                 try {
                   if (schemaJsonRaw != null) {
                     final allSchemas =
@@ -2493,7 +2498,10 @@ class _HomePageState extends LocalizedState<HomePage> {
             onPressed: () async {
               context.router.push(CurrentBoundaryRoute(
                 onBoundarySelected: (ctx) => _openModule(() async {
-                  triggerLocalization(module: 'hcm-base-clf-polio');
+                  final moduleName =
+                      'hcm-clf-${ctx.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
 
                   await FlowNavigationUtils.navigateToFlowModule(
                     context: ctx,
@@ -3098,10 +3106,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           if (isPolio) {
             await context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                // DEMO: localization for this module is bundled in
-                // `lib/localization.json` and intercepted in the
-                // LocalizationBloc (`_bundledModules`).
-                triggerLocalization(module: 'hcm-base-transitpost-polio');
+                final moduleName =
+                    'hcm-transitpost-${ctx.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
@@ -3113,7 +3121,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               }),
             ));
           } else {
-            const module = "hcm-transitpost";
+            const module = "hcm-base-transitpost-polio";
             triggerLocalization(module: module);
             context.router.push(const TransitPostWrapperRoute());
           }
