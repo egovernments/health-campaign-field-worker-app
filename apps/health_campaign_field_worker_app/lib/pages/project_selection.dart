@@ -272,9 +272,20 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     final selectedLocale = AppSharedPreferences().getSelectedLocale!;
     final locBloc = context.read<LocalizationBloc>();
 
-    // Build module string for campaign localizations
-    const moduleKey =
-        'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST,STOCK,LQA,INSIDEMONITORING';
+    // Build module string for campaign localizations.
+    //
+    // Must stay in step with the `hcm-<key>-<referenceID>` module names the
+    // home cards pass to `triggerLocalization`. Anything missing here is not
+    // in SQL when home runs `loadLocalization`, so it misses the
+    // `_loadLocale` rehydrate of the flow-builder/forms caches and the module
+    // renders raw codes until its own tap-time fetch lands — that dispatch is
+    // fire-and-forget, so the route paints first. The polio modules
+    // (CLF / TRANSITPOST / HOUSEHOLDSTRATEGY / MISSEDCHILDREN) were absent
+    // and showed exactly that.
+    const moduleKey = 'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,'
+        'CLOSEHOUSEHOLD,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,'
+        'CHECKLIST,STOCK,LQA,INSIDEMONITORING,CLF,TRANSITPOST,'
+        'HOUSEHOLDSTRATEGY,MISSEDCHILDREN';
     final keys = moduleKey.split(',').map((e) => e.trim()).toList();
     final moduleNames =
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');

@@ -32,13 +32,15 @@ final dynamic sampleClfVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "label":
-                      "GV_SESSION_LAST_USED_ON {{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}",
+                  "label": "GV_SESSION_LAST_USED_ON",
+                  "labelArgs": [
+                    "{{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}"
+                  ],
                   "format": "tag",
                   "fieldName": "lastUsedChip",
                   "properties": {
-                    "tagType": "monochrome",
                     "icon": "Schedule",
+                    "tagType": "monochrome",
                     "bottomGap": 12
                   }
                 },
@@ -190,6 +192,52 @@ final dynamic sampleClfVaccinationFlows = {
           "filters": [
             {"field": "additionalFields.fields.sessionType", "equals": "CLF"}
           ],
+          "computed": {
+            "_maxChildTs": {
+              "from": "children",
+              "order": 1,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "_maxActivityTs": {
+              "order": 3,
+              "fallback": 0,
+              "condition": {
+                "if": {
+                  "left": "{{_maxChildTs}}",
+                  "right": "{{_maxReferralTs}}",
+                  "operator": "gt"
+                },
+                "else": "{{_maxReferralTs}}",
+                "then": "{{_maxChildTs}}"
+              }
+            },
+            "_maxReferralTs": {
+              "from": "referrals",
+              "order": 2,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "lastActivityTs": {
+              "order": 4,
+              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
+              "condition": {
+                "if": {
+                  "left": "{{_maxActivityTs}}",
+                  "right": 0,
+                  "operator": "gt"
+                },
+                "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                "then": "{{_maxActivityTs}}"
+              }
+            }
+          },
           "relations": [
             {
               "name": "children",
@@ -255,52 +303,6 @@ final dynamic sampleClfVaccinationFlows = {
           ],
           "rootEntity": "UserActionModel",
           "wrapperName": "ClfSessionsListWrapper",
-          "computed": {
-            "_maxChildTs": {
-              "order": 1,
-              "from": "children",
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "operation": "max",
-                "fallback": 0
-              }
-            },
-            "_maxReferralTs": {
-              "order": 2,
-              "from": "referrals",
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "operation": "max",
-                "fallback": 0
-              }
-            },
-            "_maxActivityTs": {
-              "order": 3,
-              "fallback": 0,
-              "condition": {
-                "if": {
-                  "left": "{{_maxChildTs}}",
-                  "right": "{{_maxReferralTs}}",
-                  "operator": "gt"
-                },
-                "then": "{{_maxChildTs}}",
-                "else": "{{_maxReferralTs}}"
-              }
-            },
-            "lastActivityTs": {
-              "order": 4,
-              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
-              "condition": {
-                "if": {
-                  "left": "{{_maxActivityTs}}",
-                  "right": 0,
-                  "operator": "gt"
-                },
-                "then": "{{_maxActivityTs}}",
-                "else": "{{UserActionModel.clientAuditDetails.createdTime}}"
-              }
-            }
-          },
           "searchConfig": {
             "select": ["userAction"],
             "orderBy": {"field": "clientCreatedTime", "order": "DESC"},
@@ -330,6 +332,72 @@ final dynamic sampleClfVaccinationFlows = {
             "properties": [
               {
                 "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
                 "enums": [
                   {"code": "SCHOOL", "name": "GV_ENUM_SCHOOL"},
                   {"code": "MARKET", "name": "GV_ENUM_MARKET"},
@@ -341,7 +409,7 @@ final dynamic sampleClfVaccinationFlows = {
                   {"code": "OTHER", "name": "GV_ENUM_OTHER"}
                 ],
                 "label": "GV_CLF_LOCATION_TYPE_LABEL",
-                "order": 1,
+                "order": 4,
                 "value": "",
                 "format": "dropdown",
                 "hidden": false,
@@ -350,6 +418,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "clfLocationType",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -366,7 +435,7 @@ final dynamic sampleClfVaccinationFlows = {
               {
                 "type": "string",
                 "label": "GV_LOCATION_NAME_LABEL",
-                "order": 2,
+                "order": 5,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -375,7 +444,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "locationName",
-                "textCapitalization": "words",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -397,12 +466,13 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "textCapitalization": "words"
               },
               {
                 "type": "string",
                 "label": "GV_RESPONSIBLE_PERSON_LABEL",
-                "order": 3,
+                "order": 6,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -432,7 +502,7 @@ final dynamic sampleClfVaccinationFlows = {
               {
                 "type": "string",
                 "label": "GV_CONTACT_NUMBER_LABEL",
-                "order": 4,
+                "order": 7,
                 "value": "",
                 "format": "mobileNumber",
                 "hidden": false,
@@ -444,6 +514,11 @@ final dynamic sampleClfVaccinationFlows = {
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                },
                 "validations": [
                   {
                     "type": "pattern",
@@ -462,58 +537,15 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false,
-                "lengthRange": {
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
-                }
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_DATE_LABEL",
-                "order": 5,
-                "value": "",
-                "format": "date",
-                "hidden": true,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionDate",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": true,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_AREA_LABEL",
-                "order": 6,
-                "value": "",
-                "format": "locality",
-                "hidden": true,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionArea",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
                 "isMultiSelect": false
               },
               {
                 "type": "string",
                 "label": "GV_WORKER_NAME_LABEL",
-                "order": 7,
+                "order": 8,
                 "value": "",
                 "format": "text",
-                "hidden": true,
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -532,10 +564,10 @@ final dynamic sampleClfVaccinationFlows = {
               {
                 "type": "string",
                 "label": "GV_WORKER_PHONE_LABEL",
-                "order": 8,
+                "order": 9,
                 "value": "",
-                "format": "phone",
-                "hidden": true,
+                "format": "mobileNumber",
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -553,32 +585,6 @@ final dynamic sampleClfVaccinationFlows = {
                     "expression": "true==true"
                   }
                 ]
-              },
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 9,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "gpsStart",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "includeInSummary": false,
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
               }
             ],
             "systemDate": null,
@@ -707,87 +713,94 @@ final dynamic sampleClfVaccinationFlows = {
                 "value": "GV_METRIC_VACCINATED_TODAY",
                 "format": "textTemplate",
                 "fieldName": "vaccinatedLabel",
+                "mandatory": true,
                 "properties": {"style": "bodyS", "bottomGap": 4}
               },
               {
                 "type": "template",
                 "format": "row",
-                "fieldName": "vaccinatedSplit",
-                "properties": {"gap": 8},
                 "children": [
                   {
                     "flex": 1,
                     "type": "template",
                     "format": "card",
-                    "fieldName": "femalePill",
-                    "properties": {"type": "secondary", "radius": "radius4"},
                     "children": [
                       {
                         "type": "template",
                         "format": "row",
-                        "fieldName": "femalePillRow",
-                        "properties": {
-                          "gap": 4,
-                          "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
-                          "crossAxisAlignment": "center"
-                        },
                         "children": [
                           {
                             "type": "template",
                             "value": "{{contextData.0.femaleChildren.length}}",
                             "format": "textTemplate",
                             "fieldName": "femaleCount",
-                            "properties": {"style": "headingS", "color": "primary"}
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
                           },
                           {
                             "type": "template",
                             "value": "GV_ENUM_FEMALE",
                             "format": "textTemplate",
                             "fieldName": "femaleLabel",
-                            "properties": {"style": "bodyS", "color": "primary"}
+                            "properties": {"color": "primary", "style": "bodyS"}
                           }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "format": "card",
-                    "fieldName": "malePill",
-                    "properties": {"type": "secondary", "radius": "radius4"},
-                    "children": [
-                      {
-                        "type": "template",
-                        "format": "row",
-                        "fieldName": "malePillRow",
+                        ],
+                        "fieldName": "femalePillRow",
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
                           "mainAxisAlignment": "center",
                           "crossAxisAlignment": "center"
-                        },
+                        }
+                      }
+                    ],
+                    "fieldName": "femalePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
+                  },
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
                         "children": [
                           {
                             "type": "template",
                             "value": "{{contextData.0.malesChildren.length}}",
                             "format": "textTemplate",
                             "fieldName": "maleCount",
-                            "properties": {"style": "headingS", "color": "primary"}
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
                           },
                           {
                             "type": "template",
                             "value": "GV_ENUM_MALE",
                             "format": "textTemplate",
                             "fieldName": "maleLabel",
-                            "properties": {"style": "bodyS", "color": "primary"}
+                            "properties": {"color": "primary", "style": "bodyS"}
                           }
-                        ]
+                        ],
+                        "fieldName": "malePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
                       }
-                    ]
+                    ],
+                    "fieldName": "malePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
                   }
-                ]
+                ],
+                "fieldName": "vaccinatedSplit",
+                "properties": {"gap": 8}
               }
             ],
             "fieldName": "vaccinatedTile",
@@ -871,6 +884,7 @@ final dynamic sampleClfVaccinationFlows = {
               }
             ],
             "fieldName": "addReferral",
+            "mandatory": true,
             "properties": {
               "size": "large",
               "type": "secondary",
@@ -1020,19 +1034,42 @@ final dynamic sampleClfVaccinationFlows = {
             "properties": [
               {
                 "type": "string",
-                "label": "GV_CHILD_NAME_LABEL",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
                 "order": 1,
                 "value": "",
-                "format": "text",
+                "format": "latLng",
                 "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_NAME_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "childName",
-                "textCapitalization": "words",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1054,16 +1091,13 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "textCapitalization": "words"
               },
               {
                 "type": "string",
-                "enums": [
-                  {"code": "MALE", "name": "GV_ENUM_MALE"},
-                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
-                ],
                 "label": "GV_CHILD_SEX_LABEL",
-                "order": 2,
+                "order": 3,
                 "value": "",
                 "format": "select",
                 "hidden": false,
@@ -1076,6 +1110,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
                 "systemDate": false,
                 "validations": [
                   {
@@ -1089,10 +1124,9 @@ final dynamic sampleClfVaccinationFlows = {
               },
               {
                 "type": "dynamic",
-                "enums": [
-                ],
+                "enums": [],
                 "label": "GV_AGE_BAND_LABEL",
-                "order": 3,
+                "order": 4,
                 "value": "",
                 "format": "custom",
                 "hidden": false,
@@ -1115,35 +1149,29 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "includeInSummary": true
               },
               {
                 "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 4,
+                "label": "GV_VACCINE_LABEL",
+                "order": 10,
                 "value": "",
-                "format": "latLng",
-                "hidden": false,
+                "format": "text",
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": true,
-                "required": true,
-                "fieldName": "gpsChild",
-                "mandatory": true,
+                "fieldName": "ageBandVaccine",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "includeInSummary": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "mandatory": true,
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "systemDate": null,
@@ -1183,6 +1211,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": true,
                 "fieldName": "twoDropsAdministered",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1226,7 +1255,7 @@ final dynamic sampleClfVaccinationFlows = {
         "project": "POLIO",
         "summary": true,
         "version": 1,
-        "category": "CLF_SESSIONS",
+        "category": "CLF_VACCINATE",
         "disabled": false,
         "onAction": [
           {
@@ -1315,6 +1344,7 @@ final dynamic sampleClfVaccinationFlows = {
                 }
               ],
               "fieldName": "recordAnother",
+              "mandatory": true,
               "properties": {"type": "primary"}
             },
             "secondaryAction": {
@@ -1334,6 +1364,7 @@ final dynamic sampleClfVaccinationFlows = {
                 }
               ],
               "fieldName": "backToDashboard",
+              "mandatory": true,
               "properties": {"type": "secondary"}
             }
           }
@@ -1344,7 +1375,7 @@ final dynamic sampleClfVaccinationFlows = {
         "footer": [],
         "header": [],
         "heading": "",
-        "category": "CLF_SESSIONS",
+        "category": "CLF_VACCINATE",
         "screenType": "TEMPLATE",
         "description": "",
         "initActions": [],
@@ -1382,6 +1413,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "contactPerson",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1417,9 +1449,15 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "contactNumber",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                },
                 "validations": [
                   {
                     "type": "pattern",
@@ -1438,12 +1476,7 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false,
-                "lengthRange": {
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
-                }
+                "isMultiSelect": false
               },
               {
                 "type": "string",
@@ -1457,6 +1490,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "address",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1487,6 +1521,7 @@ final dynamic sampleClfVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "referralReason",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1518,16 +1553,14 @@ final dynamic sampleClfVaccinationFlows = {
                 "format": "latLng",
                 "hidden": false,
                 "tooltip": "",
-                "helpText": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
                 "infoText": "",
                 "readOnly": true,
                 "required": true,
                 "fieldName": "gpsReferral",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "includeInSummary": false,
                 "validations": [
                   {
                     "type": "required",
@@ -1536,7 +1569,8 @@ final dynamic sampleClfVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -1636,6 +1670,7 @@ final dynamic sampleClfVaccinationFlows = {
                 }
               ],
               "fieldName": "recordAnotherReferral",
+              "mandatory": true,
               "properties": {"type": "primary"}
             },
             "secondaryAction": {
@@ -1655,6 +1690,7 @@ final dynamic sampleClfVaccinationFlows = {
                 }
               ],
               "fieldName": "backToDashboard",
+              "mandatory": true,
               "properties": {"type": "secondary"}
             }
           }
@@ -1685,6 +1721,6 @@ final dynamic sampleClfVaccinationFlows = {
     "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
     "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
     "createdTime": 1789628239245,
-    "lastModifiedTime": 1789993507428
+    "lastModifiedTime": 1790760453587
   }
 };

@@ -284,7 +284,7 @@
   {
     "code": "GV_SESSION_LAST_USED_ON",
     "locale": "",
-    "message": "Last used on",
+    "message": "Last used on {1}",
     "module": "hcm-base-transit_post-polio"
   },
   {
@@ -339,6 +339,12 @@
     "code": "GV_AGE_BAND_LABEL",
     "locale": "",
     "message": "Age group",
+    "module": "hcm-base-transit_post-polio"
+  },
+  {
+    "code": "GV_VACCINE_LABEL",
+    "locale": "",
+    "message": "Vaccine",
     "module": "hcm-base-transit_post-polio"
   },
   {
@@ -926,7 +932,7 @@
   {
     "code": "GV_SESSION_LAST_USED_ON",
     "locale": "",
-    "message": "Last used on",
+    "message": "Last used on {1}",
     "module": "hcm-base-clf-polio"
   },
   {
@@ -981,6 +987,12 @@
     "code": "GV_AGE_BAND_LABEL",
     "locale": "",
     "message": "Age group",
+    "module": "hcm-base-clf-polio"
+  },
+  {
+    "code": "GV_VACCINE_LABEL",
+    "locale": "",
+    "message": "Vaccine",
     "module": "hcm-base-clf-polio"
   },
   {

@@ -5,6 +5,8 @@ import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/checkbox_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -1652,6 +1654,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 right: spacer4,
                 bottom: spacer4,
               ),
+              // Children carry their own vertical rhythm — LabelValueSummary
+              // already pads 16px under its heading and LabelValueItem /
+              // the bool rows pad 4px top and bottom. DigitCard's default
+              // (16px on mobile) stacked on top of those, leaving 36px under
+              // a checklist heading against 20px under the Child Details
+              // heading in the same summary. At 0 both land on 20px, and a
+              // page mixing label/value rows with checkboxes keeps the 8px
+              // row rhythm across the join.
+              spacing: 0,
               children: [
                 LabelValueSummary(
                   padding: EdgeInsets.zero,
@@ -1665,7 +1676,23 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                   items: _renderSummaryLabelValueItems(entry.value),
                 ),
-                ..._renderSummaryBoolRows(entry.value),
+                // Grouped into a single card child on purpose. DigitCard puts
+                // its inter-child spacing (16px on mobile) between every
+                // child, so passing the rows in as siblings spaced
+                // consecutive checkboxes 24px apart — 16px plus each row's
+                // own 4px top/bottom padding — three times the 8px that
+                // LabelValueItem rows get in the same card. One child means
+                // the 16px applies once, above the group.
+                ...(() {
+                  final boolRows = _renderSummaryBoolRows(entry.value);
+                  if (boolRows.isEmpty) return const <Widget>[];
+                  return [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: boolRows,
+                    ),
+                  ];
+                })(),
               ],
             ),
           const SizedBox(height: spacer2),
@@ -1773,10 +1800,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     }).toList();
   }
 
-  /// Renders boolean-checkbox summary rows as standalone `Padding + Row`
-  /// widgets so the check-icon sits at the card's true left edge. Bypassing
-  /// [LabelValueItem] avoids its fixed 24px inter-column spacer that would
-  /// otherwise indent the icon.
+  /// Renders boolean-checkbox summary rows with [DigitCheckbox] so they match
+  /// the checkbox used on the form pages. Kept out of [LabelValueItem], whose
+  /// fixed 24px inter-column spacer would indent the box away from the card's
+  /// left edge.
   List<Widget> _renderSummaryBoolRows(PropertySchema schema) {
     final theme = Theme.of(context);
     final properties = schema.properties ?? {};
@@ -1793,23 +1820,25 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       final rawValue = entry.value.value as bool;
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: spacer1),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              rawValue ? Icons.check_box : Icons.check_box_outline_blank,
-              color: theme.colorTheme.primary.primary2,
-            ),
-            const SizedBox(width: spacer2),
-            Expanded(
-              child: Text(
-                label,
-                style: theme.digitTextTheme(context).bodyL.copyWith(
-                      color: theme.colorTheme.text.primary,
-                    ),
-              ),
-            ),
-          ],
+        child: DigitCheckbox(
+          value: rawValue,
+          label: label,
+          // Display-only: `readOnly` nulls the tap handler so the box can't
+          // be toggled out of sync with the value already captured.
+          readOnly: true,
+          onChanged: (_) {},
+          // Labels are localized sentences already — don't re-case them.
+          capitalizeFirstLetter: false,
+          // `readOnly` feeds DigitCheckboxIcon's `isDisabled`, which would
+          // swap in the disabled grey. Point both the selected and disabled
+          // colors at the accent this summary already used, so a read-only
+          // row still reads as confirmed rather than greyed out.
+          checkboxThemeData:
+              DigitCheckboxThemeData.defaultTheme(context).copyWith(
+            context: context,
+            selectedIconColor: theme.colorTheme.primary.primary2,
+            disabledIconColor: theme.colorTheme.primary.primary2,
+          ),
         ),
       );
     }).toList();

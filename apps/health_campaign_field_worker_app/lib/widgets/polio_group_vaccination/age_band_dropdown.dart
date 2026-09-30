@@ -1,5 +1,4 @@
-import 'dart:collection';
-
+import 'package:collection/collection.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/helper/validation_message_helper.dart';
@@ -24,18 +23,46 @@ class AgeBandDropDown extends LocalizedStatefulWidget {
   final String schemaName;
   final String formControlName;
 
+  /// Companion control written alongside [formControlName] so the summary
+  /// page can show the vaccine the band's dose criteria carries. Optional —
+  /// a config that doesn't declare it is left alone.
+  final String vaccineControlName;
+
   const AgeBandDropDown({
     super.key,
     super.appLocalizations,
     required this.schemaName,
     this.formControlName = 'ageBand',
+    this.vaccineControlName = 'ageBandVaccine',
   });
 
   @override
   State<AgeBandDropDown> createState() => _AgeBandDropDownState();
 }
 
+/// A single derived age band: the persisted [code], the human-readable
+/// [label], and the localized vaccine name(s) from the dose criteria that
+/// produced it.
+class _AgeBand {
+  final String code;
+  final String label;
+  final String vaccines;
+  final int min;
+  final int max;
+
+  const _AgeBand({
+    required this.code,
+    required this.label,
+    required this.vaccines,
+    required this.min,
+    required this.max,
+  });
+}
+
 class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
+  /// Guards the one-shot backfill of the companion controls for a band that
+  /// was already selected before this widget mounted (edit / back-nav).
+  bool _backfilled = false;
   @override
   Widget build(BuildContext context) {
     final pages = context
@@ -84,11 +111,13 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
       walk(pages);
     }
 
-    final derivedItems = _buildAgeBandItems();
+    final bands = _buildAgeBands();
     // Fall back to whatever `enums` the config declared when the campaign
     // isn't tagged with age conditions — keeps older configs working.
-    final items = derivedItems.isNotEmpty
-        ? derivedItems
+    final items = bands.isNotEmpty
+        ? bands
+            .map((b) => DropdownItem(name: b.label, code: b.code))
+            .toList()
         : fallbackEnums
             .map(
               (o) => DropdownItem(
@@ -104,6 +133,22 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) {
         final form = ReactiveForm.of(context) as FormGroup;
+
+        // A band selected on a previous visit only lives in `ageBand`; the
+        // summary reads the companion controls, so seed them once from the
+        // persisted code. Deferred because it dispatches onto FormsBloc.
+        if (!_backfilled) {
+          _backfilled = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            final current = form.control(widget.formControlName).value;
+            if (current == null || current.toString().isEmpty) return;
+            _syncCompanions(
+              form,
+              bands.firstWhereOrNull((b) => b.code == current.toString()),
+            );
+          });
+        }
 
         return LabeledField(
           isRequired: isRequiredFromSchema,
@@ -141,6 +186,11 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
                       value: val.code,
                     ),
                   );
+
+              _syncCompanions(
+                form,
+                bands.firstWhereOrNull((b) => b.code == val.code),
+              );
             },
           ),
         );
@@ -148,7 +198,45 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
     );
   }
 
-  /// Derives ordered, deduplicated age-band [DropdownItem]s from the
+  /// Mirrors the selected band into the companion controls the summary page
+  /// reads. No-ops for controls the config doesn't declare, so this stays
+  /// safe for campaigns that don't want the extra summary rows.
+  void _syncCompanions(FormGroup form, _AgeBand? band) {
+    void write(String name, String? value) {
+      if (!form.contains(name)) return;
+      if (form.control(name).value == value) return;
+      form.control(name).value = value;
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              context: context,
+              schemaKey: widget.schemaName,
+              key: name,
+              value: value,
+            ),
+          );
+    }
+
+    write(widget.vaccineControlName, band?.vaccines);
+  }
+
+  /// Label for a band code.
+  ///
+  /// The code is itself the localization code, so a campaign that adds a
+  /// `0_59_MONTHS` entry gets a translated band in both this dropdown and
+  /// the summary page — the summary translates the persisted value directly
+  /// (`forms_render._renderSummaryLabelValueItems`), so no engine hook is
+  /// needed for the two to agree.
+  ///
+  /// `translate` echoes unknown codes back, so fall through to the English
+  /// composition when the campaign hasn't added the entry. Untranslated
+  /// campaigns keep today's behaviour instead of showing a raw code here.
+  String _bandLabel(String code, int min, int max) {
+    final translated = localizations.translate(code);
+    if (translated != code) return translated;
+    return '$min-$max';
+  }
+
+  /// Derives ordered, deduplicated age bands from the
   /// active cycle's `deliveries[].doseCriteria[].condition` expressions.
   ///
   /// Accepts age on either side of the operator so both authoring styles
@@ -158,7 +246,7 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
   /// condition strings from MDMS still parse. Strict `>`/`<` inflate/
   /// deflate the bound by one so the user-facing range is inclusive
   /// ("0-11 months" for `age >= 0 && age < 12`).
-  List<DropdownItem> _buildAgeBandItems() {
+  List<_AgeBand> _buildAgeBands() {
     final projectType = FlowBuilderSingleton().projectType;
     final cycles = projectType?.cycles;
     if (cycles == null || cycles.isEmpty) return const [];
@@ -176,7 +264,9 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
     final ageLeftMin = RegExp(r'(\d+)(<=?)age');
     final ageLeftMax = RegExp(r'(\d+)(>=?)age');
 
-    final ranges = SplayTreeMap<String, Map<String, int>>();
+    // Keyed by band code so repeated criteria collapse; vaccine names from
+    // every dose criteria sharing a band are merged.
+    final bands = <String, _AgeBand>{};
     for (final delivery in activeCycle.deliveries ?? []) {
       for (final dc in delivery.doseCriteria ?? []) {
         final raw = dc.condition ?? '';
@@ -219,15 +309,43 @@ class _AgeBandDropDownState extends LocalizedState<AgeBandDropDown> {
           }
         }
         if (min == null || max == null || max < min) continue;
-        ranges.putIfAbsent('${min}_$max', () => {'min': min!, 'max': max!});
+
+        final code = '${min} - ${max}';
+        // `dc` is dynamic (the cycle/delivery chain isn't statically typed
+        // here), so collect imperatively into a typed list. A `.map().where()`
+        // chain off a dynamic receiver builds `(dynamic) => dynamic` closures
+        // and `where` throws at runtime for not being `(dynamic) => bool`.
+        final names = <String>[];
+        for (final v in (dc.productVariants as List?) ?? const []) {
+          final raw = (v as dynamic).name;
+          if (raw == null) continue;
+          final translated = localizations.translate(raw.toString());
+          if (translated.isNotEmpty) names.add(translated);
+        }
+
+        final existing = bands[code];
+        final merged = <String>{
+          if (existing != null && existing.vaccines.isNotEmpty)
+            ...existing.vaccines.split(', '),
+          ...names,
+        }.join(', ');
+
+        bands[code] = _AgeBand(
+          code: code,
+          label: _bandLabel(code, min, max),
+          vaccines: merged,
+          min: min,
+          max: max,
+        );
       }
     }
 
-    return ranges.entries
-        .map((e) => DropdownItem(
-              name: '${e.value['min']}-${e.value['max']} months',
-              code: '${e.value['min']}_${e.value['max']}_MONTHS',
-            ))
-        .toList();
+    // Numeric order. The previous SplayTreeMap sorted the `min_max` keys as
+    // strings, which put "5_11" after "12_59".
+    final ordered = bands.values.toList()
+      ..sort((a, b) => a.min != b.min
+          ? a.min.compareTo(b.min)
+          : a.max.compareTo(b.max));
+    return ordered;
   }
 }

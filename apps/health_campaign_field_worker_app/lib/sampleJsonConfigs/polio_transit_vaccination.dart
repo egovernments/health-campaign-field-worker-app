@@ -32,13 +32,15 @@ final dynamic sampleTransitVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "label":
-                      "GV_SESSION_LAST_USED_ON {{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}",
+                  "label": "GV_SESSION_LAST_USED_ON",
+                  "labelArgs": [
+                    "{{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}"
+                  ],
                   "format": "tag",
                   "fieldName": "lastUsedChip",
                   "properties": {
-                    "tagType": "monochrome",
                     "icon": "Schedule",
+                    "tagType": "monochrome",
                     "bottomGap": 12
                   }
                 },
@@ -193,6 +195,52 @@ final dynamic sampleTransitVaccinationFlows = {
               "equals": "TRANSIT"
             }
           ],
+          "computed": {
+            "_maxChildTs": {
+              "from": "children",
+              "order": 1,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "_maxActivityTs": {
+              "order": 3,
+              "fallback": 0,
+              "condition": {
+                "if": {
+                  "left": "{{_maxChildTs}}",
+                  "right": "{{_maxReferralTs}}",
+                  "operator": "gt"
+                },
+                "else": "{{_maxReferralTs}}",
+                "then": "{{_maxChildTs}}"
+              }
+            },
+            "_maxReferralTs": {
+              "from": "referrals",
+              "order": 2,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "lastActivityTs": {
+              "order": 4,
+              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
+              "condition": {
+                "if": {
+                  "left": "{{_maxActivityTs}}",
+                  "right": 0,
+                  "operator": "gt"
+                },
+                "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                "then": "{{_maxActivityTs}}"
+              }
+            }
+          },
           "relations": [
             {
               "name": "children",
@@ -258,52 +306,6 @@ final dynamic sampleTransitVaccinationFlows = {
           ],
           "rootEntity": "UserActionModel",
           "wrapperName": "TransitSessionsListWrapper",
-          "computed": {
-            "_maxChildTs": {
-              "order": 1,
-              "from": "children",
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "operation": "max",
-                "fallback": 0
-              }
-            },
-            "_maxReferralTs": {
-              "order": 2,
-              "from": "referrals",
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "operation": "max",
-                "fallback": 0
-              }
-            },
-            "_maxActivityTs": {
-              "order": 3,
-              "fallback": 0,
-              "condition": {
-                "if": {
-                  "left": "{{_maxChildTs}}",
-                  "right": "{{_maxReferralTs}}",
-                  "operator": "gt"
-                },
-                "then": "{{_maxChildTs}}",
-                "else": "{{_maxReferralTs}}"
-              }
-            },
-            "lastActivityTs": {
-              "order": 4,
-              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
-              "condition": {
-                "if": {
-                  "left": "{{_maxActivityTs}}",
-                  "right": 0,
-                  "operator": "gt"
-                },
-                "then": "{{_maxActivityTs}}",
-                "else": "{{UserActionModel.clientAuditDetails.createdTime}}"
-              }
-            }
-          },
           "searchConfig": {
             "select": ["userAction"],
             "orderBy": {"field": "clientCreatedTime", "order": "DESC"},
@@ -333,6 +335,72 @@ final dynamic sampleTransitVaccinationFlows = {
             "properties": [
               {
                 "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
                 "enums": [
                   {"code": "BUS_STATION", "name": "GV_ENUM_BUS_STATION"},
                   {
@@ -344,7 +412,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   {"code": "OTHER", "name": "GV_ENUM_OTHER"}
                 ],
                 "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
-                "order": 1,
+                "order": 4,
                 "value": "",
                 "format": "dropdown",
                 "hidden": false,
@@ -353,6 +421,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "transitLocationType",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -369,7 +438,7 @@ final dynamic sampleTransitVaccinationFlows = {
               {
                 "type": "string",
                 "label": "GV_TRANSIT_SITE_LANDMARK_LABEL",
-                "order": 2,
+                "order": 5,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -378,7 +447,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "locationName",
-                "textCapitalization": "words",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -400,53 +469,16 @@ final dynamic sampleTransitVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_DATE_LABEL",
-                "order": 3,
-                "value": "",
-                "format": "date",
-                "hidden": true,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionDate",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": true,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_AREA_LABEL",
-                "order": 4,
-                "value": "",
-                "format": "locality",
-                "hidden": true,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionArea",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "textCapitalization": "words"
               },
               {
                 "type": "string",
                 "label": "GV_WORKER_NAME_LABEL",
-                "order": 5,
+                "order": 6,
                 "value": "",
                 "format": "text",
-                "hidden": true,
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -465,10 +497,10 @@ final dynamic sampleTransitVaccinationFlows = {
               {
                 "type": "string",
                 "label": "GV_WORKER_PHONE_LABEL",
-                "order": 6,
+                "order": 7,
                 "value": "",
-                "format": "phone",
-                "hidden": true,
+                "format": "mobileNumber",
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -486,32 +518,6 @@ final dynamic sampleTransitVaccinationFlows = {
                     "expression": "true==true"
                   }
                 ]
-              },
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 7,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "gpsStart",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "includeInSummary": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
               }
             ],
             "systemDate": null,
@@ -645,82 +651,88 @@ final dynamic sampleTransitVaccinationFlows = {
               {
                 "type": "template",
                 "format": "row",
-                "fieldName": "vaccinatedSplit",
-                "properties": {"gap": 8},
                 "children": [
                   {
                     "flex": 1,
                     "type": "template",
                     "format": "card",
-                    "fieldName": "femalePill",
-                    "properties": {"type": "secondary", "radius": "radius4"},
                     "children": [
                       {
                         "type": "template",
                         "format": "row",
-                        "fieldName": "femalePillRow",
-                        "properties": {
-                          "gap": 4,
-                          "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
-                          "crossAxisAlignment": "center"
-                        },
                         "children": [
                           {
                             "type": "template",
                             "value": "{{contextData.0.femaleChildren.length}}",
                             "format": "textTemplate",
                             "fieldName": "femaleCount",
-                            "properties": {"style": "headingM", "color": "primary"}
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingM"
+                            }
                           },
                           {
                             "type": "template",
                             "value": "GV_ENUM_FEMALE",
                             "format": "textTemplate",
                             "fieldName": "femaleLabel",
-                            "properties": {"style": "bodyS", "color": "primary"}
+                            "properties": {"color": "primary", "style": "bodyS"}
                           }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "format": "card",
-                    "fieldName": "malePill",
-                    "properties": {"type": "secondary", "radius": "radius4"},
-                    "children": [
-                      {
-                        "type": "template",
-                        "format": "row",
-                        "fieldName": "malePillRow",
+                        ],
+                        "fieldName": "femalePillRow",
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
                           "mainAxisAlignment": "center",
                           "crossAxisAlignment": "center"
-                        },
+                        }
+                      }
+                    ],
+                    "fieldName": "femalePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
+                  },
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
                         "children": [
                           {
                             "type": "template",
                             "value": "{{contextData.0.malesChildren.length}}",
                             "format": "textTemplate",
                             "fieldName": "maleCount",
-                            "properties": {"style": "headingM", "color": "primary"}
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingM"
+                            }
                           },
                           {
                             "type": "template",
                             "value": "GV_ENUM_MALE",
                             "format": "textTemplate",
                             "fieldName": "maleLabel",
-                            "properties": {"style": "bodyS", "color": "primary"}
+                            "properties": {"color": "primary", "style": "bodyS"}
                           }
-                        ]
+                        ],
+                        "fieldName": "malePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
                       }
-                    ]
+                    ],
+                    "fieldName": "malePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
                   }
-                ]
+                ],
+                "fieldName": "vaccinatedSplit",
+                "properties": {"gap": 8}
               }
             ],
             "fieldName": "vaccinatedTile",
@@ -809,6 +821,7 @@ final dynamic sampleTransitVaccinationFlows = {
               }
             ],
             "fieldName": "addReferral",
+            "mandatory": true,
             "properties": {
               "size": "large",
               "type": "secondary",
@@ -964,19 +977,42 @@ final dynamic sampleTransitVaccinationFlows = {
             "properties": [
               {
                 "type": "string",
-                "label": "GV_CHILD_NAME_LABEL",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
                 "order": 1,
                 "value": "",
-                "format": "text",
+                "format": "latLng",
                 "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_NAME_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "childName",
-                "textCapitalization": "words",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -992,14 +1028,11 @@ final dynamic sampleTransitVaccinationFlows = {
                     "message": "GV_VALIDATION_MAX_200"
                   }
                 ],
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "textCapitalization": "words"
               },
               {
                 "type": "string",
-                "enums": [
-                  {"code": "MALE", "name": "GV_ENUM_MALE"},
-                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
-                ],
                 "label": "GV_CHILD_SEX_LABEL",
                 "order": 2,
                 "value": "",
@@ -1014,6 +1047,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
                 "systemDate": false,
                 "validations": [
                   {
@@ -1027,11 +1061,9 @@ final dynamic sampleTransitVaccinationFlows = {
               },
               {
                 "type": "dynamic",
-                "enums": [
-
-                ],
+                "enums": [],
                 "label": "GV_AGE_BAND_LABEL",
-                "order": 3,
+                "order": 4,
                 "value": "",
                 "format": "custom",
                 "hidden": false,
@@ -1054,24 +1086,52 @@ final dynamic sampleTransitVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "label": "GV_VACCINE_LABEL",
+                "order": 10,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "mandatory": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "ageBandVaccine",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
               },
               {
                 "type": "string",
                 "enums": [
-                  {"code": "ENTERING", "name": "GV_ENUM_ENTERING"},
-                  {"code": "EXITING", "name": "GV_ENUM_EXITING"}
+                  {"code": "CHAD", "name": "GV_ENUM_CHAD"},
+                  {"code": "NIGERIA", "name": "GV_ENUM_NIGERIA"},
+                  {"code": "CAMEROON", "name": "GV_ENUM_CAMEROON"},
+                  {"code": "CAR", "name": "GV_ENUM_CAR"},
+                  {"code": "SUDAN", "name": "GV_ENUM_SUDAN"},
+                  {"code": "NIGER", "name": "GV_ENUM_NIGER"},
+                  {"code": "OTHER", "name": "GV_ENUM_OTHER"}
                 ],
-                "label": "GV_DIRECTION_OF_TRAVEL_LABEL",
+                "label": "GV_NATIONALITY_LABEL",
                 "order": 5,
                 "value": "",
-                "format": "select",
+                "format": "dropdown",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "fieldName": "directionOfTravel",
+                "fieldName": "nationality",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1091,24 +1151,19 @@ final dynamic sampleTransitVaccinationFlows = {
               {
                 "type": "string",
                 "enums": [
-                  {"code": "CHAD", "name": "GV_ENUM_CHAD"},
-                  {"code": "NIGERIA", "name": "GV_ENUM_NIGERIA"},
-                  {"code": "CAMEROON", "name": "GV_ENUM_CAMEROON"},
-                  {"code": "CAR", "name": "GV_ENUM_CAR"},
-                  {"code": "SUDAN", "name": "GV_ENUM_SUDAN"},
-                  {"code": "NIGER", "name": "GV_ENUM_NIGER"},
-                  {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                  {"code": "ENTERING", "name": "GV_ENUM_ENTERING"},
+                  {"code": "EXITING", "name": "GV_ENUM_EXITING"}
                 ],
-                "label": "GV_NATIONALITY_LABEL",
+                "label": "GV_DIRECTION_OF_TRAVEL_LABEL",
                 "order": 6,
                 "value": "",
-                "format": "dropdown",
+                "format": "select",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "fieldName": "nationality",
+                "fieldName": "directionOfTravel",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1188,34 +1243,6 @@ final dynamic sampleTransitVaccinationFlows = {
                     }
                   ]
                 }
-              },
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 9,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "required": true,
-                "fieldName": "gpsChild",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "includeInSummary": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
               }
             ],
             "systemDate": null,
@@ -1298,7 +1325,7 @@ final dynamic sampleTransitVaccinationFlows = {
         "project": "POLIO-SIA",
         "summary": true,
         "version": 1,
-        "category": "TRANSITPOST_SESSIONS",
+        "category": "TRANSITPOST_VACCINATE",
         "disabled": false,
         "onAction": [
           {
@@ -1394,6 +1421,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 }
               ],
               "fieldName": "recordAnother",
+              "mandatory": true,
               "properties": {"type": "primary"}
             },
             "secondaryAction": {
@@ -1413,6 +1441,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 }
               ],
               "fieldName": "backToDashboard",
+              "mandatory": true,
               "properties": {"type": "secondary"}
             }
           }
@@ -1423,7 +1452,7 @@ final dynamic sampleTransitVaccinationFlows = {
         "footer": [],
         "header": [],
         "heading": "",
-        "category": "TRANSITPOST_SESSIONS",
+        "category": "TRANSITPOST_VACCINATE",
         "screenType": "TEMPLATE",
         "description": "",
         "initActions": [],
@@ -1461,6 +1490,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "contactPerson",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1491,9 +1521,15 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "contactNumber",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                },
                 "validations": [
                   {
                     "type": "pattern",
@@ -1512,12 +1548,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false,
-                "lengthRange": {
-                  "maxLength": 10,
-                  "minLength": 10,
-                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
-                }
+                "isMultiSelect": false
               },
               {
                 "type": "string",
@@ -1531,6 +1562,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "address",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1561,6 +1593,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "referralReason",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1592,16 +1625,13 @@ final dynamic sampleTransitVaccinationFlows = {
                 "format": "latLng",
                 "hidden": false,
                 "tooltip": "",
-                "helpText": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
                 "infoText": "",
                 "readOnly": true,
-                "required": true,
                 "fieldName": "gpsReferral",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "includeInSummary": false,
                 "validations": [
                   {
                     "type": "required",
@@ -1610,7 +1640,8 @@ final dynamic sampleTransitVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -1710,6 +1741,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 }
               ],
               "fieldName": "recordAnotherReferral",
+              "mandatory": true,
               "properties": {"type": "primary"}
             },
             "secondaryAction": {
@@ -1729,6 +1761,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 }
               ],
               "fieldName": "backToDashboard",
+              "mandatory": true,
               "properties": {"type": "secondary"}
             }
           }
@@ -1759,6 +1792,6 @@ final dynamic sampleTransitVaccinationFlows = {
     "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
     "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
     "createdTime": 1789645567189,
-    "lastModifiedTime": 1789992316993
+    "lastModifiedTime": 1790683403970
   }
 };
