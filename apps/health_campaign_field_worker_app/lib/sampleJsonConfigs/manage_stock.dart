@@ -434,7 +434,23 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "visible": "{{navigation.receiverId}} != {{fn:getUserFacilityId()}}",
+          "visible":
+              "{{fn:isEmpty(navigation.clientReferenceId)}} == true || {{fn:isEmpty(navigation.productVariantId)}} == true || {{fn:isEmpty(navigation.quantity)}} == true || {{fn:isEmpty(navigation.receiverId)}} == true || {{fn:isEmpty(navigation.senderId)}} == true",
+          "type": "error",
+          "label": "INVENTORY_SCAN_INVALID_PAYLOAD_LABEL",
+          "description": "INVENTORY_SCAN_INVALID_PAYLOAD_DESCRIPTION"
+        },
+        {
+          // Operands are quoted because a null receiverId interpolates to an
+          // empty string, and a bare `&& != CFAC-x` is a syntax error that
+          // makes FormulaParser fail the WHOLE expression — which
+          // ConditionalEvaluator then reports as false. Quoting keeps it a
+          // valid string comparison. The `isEmpty` guard then reports an
+          // absent receiverId as an invalid payload above rather than as a
+          // mismatch.
+          "format": "infoCard",
+          "visible":
+              "{{fn:isEmpty(navigation.receiverId)}} == false && '{{navigation.receiverId}}' != '{{fn:getUserFacilityId()}}'",
           "type": "error",
           "label": "INVENTORY_SCAN_RECEIVER_MISMATCH_LABEL",
           "description": "INVENTORY_SCAN_RECEIVER_MISMATCH_DESCRIPTION"
@@ -448,13 +464,23 @@ final dynamic sampleInventoryFlows = {
           "description": "INVENTORY_SCAN_BOUNDARY_MISMATCH_DESCRIPTION"
         },
         {
+          // Gated on clientReferenceId being present. The initActions search
+          // filters on `additionalFields matches {{navigation.clientReferenceId}}`,
+          // so a null reference degenerates into a match-anything filter and
+          // this card claims "already received" for a payload that was never
+          // a receipt at all.
           "format": "infoCard",
-          "visible": "{{fn:hasResults('StockModel')}} == true",
+          "visible":
+              "{{fn:isEmpty(navigation.clientReferenceId)}} == false && {{fn:hasResults('StockModel')}} == true",
           "type": "warning",
           "label": "INVENTORY_SCAN_ALREADY_RECEIVED_LABEL",
           "description": "INVENTORY_SCAN_ALREADY_RECEIVED_DESCRIPTION"
         },
         {
+          // Hidden for an invalid payload — every row interpolates to empty,
+          // so the card renders as a blank white box under the error.
+          "hidden":
+              "{{fn:isEmpty(navigation.clientReferenceId)}} == true || {{fn:isEmpty(navigation.productVariantId)}} == true || {{fn:isEmpty(navigation.quantity)}} == true || {{fn:isEmpty(navigation.receiverId)}} == true || {{fn:isEmpty(navigation.senderId)}} == true",
           "format": "card",
           "children": [
             {
@@ -490,8 +516,24 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "button",
           "label": "INVENTORY_SCAN_CONFIRM_RECEIVE_LABEL",
-          "hidden":
-              "{{fn:isEmpty(navigation.receiverId)}} == false && {{navigation.receiverId}} != {{fn:getUserFacilityId()}} || {{fn:hasResults('StockModel')}} == true || ({{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isScanBoundaryOutOfScope(navigation.boundaryCode)}} == true)",
+          // The leading group rejects a payload that decoded as JSON but
+          // isn't a dispatch QR. `parseJson` on the scanner only guarantees a
+          // JSON *object*, so an unrelated QR such as `{"a":1}` reaches this
+          // screen with every nav param empty. The mismatch and boundary
+          // clauses are each gated on their own field being present, so none
+          // of them fired, Confirm stayed tappable, and stockScanReceipt —
+          // pure `__context:` passthrough with no validation — persisted a
+          // RECEIVED row with a null product and null quantity.
+          //
+          // The receiverId comparison operands are quoted: a null receiverId
+          // interpolates to an empty string, and a bare `&& != CFAC-x` is a
+          // syntax error that makes FormulaParser fail the ENTIRE expression,
+          // which ConditionalEvaluator then reports as false
+          // (conditional_evaluator.dart:152). That silently discarded every
+          // other clause here, including `hasResults`, which is why the
+          // button stayed live even when the already-received card was shown.
+          "disabled":
+              "({{fn:isEmpty(navigation.clientReferenceId)}} == true || {{fn:isEmpty(navigation.productVariantId)}} == true || {{fn:isEmpty(navigation.quantity)}} == true || {{fn:isEmpty(navigation.receiverId)}} == true || {{fn:isEmpty(navigation.senderId)}} == true) || ({{fn:isEmpty(navigation.receiverId)}} == false && '{{navigation.receiverId}}' != '{{fn:getUserFacilityId()}}') || {{fn:hasResults('StockModel')}} == true || ({{fn:isEmpty(navigation.boundaryCode)}} == false && {{fn:isScanBoundaryOutOfScope(navigation.boundaryCode)}} == true)",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -2076,8 +2118,12 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "actionPopup",
                     "label": "INVENTORY_VIEW_QR_LABEL",
+                    // Quoted so a row with a null transactionType compares as
+                    // a string instead of failing the parse (which
+                    // ConditionalEvaluator reports as false, silently hiding
+                    // the action).
                     "visible":
-                        "{{item.items[0].transactionType}} == DISPATCHED",
+                        "'{{item.items[0].transactionType}}' == 'DISPATCHED'",
                     "properties": {
                       "type": "tertiary",
                       "size": "medium",
