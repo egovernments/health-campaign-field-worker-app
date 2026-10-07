@@ -101,10 +101,17 @@ class ClearStateExecutor extends ActionExecutor {
       final hasRemainingFilters =
           SearchStateManager().hasFiltersForScreen(compositeKey);
       if (hasRemainingFilters) {
+        // Preserve the non-cleared filters in this searchName's bucket and
+        // just re-fire the search. Passing `[]` here wipes the bucket
+        // entirely — including filters added by initActions (e.g. tenantId
+        // on the complaints inbox) — leaving `getAllFilters()` empty and the
+        // list stuck on the prior (or blank) wrapper.
+        final currentFilters =
+            SearchStateManager().getFilters(compositeKey, searchName);
         SearchStateManager().updateFilters(
           compositeKey,
           searchName,
-          [],
+          currentFilters,
           triggerSearch: true,
         );
       } else {

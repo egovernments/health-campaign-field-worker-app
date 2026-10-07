@@ -389,7 +389,38 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
+  // The assigned boundary's own materializedPath, minus its last segment —
+  // i.e. the ancestor chain above it. Null if not found in [tree].
+  String? _ancestorPrefixFor(List<BoundaryModel> tree, String? assignedCode) {
+    if (assignedCode == null) return null;
+    final assigned = tree.firstWhere(
+      (b) => b.code == assignedCode,
+      orElse: () => BoundaryModel(),
+    );
+    final segs = assigned.materializedPath?.split('.');
+    if (segs == null || segs.length <= 1) return null;
+    return segs.sublist(0, segs.length - 1).join('.');
+  }
+
+  // Prefixes every boundary's materializedPath with [prefix], so a scoped
+  // fetch (rooted at the project's assigned boundary) ends up with the
+  // same full root-to-leaf path a full-tree fetch would have produced.
+  List<BoundaryModel> _withAncestorPrefix(
+    List<BoundaryModel> boundaries,
+    String? prefix,
+  ) {
+    if (prefix == null) return boundaries;
+    return boundaries
+        .map((b) => b.copyWith(
+              materializedPath: '$prefix.${b.materializedPath}',
+            ))
+        .toList();
+  }
+
+  FutureOr<void> _loadProjectFacilities(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
     final userObject = await localSecureStore.userRequestModel;
     final assignedBoundaryType = project.address?.boundaryType;
     final assignedBoundaryCode = project.address?.boundary;
@@ -398,16 +429,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     if (assignedBoundaryType != null && assignedBoundaryCode != null) {
       // Derive parent → current → child boundary types from the boundary
       // search API response for the CURRENT hierarchy (multi-hierarchy
-      // safe). We fetch the full hierarchy tree with no `codes` filter;
-      // the remote client's
+      // safe). We fetch the full hierarchy tree with no `codes` filter (or
+      // reuse one already fetched by the caller); the remote client's
       // `_flattenBoundaryMap` computes `materializedPath` and
       // `boundaryNum` root-to-leaf, so once flattened we can locate the
       // assigned code by materializedPath (which is unique) and take
       // parent (boundaryNum-1) and child (boundaryNum+1) types.
       try {
-        final treeRows = await boundaryRemoteRepository.search(
-          BoundarySearchModel(),
-        );
+        final treeRows = prefetchedTree ??
+            await boundaryRemoteRepository.search(
+              BoundarySearchModel(),
+            );
 
         // Locate the assigned row anywhere in the tree by exact code
         // match.
@@ -746,6 +778,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     List<BoundaryModel> boundaries;
+    List<BoundaryModel> fullBoundaryTree = [];
     try {
       try {
         if (context.loggedInUserRoles
@@ -1023,6 +1056,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
+      // Fetched once and reused for: (1) prefixing the scoped boundary
+      // fetch below with the assigned boundary's real ancestor path, and
+      // (2) _loadProjectFacilities' parent/child boundary-type lookup —
+      // avoids sending this (potentially large) full-tree request twice.
+      try {
+        fullBoundaryTree = await boundaryRemoteRepository.search(
+          BoundarySearchModel(),
+        );
+      } catch (e) {
+        debugPrint('full boundary tree fetch failed: $e');
+      }
+      final ancestorPrefix = _ancestorPrefixFor(
+        fullBoundaryTree,
+        event.model.address?.boundary,
+      );
+
       reportSyncProgress('boundary');
       if (rowversionList.firstOrNull?.version != serverVersion ||
           boundaryRefetched) {
@@ -1032,6 +1081,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             codes: event.model.address?.boundary,
           ),
         );
+        boundaries = _withAncestorPrefix(boundaries, ancestorPrefix);
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
@@ -1065,6 +1115,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               codes: event.model.address?.boundary,
             ),
           );
+          boundaries = _withAncestorPrefix(boundaries, ancestorPrefix);
           if (boundaries.isEmpty) {
             emit(
               state.copyWith(
@@ -1106,7 +1157,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Load project facilities after project selection
     try {
       reportSyncProgress('projectFacility');
-      await _loadProjectFacilities(event.model);
+      await _loadProjectFacilities(event.model, prefetchedTree: fullBoundaryTree);
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
