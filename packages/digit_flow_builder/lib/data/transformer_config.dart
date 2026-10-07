@@ -624,9 +624,12 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // The ineligible branch is submitted from the eligibilityChecklist
+            // form, so the captured location lives under that page key. There
+            // is no `address` page in this flow.
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -654,6 +657,9 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -688,9 +694,11 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Location is captured on the unableToDeliver form itself; this
+            // flow has no `address` page and no DeliveryDetails page.
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -722,11 +730,9 @@ final jsonConfig = {
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
             "comment": "unableToDeliver.comment",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
-            "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]",
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
