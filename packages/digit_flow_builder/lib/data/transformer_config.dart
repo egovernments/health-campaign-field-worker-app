@@ -1216,7 +1216,7 @@ final jsonConfig = {
             "pincode": "locationDetails.pincode",
             "type": "locationDetails.typeOfAddress",
             "locality": {
-              "code": "__context:selectedBoundaryCode",
+              "code": "__context:selectedBoundaryHierarchyCode",
               "name": "__context:selectedBoundaryName",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion"
@@ -1231,7 +1231,8 @@ final jsonConfig = {
             "supervisorName": "complaintDetails.supervisorName",
             "supervisorContactNumber":
                 "complaintDetails.supervisorContactNumber ",
-            "otherComplaintDescription": "complaintType.otherReason"
+            "otherComplaintDescription": "complaintType.otherReason",
+            "boundaryCode": "__context:selectedBoundaryHierarchyCode"
           },
           "clientAuditDetails": "__generate:clientAudit"
         }

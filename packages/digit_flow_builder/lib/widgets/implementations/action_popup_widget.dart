@@ -65,17 +65,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
 
         // Show popup if popupConfig is provided
         if (popupConfig != null) {
-          // Execute onOpenAction before showing popup
-          final onOpenActions = popupConfig['onOpenAction'] as List<dynamic>?;
-          if (onOpenActions != null) {
-            for (var raw in onOpenActions) {
-              if (raw is Map<String, dynamic>) {
-                final action = ActionConfig.fromJson(raw);
-                onAction(action);
-              }
-            }
-          }
-
+          _runActions(popupConfig['onOpenAction'], onAction);
           await _showActionPopup(context, popupConfig, onAction, screenKey,
               stateData, item, listIndex, compositeKey, resolved.evalContext);
         }
@@ -228,9 +218,19 @@ class ActionPopupWidget extends ResolvedFlowWidget {
                 )
               : null,
           titleIconAlignment: CrossAxisAlignment.center,
+          // If `onCloseAction` is declared, cross-tap fires it (config must
+          // include CLOSE_POPUP — otherwise a manual pop here plus a
+          // CLOSE_POPUP in the list would double-pop the underlying route).
+          // Otherwise fall back to the original close-only behavior.
           onCrossTap: showCloseButton
               ? () {
-                  Navigator.of(ctx, rootNavigator: true).pop();
+                  final onCloseActions =
+                      popupConfig['onCloseAction'] as List?;
+                  if (onCloseActions == null || onCloseActions.isEmpty) {
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                    return;
+                  }
+                  _runActions(onCloseActions, onAction);
                 }
               : null,
           actionSpacing: spacer2,
@@ -276,6 +276,18 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         );
       },
     );
+  }
+
+  /// Runs a list of raw action-config maps through [onAction]. Silently
+  /// skips null/non-Map entries. Shared by `onOpenAction` (button press) and
+  /// `onCloseAction` (cross-tap).
+  void _runActions(dynamic actions, void Function(ActionConfig) onAction) {
+    if (actions is! List) return;
+    for (final raw in actions) {
+      if (raw is Map<String, dynamic>) {
+        onAction(ActionConfig.fromJson(raw));
+      }
+    }
   }
 
   DigitButtonType _parseButtonType(String? type) {

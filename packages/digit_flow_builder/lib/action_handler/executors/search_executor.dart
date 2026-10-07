@@ -216,14 +216,34 @@ class SearchExecutor extends ActionExecutor {
     final skipAccumulatedFilters =
         data['skipAccumulatedFilters'] as bool? ?? false;
 
-    // Update SearchStateManager with resolved filters (will merge with existing)
+    // Update SearchStateManager with resolved filters.
+    //
+    // Merge by `(key, operation)` on top of the existing bucket rather than
+    // replacing it wholesale. `SearchStateManager.updateFilters` replaces the
+    // whole searchName bucket, which silently drops base-scope filters (e.g.
+    // `tenantId` seeded by initActions) whenever a user-driven SEARCH_EVENT
+    // omits them from its `data`. Symptom (Complaints inbox): after applying
+    // ASSIGN_TO_ME then ASSIGN_TO_ALL, all applyIf's fail, `resolvedFilters`
+    // is empty, and by then `tenantId` was already wiped by the previous
+    // apply — so the follow-up search runs with no scope and returns stale /
+    // wrong results. Merging preserves any key the incoming action does not
+    // re-declare.
     if (!skipAccumulatedFilters &&
         compositeKey != null &&
         resolvedFilters.isNotEmpty) {
+      String dedupKey(Map f) => '${f['key']}::${f['operation'] ?? 'equals'}';
+      final merged = <String, Map<String, dynamic>>{
+        for (final f
+            in SearchStateManager().getFilters(compositeKey, searchName))
+          if (f is Map<String, dynamic> && f['key'] != null) dedupKey(f): f,
+        for (final f in resolvedFilters)
+          if (f['key'] != null) dedupKey(f): f,
+      };
+
       SearchStateManager().updateFilters(
         compositeKey,
         searchName,
-        resolvedFilters,
+        merged.values.toList(),
         triggerSearch: false, // We'll execute search directly below
       );
 
