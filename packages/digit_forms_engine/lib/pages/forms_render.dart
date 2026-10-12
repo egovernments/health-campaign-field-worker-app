@@ -25,6 +25,7 @@ import '../helper/form_builder_helper.dart';
 import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
+import '../utils/gps_warmup.dart';
 import '../utils/screen_protection_manager.dart';
 import '../utils/utils.dart';
 import '../widgets/multi_entity_tab_view.dart';
@@ -60,6 +61,8 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   bool _hasInitializedProtection = false;
   bool _isSubmitting = false;
+  bool _gpsWarmupChecked = false;
+  bool _holdsGpsWarmup = false;
 
   /// GlobalKey to access MultiEntityTabViewState for programmatic tab navigation
   final GlobalKey<MultiEntityTabViewState> _multiEntityTabKey =
@@ -81,7 +84,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   void dispose() {
     // Unregister from protection manager
     ScreenProtectionManager().unregisterPage(_protectionPageId);
+    if (_holdsGpsWarmup) GpsWarmup.instance.release();
     super.dispose();
+  }
+
+  /// Starts high-accuracy GPS as soon as a form with a location field opens,
+  /// so the fix has converged by the time that field is reached. Every page
+  /// route holds it, so it stays on until the whole form is closed.
+  void _warmGpsIfNeeded(SchemaObject schemaObject) {
+    if (_gpsWarmupChecked) return;
+    _gpsWarmupChecked = true;
+    if (GpsWarmup.schemaHasLocationField(schemaObject)) {
+      _holdsGpsWarmup = true;
+      GpsWarmup.instance.acquire();
+    }
   }
 
   /// Update screen protection based on the current page's preventScreenCapture flag
@@ -157,6 +173,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          _warmGpsIfNeeded(schemaObject);
 
           if (widget.isSummary) {
             return _buildSummaryPage(context, schemaObject);
