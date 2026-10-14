@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../localized.dart';
 
 class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
@@ -19,7 +20,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final bool readOnly;
   final int? maxQuantity;
   final List<DeliveryProductVariant>? variants;
-  final void Function(int index, DeliveryProductVariant product)? onProductChanged;
+  final void Function(int index, DeliveryProductVariant product)?
+      onProductChanged;
 
   const ResourceBeneficiaryCard({
     super.key,
@@ -69,48 +71,51 @@ class ResourceBeneficiaryCardState
           ),
         ),
         child: SelectionCard<DeliveryProductVariant>(
-        width: MediaQuery.of(context).size.width * .8,
-        showParentContainer: false,
-        options: widget.variants ?? [],
-        readOnly: widget.readOnly,
-        onSelectionChanged: (selectedOptions) {
-          if (selectedOptions.isNotEmpty) {
-            var selectedOption = selectedOptions.first;
-            widget.form.control('resourceDelivered.${widget.cardIndex}').value =
-                selectedOption;
-            // Update quantity to the new product's default quantity
-            widget.form.control('quantityDistributed.${widget.cardIndex}').value =
-                selectedOption.quantity ?? 0;
-            // Notify parent to update maxQuantity
-            widget.onProductChanged?.call(widget.cardIndex, selectedOption);
-          } else {
-            widget.form.control('resourceDelivered.${widget.cardIndex}').value =
-                null;
-          }
-        },
-        initialSelection: widget.form
-                    .control('resourceDelivered.${widget.cardIndex}')
-                    .value !=
-                null
-            ? [
-                widget.form
-                    .control('resourceDelivered.${widget.cardIndex}')
-                    .value
-              ]
-            : [],
-        valueMapper: (value) {
-          return localizations.translate(
-            value.name,
-          );
-        },
-        allowMultipleSelection: false,
+          width: MediaQuery.of(context).size.width * .8,
+          showParentContainer: false,
+          options: widget.variants ?? [],
+          readOnly: widget.readOnly,
+          onSelectionChanged: (selectedOptions) {
+            if (selectedOptions.isNotEmpty) {
+              var selectedOption = selectedOptions.first;
+              widget.form
+                  .control('resourceDelivered.${widget.cardIndex}')
+                  .value = selectedOption;
+              // Update quantity to the new product's default quantity
+              widget.form
+                  .control('quantityDistributed.${widget.cardIndex}')
+                  .value = selectedOption.quantity ?? 0;
+              // Notify parent to update maxQuantity
+              widget.onProductChanged?.call(widget.cardIndex, selectedOption);
+            } else {
+              widget.form
+                  .control('resourceDelivered.${widget.cardIndex}')
+                  .value = null;
+            }
+          },
+          initialSelection: widget.form
+                      .control('resourceDelivered.${widget.cardIndex}')
+                      .value !=
+                  null
+              ? [
+                  widget.form
+                      .control('resourceDelivered.${widget.cardIndex}')
+                      .value
+                ]
+              : [],
+          valueMapper: (value) {
+            return localizations.translate(
+              value.name,
+            );
+          },
+          allowMultipleSelection: false,
         ),
       ),
       ReactiveWrapperField(
         formControlName: 'quantityDistributed.${widget.cardIndex}',
         builder: (field) => LabeledField(
           label: localizations.translate(
-            i18.common.coreCommonQuantityDistributed,
+            '${i18.common.coreCommonQuantityDistributed}.${context.selectedProjectType!.code!}',
           ),
           capitalizedFirstLetter: false,
           child: DigitNumericFormInput(

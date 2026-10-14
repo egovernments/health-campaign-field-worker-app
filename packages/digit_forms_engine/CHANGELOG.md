@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added the `multiSelectDropdown` field format: renders `MultiSelectDropDown` from the field's `enums` without the config also having to set `isMultiSelect: true`. Selections are stored dot-joined, and the summary page splits and localizes them like other multi-select fields. Composer fields declared as `"type": "array"` already fall back to `string`, so they pick this up.
+
 ## 0.1.2
 
 - Fix multi-select summary rendering: gate the dot-split on the `isMultiSelect` schema flag instead of a regex that only accepted purely alphabetic dot-joined tokens, so enum codes with underscores or digits (e.g. `MOB_VAN`, `HEALTH_WORKER`) now localize instead of being shown raw with dots. Remove the now-unused `isDotSeparatedKey` helper.

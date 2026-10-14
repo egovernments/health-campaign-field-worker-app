@@ -96,8 +96,13 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
             _evaluateCondition(condition, formGroup, navParams);
         evaluated = conditionResult ? truePart : falsePart;
       } else {
-        // Not a ternary — use inner expression directly
-        evaluated = expr;
+        // Not a ternary. A bare `{{name}}` is a reference: resolve it from
+        // navigation params or the form before falling back to treating it
+        // as a literal. This is how a campaign-driven limit reaches the
+        // picker — the engine can't read the project's delivery config
+        // itself, so the caller passes the resolved month count in as a
+        // navigation param (e.g. `{{minAgeMonths}}`).
+        evaluated = _resolveNumericReference(expr, formGroup, navParams) ?? expr;
       }
     }
 
@@ -108,6 +113,28 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final months = totalMonths % 12;
 
     return (years, months);
+  }
+
+  /// Resolves [name] to a number held in navigation params or a form control,
+  /// returned as a string for the caller to parse. Null when it resolves to
+  /// nothing numeric, so the caller can fall back to treating the expression
+  /// as a literal.
+  String? _resolveNumericReference(
+    String name,
+    FormGroup formGroup,
+    Map<String, dynamic>? navParams,
+  ) {
+    dynamic value;
+    if (navParams != null && navParams.containsKey(name)) {
+      value = navParams[name];
+    } else if (formGroup.contains(name)) {
+      value = formGroup.control(name).value;
+    }
+
+    if (value == null) return null;
+    if (value is num) return value.toInt().toString();
+    final text = value.toString().trim();
+    return int.tryParse(text) != null ? text : null;
   }
 
   /// Evaluate a condition variable from form controls or navigation params.

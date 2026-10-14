@@ -433,6 +433,23 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           readOnly: _isReadOnly,
         );
 
+      // Dedicated multi-select dropdown format. Same builder as `dropdown`,
+      // but multi-select is implied by the format so the config does not need
+      // to also set `isMultiSelect: true`. Values are stored dot-joined.
+      case PropertySchemaFormat.multiSelectDropdown:
+        return JsonSchemaDropdownBuilder(
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          enums: widget.schema.enums ?? [],
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          isMultiselect: true,
+          readOnly: _isReadOnly,
+        );
+
       case PropertySchemaFormat.mobileNumber:
         return JsonSchemaStringBuilder(
           form: form,

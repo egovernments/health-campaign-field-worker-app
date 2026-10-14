@@ -202,6 +202,7 @@ final jsonConfig = {
   // "clientReferenceId" mapping against individuals[index].clientReferenceId
   // (see transformer_service.dart:882–916).
   "bulkProjectBeneficiaryFromMembers": {
+    "fallbackModel": "ProjectBeneficiaryModel",
     "models": {
       "ProjectBeneficiaryModel": {
         "listSource": "__context:individuals",
@@ -419,6 +420,7 @@ final jsonConfig = {
     }
   },
   "indirectBulkDelivery": {
+    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
@@ -1725,6 +1727,7 @@ final jsonConfig = {
     }
   },
   "polioStockDetails": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1754,6 +1757,7 @@ final jsonConfig = {
     }
   },
   "polioIssuedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1787,6 +1791,7 @@ final jsonConfig = {
     }
   },
   "polioReturnedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1814,8 +1819,10 @@ final jsonConfig = {
                 "returnedVialDetails.unopenedSpoiltVialsReturned",
             "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
             "totalReturned": "returnedVialDetails.totalReturned",
-            "unusedDiluentsReturned": "returnedVialDetails.unusedDiluentsReturned",
-            "spoiledDiluentsReturned": "returnedVialDetails.spoiledDiluentsReturned",
+            "unusedDiluentsReturned":
+                "returnedVialDetails.unusedDiluentsReturned",
+            "spoiledDiluentsReturned":
+                "returnedVialDetails.spoiledDiluentsReturned",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1847,6 +1854,7 @@ final jsonConfig = {
     }
   },
   "clfSession": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1882,6 +1890,7 @@ final jsonConfig = {
     }
   },
   "transitSession": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1915,6 +1924,7 @@ final jsonConfig = {
     }
   },
   "groupVacChild": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1936,6 +1946,7 @@ final jsonConfig = {
             "childName": "childDetails.childName",
             "childSex": "childDetails.childSex",
             "ageBand": "childDetails.ageBand",
+            "childDob": "childDetails.childDob",
             "directionOfTravel": "childDetails.directionOfTravel",
             "nationality": "childDetails.nationality",
             "opvPrior": "childDetails.opvPrior",
@@ -1949,6 +1960,7 @@ final jsonConfig = {
     }
   },
   "groupVacReferral": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1978,6 +1990,7 @@ final jsonConfig = {
     }
   },
   "lqaClusterData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2015,6 +2028,7 @@ final jsonConfig = {
     }
   },
   "lqaChildData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2057,6 +2071,7 @@ final jsonConfig = {
     }
   },
   "lqaCloseoutData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2086,6 +2101,7 @@ final jsonConfig = {
     }
   },
   "polioInsideHousehold": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
