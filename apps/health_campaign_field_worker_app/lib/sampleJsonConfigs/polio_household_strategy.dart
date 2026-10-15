@@ -815,8 +815,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "type": "template",
                     "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
                     "format": "tag",
+                    // Also shown for Vaccinated Elsewhere: the task keeps its own
+                    // VACCINATED_ELSEWHERE status (not counted in progress), but the
+                    // card shows the same success chip.
                     "visible":
-                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                        "({{fn:isDelivered(item.task.last.status)}}==true || {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==true) && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
@@ -843,7 +846,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
+                        "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false && {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -1094,7 +1097,62 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "secondary",
-                      "bottomGap": 16,
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center"
+                    }
+                  },
+                  {
+                    "type": "template",
+                    "label":
+                        "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
+                    "format": "button",
+                    "visible":
+                        "{{fn:wasAbsentOrRefusedForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                    "onAction": [
+                      {
+                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                        "properties": {
+                          "data": [
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{item.member.0.householdClientReferenceId}}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value": "{{contextData.0.currentRunningCycle}}"
+                            },
+                            {"key": "doseIndex", "value": "1"},
+                            {
+                              "key": "selectedIndividualAgeInMonths",
+                              "value":
+                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                            }
+                          ],
+                          "name": "VACCINATED_ELSEWHERE",
+                          "type": "FORM",
+                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                          "eligibilityParams": [
+                            {
+                              "type": "int",
+                              "navKey": "selectedIndividualAgeInMonths",
+                              "conditionVar": "age"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "fieldName": "revisitVaccinatedElsewhereButton",
+                    "mandatory": true,
+                    "properties": {
+                      "size": "medium",
+                      "type": "secondary",
+                      "topGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -5465,7 +5523,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 0,
               "value": "",
               "format": "custom",
-              "hidden": false,
+              // Hidden, not removed: set to false to be able to show the card again.
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -5524,64 +5583,150 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "includeInSummary": true
             },
+            // {
+            //   "type": "string",
+            //   "label": "UNABLETODELIVER_SITE_NAME_LABEL",
+            //   "order": 2,
+            //   "value": "",
+            //   "format": "text",
+            //   "hidden": true,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "siteName",
+            //   "mandatory": false,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [
+            //     {
+            //       "type": "pattern",
+            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+            //     }
+            //   ],
+            //   "errorMessage":
+            //       "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
+            //   "isMultiSelect": false,
+            //   "additionalFields": true
+            // },
+            // {
+            //   "type": "string",
+            //   "label": "UNABLETODELIVER_REGION_LABEL",
+            //   "order": 3,
+            //   "value": "",
+            //   "format": "text",
+            //   "hidden": true,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "region",
+            //   "mandatory": false,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [
+            //     {
+            //       "type": "pattern",
+            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+            //     }
+            //   ],
+            //   "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
+            //   "isMultiSelect": false,
+            //   "additionalFields": true
+            // },
             {
               "type": "string",
-              "label": "UNABLETODELIVER_SITE_NAME_LABEL",
+              "enums": [
+                {"code": "SCHOOL", "name": "VACCINATED_ELSEWHERE_ENUM_SCHOOL"},
+                {
+                  "code": "MARKETPLACE",
+                  "name": "VACCINATED_ELSEWHERE_ENUM_MARKETPLACE"
+                },
+                {
+                  "code": "HEALTH_FACILITY",
+                  "name": "VACCINATED_ELSEWHERE_ENUM_HEALTH_FACILITY"
+                },
+                {
+                  "code": "TRANSIT_POST",
+                  "name": "VACCINATED_ELSEWHERE_ENUM_TRANSIT_POST"
+                },
+                {"code": "OTHER", "name": "VACCINATED_ELSEWHERE_ENUM_OTHER"}
+              ],
+              "label": "VACCINATED_ELSEWHERE_LOCATION_LABEL",
               "order": 2,
               "value": "",
-              "format": "text",
-              "hidden": true,
-              "isMdms": false,
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "siteName",
-              "mandatory": false,
+              "fieldName": "vaccinationLocation",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": null,
+              // Options come from this MDMS master when the FormConfig is
+              // downloaded (project.dart, enrichFormSchemasWithEnumsForForms).
+              // The enums above are the fallback if the master is empty.
+              "schemaCode": "common-masters.GroupVaccinationLocations",
               "systemDate": false,
               "validations": [
                 {
-                  "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                  "type": "required",
+                  "value": true,
+                  "message": "VACCINATED_ELSEWHERE_LOCATION_REQUIRED"
                 }
               ],
               "errorMessage":
-                  "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
+                  "REGISTRATION_VACCINATED_ELSEWHERE_vaccinationLocation_ERROR",
+              "includeInForm": true,
               "isMultiSelect": false,
-              "additionalFields": true
+              "additionalFields": true,
+              "includeInSummary": true
             },
             {
               "type": "string",
-              "label": "UNABLETODELIVER_REGION_LABEL",
+              "label": "VACCINATED_ELSEWHERE_LOCATION_OTHER_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
-              "hidden": true,
+              "hidden": false,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "region",
+              "fieldName": "vaccinationLocationOther",
               "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-                }
-              ],
-              "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
+              // No "required" rule: "Other" is accepted without a location.
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
               "isMultiSelect": false,
-              "additionalFields": true
+              "additionalFields": true,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition":
+                        "vaccinatedElsewhere.vaccinationLocation=='OTHER'"
+                  }
+                ]
+              }
             }
           ],
           "actionLabel": "VACCINATED_ELSEWHERE_FLOW_ACTION_LABEL",

@@ -12,6 +12,7 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_flow_builder/action_handler/action_executor_registry.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
@@ -22,13 +23,12 @@ import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
@@ -58,13 +58,12 @@ import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_clf_vaccination.dart';
+import '../sampleJsonConfigs/polio_household_strategy.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
-import '../sampleJsonConfigs/polio_transit_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/registration_bednet_flows.dart';
+import '../sampleJsonConfigs/polio_transit_vaccination.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
-import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
@@ -84,17 +83,16 @@ import '../widgets/attendance/custom_row_widget.dart';
 import '../widgets/attendance/face_auth_event_dots_widget.dart';
 import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
-import '../widgets/polio_group_vaccination/age_band_dropdown.dart';
-import 'package:digit_face_verification/digit_face_verification.dart';
-import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
-import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
+import '../widgets/polio_group_vaccination/age_band_dropdown.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
@@ -2342,8 +2340,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                   isPolio ? 'hcm-householdstrategy-${context.selectedProject.referenceID},hcm-beneficiary' : 'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
+                final moduleName = isPolio
+                    ? 'hcm-householdstrategy-${context.selectedProject.referenceID},hcm-beneficiary'
+                    : 'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -2487,12 +2486,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(sampleBednetFlows["flows"]
-                        as List<Map<String, dynamic>>);
+                    FlowRegistry.setConfig(
+                        samplePolioHouseholdStrategyFlows["flows"]
+                            as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleBednetFlows["initialPage"]),
+                          pageName:
+                              samplePolioHouseholdStrategyFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2543,8 +2544,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                   isPolio ? 'hcm-missedchildren-${context.selectedProject.referenceID}' : 'hcm-closehousehold-${context.selectedProject.referenceID}';
+                final moduleName = isPolio
+                    ? 'hcm-missedchildren-${context.selectedProject.referenceID}'
+                    : 'hcm-closehousehold-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -3227,11 +3229,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .where((element) {
-          final method = labelToDeliveryMethod[element];
-          if (method == null) return true;
-          return FlowBuilderSingleton().hasDeliveryMethod(method);
-        })
-        .toList();
+      final method = labelToDeliveryMethod[element];
+      if (method == null) return true;
+      return FlowBuilderSingleton().hasDeliveryMethod(method);
+    }).toList();
 
     final showcaseKeys = filteredLabels
         .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))

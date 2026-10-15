@@ -1634,10 +1634,13 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_SUCCESS",
+          // Not ADMINISTRATION_SUCCESS: the dose is counted where the child
+          // was vaccinated, so this task must not count as a household dose.
+          // "status": "__value:ADMINISTRATION_SUCCESS",
+          "status": "__value:VACCINATED_ELSEWHERE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
-          "resources": "list:TaskResourceModel",
+          // "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -1681,8 +1684,11 @@ final jsonConfig = {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
-            "siteName": "vaccinatedElsewhere.siteName",
-            "region": "vaccinatedElsewhere.region",
+            // "siteName": "vaccinatedElsewhere.siteName",
+            // "region": "vaccinatedElsewhere.region",
+            "vaccinationLocation": "vaccinatedElsewhere.vaccinationLocation",
+            "vaccinationLocationOther":
+                "vaccinatedElsewhere.vaccinationLocationOther",
             "latitude": "vaccinatedElsewhere.latLng[0]",
             "longitude": "vaccinatedElsewhere.latLng[1]",
             "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
@@ -1693,27 +1699,27 @@ final jsonConfig = {
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
-        },
-        "listMappings": {
-          "TaskResourceModel": {
-            "listSource": "vaccinatedElsewhere.resourceCard",
-            "mappings": {
-              "clientReferenceId": "__generate:uuid",
-              "taskId": "taskId",
-              "productVariantId":
-                  "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
-              "quantity":
-                  "vaccinatedElsewhere.resourceCard.quantityDistributed",
-              "isDelivered": "__value:true",
-              "deliveryComment": "vaccinatedElsewhere.deliveryComment",
-              "nonRecoverableError": "error.nonRecoverable",
-              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
-              "tenantId": "__context:tenantId",
-              "rowVersion": "meta.rowVersion",
-              "clientAuditDetails": "__generate:clientAudit",
-              "auditDetails": "__generate:audit",
-            }
-          }
+        // },
+        // "listMappings": {
+        //   "TaskResourceModel": {
+        //     "listSource": "vaccinatedElsewhere.resourceCard",
+        //     "mappings": {
+        //       "clientReferenceId": "__generate:uuid",
+        //       "taskId": "taskId",
+        //       "productVariantId":
+        //           "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
+        //       "quantity":
+        //           "vaccinatedElsewhere.resourceCard.quantityDistributed",
+        //       "isDelivered": "__value:true",
+        //       "deliveryComment": "vaccinatedElsewhere.deliveryComment",
+        //       "nonRecoverableError": "error.nonRecoverable",
+        //       "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+        //       "tenantId": "__context:tenantId",
+        //       "rowVersion": "meta.rowVersion",
+        //       "clientAuditDetails": "__generate:clientAudit",
+        //       "auditDetails": "__generate:audit",
+        //     }
+        //   }
         }
       }
     }

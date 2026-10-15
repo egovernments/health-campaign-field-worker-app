@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -94,6 +94,52 @@ List _filteredDeliveries(List? deliveries) {
   }).toList();
 }
 
+/// Value of [key] in a task's additionalFields.fields, or null.
+dynamic _taskAdditionalField(Map<String, dynamic> task, String key) {
+  final fields = task['additionalFields']?['fields'] as List?;
+  for (final field in fields ?? const []) {
+    if (field is Map && field['key'] == key) return field['value'];
+  }
+  return null;
+}
+
+/// Latest task (by createdTime) recorded for the current running cycle,
+/// or null when there is no running cycle or no task for it.
+Map<String, dynamic>? _latestCurrentCycleTask(dynamic rawTasks) {
+  if (rawTasks is! List || rawTasks.isEmpty) return null;
+
+  final tasks = rawTasks.map((item) {
+    if (item is Map<String, dynamic>) return item;
+    if (item is Map) return Map<String, dynamic>.from(item);
+    try {
+      return (item as dynamic).toMap() as Map<String, dynamic>;
+    } catch (_) {
+      return <String, dynamic>{};
+    }
+  }).toList();
+
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final selectedCycle =
+      FlowBuilderSingleton().projectType?.cycles?.firstWhereOrNull(
+            (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+          );
+  if (selectedCycle == null) return null;
+
+  final currentCycleTasks = tasks.where((task) {
+    final cycleIndex = int.tryParse(
+        _taskAdditionalField(task, 'cycleIndex')?.toString() ?? '');
+    return cycleIndex == selectedCycle.id;
+  }).toList();
+  if (currentCycleTasks.isEmpty) return null;
+
+  currentCycleTasks.sort((a, b) {
+    final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+    final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+    return (bTime as num).compareTo(aTime as num);
+  });
+  return currentCycleTasks.first;
+}
+
 class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
@@ -106,6 +152,7 @@ class TaskStatus {
   static const String administrationFailed = 'ADMINISTRATION_FAILED';
   static const String visited = 'VISITED';
   static const String noActiveCycle = 'NO_ACTIVE_CYCLE';
+  static const String vaccinatedElsewhere = 'VACCINATED_ELSEWHERE';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -977,6 +1024,13 @@ void initializeFunctionRegistry() {
         return true;
       }
 
+      // Vaccinated elsewhere was recorded - nothing left to deliver this cycle.
+      if (lastTaskStatus == TaskStatus.vaccinatedElsewhere &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id) {
+        return true;
+      }
+
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
       if (lastDose != null &&
@@ -1109,6 +1163,11 @@ void initializeFunctionRegistry() {
         final hasRedose = redoseFn.call([args[1]], stateData);
         if (hasRedose == true) return true;
       }
+
+      // Also eligible after vaccinated elsewhere following unable-to-deliver.
+      final elsewhereFn =
+          FunctionRegistry.get('hasVaccinatedElsewhereForCurrentCycle');
+      if (elsewhereFn?.call([args[1]], stateData) == true) return true;
     }
 
     return false;
@@ -2416,6 +2475,29 @@ void initializeFunctionRegistry() {
     } catch (_) {
       return 0;
     }
+  });
+
+  /// True when the latest current-cycle task is Unable To Deliver with
+  /// reason ABSENCE or REFUSED. Drives the "Vaccinated elsewhere" button on
+  /// revisit.
+  FunctionRegistry.register('wasAbsentOrRefusedForCurrentCycle',
+      (args, stateData) {
+    final latest = _latestCurrentCycleTask(args.isNotEmpty ? args.first : null);
+    if (latest == null) return false;
+
+    final status = latest['status']?.toString().toUpperCase();
+    final reason =
+        _taskAdditionalField(latest, 'reason')?.toString().toUpperCase();
+    return status == TaskStatus.administrationFailed &&
+        (reason == 'ABSENCE' || reason == 'REFUSED');
+  });
+
+  /// True when the latest current-cycle task is VACCINATED_ELSEWHERE.
+  FunctionRegistry.register('hasVaccinatedElsewhereForCurrentCycle',
+      (args, stateData) {
+    final latest = _latestCurrentCycleTask(args.isNotEmpty ? args.first : null);
+    return latest?['status']?.toString().toUpperCase() ==
+        TaskStatus.vaccinatedElsewhere;
   });
 }
 
