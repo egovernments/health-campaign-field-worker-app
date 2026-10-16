@@ -1205,9 +1205,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     try {
-      // Trigger silent stock downsync after project facilities are loaded
-      reportSyncProgress('stock');
-      await _silentStockDownSync(event.model);
+      // Trigger silent stock downsync after project facilities are loaded.
+      //
+      // Only stock-handling roles need it. Without this gate every other
+      // role still pays for the two local searches inside the method before
+      // its own `receiverIds.isEmpty` check bails out, and still surfaces a
+      // `stockDownsync` sync error if any of that throws.
+      if (await _handlesStock()) {
+        reportSyncProgress('stock');
+        await _silentStockDownSync(event.model);
+      }
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
@@ -1224,6 +1231,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  /// Whether the logged-in user holds a role that receives dispatched stock.
+  ///
+  /// Gates [_silentStockDownSync] at its call site. Returns false when the
+  /// user can't be read, so an unreadable secure store skips the downsync
+  /// rather than running it for a user whose roles are unknown.
+  Future<bool> _handlesStock() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return false;
+
+    const stockRoles = {
+      RolesType.warehouseManager,
+      RolesType.distributor,
+    };
+
+    final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
+
+    return userObject.roles.any((role) => stockRoleCodes.contains(role.code));
   }
 
   /// Silently downloads dispatched stock from server without UI dialogs.
