@@ -106,6 +106,7 @@ anchor the conformance fixtures:
 | Nested entity field | nested object | `"additionalFields": { ... }` |
 | Generated value | `__generate:` | `uuid`, `audit`, `clientAudit`, `timestamp` |
 | Literal | `__value:` | `__value:ACTIVE`, `__value:DATETIME.NOW` |
+| Value with fallback | `__default:` | `__default:2:householdDetails.memberCount` |
 | Runtime context | `__context:` | `__context:projectId` |
 | Cross-model reference | `__ref:` | `__ref:IndividualModel.clientReferenceId` |
 | Conditional | `__switch:` | `__switch:type:{A:1,B:2}` |

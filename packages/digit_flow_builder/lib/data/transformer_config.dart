@@ -6,7 +6,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -51,7 +51,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           }
@@ -225,7 +225,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -270,7 +270,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "caregiverConsent": "caregiverConsent.consentToParticipate",
             "negativeConsentReason": "caregiverConsent.negativeConsentReason",
             "locality": "__context:selectedBoundaryCode",
