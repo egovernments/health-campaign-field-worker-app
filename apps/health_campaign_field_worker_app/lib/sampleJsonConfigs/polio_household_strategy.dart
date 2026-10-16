@@ -2676,7 +2676,9 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              // "hidden": false,
+              // Synced with MDMS HOUSEHOLDSTRATEGY: scanner is hidden.
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -2730,20 +2732,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "type": "string",
               "enums": [
                 {"code": "YES", "name": "HCM_COMMON_YES"},
-                {"code": "NO", "name": "HCM_COMMON_NO"}
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
-              "label": "HCM_DELIVERY_RECEIVED_OPV_BEFORE_LABEL",
+              "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_VACCINATION",
               "order": 6,
               "value": "",
               "format": "radio",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText":
+                  "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE_VACCINATION",
               "infoText": "",
               "readOnly": false,
               "required": true,
-              "fieldName": "receivedOPVBefore",
+              "fieldName": "zeroDoseDTP",
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
@@ -2756,7 +2760,44 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
-              "errorMessage": "REGISTRATION_DELIVERY_receivedOPVBefore_ERROR",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
+              ],
+              "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_VACCINATION",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "prevRoundDose",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
@@ -3272,10 +3313,106 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               ],
               "required.message": "HCM_VALIDATION_GENDER_REQUIRED"
             },
+            // Synced with MDMS HOUSEHOLDSTRATEGY: zero-dose DTP and previous-round
+            // dose questions, shown for children under 60 months.
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
+              ],
+              "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "zeroDoseDTP",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "calculateAgeInMonths(beneficiaryDetails.dobPicker)>0 && calculateAgeInMonths(beneficiaryDetails.dobPicker)<60"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
+              ],
+              "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "prevRoundDose",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "calculateAgeInMonths(beneficiaryDetails.dobPicker)>0 && calculateAgeInMonths(beneficiaryDetails.dobPicker)<60"
+                  }
+                ]
+              }
+            },
             {
               "type": "string",
               "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
-              "order": 8,
+              // "order": 8,
+              // Synced with MDMS HOUSEHOLDSTRATEGY: after zeroDoseDTP and prevRoundDose.
+              "order": 10,
               "value": "",
               "format": "scanner",
               "hidden": false,
@@ -5965,7 +6102,9 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              // "hidden": false,
+              // Synced with MDMS HOUSEHOLDSTRATEGY: scanner is hidden.
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -6019,20 +6158,21 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "type": "string",
               "enums": [
                 {"code": "YES", "name": "HCM_COMMON_YES"},
-                {"code": "NO", "name": "HCM_COMMON_NO"}
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
-              "label": "HCM_REDOSE_RECEIVED_OPV_BEFORE_LABEL",
+              "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_DOSE",
               "order": 6,
               "value": "",
               "format": "radio",
               "hidden": false,
               "isMdms": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE",
               "infoText": "",
               "readOnly": false,
               "required": true,
-              "fieldName": "receivedOPVBefore",
+              "fieldName": "zeroDoseDTP",
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
@@ -6045,7 +6185,44 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 }
               ],
-              "errorMessage": "REGISTRATION_REDOSE_receivedOPVBefore_ERROR",
+              "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "HCM_COMMON_YES"},
+                {"code": "NO", "name": "HCM_COMMON_NO"},
+                {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
+              ],
+              "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_DOSE",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "prevRoundDose",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
@@ -6135,7 +6312,9 @@ final dynamic samplePolioHouseholdStrategyFlows = {
   ],
   "order": 1,
   "active": true,
-  "project": "CMP-2026-10-01-006860",
+  // "project": "CMP-2026-10-01-006860",
+  // Synced with MDMS HOUSEHOLDSTRATEGY.
+  "project": "POLIO",
   "version": 1,
   "disabled": false,
   "isSelected": true,
