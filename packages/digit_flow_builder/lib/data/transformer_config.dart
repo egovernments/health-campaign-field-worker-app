@@ -868,6 +868,8 @@ final jsonConfig = {
             "reasonForRedose": "RedoseDetails.reasonForRedose",
             "redoseComments": "RedoseDetails.redoseComments",
             "taskType": "__value:REDOSE",
+            // A redose is only given on a revisit.
+            "revisit": "__value:true",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -1681,6 +1683,8 @@ final jsonConfig = {
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "taskType": "__value:VACCINATED_ELSEWHERE",
+            // "true" from the revisit button, "false" from the first visit.
+            "revisit": "__context:isRevisit",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",

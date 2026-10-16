@@ -968,7 +968,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                                       "value":
                                           "{{contextData.0.currentRunningCycle}}"
                                     },
-                                    {"key": "doseIndex", "value": "1"}
+                                    {"key": "doseIndex", "value": "1"},
+                                    {"key": "isRevisit", "value": "false"}
                                   ],
                                   "name": "VACCINATED_ELSEWHERE",
                                   "type": "FORM",
@@ -1132,7 +1133,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                               "key": "selectedIndividualAgeInMonths",
                               "value":
                                   "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            }
+                            },
+                            {"key": "isRevisit", "value": "true"}
                           ],
                           "name": "VACCINATED_ELSEWHERE",
                           "type": "FORM",
@@ -5677,7 +5679,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               // Options come from this MDMS master when the FormConfig is
               // downloaded (project.dart, enrichFormSchemasWithEnumsForForms).
               // The enums above are the fallback if the master is empty.
-              "schemaCode": "common-masters.GroupVaccinationLocations",
+              // "schemaCode": "common-masters.GroupVaccinationLocations",
+              // Options from both masters, merged in this order; a code
+              // repeated in the second master is dropped (mdms_enum_utils.dart).
+              "schemaCode":
+                  "common-masters.GroupVaccinationLocations,common-masters.GroupVaccinationLocationsCLF",
               "systemDate": false,
               "validations": [
                 {
@@ -5751,7 +5757,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
               {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {"key": "isRevisit", "value": "{{navigation.isRevisit}}"}
             ],
             "onError": [
               {

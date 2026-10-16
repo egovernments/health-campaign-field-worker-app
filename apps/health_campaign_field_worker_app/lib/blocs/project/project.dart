@@ -40,6 +40,7 @@ import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
+import '../../utils/mdms_enum_utils.dart';
 import '../../utils/utils.dart';
 import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
@@ -1668,51 +1669,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     await storeSchema(formConfigs);
   }
 
-  void _collectSchemaCodes(dynamic node, Set<String> schemaCodes) {
-    if (node is Map) {
-      final schemaCode = node['schemaCode'];
-      if (schemaCode is String && schemaCode.isNotEmpty) {
-        final parts = schemaCode.split('.');
-        if (parts.length == 2) {
-          schemaCodes.add(schemaCode);
-        }
-      }
-      for (final value in node.values) {
-        _collectSchemaCodes(value, schemaCodes);
-      }
-    } else if (node is List) {
-      for (final item in node) {
-        _collectSchemaCodes(item, schemaCodes);
-      }
-    }
-  }
+  // A schemaCode can name several masters separated by commas; see
+  // utils/mdms_enum_utils.dart.
+  void _collectSchemaCodes(dynamic node, Set<String> schemaCodes) =>
+      collectSchemaCodes(node, schemaCodes);
 
+  // Merges the records of every master named in schemaCode; see
+  // utils/mdms_enum_utils.dart.
   void _applyEnumsToSchemaCodes(
     dynamic node,
     Map<String, List<dynamic>> enumsBySchemaCode,
-  ) {
-    if (node is Map) {
-      final schemaCode = node['schemaCode'];
-      if (schemaCode is String && schemaCode.isNotEmpty) {
-        final enumValues = enumsBySchemaCode[schemaCode];
-        if (enumValues != null && enumValues.isNotEmpty) {
-          node['enums'] = enumValues
-              .map((e) => {
-                    'code': e['code'],
-                    'name': e['name'] ?? e['code'],
-                  })
-              .toList();
-        }
-      }
-      for (final value in node.values) {
-        _applyEnumsToSchemaCodes(value, enumsBySchemaCode);
-      }
-    } else if (node is List) {
-      for (final item in node) {
-        _applyEnumsToSchemaCodes(item, enumsBySchemaCode);
-      }
-    }
-  }
+  ) =>
+      applyEnumsToSchemaCodes(node, enumsBySchemaCode);
 
   Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
     final deviceSwitchReason = await localSecureStore.deviceSwitchReason;

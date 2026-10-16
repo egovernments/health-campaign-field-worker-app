@@ -692,7 +692,8 @@ void main() {
       expect(location['includeInForm'], isTrue);
       expect(location['mandatory'], isTrue);
       expect(location['isMdms'], isTrue);
-      expect(location['schemaCode'], 'common-masters.GroupVaccinationLocations');
+      expect(location['schemaCode'],
+          'common-masters.GroupVaccinationLocations,common-masters.GroupVaccinationLocationsCLF');
       expect(location['order'], greaterThan(veProperty('latLng')!['order']));
       expect(location['label'], 'VACCINATED_ELSEWHERE_LOCATION_LABEL');
       final required = (location['validations'] as List)
@@ -949,6 +950,136 @@ void main() {
             isTrue,
             reason: reason);
       }
+    });
+  });
+
+  // ========================================================================
+  group('Revisit flag on tasks', () {
+    final baseContext = {
+      'projectId': 'project-1',
+      'tenantId': 'mz',
+      'userId': 'user-1',
+      'userUUID': 'user-1',
+      'loggedInUserUuid': 'user-1',
+      'selectedBoundaryCode': 'VILLAGE_1',
+      'ProjectBeneficiaryClientReferenceId': 'pb-1',
+      'cycleIndex': '2',
+      'doseIndex': '1',
+    };
+
+    TaskModel saveWith(String configName, Map<String, dynamic> formValues,
+        Map<String, dynamic> ctx) {
+      final config = jsonConfig[configName] as Map<String, dynamic>;
+      return FormEntityMapper(config: jsonConfig)
+          .mapFormToEntities(
+            formValues: formValues,
+            modelsConfig: config['models'] as Map<String, dynamic>,
+            context: ctx,
+            fallbackFormDataString: config['fallbackModel'] as String?,
+          )
+          .whereType<TaskModel>()
+          .single;
+    }
+
+    String? revisitOf(TaskModel t) => t.additionalFields?.fields
+        .firstWhere((f) => f.key == 'revisit',
+            orElse: () => AdditionalField('revisit', null))
+        .value
+        ?.toString();
+
+    List<Map> navData(String buttonFieldName) => [
+          for (final m in findAll(field(buttonFieldName),
+              (m) => m['name'] == 'VACCINATED_ELSEWHERE' && m['data'] is List))
+            for (final d in m['data'] as List) d as Map,
+        ];
+
+    test('revisit button passes isRevisit = "true"', () {
+      final d = navData('revisitVaccinatedElsewhereButton')
+          .firstWhere((d) => d['key'] == 'isRevisit');
+      expect(d['value'], 'true');
+    });
+
+    test('first-visit button passes isRevisit = "false"', () {
+      final d = navData('vaccinatedElsewhereButton')
+          .firstWhere((d) => d['key'] == 'isRevisit');
+      expect(d['value'], 'false');
+    });
+
+    test('Vaccinated Elsewhere save action forwards isRevisit to the mapping',
+        () {
+      final saveAction = findAll(
+              flows,
+              (m) =>
+                  m['actionType'] == 'FETCH_TRANSFORMER_CONFIG' &&
+                  m['properties']?['configName'] == 'vaccinatedElsewhere')
+          .single;
+      final entry = (saveAction['properties']['data'] as List)
+          .firstWhere((d) => d['key'] == 'isRevisit');
+      expect(entry['value'], '{{navigation.isRevisit}}');
+      // Resolved the way TransformerExecutor resolves it.
+      expect(
+          resolveValue(entry['value'], {
+            'navigation': {'isRevisit': 'true'}
+          }),
+          'true');
+      expect(
+          resolveValue(entry['value'], {
+            'navigation': {'isRevisit': 'false'}
+          }),
+          'false');
+    });
+
+    test('Vaccinated Elsewhere on revisit is saved with revisit = "true"', () {
+      final t = saveWith(
+          'vaccinatedElsewhere',
+          {
+            'vaccinatedElsewhere': {'vaccinationLocation': 'SCHOOL'}
+          },
+          {...baseContext, 'isRevisit': 'true'});
+      expect(t.status, 'VACCINATED_ELSEWHERE');
+      expect(revisitOf(t), 'true');
+    });
+
+    test('Vaccinated Elsewhere on first visit is saved with revisit = "false"',
+        () {
+      final t = saveWith(
+          'vaccinatedElsewhere',
+          {
+            'vaccinatedElsewhere': {'vaccinationLocation': 'SCHOOL'}
+          },
+          {...baseContext, 'isRevisit': 'false'});
+      expect(revisitOf(t), 'false');
+    });
+
+    test('revisit flag does not change how the card reads the task', () {
+      final t = saveWith(
+          'vaccinatedElsewhere',
+          {
+            'vaccinatedElsewhere': {'vaccinationLocation': 'SCHOOL'}
+          },
+          {...baseContext, 'isRevisit': 'true'});
+      expect(card([absent, t]), only(['administrationSuccess']));
+    });
+
+    test('a redose is always saved with revisit = "true"', () {
+      final t = saveWith(
+          'redose',
+          {
+            'RedoseDetails': {'reasonForRedose': 'VOMITED'}
+          },
+          baseContext);
+      expect(t.status, 'VISITED');
+      expect(revisitOf(t), 'true');
+    });
+
+    test('Unable To Deliver has no revisit flag', () {
+      final t = saveWith(
+          'polioUnableToDeliverConfig',
+          {
+            'unableToDeliver': {'reason': 'ABSENCE'}
+          },
+          baseContext);
+      expect(revisitOf(t), isNull);
     });
   });
 }
