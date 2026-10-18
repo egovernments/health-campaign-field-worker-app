@@ -6,27 +6,27 @@ import 'package:digit_forms_engine/widgets/json_schema_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('classifyLocationAccuracy (ODK Collect thresholds)', () {
-    LocationAccuracyLevel classify(double accuracy) =>
-        classifyLocationAccuracy(
+  group('classifyLocationAccuracy', () {
+    LocationAccuracyLevel classify(double accuracy) => classifyLocationAccuracy(
           accuracy,
           accuracyThreshold: kDefaultLocationAccuracyThreshold,
           unacceptableAccuracyThreshold:
               kDefaultUnacceptableLocationAccuracyThreshold,
         );
 
-    test('within threshold + 5 m is improving', () {
-      expect(classify(3), LocationAccuracyLevel.improving);
-      expect(classify(10), LocationAccuracyLevel.improving);
+    test('5 m or less is good', () {
+      expect(classify(3), LocationAccuracyLevel.good);
+      expect(classify(5), LocationAccuracyLevel.good);
     });
 
-    test('above threshold + 5 m is poor', () {
-      expect(classify(10.1), LocationAccuracyLevel.poor);
-      expect(classify(100), LocationAccuracyLevel.poor);
+    test('above 5 m up to 10 m is fair', () {
+      expect(classify(5.1), LocationAccuracyLevel.fair);
+      expect(classify(10), LocationAccuracyLevel.fair);
     });
 
-    test('above unacceptable threshold is unacceptable', () {
-      expect(classify(100.1), LocationAccuracyLevel.unacceptable);
+    test('above 10 m is low', () {
+      expect(classify(10.1), LocationAccuracyLevel.low);
+      expect(classify(150), LocationAccuracyLevel.low);
     });
   });
 
@@ -67,8 +67,7 @@ void main() {
 
     test('detects a location field on a later page', () {
       expect(
-        GpsWarmup.schemaHasLocationField(
-            formWith(PropertySchemaFormat.latLng)),
+        GpsWarmup.schemaHasLocationField(formWith(PropertySchemaFormat.latLng)),
         isTrue,
       );
     });
@@ -113,17 +112,20 @@ void main() {
       expect(hint(accuracy: 14), LocationCaptureHint.openSky);
     });
 
-    test('enough satellites but poor accuracy asks to hold still', () {
+    test('enough satellites but low accuracy asks to hold still', () {
       expect(hint(accuracy: 14, satellites: 9), LocationCaptureHint.holdStill);
     });
 
-    test('close to the threshold says almost there', () {
-      expect(hint(accuracy: 7, satellites: 6),
-          LocationCaptureHint.almostThere);
+    test('fair accuracy says almost there', () {
+      expect(hint(accuracy: 7, satellites: 6), LocationCaptureHint.almostThere);
     });
 
-    test('near the threshold without a satellite fix asks for open sky', () {
+    test('fair accuracy without a satellite fix asks for open sky', () {
       expect(hint(accuracy: 8, satellites: 2), LocationCaptureHint.openSky);
+    });
+
+    test('good accuracy needs no hint', () {
+      expect(hint(accuracy: 4, satellites: 2), LocationCaptureHint.none);
     });
   });
 }

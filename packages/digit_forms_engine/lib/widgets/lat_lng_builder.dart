@@ -1,10 +1,10 @@
 part of 'json_schema_builder.dart';
 
-/// Defaults mirror ODK Collect (ActivityGeoDataRequester): a point is
-/// auto-saved once accuracy reaches 5 m, and readings worse than 100 m are
-/// flagged as unacceptable.
+/// Accuracy at or below [kDefaultLocationAccuracyThreshold] is good (best);
+/// at or below [kDefaultUnacceptableLocationAccuracyThreshold] is fair and can
+/// be saved; anything worse is low accuracy and cannot be saved.
 const double kDefaultLocationAccuracyThreshold = 5;
-const double kDefaultUnacceptableLocationAccuracyThreshold = 100;
+const double kDefaultUnacceptableLocationAccuracyThreshold = 10;
 
 /// Validation rule types used to override the thresholds per field, e.g.
 /// `{"type": "accuracyThreshold", "value": 10}`. The validator builder
@@ -13,20 +13,19 @@ const String kAccuracyThresholdRule = 'accuracyThreshold';
 const String kUnacceptableAccuracyThresholdRule =
     'unacceptableAccuracyThreshold';
 
-enum LocationAccuracyLevel { improving, poor, unacceptable }
+enum LocationAccuracyLevel { good, fair, low }
 
-/// Port of ODK Collect's FindLocationViewModel.currentAccuracy.
 @visibleForTesting
 LocationAccuracyLevel classifyLocationAccuracy(
   double accuracy, {
   required double accuracyThreshold,
   required double unacceptableAccuracyThreshold,
 }) {
-  if (accuracy > unacceptableAccuracyThreshold) {
-    return LocationAccuracyLevel.unacceptable;
+  if (accuracy <= accuracyThreshold) return LocationAccuracyLevel.good;
+  if (accuracy <= unacceptableAccuracyThreshold) {
+    return LocationAccuracyLevel.fair;
   }
-  if (accuracy > accuracyThreshold + 5) return LocationAccuracyLevel.poor;
-  return LocationAccuracyLevel.improving;
+  return LocationAccuracyLevel.low;
 }
 
 /// Seconds of capture before the dialog starts suggesting what to do.
@@ -35,9 +34,15 @@ const int kLocationHintDelaySeconds = 30;
 /// A real GNSS fix needs at least 4 satellites.
 const int kMinFixSatellites = 4;
 
-enum LocationCaptureHint { none, checkLocation, openSky, holdStill, almostThere }
+enum LocationCaptureHint {
+  none,
+  checkLocation,
+  openSky,
+  holdStill,
+  almostThere
+}
 
-/// Field-worker guidance shown when capture is slow to reach the threshold.
+/// Field-worker guidance shown when capture is slow to reach good accuracy.
 /// [satellites] is null when the device doesn't report it (e.g. iOS); open
 /// sky is then the most useful advice.
 @visibleForTesting
@@ -52,21 +57,20 @@ LocationCaptureHint locationCaptureHint({
     return LocationCaptureHint.none;
   }
   if (accuracy == null) return LocationCaptureHint.checkLocation;
-  // Close to the threshold but too few satellites: a Wi-Fi/network fix that
-  // only open sky will improve.
-  if (satellites != null && satellites < kMinFixSatellites) {
-    return LocationCaptureHint.openSky;
-  }
 
   final level = classifyLocationAccuracy(
     accuracy,
     accuracyThreshold: accuracyThreshold,
     unacceptableAccuracyThreshold: unacceptableAccuracyThreshold,
   );
-  if (level == LocationAccuracyLevel.improving) {
+  if (level == LocationAccuracyLevel.good) return LocationCaptureHint.none;
+  // Too few satellites: a Wi-Fi/network fix that only open sky will improve.
+  if (satellites == null || satellites < kMinFixSatellites) {
+    return LocationCaptureHint.openSky;
+  }
+  if (level == LocationAccuracyLevel.fair) {
     return LocationCaptureHint.almostThere;
   }
-  if (satellites == null) return LocationCaptureHint.openSky;
   return LocationCaptureHint.holdStill;
 }
 
@@ -149,15 +153,11 @@ class _CaptureProgress {
   /// it (see [_gnssSatellitesChannel]), in which case the line is hidden.
   final int? satellites;
 
-  /// Satellites used per constellation (e.g. GPS, Galileo, NavIC).
-  final Map<String, int>? satelliteSystems;
-
   const _CaptureProgress({
     this.latLng,
     this.accuracy,
     this.elapsedSeconds = 0,
     this.satellites,
-    this.satelliteSystems,
   });
 
   bool get hasReading => latLng != null;
@@ -167,21 +167,19 @@ class _CaptureProgress {
     double? accuracy,
     int? elapsedSeconds,
     int? satellites,
-    Map<String, int>? satelliteSystems,
   }) =>
       _CaptureProgress(
         latLng: latLng ?? this.latLng,
         accuracy: accuracy ?? this.accuracy,
         elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
         satellites: satellites ?? this.satellites,
-        satelliteSystems: satelliteSystems ?? this.satelliteSystems,
       );
 }
 
-/// Follows ODK Collect's geopoint flow: keep listening to location updates,
-/// show live accuracy/status/elapsed time, auto-save the first reading within
-/// [accuracyThreshold], and let the user save the current reading early or
-/// cancel.
+/// Keeps listening to location updates while the capture dialog shows live
+/// accuracy, status, elapsed time and satellites. Save is enabled once the
+/// reading is within [unacceptableAccuracyThreshold]; fields that aren't
+/// required can also be cancelled.
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
   double? _accuracy;
@@ -265,16 +263,8 @@ class _LatLngBuilderStatefulWrapperState
     _satelliteSub = _gnssSatellitesChannel.receiveBroadcastStream().listen(
       (event) {
         if (event is! Map || event['used'] is! int) return;
-        final systems = event['systems'];
-        _progress.value = _progress.value.copyWith(
-          satellites: event['used'] as int,
-          satelliteSystems: systems is Map
-              ? {
-                  for (final e in systems.entries)
-                    if (e.value is int) e.key.toString(): e.value as int
-                }
-              : const {},
-        );
+        _progress.value =
+            _progress.value.copyWith(satellites: event['used'] as int);
       },
       onError: (_) {},
     );
@@ -307,11 +297,6 @@ class _LatLngBuilderStatefulWrapperState
       latLng: state.latLngString,
       accuracy: state.accuracy,
     );
-
-    final accuracy = state.accuracy;
-    if (accuracy != null && accuracy <= widget.accuracyThreshold) {
-      _acceptCurrentReading();
-    }
   }
 
   void _acceptCurrentReading() {
@@ -326,10 +311,20 @@ class _LatLngBuilderStatefulWrapperState
     });
 
     // Append accuracy to the "lat, lng" string
-    widget.form.control(widget.formControlName).value =
-        reading.accuracy != null
-            ? '${reading.latLng},${reading.accuracy}'
-            : reading.latLng;
+    widget.form.control(widget.formControlName).value = reading.accuracy != null
+        ? '${reading.latLng},${reading.accuracy}'
+        : reading.latLng;
+
+    final loc = FormLocalization.of(context);
+    final accuracy = reading.accuracy;
+    Toast.showToast(
+      context,
+      message: accuracy == null
+          ? _t(loc, 'LOCATION_SAVED', 'Location saved')
+          : _t(loc, 'LOCATION_SAVED_WITH_ACCURACY', 'Location saved ({})',
+              _formatAccuracy(loc, accuracy)),
+      type: ToastType.success,
+    );
   }
 
   /// Translates [key], falling back to [fallback] when the key is missing
@@ -343,23 +338,13 @@ class _LatLngBuilderStatefulWrapperState
   String _formatMeters(FormLocalization loc, double meters) =>
       '${meters.toStringAsFixed(2)} ${loc.translate('CORE_COMMON_METERS')}';
 
-  /// "12 (GPS 4 · Galileo 3 · BeiDou 3 · NavIC 2)", largest system first.
-  String _formatSatellites(_CaptureProgress progress) {
-    final systems = (progress.satelliteSystems ?? const {}).entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    if (systems.isEmpty) return '${progress.satellites}';
-    final breakdown = systems.map((e) => '${e.key} ${e.value}').join(' · ');
-    return '${progress.satellites} ($breakdown)';
-  }
-
   String _formatElapsed(int seconds) {
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
     final secs = (seconds % 60).toString().padLeft(2, '0');
     return '$minutes:$secs';
   }
 
-  /// ODK-style accuracy: up to two decimals, trailing zeros dropped
-  /// ("5.82 m", "19.8 m", "5 m").
+  /// Up to two decimals, trailing zeros dropped ("5 m", "7.5 m").
   String _formatAccuracy(FormLocalization loc, double meters) {
     final value = meters
         .toStringAsFixed(2)
@@ -368,12 +353,55 @@ class _LatLngBuilderStatefulWrapperState
     return _t(loc, 'LOCATION_ACCURACY_M', '{} m', value);
   }
 
-  /// Laid out like ODK Collect's GeoPointDialogFragment: a coloured header
-  /// (title, large current accuracy, status, strength bar), then threshold,
-  /// elapsed time and satellites, with Cancel/Save at the bottom right. The
-  /// header turns red for unacceptable accuracy, as in ODK.
+  /// Save rule with the save threshold in bold, e.g. "You can save once
+  /// accuracy is **10 m or less**; 5 m or less is best."
+  TextSpan _saveRuleSpan(FormLocalization loc, TextStyle boldStyle) {
+    final template = _t(loc, 'LOCATION_CAPTURE_SAVE_RULE',
+            'You can save once accuracy is {save}; {best} or less is best.')
+        .replaceAll('{best}', _formatAccuracy(loc, widget.accuracyThreshold));
+    final save = _t(loc, 'LOCATION_ACCURACY_OR_LESS', '{} or less',
+        _formatAccuracy(loc, widget.unacceptableAccuracyThreshold));
+    final parts = template.split('{save}');
+    return TextSpan(children: [
+      TextSpan(text: parts.first),
+      for (final rest in parts.skip(1)) ...[
+        TextSpan(text: save, style: boldStyle),
+        TextSpan(text: rest),
+      ],
+    ]);
+  }
+
+  String? _hintText(FormLocalization loc, _CaptureProgress progress) {
+    switch (locationCaptureHint(
+      elapsedSeconds: progress.elapsedSeconds,
+      accuracy: progress.accuracy,
+      satellites: progress.satellites,
+      accuracyThreshold: widget.accuracyThreshold,
+      unacceptableAccuracyThreshold: widget.unacceptableAccuracyThreshold,
+    )) {
+      case LocationCaptureHint.none:
+        return null;
+      case LocationCaptureHint.checkLocation:
+        return _t(loc, 'LOCATION_HINT_CHECK_LOCATION',
+            'Still no location. Check that location is turned on, then move to an open area.');
+      case LocationCaptureHint.openSky:
+        return _t(loc, 'LOCATION_HINT_OPEN_SKY',
+            'Move to an open area with a clear view of the sky, away from buildings and trees.');
+      case LocationCaptureHint.holdStill:
+        return _t(loc, 'LOCATION_HINT_HOLD_STILL',
+            "Hold the phone up, keep still, and don't cover the top of the phone.");
+      case LocationCaptureHint.almostThere:
+        return _t(
+            loc, 'LOCATION_HINT_ALMOST_THERE', 'Almost there. Keep still.');
+    }
+  }
+
+  /// Title and save rule, then a reading card with a pulsing pin, the current
+  /// accuracy and a status chip coloured by level (low → fair → good), elapsed
+  /// time and satellites, and Save (enabled once accuracy is fair or good).
   void _showCaptureDialog() {
     final loc = FormLocalization.of(context);
+    final isRequired = widget.isRequired ?? false;
 
     showDialog<void>(
       context: context,
@@ -382,252 +410,295 @@ class _LatLngBuilderStatefulWrapperState
         _dialogContext = dialogContext;
         final theme = Theme.of(dialogContext);
         final textTheme = theme.digitTextTheme(dialogContext);
+        final colors = theme.colorTheme;
+        final mutedStyle =
+            textTheme.bodyS.copyWith(color: colors.text.secondary);
 
         return PopScope(
           canPop: false,
-          child: ValueListenableBuilder<_CaptureProgress>(
-            valueListenable: _progress,
-            builder: (context, progress, _) {
-              final accuracy = progress.accuracy;
-              final level = accuracy == null
-                  ? null
-                  : classifyLocationAccuracy(
-                      accuracy,
-                      accuracyThreshold: widget.accuracyThreshold,
-                      unacceptableAccuracyThreshold:
-                          widget.unacceptableAccuracyThreshold,
-                    );
+          child: Dialog(
+            backgroundColor: colors.paper.primary,
+            insetPadding: const EdgeInsets.symmetric(
+                horizontal: spacer5, vertical: spacer6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(spacer3),
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(spacer4),
+              child: ValueListenableBuilder<_CaptureProgress>(
+                valueListenable: _progress,
+                builder: (context, progress, _) {
+                  final accuracy = progress.accuracy;
+                  final level = accuracy == null
+                      ? null
+                      : classifyLocationAccuracy(
+                          accuracy,
+                          accuracyThreshold: widget.accuracyThreshold,
+                          unacceptableAccuracyThreshold:
+                              widget.unacceptableAccuracyThreshold,
+                        );
+                  final canSave = progress.hasReading &&
+                      level != null &&
+                      level != LocationAccuracyLevel.low;
+                  final hint = _hintText(loc, progress);
 
-              final String? hint;
-              switch (locationCaptureHint(
-                elapsedSeconds: progress.elapsedSeconds,
-                accuracy: accuracy,
-                satellites: progress.satellites,
-                accuracyThreshold: widget.accuracyThreshold,
-                unacceptableAccuracyThreshold:
-                    widget.unacceptableAccuracyThreshold,
-              )) {
-                case LocationCaptureHint.none:
-                  hint = null;
-                  break;
-                case LocationCaptureHint.checkLocation:
-                  hint = _t(loc, 'LOCATION_HINT_CHECK_LOCATION',
-                      'Still no location. Check that location is turned on, then move to an open area.');
-                  break;
-                case LocationCaptureHint.openSky:
-                  hint = _t(loc, 'LOCATION_HINT_OPEN_SKY',
-                      'Move to an open area with a clear view of the sky, away from buildings and trees.');
-                  break;
-                case LocationCaptureHint.holdStill:
-                  hint = _t(loc, 'LOCATION_HINT_HOLD_STILL',
-                      "Hold the phone up, keep still, and don't cover the top of the phone.");
-                  break;
-                case LocationCaptureHint.almostThere:
-                  hint = _t(loc, 'LOCATION_HINT_ALMOST_THERE',
-                      'Almost there. Keep still.');
-                  break;
-              }
+                  final Color color;
+                  final Color softColor;
+                  final IconData? statusIcon;
+                  final String status;
+                  switch (level) {
+                    case null:
+                      color = colors.text.secondary;
+                      softColor = colors.generic.background;
+                      statusIcon = null;
+                      status = _t(loc, 'LOCATION_SEARCHING', 'Searching…');
+                      break;
+                    case LocationAccuracyLevel.low:
+                      color = colors.alert.error;
+                      softColor = colors.alert.errorBg;
+                      statusIcon = Icons.error;
+                      status = _t(loc, 'LOCATION_ACCURACY_LOW', 'Low accuracy');
+                      break;
+                    case LocationAccuracyLevel.fair:
+                      color = colors.alert.warning;
+                      softColor = colors.alert.warningBg;
+                      statusIcon = Icons.contrast;
+                      status =
+                          _t(loc, 'LOCATION_ACCURACY_FAIR', 'Fair accuracy');
+                      break;
+                    case LocationAccuracyLevel.good:
+                      color = colors.alert.success;
+                      softColor = colors.alert.successBg;
+                      statusIcon = Icons.check_circle;
+                      status =
+                          _t(loc, 'LOCATION_ACCURACY_GOOD', 'Good accuracy');
+                      break;
+                  }
 
-              // Status text and strength bar values follow ODK's
-              // AccuracyProgressView (20 % while waiting for a first fix).
-              final String status;
-              final double strength;
-              switch (level) {
-                case null:
-                  status = _t(loc, 'LOCATION_WAITING_FOR_FIX',
-                      'Trying to get location. Please wait.');
-                  strength = 0.2;
-                  break;
-                case LocationAccuracyLevel.unacceptable:
-                  status = _t(loc, 'LOCATION_ACCURACY_UNACCEPTABLE',
-                      'Unacceptable accuracy. Please wait.');
-                  strength = 0.4;
-                  break;
-                case LocationAccuracyLevel.poor:
-                  status = _t(loc, 'LOCATION_ACCURACY_POOR',
-                      'Poor accuracy. Please wait.');
-                  strength = 0.6;
-                  break;
-                case LocationAccuracyLevel.improving:
-                  status = _t(loc, 'LOCATION_ACCURACY_IMPROVING',
-                      'Improving accuracy. Please wait.');
-                  strength = 0.8;
-                  break;
-              }
-
-              final unacceptable = level == LocationAccuracyLevel.unacceptable;
-              final headerColor = unacceptable
-                  ? theme.colorTheme.alert.error
-                  : theme.colorTheme.primary.primary2;
-              final onHeader = theme.colorTheme.paper.primary;
-              final bodyStyle = textTheme.bodyS
-                  .copyWith(color: theme.colorTheme.text.primary);
-
-              return Dialog(
-                clipBehavior: Clip.antiAlias,
-                backgroundColor: theme.colorTheme.paper.primary,
-                insetPadding: const EdgeInsets.symmetric(
-                    horizontal: spacer6, vertical: spacer6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(spacer6),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Text(
+                        _t(loc, 'CAPTURING_LOCATION', 'Capturing location'),
+                        style: textTheme.headingL
+                            .copyWith(color: colors.primary.primary2),
+                      ),
+                      const SizedBox(height: spacer1),
+                      Text.rich(
+                        TextSpan(children: [
+                          TextSpan(
+                            text: isRequired
+                                ? _t(loc, 'LOCATION_CAPTURE_REQUIRED',
+                                    'Location is required for this form, so please wait while we capture it.')
+                                : _t(loc, 'LOCATION_CAPTURE_WAIT',
+                                    'Please wait while we capture your location.'),
+                          ),
+                          const TextSpan(text: ' '),
+                          _saveRuleSpan(
+                            loc,
+                            TextStyle(
+                              color: colors.text.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ]),
+                        style: mutedStyle,
+                      ),
+                      const SizedBox(height: spacer3),
                       Container(
-                        color: headerColor,
-                        padding: const EdgeInsets.fromLTRB(
-                            spacer4, spacer4, spacer4, spacer6),
-                        child: Semantics(
-                          liveRegion: true,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                loc.translate('CAPTURING_LOCATION').toUpperCase(),
-                                style: textTheme.captionS.copyWith(
-                                  color: onHeader,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                              const SizedBox(height: spacer4),
-                              Text(
-                                accuracy == null
-                                    ? '--'
-                                    : _formatAccuracy(loc, accuracy),
-                                textAlign: TextAlign.center,
-                                style: textTheme.headingXl.copyWith(
-                                  color: onHeader,
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(height: spacer1),
-                              Text(
-                                status,
-                                textAlign: TextAlign.center,
-                                style: textTheme.bodyL.copyWith(color: onHeader),
-                              ),
-                              const SizedBox(height: spacer2),
-                              Center(
-                                child: SizedBox(
-                                  width: 240,
-                                  child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(spacer2),
-                                    child: TweenAnimationBuilder<double>(
-                                      tween: Tween(end: strength),
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      builder: (context, value, _) =>
-                                          LinearProgressIndicator(
-                                        value: value,
-                                        minHeight: spacer4,
-                                        color: onHeader,
-                                        backgroundColor:
-                                            onHeader.withOpacity(0.3),
+                        padding: const EdgeInsets.all(spacer3),
+                        decoration: BoxDecoration(
+                          color: colors.paper.secondary,
+                          border: Border.all(color: colors.generic.divider),
+                          borderRadius: BorderRadius.circular(spacer2),
+                        ),
+                        child: Column(
+                          children: [
+                            _PulsingPin(color: color),
+                            const SizedBox(height: spacer1),
+                            Semantics(
+                              liveRegion: true,
+                              label: accuracy == null
+                                  ? status
+                                  : '$status, ${_formatAccuracy(loc, accuracy)}',
+                              excludeSemantics: true,
+                              child: Column(
+                                children: [
+                                  Text.rich(
+                                    TextSpan(children: [
+                                      TextSpan(
+                                        text: accuracy == null
+                                            ? '--'
+                                            : accuracy.toStringAsFixed(1),
                                       ),
+                                      TextSpan(
+                                        text:
+                                            ' ${_t(loc, 'LOCATION_UNIT_M', 'm')}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ]),
+                                    style: textTheme.headingL.copyWith(
+                                      color: color,
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1,
+                                      fontFeatures: const [
+                                        FontFeature.tabularFigures()
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            spacer4, spacer4, spacer4, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (hint != null) ...[
-                              Semantics(
-                                liveRegion: true,
-                                child: Container(
-                                  padding: const EdgeInsets.all(spacer2),
-                                  decoration: BoxDecoration(
-                                    color: theme.colorTheme.alert.infoBg,
-                                    borderRadius:
-                                        BorderRadius.circular(spacer1),
+                                  const SizedBox(height: spacer2),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: softColor,
+                                      borderRadius: BorderRadius.circular(999),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (statusIcon != null) ...[
+                                          Icon(statusIcon,
+                                              size: 14, color: color),
+                                          const SizedBox(width: spacer1),
+                                        ],
+                                        Text(
+                                          status,
+                                          style: textTheme.captionS.copyWith(
+                                            color: color,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.lightbulb_outline,
-                                        size: spacer5,
-                                        color: theme.colorTheme.alert.info,
-                                      ),
-                                      const SizedBox(width: spacer2),
-                                      Expanded(
-                                        child: Text(hint, style: bodyStyle),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                ],
                               ),
-                              const SizedBox(height: spacer3),
-                            ],
-                            Text(
-                              _t(loc, 'LOCATION_POINT_WILL_BE_SAVED',
-                                  'Point will be saved at {}',
-                                  _formatAccuracy(
-                                      loc, widget.accuracyThreshold)),
-                              style: bodyStyle,
                             ),
                             const SizedBox(height: spacer2),
-                            Text(
-                              _t(loc, 'LOCATION_TIME_ELAPSED',
-                                  'Time elapsed: {}',
-                                  _formatElapsed(progress.elapsedSeconds)),
-                              style: bodyStyle,
-                            ),
-                            if (progress.satellites != null) ...[
-                              const SizedBox(height: spacer2),
-                              Text(
-                                _t(loc, 'LOCATION_SATELLITES',
-                                    'Satellites: {}',
-                                    _formatSatellites(progress)),
-                                style: bodyStyle,
+                            DefaultTextStyle.merge(
+                              style: textTheme.captionS.copyWith(
+                                color: colors.text.secondary,
+                                fontSize: 12,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures()
+                                ],
                               ),
-                            ],
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Semantics(
+                                    label: _t(
+                                        loc,
+                                        'LOCATION_TIME_ELAPSED',
+                                        'Time elapsed: {}',
+                                        _formatElapsed(
+                                            progress.elapsedSeconds)),
+                                    excludeSemantics: true,
+                                    child: Row(children: [
+                                      Icon(Icons.schedule,
+                                          size: 14,
+                                          color: colors.text.secondary),
+                                      const SizedBox(width: spacer1),
+                                      Text(_formatElapsed(
+                                          progress.elapsedSeconds)),
+                                    ]),
+                                  ),
+                                  if (progress.satellites != null) ...[
+                                    Container(
+                                      width: 1,
+                                      height: 14,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: spacer4),
+                                      color: colors.generic.inputBorder,
+                                    ),
+                                    Icon(Icons.satellite_alt,
+                                        size: 14, color: colors.text.secondary),
+                                    const SizedBox(width: spacer1),
+                                    Text(_t(
+                                        loc,
+                                        'LOCATION_SATELLITES_COUNT',
+                                        '{} satellites',
+                                        '${progress.satellites}')),
+                                  ],
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(spacer4),
-                        child: Wrap(
-                          alignment: WrapAlignment.end,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: spacer2,
-                          runSpacing: spacer2,
-                          children: [
-                            DigitButton(
-                              label:
-                                  _t(loc, 'LOCATION_CANCEL_CAPTURE', 'Cancel'),
-                              onPressed: _stopCapture,
-                              type: DigitButtonType.tertiary,
-                              size: DigitButtonSize.large,
+                      if (hint != null) ...[
+                        const SizedBox(height: spacer3),
+                        Semantics(
+                          liveRegion: true,
+                          child: Container(
+                            padding: const EdgeInsets.all(spacer2),
+                            decoration: BoxDecoration(
+                              color: colors.alert.infoBg,
+                              borderRadius: BorderRadius.circular(spacer1),
                             ),
-                            DigitButton(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.lightbulb_outline,
+                                  size: spacer5,
+                                  color: colors.alert.info,
+                                ),
+                                const SizedBox(width: spacer2),
+                                Expanded(
+                                  child: Text(
+                                    hint,
+                                    style: textTheme.bodyS
+                                        .copyWith(color: colors.text.primary),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: spacer4),
+                      Row(
+                        children: [
+                          if (!isRequired) ...[
+                            Expanded(
+                              child: DigitButton(
+                                label: _t(
+                                    loc, 'LOCATION_CANCEL_CAPTURE', 'Cancel'),
+                                onPressed: _stopCapture,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            ),
+                            const SizedBox(width: spacer2),
+                          ],
+                          Expanded(
+                            child: DigitButton(
                               label: _t(loc, 'LOCATION_SAVE_POINT', 'Save'),
-                              isDisabled: !progress.hasReading,
+                              isDisabled: !canSave,
                               onPressed: _acceptCurrentReading,
                               type: DigitButtonType.primary,
                               size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           ),
         );
       },
@@ -710,6 +781,75 @@ class _LatLngBuilderStatefulWrapperState
           },
         );
       }),
+    );
+  }
+}
+
+/// Location pin with two rings pinging outwards, half a cycle apart, in the
+/// current accuracy colour. Slowed down when the platform asks for reduced
+/// motion.
+class _PulsingPin extends StatefulWidget {
+  final Color color;
+
+  const _PulsingPin({required this.color});
+
+  @override
+  State<_PulsingPin> createState() => _PulsingPinState();
+}
+
+class _PulsingPinState extends State<_PulsingPin>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    _controller
+      ..duration = Duration(seconds: reduceMotion ? 5 : 2)
+      ..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Widget _ring(double t) {
+    final progress = Curves.easeOut.transform(t);
+    return Transform.scale(
+      scale: 0.4 + 0.7 * progress,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: widget.color.withOpacity(0.35 * (1 - progress)),
+        ),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: 52,
+        height: 52,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) => Stack(
+            alignment: Alignment.center,
+            children: [
+              _ring(_controller.value),
+              _ring((_controller.value + 0.5) % 1),
+              child!,
+            ],
+          ),
+          child: Icon(Icons.location_on, size: 30, color: widget.color),
+        ),
+      ),
     );
   }
 }
