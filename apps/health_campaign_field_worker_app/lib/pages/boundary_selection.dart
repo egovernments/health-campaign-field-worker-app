@@ -29,6 +29,7 @@ import '../utils/runtime_hierarchy.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
 @RoutePage()
@@ -68,6 +69,16 @@ class _BoundarySelectionPageState
   /// raw strings on the picker. We track what's already fetched here so
   /// each drill only pulls the delta.
   final Set<String> _fetchedBoundaryCodes = <String>{};
+
+  // Keys used by the Logout button in this page's header and its
+  // confirmation popup. This page only loads the codes it lists, so these
+  // must be included or they show as raw keys.
+  static final List<String> _logoutLocalizationCodes = [
+    i18.common.coreCommonLogout,
+    i18.common.logoutConfirmationHeading,
+    i18.common.logoutConfirmationDescription,
+    i18.common.coreCommonCancel,
+  ];
   Future<void>? _pendingBoundaryLocFetch;
 
   @override
@@ -78,7 +89,8 @@ class _BoundarySelectionPageState
       i18.common.coreCommonContinue,
       i18.common.coreCommonSubmit,
       i18.common.maxBoundarySelectionReached,
-      i18.common.chooseBoundaries
+      i18.common.chooseBoundaries,
+      ..._logoutLocalizationCodes,
     ]);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
@@ -285,6 +297,7 @@ class _BoundarySelectionPageState
                             i18.common.coreCommonSubmit,
                             i18.common.maxBoundarySelectionReached,
                             i18.common.chooseBoundaries,
+                            ..._logoutLocalizationCodes,
                           ];
 
                           LocalizationParams().setCode(combinedCodes);
@@ -818,6 +831,10 @@ class _BoundarySelectionPageState
                                     ),
                                   ]),
                             ),
+                            header: const BackNavigationHelpHeaderWidget(
+                              showBackNavigation: false,
+                              showLogoutCTA: true,
+                            ),
                             slivers: [
                               SliverToBoxAdapter(
                                 child: DigitCard(
@@ -1259,8 +1276,12 @@ class _BoundarySelectionPageState
     final parentIndex = labelList.indexOf(parentLabel);
     if (state.boundaryList.isNotEmpty) {
       leastLevelBoundaries = (state.boundaryList.map((e) => e.code!).toList());
-      LocalizationParams()
-          .setCode(state.boundaryList.map((e) => e.code!).toList());
+      // LocalizationParams()
+      //     .setCode(state.boundaryList.map((e) => e.code!).toList());
+      LocalizationParams().setCode([
+        ...state.boundaryList.map((e) => e.code!),
+        ..._logoutLocalizationCodes,
+      ]);
     }
     for (int i = parentIndex + 1; i < labelList.length; i++) {
       final label = labelList[i];
@@ -1296,6 +1317,7 @@ class _BoundarySelectionPageState
         i18.common.coreCommonSubmit,
         i18.common.maxBoundarySelectionReached,
         i18.common.chooseBoundaries,
+        ..._logoutLocalizationCodes,
       ];
 
       LocalizationParams().setCode(combinedCodes);
