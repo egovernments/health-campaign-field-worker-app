@@ -4545,7 +4545,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   "value": true,
                   "message": "HCM_VALIDATION_REQUIRED_FIELD"
                 },
-                {"type": "captureTimeout", "value": 20}
+                {"type": "captureTimeout", "value": 60}
               ],
               "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
               "isMultiSelect": false,
