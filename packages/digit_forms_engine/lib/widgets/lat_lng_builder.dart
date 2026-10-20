@@ -13,6 +13,45 @@ const String kAccuracyThresholdRule = 'accuracyThreshold';
 const String kUnacceptableAccuracyThresholdRule =
     'unacceptableAccuracyThreshold';
 
+/// Validation rule closing the capture dialog after `value` seconds, set from
+/// the campaign config, e.g. `{"type": "captureTimeout", "value": 60}`. Without
+/// it the dialog stays open until the reading is saved.
+const String kCaptureTimeoutRule = 'captureTimeout';
+
+/// Whether a recaptured reading with [candidate] accuracy should replace the
+/// saved one with [saved] accuracy. A smaller radius is more accurate, so an
+/// earlier, more accurate reading is kept. A reading without accuracy only
+/// replaces one that has none either.
+@visibleForTesting
+bool shouldReplaceSavedReading({
+  required double? saved,
+  required double? candidate,
+}) {
+  if (saved == null) return true;
+  if (candidate == null) return false;
+  return candidate <= saved;
+}
+
+/// Location fields whose capture dialog timed out with no location saved,
+/// per form. The page CTA listens to [of] and stays disabled while its form
+/// has any, until a location is saved.
+class LocationCaptureTimeouts {
+  LocationCaptureTimeouts._();
+
+  static final Expando<ValueNotifier<Set<String>>> _byForm = Expando();
+
+  static ValueNotifier<Set<String>> of(FormGroup form) =>
+      _byForm[form] ??= ValueNotifier(const <String>{});
+
+  static void set(FormGroup form, String formControlName, bool timedOut) {
+    final notifier = of(form);
+    if (notifier.value.contains(formControlName) == timedOut) return;
+    notifier.value = timedOut
+        ? {...notifier.value, formControlName}
+        : ({...notifier.value}..remove(formControlName));
+  }
+}
+
 enum LocationAccuracyLevel { good, fair, low }
 
 @visibleForTesting
@@ -111,8 +150,16 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       unacceptableAccuracyThreshold: _thresholdFromRules(
               validations, kUnacceptableAccuracyThresholdRule) ??
           kDefaultUnacceptableLocationAccuracyThreshold,
+      captureTimeout: _captureTimeoutFromRules(validations),
     );
   }
+}
+
+Duration? _captureTimeoutFromRules(List<ValidationRule>? rules) {
+  final seconds = _thresholdFromRules(rules, kCaptureTimeoutRule);
+  return seconds == null
+      ? null
+      : Duration(milliseconds: (seconds * 1000).round());
 }
 
 class _LatLngBuilderStatefulWrapper extends StatefulWidget {
@@ -126,6 +173,9 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final double accuracyThreshold;
   final double unacceptableAccuracyThreshold;
 
+  /// Closes the capture dialog after this long; null keeps it open.
+  final Duration? captureTimeout;
+
   const _LatLngBuilderStatefulWrapper({
     required this.form,
     required this.formControlName,
@@ -133,6 +183,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
     required this.readOnly,
     required this.accuracyThreshold,
     required this.unacceptableAccuracyThreshold,
+    this.captureTimeout,
     this.helpText,
     this.isRequired,
     this.tooltipText,
@@ -196,6 +247,7 @@ class _LatLngBuilderStatefulWrapperState
       EventChannel('digit_forms_engine/gnss_satellites');
   BuildContext? _dialogContext;
   Timer? _elapsedTimer;
+  Timer? _timeoutTimer;
   final ValueNotifier<_CaptureProgress> _progress =
       ValueNotifier(const _CaptureProgress());
 
@@ -224,6 +276,13 @@ class _LatLngBuilderStatefulWrapperState
     _satelliteSub?.cancel();
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
+    _timeoutTimer?.cancel();
+    // A field hidden after timing out no longer blocks the CTA. Deferred so
+    // the page isn't rebuilt while the tree is being torn down.
+    final form = widget.form;
+    final formControlName = widget.formControlName;
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => LocationCaptureTimeouts.set(form, formControlName, false));
     _progress.dispose();
     super.dispose();
   }
@@ -240,6 +299,9 @@ class _LatLngBuilderStatefulWrapperState
         elapsedSeconds: DateTime.now().difference(startedAt).inSeconds,
       );
     });
+    _timeoutTimer?.cancel();
+    final timeout = widget.captureTimeout;
+    _timeoutTimer = timeout == null ? null : Timer(timeout, _onCaptureTimeout);
 
     _showCaptureDialog();
     context.read<LocationBloc>().add(const LoadLocationEvent());
@@ -277,6 +339,8 @@ class _LatLngBuilderStatefulWrapperState
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
     _elapsedTimer = null;
+    _timeoutTimer?.cancel();
+    _timeoutTimer = null;
 
     final dialogContext = _dialogContext;
     _dialogContext = null;
@@ -299,11 +363,56 @@ class _LatLngBuilderStatefulWrapperState
     );
   }
 
+  /// The configured time ran out: close the dialog and stay on the page,
+  /// keeping any saved location. With none, the page CTA is disabled until a
+  /// recapture (refresh icon) saves one. Nothing is auto-saved.
+  void _onCaptureTimeout() {
+    if (!mounted || !_isCapturing) return;
+    _stopCapture();
+
+    final hasLocation = _latLngValue != null;
+    if (!hasLocation) {
+      LocationCaptureTimeouts.set(widget.form, widget.formControlName, true);
+    }
+    setState(() {});
+
+    final loc = FormLocalization.of(context);
+    Toast.showToast(
+      context,
+      message: hasLocation
+          ? _t(loc, 'LOCATION_CAPTURE_TIMED_OUT_KEPT',
+              'Time ran out. The earlier location is kept.')
+          : _t(loc, 'LOCATION_CAPTURE_TIMED_OUT',
+              'Time ran out before the location was saved. Tap refresh to try again.'),
+      type: hasLocation ? ToastType.warning : ToastType.error,
+    );
+  }
+
   void _acceptCurrentReading() {
     final reading = _progress.value;
     if (!_isCapturing || !reading.hasReading) return;
 
     _stopCapture();
+    LocationCaptureTimeouts.set(widget.form, widget.formControlName, false);
+
+    final loc = FormLocalization.of(context);
+
+    // On a recapture, keep the earlier reading if it is more accurate.
+    final savedAccuracy = _accuracy;
+    if (_latLngValue != null &&
+        !shouldReplaceSavedReading(
+            saved: savedAccuracy, candidate: reading.accuracy)) {
+      Toast.showToast(
+        context,
+        message: _t(
+            loc,
+            'LOCATION_KEPT_MORE_ACCURATE',
+            'Kept the earlier location ({}), it is more accurate.',
+            _formatAccuracy(loc, savedAccuracy!)),
+        type: ToastType.info,
+      );
+      return;
+    }
 
     setState(() {
       _latLngValue = reading.latLng;
@@ -315,7 +424,6 @@ class _LatLngBuilderStatefulWrapperState
         ? '${reading.latLng},${reading.accuracy}'
         : reading.latLng;
 
-    final loc = FormLocalization.of(context);
     final accuracy = reading.accuracy;
     Toast.showToast(
       context,
@@ -342,6 +450,15 @@ class _LatLngBuilderStatefulWrapperState
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
     final secs = (seconds % 60).toString().padLeft(2, '0');
     return '$minutes:$secs';
+  }
+
+  /// Elapsed time, with the configured limit when there is one ("00:12 / 01:00").
+  String _elapsedText(_CaptureProgress progress) {
+    final elapsed = _formatElapsed(progress.elapsedSeconds);
+    final timeout = widget.captureTimeout;
+    return timeout == null
+        ? elapsed
+        : '$elapsed / ${_formatElapsed(timeout.inSeconds)}';
   }
 
   /// Up to two decimals, trailing zeros dropped ("5 m", "7.5 m").
@@ -598,16 +715,14 @@ class _LatLngBuilderStatefulWrapperState
                                         loc,
                                         'LOCATION_TIME_ELAPSED',
                                         'Time elapsed: {}',
-                                        _formatElapsed(
-                                            progress.elapsedSeconds)),
+                                        _elapsedText(progress)),
                                     excludeSemantics: true,
                                     child: Row(children: [
                                       Icon(Icons.schedule,
                                           size: 14,
                                           color: colors.text.secondary),
                                       const SizedBox(width: spacer1),
-                                      Text(_formatElapsed(
-                                          progress.elapsedSeconds)),
+                                      Text(_elapsedText(progress)),
                                     ]),
                                   ),
                                   if (progress.satellites != null) ...[
