@@ -13,6 +13,33 @@ const String kAccuracyThresholdRule = 'accuracyThreshold';
 const String kUnacceptableAccuracyThresholdRule =
     'unacceptableAccuracyThreshold';
 
+/// Validation rule that closes the capture dialog after `value` seconds, e.g.
+/// `{"type": "captureTimeout", "value": 120}`. When it runs out, the most
+/// accurate reading so far is saved, whatever its accuracy. Without the rule
+/// the dialog stays open until the reading is saved.
+const String kCaptureTimeoutRule = 'captureTimeout';
+
+@visibleForTesting
+Duration? captureTimeoutFromRules(List<ValidationRule>? rules) {
+  final seconds = _thresholdFromRules(rules, kCaptureTimeoutRule);
+  return seconds == null
+      ? null
+      : Duration(milliseconds: (seconds * 1000).round());
+}
+
+/// Whether a reading with [candidate] accuracy should replace one with
+/// [saved] accuracy. A smaller radius is more accurate. A reading without
+/// accuracy only replaces one that has none either.
+@visibleForTesting
+bool shouldReplaceSavedReading({
+  required double? saved,
+  required double? candidate,
+}) {
+  if (saved == null) return true;
+  if (candidate == null) return false;
+  return candidate <= saved;
+}
+
 enum LocationAccuracyLevel { good, fair, low }
 
 @visibleForTesting
@@ -111,6 +138,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       unacceptableAccuracyThreshold: _thresholdFromRules(
               validations, kUnacceptableAccuracyThresholdRule) ??
           kDefaultUnacceptableLocationAccuracyThreshold,
+      captureTimeout: captureTimeoutFromRules(validations),
     );
   }
 }
@@ -126,6 +154,10 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final double accuracyThreshold;
   final double unacceptableAccuracyThreshold;
 
+  /// Saves the best reading and closes the capture dialog after this long;
+  /// null keeps it open.
+  final Duration? captureTimeout;
+
   const _LatLngBuilderStatefulWrapper({
     required this.form,
     required this.formControlName,
@@ -133,6 +165,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
     required this.readOnly,
     required this.accuracyThreshold,
     required this.unacceptableAccuracyThreshold,
+    this.captureTimeout,
     this.helpText,
     this.isRequired,
     this.tooltipText,
@@ -179,7 +212,8 @@ class _CaptureProgress {
 /// Keeps listening to location updates while the capture dialog shows live
 /// accuracy, status, elapsed time and satellites. Save is enabled once the
 /// reading is within [unacceptableAccuracyThreshold]; fields that aren't
-/// required can also be cancelled.
+/// required can also be cancelled. With a capture timeout, the most accurate
+/// reading is saved when it runs out.
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
   double? _accuracy;
@@ -196,8 +230,12 @@ class _LatLngBuilderStatefulWrapperState
       EventChannel('digit_forms_engine/gnss_satellites');
   BuildContext? _dialogContext;
   Timer? _elapsedTimer;
+  Timer? _timeoutTimer;
   final ValueNotifier<_CaptureProgress> _progress =
       ValueNotifier(const _CaptureProgress());
+
+  /// Most accurate reading of the current capture, saved on timeout.
+  _CaptureProgress _best = const _CaptureProgress();
 
   @override
   void initState() {
@@ -224,6 +262,7 @@ class _LatLngBuilderStatefulWrapperState
     _satelliteSub?.cancel();
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
+    _timeoutTimer?.cancel();
     _progress.dispose();
     super.dispose();
   }
@@ -233,6 +272,7 @@ class _LatLngBuilderStatefulWrapperState
 
     _isCapturing = true;
     _progress.value = const _CaptureProgress();
+    _best = const _CaptureProgress();
     final startedAt = DateTime.now();
     _elapsedTimer?.cancel();
     _elapsedTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -240,6 +280,9 @@ class _LatLngBuilderStatefulWrapperState
         elapsedSeconds: DateTime.now().difference(startedAt).inSeconds,
       );
     });
+    _timeoutTimer?.cancel();
+    final timeout = widget.captureTimeout;
+    _timeoutTimer = timeout == null ? null : Timer(timeout, _onCaptureTimeout);
 
     _showCaptureDialog();
     context.read<LocationBloc>().add(const LoadLocationEvent());
@@ -277,6 +320,8 @@ class _LatLngBuilderStatefulWrapperState
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
     _elapsedTimer = null;
+    _timeoutTimer?.cancel();
+    _timeoutTimer = null;
 
     final dialogContext = _dialogContext;
     _dialogContext = null;
@@ -297,12 +342,52 @@ class _LatLngBuilderStatefulWrapperState
       latLng: state.latLngString,
       accuracy: state.accuracy,
     );
+
+    if (!_best.hasReading ||
+        shouldReplaceSavedReading(
+            saved: _best.accuracy, candidate: state.accuracy)) {
+      _best = _CaptureProgress(
+        latLng: state.latLngString,
+        accuracy: state.accuracy,
+      );
+    }
   }
 
   void _acceptCurrentReading() {
-    final reading = _progress.value;
-    if (!_isCapturing || !reading.hasReading) return;
+    if (!_isCapturing || !_progress.value.hasReading) return;
+    _saveReading(_progress.value);
+  }
 
+  /// The configured time ran out: save the most accurate reading so far, as
+  /// Save does, and close the dialog. A saved location that is more accurate
+  /// is kept. With no reading at all the field stays as it was.
+  void _onCaptureTimeout() {
+    if (!mounted || !_isCapturing) return;
+    final best = _best;
+    final loc = FormLocalization.of(context);
+
+    if (!best.hasReading ||
+        (_latLngValue != null &&
+            !shouldReplaceSavedReading(
+                saved: _accuracy, candidate: best.accuracy))) {
+      _stopCapture();
+      final hasLocation = _latLngValue != null;
+      Toast.showToast(
+        context,
+        message: hasLocation
+            ? _t(loc, 'LOCATION_CAPTURE_TIMED_OUT_KEPT',
+                'Time ran out. The earlier location is kept.')
+            : _t(loc, 'LOCATION_CAPTURE_TIMED_OUT',
+                'Time ran out before a location was found. Tap refresh to try again.'),
+        type: hasLocation ? ToastType.warning : ToastType.error,
+      );
+      return;
+    }
+
+    _saveReading(best, timedOut: true);
+  }
+
+  void _saveReading(_CaptureProgress reading, {bool timedOut = false}) {
     _stopCapture();
 
     setState(() {
@@ -317,13 +402,34 @@ class _LatLngBuilderStatefulWrapperState
 
     final loc = FormLocalization.of(context);
     final accuracy = reading.accuracy;
-    Toast.showToast(
-      context,
-      message: accuracy == null
+    final String message;
+    if (timedOut) {
+      message = accuracy == null
+          ? _t(loc, 'LOCATION_CAPTURE_TIMED_OUT_SAVED_NO_ACCURACY',
+              'Time ran out. Location saved.')
+          : _t(
+              loc,
+              'LOCATION_CAPTURE_TIMED_OUT_SAVED',
+              'Time ran out. Best location saved ({}).',
+              _formatAccuracy(loc, accuracy));
+    } else {
+      message = accuracy == null
           ? _t(loc, 'LOCATION_SAVED', 'Location saved')
           : _t(loc, 'LOCATION_SAVED_WITH_ACCURACY', 'Location saved ({})',
-              _formatAccuracy(loc, accuracy)),
-      type: ToastType.success,
+              _formatAccuracy(loc, accuracy));
+    }
+    final isGood = accuracy != null &&
+        classifyLocationAccuracy(
+              accuracy,
+              accuracyThreshold: widget.accuracyThreshold,
+              unacceptableAccuracyThreshold:
+                  widget.unacceptableAccuracyThreshold,
+            ) !=
+            LocationAccuracyLevel.low;
+    Toast.showToast(
+      context,
+      message: message,
+      type: !timedOut || isGood ? ToastType.success : ToastType.warning,
     );
   }
 
@@ -342,6 +448,15 @@ class _LatLngBuilderStatefulWrapperState
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
     final secs = (seconds % 60).toString().padLeft(2, '0');
     return '$minutes:$secs';
+  }
+
+  /// Elapsed time, with the configured limit when there is one ("00:12 / 02:00").
+  String _elapsedText(_CaptureProgress progress) {
+    final elapsed = _formatElapsed(progress.elapsedSeconds);
+    final timeout = widget.captureTimeout;
+    return timeout == null
+        ? elapsed
+        : '$elapsed / ${_formatElapsed(timeout.inSeconds)}';
   }
 
   /// Up to two decimals, trailing zeros dropped ("5 m", "7.5 m").
@@ -598,16 +713,14 @@ class _LatLngBuilderStatefulWrapperState
                                         loc,
                                         'LOCATION_TIME_ELAPSED',
                                         'Time elapsed: {}',
-                                        _formatElapsed(
-                                            progress.elapsedSeconds)),
+                                        _elapsedText(progress)),
                                     excludeSemantics: true,
                                     child: Row(children: [
                                       Icon(Icons.schedule,
                                           size: 14,
                                           color: colors.text.secondary),
                                       const SizedBox(width: spacer1),
-                                      Text(_formatElapsed(
-                                          progress.elapsedSeconds)),
+                                      Text(_elapsedText(progress)),
                                     ]),
                                   ),
                                   if (progress.satellites != null) ...[

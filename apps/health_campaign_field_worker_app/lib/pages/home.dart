@@ -59,6 +59,7 @@ import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_clf_vaccination.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
+import '../sampleJsonConfigs/polio_household_strategy.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_transit_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
@@ -2465,8 +2466,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 // apps use REGISTRATION (no method-tagged deliveries expected).
                 FlowBuilderSingleton().setActiveDeliveryMethod(
                     isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION');
+                // TEMP (GPS capture timeout testing): true uses the local
+                // sample flows instead of the config downloaded from MDMS.
+                const useLocalSampleFlows = true;
                 try {
-                  if (schemaJsonRaw != null) {
+                  // if (schemaJsonRaw != null) {
+                  if (!useLocalSampleFlows && schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final data = isPolio
@@ -2485,6 +2490,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                     ctx.router.push(
                       FlowBuilderHomeRoute(
                           pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else if (isPolio) {
+                    FlowRegistry.setConfig(
+                        samplePolioHouseholdStrategyFlows["flows"]
+                            as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName:
+                              samplePolioHouseholdStrategyFlows["initialPage"]),
                     );
                   } else {
                     FlowRegistry.setConfig(sampleBednetFlows["flows"]

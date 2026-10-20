@@ -42,6 +42,62 @@ void main() {
     expect(buildValidators<String>(schema), isEmpty);
   });
 
+  group('captureTimeoutFromRules', () {
+    test('reads the timeout in seconds', () {
+      expect(
+        captureTimeoutFromRules(
+            const [ValidationRule(type: kCaptureTimeoutRule, value: 120)]),
+        const Duration(seconds: 120),
+      );
+      expect(
+        captureTimeoutFromRules(
+            const [ValidationRule(type: kCaptureTimeoutRule, value: '1.5')]),
+        const Duration(milliseconds: 1500),
+      );
+    });
+
+    test('no timeout when missing or not a positive number', () {
+      expect(captureTimeoutFromRules(null), isNull);
+      expect(captureTimeoutFromRules(const []), isNull);
+      expect(
+        captureTimeoutFromRules(
+            const [ValidationRule(type: kCaptureTimeoutRule, value: 0)]),
+        isNull,
+      );
+      expect(
+        captureTimeoutFromRules(
+            const [ValidationRule(type: kCaptureTimeoutRule, value: 'abc')]),
+        isNull,
+      );
+    });
+
+    test('does not become a form validator', () {
+      const schema = PropertySchema(
+        type: PropertySchemaType.string,
+        validations: [ValidationRule(type: kCaptureTimeoutRule, value: 60)],
+      );
+
+      expect(buildValidators<String>(schema), isEmpty);
+    });
+  });
+
+  group('shouldReplaceSavedReading', () {
+    test('a more accurate or equal reading replaces the saved one', () {
+      expect(shouldReplaceSavedReading(saved: 20, candidate: 8), isTrue);
+      expect(shouldReplaceSavedReading(saved: 8, candidate: 8), isTrue);
+    });
+
+    test('a less accurate reading does not', () {
+      expect(shouldReplaceSavedReading(saved: 8, candidate: 20), isFalse);
+    });
+
+    test('readings without accuracy', () {
+      expect(shouldReplaceSavedReading(saved: null, candidate: 20), isTrue);
+      expect(shouldReplaceSavedReading(saved: null, candidate: null), isTrue);
+      expect(shouldReplaceSavedReading(saved: 8, candidate: null), isFalse);
+    });
+  });
+
   group('GpsWarmup.schemaHasLocationField', () {
     SchemaObject formWith(PropertySchemaFormat format) => SchemaObject(
           name: 'test',
