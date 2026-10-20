@@ -28,7 +28,6 @@ import '../models/schema_object/schema_object.dart';
 import '../utils/gps_warmup.dart';
 import '../utils/screen_protection_manager.dart';
 import '../utils/utils.dart';
-import '../widgets/json_schema_builder.dart' show LocationCaptureTimeouts;
 import '../widgets/multi_entity_tab_view.dart';
 
 @RoutePage()
@@ -251,12 +250,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       margin: const EdgeInsets.only(top: spacer2),
                       children: [
                         ReactiveFormConsumer(
-                          builder: (context, formGroup, child) =>
-                              // Disabled while a location capture timed out with nothing saved.
-                              ValueListenableBuilder<Set<String>>(
-                            valueListenable: LocationCaptureTimeouts.of(formGroup),
-                            builder: (context, timedOutLocations, _) => DigitButton(
-                              isDisabled: timedOutLocations.isNotEmpty,
+                          builder: (context, formGroup, child) => DigitButton(
                             label: (index) < schemaObject.pages.length - 1
                                 ? localizations
                                     .translate(schema.actionLabel ?? 'Next')
@@ -862,7 +856,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             size: DigitButtonSize.large,
                             mainAxisSize: MainAxisSize.max,
                           ),
-                          ),
                         ),
                         if (schema.secondaryActionLabel != null &&
                             widget.onSecondaryAction != null)
@@ -1183,12 +1176,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 margin: const EdgeInsets.only(top: spacer2),
                 children: [
                   ReactiveFormConsumer(
-                    builder: (context, formGroup, child) =>
-                        // Disabled while a location capture timed out with nothing saved.
-                        ValueListenableBuilder<Set<String>>(
-                      valueListenable: LocationCaptureTimeouts.of(formGroup),
-                      builder: (context, timedOutLocations, _) => DigitButton(
-                        isDisabled: timedOutLocations.isNotEmpty,
+                    builder: (context, formGroup, child) => DigitButton(
                       label: (index) < schemaObject.pages.length - 1
                           ? localizations
                               .translate(schema.actionLabel ?? 'Next')
@@ -1346,7 +1334,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
                       mainAxisSize: MainAxisSize.max,
-                    ),
                     ),
                   ),
                   if (schema.secondaryActionLabel != null &&
