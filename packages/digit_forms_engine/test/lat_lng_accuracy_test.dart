@@ -4,6 +4,7 @@ import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
 import 'package:digit_forms_engine/utils/gps_warmup.dart';
 import 'package:digit_forms_engine/widgets/json_schema_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 void main() {
   group('classifyLocationAccuracy', () {
@@ -126,6 +127,50 @@ void main() {
 
     test('good accuracy needs no hint', () {
       expect(hint(accuracy: 4, satellites: 2), LocationCaptureHint.none);
+    });
+  });
+
+  group('shouldReplaceSavedReading', () {
+    test('a more accurate recapture replaces the saved reading', () {
+      expect(shouldReplaceSavedReading(saved: 8, candidate: 4), isTrue);
+    });
+
+    test('a less accurate recapture keeps the earlier reading', () {
+      expect(shouldReplaceSavedReading(saved: 4, candidate: 8), isFalse);
+    });
+
+    test('equal accuracy takes the latest reading', () {
+      expect(shouldReplaceSavedReading(saved: 6, candidate: 6), isTrue);
+    });
+
+    test('nothing saved, or saved without accuracy, is always replaced', () {
+      expect(shouldReplaceSavedReading(saved: null, candidate: 9), isTrue);
+      expect(shouldReplaceSavedReading(saved: null, candidate: null), isTrue);
+    });
+
+    test('a recapture without accuracy never replaces one with it', () {
+      expect(shouldReplaceSavedReading(saved: 9, candidate: null), isFalse);
+    });
+  });
+
+  group('LocationCaptureTimeouts', () {
+    test('tracks timed-out fields per form and notifies on change', () {
+      final form = FormGroup({'location': FormControl<String>()});
+      final other = FormGroup({'location': FormControl<String>()});
+      var notifications = 0;
+      LocationCaptureTimeouts.of(form).addListener(() => notifications++);
+
+      LocationCaptureTimeouts.set(form, 'location', true);
+      expect(LocationCaptureTimeouts.of(form).value, {'location'});
+      expect(LocationCaptureTimeouts.of(other).value, isEmpty);
+
+      // Unchanged state doesn't notify.
+      LocationCaptureTimeouts.set(form, 'location', true);
+      expect(notifications, 1);
+
+      LocationCaptureTimeouts.set(form, 'location', false);
+      expect(LocationCaptureTimeouts.of(form).value, isEmpty);
+      expect(notifications, 2);
     });
   });
 }
