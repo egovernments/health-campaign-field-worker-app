@@ -60,6 +60,7 @@ import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_outside_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_bednet_flows.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
@@ -2484,12 +2485,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(sampleBednetFlows["flows"]
-                        as List<Map<String, dynamic>>);
+                    FlowRegistry.setConfig(
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
                       FlowBuilderHomeRoute(
-                          pageName: sampleBednetFlows["initialPage"]),
+                          pageName: sampleFlows["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -3211,6 +3212,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+
+    filteredLabels.add(i18.home.outsideHouseholdVaccinationLabel);
 
     final List<Widget> widgetList = filteredLabels
         .where((label) => homeItemsMap.containsKey(label))
