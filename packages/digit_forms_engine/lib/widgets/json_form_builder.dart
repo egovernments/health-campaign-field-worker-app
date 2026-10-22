@@ -30,6 +30,13 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   Widget build(BuildContext context) {
     final form = ReactiveForm.of(context) as FormGroup;
 
+    // A hidden custom component that is still part of the form
+    // (includeInForm: true) is built off screen, so a component that fills
+    // its own value while building (e.g. the resource card) still sets it.
+    if (_isOffstageCustomField(widget.schema)) {
+      return Offstage(child: ExcludeFocus(child: _buildByType(form)));
+    }
+
     // Handle conditional display logic
     if (_shouldHideField(form, widget.schema, widget.formControlName)) {
       return const SizedBox.shrink();
@@ -323,6 +330,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return match.group(0)!; // keep original if not found
     });
   }
+
+  bool _isOffstageCustomField(PropertySchema schema) =>
+      schema.hidden == true &&
+      schema.includeInForm == true &&
+      schema.format == PropertySchemaFormat.custom;
 
   /// Conditionally hide based on display behavior
   bool _shouldHideField(
@@ -764,6 +776,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 
+    // Hidden custom fields kept in the form (includeInForm: true). They are
+    // added after the visible fields and built off screen, so the visible
+    // fields' spacing and dividers stay exactly as before.
+    final offstageEntries = entries.where((entry) {
+      final subSchema = entry.value;
+      if (subSchema.displayOnly == true) return false;
+      return _isOffstageCustomField(subSchema);
+    }).toList();
+
     final bool showDividers = widget.schema.conditions?['showDividers'] == true;
     final dividerColor =
         Theme.of(context).colorTheme.generic.divider;
@@ -771,7 +792,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: visibleEntries.asMap().entries.map((entry) {
+      children: [
+        ...visibleEntries.asMap().entries.map((entry) {
         final index = entry.key;
         final mapEntry = entry.value;
 
@@ -824,7 +846,18 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: fieldWidget,
               );
-      }).toList(),
+      }),
+        // Each of these builds as Offstage (see build()), so it takes no space.
+        ...offstageEntries.map((entry) => JsonFormBuilder(
+              key: ValueKey(entry.key),
+              pageName: widget.pageName,
+              currentSchemaKey: widget.currentSchemaKey,
+              formControlName: entry.key,
+              schema: entry.value,
+              components: widget.components,
+              navigationParams: widget.navigationParams,
+            )),
+      ],
     );
   }
 

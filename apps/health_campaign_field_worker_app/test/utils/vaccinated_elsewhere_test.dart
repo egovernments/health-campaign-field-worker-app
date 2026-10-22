@@ -676,6 +676,13 @@ void main() {
       expect(veProperty('resourceCard')!['hidden'], isTrue);
     });
 
+    test('hidden resources card is still part of the form', () {
+      // The forms engine builds hidden + includeInForm custom fields off
+      // screen, so the card still fills its value from the delivery rules.
+      expect(veProperty('resourceCard')!['includeInForm'], isTrue);
+      expect(veProperty('resourceCard')!['format'], 'custom');
+    });
+
     test('old site name and region fields are gone', () {
       expect(veProperty('siteName'), isNull);
       expect(veProperty('region'), isNull);
@@ -782,7 +789,10 @@ void main() {
       expect(entities.whereType<TaskResourceModel>(), isEmpty);
     });
 
-    test('saves the new status, the location and no vaccine resource', () {
+    // The hidden resource card is still sent, so a form without a card value
+    // saves no resource; the card case is covered below.
+    // test('saves the new status, the location and no vaccine resource', () {
+    test('saves the new status and the location', () {
       final t = save({'vaccinationLocation': 'TRANSIT_POST'})
           .whereType<TaskModel>()
           .single;
@@ -793,7 +803,7 @@ void main() {
       expect(field(t, 'cycleIndex'), '2');
       expect(field(t, 'doseIndex'), '1');
       expect(field(t, 'taskType'), 'VACCINATED_ELSEWHERE');
-      expect(t.resources ?? [], isEmpty);
+      // expect(t.resources ?? [], isEmpty);
     });
 
     test('fills project, tenant, creator and a new client reference id', () {
@@ -856,7 +866,8 @@ void main() {
       expect(field(t, 'lng'), '7.25');
     });
 
-    test('a resource card value in the form is ignored', () {
+    // test('a resource card value in the form is ignored', () {
+    test('the hidden resource card value is saved as task resources', () {
       final t = save({
         'vaccinationLocation': 'SCHOOL',
         'resourceCard': [
@@ -866,7 +877,12 @@ void main() {
           }
         ],
       }).whereType<TaskModel>().single;
-      expect(t.resources ?? [], isEmpty);
+      // expect(t.resources ?? [], isEmpty);
+      final resource = t.resources!.single;
+      expect(resource.productVariantId, 'nOPV2');
+      expect(resource.quantity, '1');
+      expect(resource.isDelivered, isTrue);
+      expect(resource.taskclientReferenceId, t.clientReferenceId);
     });
 
     test('the cycle comes from the button, so the task belongs to this round', () {

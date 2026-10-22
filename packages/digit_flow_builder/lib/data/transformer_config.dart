@@ -1642,7 +1642,7 @@ final jsonConfig = {
           "status": "__value:VACCINATED_ELSEWHERE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
-          // "resources": "list:TaskResourceModel",
+          "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -1703,27 +1703,27 @@ final jsonConfig = {
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
-        // },
-        // "listMappings": {
-        //   "TaskResourceModel": {
-        //     "listSource": "vaccinatedElsewhere.resourceCard",
-        //     "mappings": {
-        //       "clientReferenceId": "__generate:uuid",
-        //       "taskId": "taskId",
-        //       "productVariantId":
-        //           "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
-        //       "quantity":
-        //           "vaccinatedElsewhere.resourceCard.quantityDistributed",
-        //       "isDelivered": "__value:true",
-        //       "deliveryComment": "vaccinatedElsewhere.deliveryComment",
-        //       "nonRecoverableError": "error.nonRecoverable",
-        //       "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
-        //       "tenantId": "__context:tenantId",
-        //       "rowVersion": "meta.rowVersion",
-        //       "clientAuditDetails": "__generate:clientAudit",
-        //       "auditDetails": "__generate:audit",
-        //     }
-        //   }
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "vaccinatedElsewhere.resourceCard",
+            "mappings": {
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "vaccinatedElsewhere.resourceCard.resourceDelivered.productId",
+              "quantity":
+                  "vaccinatedElsewhere.resourceCard.quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "vaccinatedElsewhere.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
         }
       }
     }
