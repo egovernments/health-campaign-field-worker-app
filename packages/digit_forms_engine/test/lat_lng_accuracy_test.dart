@@ -16,16 +16,16 @@ void main() {
           isFalse);
     });
 
-    test('without a timer, fair or good can be saved', () {
+    test('without a timer, only good accuracy can be saved', () {
       expect(
           canSaveLocation(
-              level: LocationAccuracyLevel.fair, elapsedSeconds: 0),
-          isTrue);
+              level: LocationAccuracyLevel.fair, elapsedSeconds: 600),
+          isFalse);
       expect(
-          canSaveLocation(
-              level: LocationAccuracyLevel.good, elapsedSeconds: 0),
+          canSaveLocation(level: LocationAccuracyLevel.good, elapsedSeconds: 0),
           isTrue);
     });
+
 
     test('with a timer, only good accuracy saves before it runs out', () {
       expect(
@@ -85,8 +85,8 @@ void main() {
     });
 
     test('is on unless enabled is false', () {
-      expect(field({'enabled': false, 'minutes': 2}).popupTimer?.duration,
-          isNull);
+      expect(
+          field({'enabled': false, 'minutes': 2}).popupTimer?.duration, isNull);
       expect(field({'minutes': 0, 'seconds': 59}).popupTimer?.duration,
           const Duration(seconds: 59));
     });
@@ -105,14 +105,22 @@ void main() {
       expect(classify(5), LocationAccuracyLevel.good);
     });
 
-    test('above 5 m up to 10 m is fair', () {
-      expect(classify(5.1), LocationAccuracyLevel.fair);
-      expect(classify(10), LocationAccuracyLevel.fair);
+    test('above 5 m is low by default (no 10 m band)', () {
+      expect(kDefaultUnacceptableLocationAccuracyThreshold, 5);
+      expect(classify(5.1), LocationAccuracyLevel.low);
+      expect(classify(10), LocationAccuracyLevel.low);
+      expect(classify(150), LocationAccuracyLevel.low);
     });
 
-    test('above 10 m is low', () {
-      expect(classify(10.1), LocationAccuracyLevel.low);
-      expect(classify(150), LocationAccuracyLevel.low);
+    test('a configured unacceptableAccuracyThreshold adds a fair band', () {
+      LocationAccuracyLevel classifyWide(double accuracy) =>
+          classifyLocationAccuracy(
+            accuracy,
+            accuracyThreshold: kDefaultLocationAccuracyThreshold,
+            unacceptableAccuracyThreshold: 10,
+          );
+      expect(classifyWide(7), LocationAccuracyLevel.fair);
+      expect(classifyWide(10.1), LocationAccuracyLevel.low);
     });
   });
 
@@ -177,8 +185,8 @@ void main() {
           accuracy: accuracy,
           satellites: satellites,
           accuracyThreshold: kDefaultLocationAccuracyThreshold,
-          unacceptableAccuracyThreshold:
-              kDefaultUnacceptableLocationAccuracyThreshold,
+          // A configured fair band, so the fair-accuracy hints are covered.
+          unacceptableAccuracyThreshold: 10,
         );
 
     test('no hint during the first 30 seconds', () {
