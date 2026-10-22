@@ -10,71 +10,14 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "body": [
           {
             "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "type": "template",
-                    "value": "DirectionsBus",
-                    "format": "icon",
-                    "fieldName": "transitPostIcon",
-                    "properties": {"color": "primary", "size": 32}
-                  }
-                ],
-                "fieldName": "transitPostIconRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_TRANSIT_POST_HEADING",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "transitPostHeading",
-                    "properties": {
-                      "style": "headingM",
-                      "color": "primary",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "transitPostHeadingRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_TRANSIT_POST_DESCRIPTION",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "transitPostDescription",
-                    "properties": {"style": "bodyS", "textAlign": "center"}
-                  }
-                ],
-                "fieldName": "transitPostDescriptionRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              }
-            ],
+            "format": "menu_card",
+            "icon": "DirectionsBus",
+            "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
+            "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION",
+            "styling": {
+              "iconPosition": "top",
+              "alignment": "center"
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -85,76 +28,18 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 }
               }
             ],
-            "fieldName": "transitPostOption",
-            "properties": {"spacing": 12}
+            "fieldName": "transitPostOption"
           },
           {
             "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "type": "template",
-                    "value": "Groups",
-                    "format": "icon",
-                    "fieldName": "clfIcon",
-                    "properties": {"color": "primary", "size": 32}
-                  }
-                ],
-                "fieldName": "clfIconRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_CLF_HEADING",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "clfHeading",
-                    "properties": {
-                      "style": "headingM",
-                      "color": "primary",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "clfHeadingRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_CLF_DESCRIPTION",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "clfDescription",
-                    "properties": {"style": "bodyS", "textAlign": "center"}
-                  }
-                ],
-                "fieldName": "clfDescriptionRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              }
-            ],
+            "format": "menu_card",
+            "icon": "Groups",
+            "heading": "GV_LOCATION_CLF_HEADING",
+            "description": "GV_LOCATION_CLF_DESCRIPTION",
+            "styling": {
+              "iconPosition": "top",
+              "alignment": "center"
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -165,8 +50,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 }
               }
             ],
-            "fieldName": "clfOption",
-            "properties": {"spacing": 12}
+            "fieldName": "clfOption"
           }
         ],
         "name": "selectVaccinationLocation",
