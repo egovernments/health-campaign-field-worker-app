@@ -688,8 +688,8 @@ final dynamic sampleFlows = {
                     }
                   ],
                   "fieldName": "householdEditButton",
-                  "prefixIcon": "Edit",
                   "properties": {
+                    "prefixIcon": "Edit",
                     "icon": "Edit",
                     "size": "large",
                     "type": "tertiary",
@@ -717,7 +717,7 @@ final dynamic sampleFlows = {
                 },
                 {
                   "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-                  "value": "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
+                  "value": "{{contextData.0.members.length}}",
                   "isActive": true
                 }
               ],
@@ -4493,33 +4493,6 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": "REGISTRATION_HOUSEHOLD_childrenCount_ERROR",
               "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
-              "order": 3,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_MEMBERS_1"
-              },
-              "value": "2",
-              "format": "numeric",
-              "hidden": false,
-              "fieldName": "memberCount",
-              "mandatory": true,
-              "validations": [
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MIN_MEMBERS_1"
-                },
-                {
-                  "type": "max",
-                  "value": "500",
-                  "message": "HCM_VALIDATION_MAX_MEMBERS_500"
-                }
-              ],
-              "includeInForm": true
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
@@ -4903,43 +4876,6 @@ final dynamic sampleFlows = {
                 }
               ],
               "errorMessage": "REGISTRATION_HOUSEHOLD_addressLine2_ERROR",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "HCM_REGISTRATION_LANDMARK_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "text",
-              "hidden": true,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "landmark",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "lengthRange": {
-                "minLength": "2",
-                "errorMessage": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
-              },
-              "validations": [
-                {
-                  "type": "minLength",
-                  "value": "2",
-                  "message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
-                },
-                {
-                  "type": "pattern",
-                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-                  "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
-                }
-              ],
-              "errorMessage": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
               "isMultiSelect": false
             },
             {
