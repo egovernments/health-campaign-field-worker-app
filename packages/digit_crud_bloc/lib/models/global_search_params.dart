@@ -5,6 +5,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'global_search_params.freezed.dart';
 part 'global_search_params.g.dart';
 
+/// Sentinel [SearchOrderBy.field] that sorts by distance from the centre of
+/// a `within` filter rather than by a column — nearest first with
+/// `order: "ASC"`.
+///
+/// It is not a column name, so it only works on a table that also carries a
+/// `within` filter in the same search: that filter is what supplies the
+/// centre point. Without one the ordering is skipped.
+const String distanceOrderField = '__distance';
+
 /// Defines how filters across multiple tables are combined.
 enum MultiTableFilterLogic {
   /// All filters must match (intersection). Default behavior.
