@@ -74,6 +74,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       descriptionPlaceHolders:
           _labelPlaceHoldersOrNull(json['descriptionPlaceHolders']),
       showLabelOutsideCard: json['showLabelOutsideCard'] as bool?,
+      popupTimer: _popupTimerOrNull(json['popupTimer']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -143,6 +144,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('descriptionPlaceHolders',
       instance.descriptionPlaceHolders?.map((e) => e.toJson()).toList());
   writeNotNull('showLabelOutsideCard', instance.showLabelOutsideCard);
+  writeNotNull('popupTimer', instance.popupTimer?.toJson());
   return val;
 }
 
@@ -310,6 +312,20 @@ Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
       'primaryActionLabel': instance.primaryActionLabel,
       'secondaryActionLabel': instance.secondaryActionLabel,
       'conditions': instance.conditions,
+    };
+
+_$PopupTimerImpl _$$PopupTimerImplFromJson(Map<String, dynamic> json) =>
+    _$PopupTimerImpl(
+      enabled: json['enabled'] as bool?,
+      minutes: _intOrNull(json['minutes']),
+      seconds: _intOrNull(json['seconds']),
+    );
+
+Map<String, dynamic> _$$PopupTimerImplToJson(_$PopupTimerImpl instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'minutes': instance.minutes,
+      'seconds': instance.seconds,
     };
 
 _$ShowSecondaryAlertPopUpImpl _$$ShowSecondaryAlertPopUpImplFromJson(

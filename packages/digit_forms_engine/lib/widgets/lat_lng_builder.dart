@@ -28,6 +28,22 @@ LocationAccuracyLevel classifyLocationAccuracy(
   return LocationAccuracyLevel.low;
 }
 
+/// Without a popup timer, Save needs a reading at fair or good accuracy.
+/// With one ([saveEnabledAfter]), Save needs good accuracy until the timer
+/// runs out, then any reading can be saved so a worker is never stuck where
+/// accuracy won't improve.
+@visibleForTesting
+bool canSaveLocation({
+  required LocationAccuracyLevel? level,
+  required int elapsedSeconds,
+  Duration? saveEnabledAfter,
+}) {
+  if (level == null) return false;
+  if (level == LocationAccuracyLevel.good) return true;
+  if (saveEnabledAfter == null) return level == LocationAccuracyLevel.fair;
+  return elapsedSeconds >= saveEnabledAfter.inSeconds;
+}
+
 /// Seconds of capture before the dialog starts suggesting what to do.
 const int kLocationHintDelaySeconds = 30;
 
@@ -84,11 +100,15 @@ double? _thresholdFromRules(List<ValidationRule>? rules, String type) {
 class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
   final String? label;
 
+  /// From the field's `popupTimer`; null when the timer is off.
+  final Duration? saveEnabledAfter;
+
   const JsonSchemaLatLngBuilder({
     super.key,
     required super.formControlName,
     required super.form,
     this.label,
+    this.saveEnabledAfter,
     super.validations,
     super.helpText,
     super.isRequired,
@@ -105,6 +125,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       helpText: helpText,
       isRequired: isRequired,
       tooltipText: tooltipText,
+      saveEnabledAfter: saveEnabledAfter,
       accuracyThreshold:
           _thresholdFromRules(validations, kAccuracyThresholdRule) ??
               kDefaultLocationAccuracyThreshold,
@@ -125,6 +146,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final String? tooltipText;
   final double accuracyThreshold;
   final double unacceptableAccuracyThreshold;
+  final Duration? saveEnabledAfter;
 
   const _LatLngBuilderStatefulWrapper({
     required this.form,
@@ -136,6 +158,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
     this.helpText,
     this.isRequired,
     this.tooltipText,
+    this.saveEnabledAfter,
   });
 
   @override
@@ -178,8 +201,9 @@ class _CaptureProgress {
 
 /// Keeps listening to location updates while the capture dialog shows live
 /// accuracy, status, elapsed time and satellites. Save is enabled once the
-/// reading is within [unacceptableAccuracyThreshold]; fields that aren't
-/// required can also be cancelled.
+/// reading is within [unacceptableAccuracyThreshold], or at any accuracy once
+/// the popup timer runs out. Cancel closes the dialog without a value; a
+/// required field then fails validation until it is captured again.
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
   double? _accuracy;
@@ -354,13 +378,27 @@ class _LatLngBuilderStatefulWrapperState
   }
 
   /// Save rule with the save threshold in bold, e.g. "You can save once
-  /// accuracy is **10 m or less**; 5 m or less is best."
+  /// accuracy is **10 m or less**; 5 m or less is best." With a popup timer
+  /// only good accuracy saves early: "You can save once accuracy is **5 m or
+  /// less**, or when the timer ends."
   TextSpan _saveRuleSpan(FormLocalization loc, TextStyle boldStyle) {
-    final template = _t(loc, 'LOCATION_CAPTURE_SAVE_RULE',
-            'You can save once accuracy is {save}; {best} or less is best.')
-        .replaceAll('{best}', _formatAccuracy(loc, widget.accuracyThreshold));
-    final save = _t(loc, 'LOCATION_ACCURACY_OR_LESS', '{} or less',
-        _formatAccuracy(loc, widget.unacceptableAccuracyThreshold));
+    final hasTimer = widget.saveEnabledAfter != null;
+    final template = hasTimer
+        ? _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_TIMER',
+            'You can save once accuracy is {save}, or when the timer ends.')
+        : _t(loc, 'LOCATION_CAPTURE_SAVE_RULE',
+                'You can save once accuracy is {save}; {best} or less is best.')
+            .replaceAll(
+                '{best}', _formatAccuracy(loc, widget.accuracyThreshold));
+    final save = _t(
+        loc,
+        'LOCATION_ACCURACY_OR_LESS',
+        '{} or less',
+        _formatAccuracy(
+            loc,
+            hasTimer
+                ? widget.accuracyThreshold
+                : widget.unacceptableAccuracyThreshold));
     final parts = template.split('{save}');
     return TextSpan(children: [
       TextSpan(text: parts.first),
@@ -438,8 +476,15 @@ class _LatLngBuilderStatefulWrapperState
                               widget.unacceptableAccuracyThreshold,
                         );
                   final canSave = progress.hasReading &&
-                      level != null &&
-                      level != LocationAccuracyLevel.low;
+                      canSaveLocation(
+                        level: level,
+                        elapsedSeconds: progress.elapsedSeconds,
+                        saveEnabledAfter: widget.saveEnabledAfter,
+                      );
+                  final saveTimer = widget.saveEnabledAfter;
+                  final saveTimerLeft = saveTimer == null || canSave
+                      ? null
+                      : saveTimer.inSeconds - progress.elapsedSeconds;
                   final hint = _hintText(loc, progress);
 
                   final Color color;
@@ -667,20 +712,18 @@ class _LatLngBuilderStatefulWrapperState
                       const SizedBox(height: spacer4),
                       Row(
                         children: [
-                          if (!isRequired) ...[
-                            Expanded(
-                              child: DigitButton(
-                                label: _t(
-                                    loc, 'LOCATION_CANCEL_CAPTURE', 'Cancel'),
-                                onPressed: _stopCapture,
-                                type: DigitButtonType.secondary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                              ),
+                          Expanded(
+                            child: DigitButton(
+                              label: _t(
+                                  loc, 'LOCATION_CANCEL_CAPTURE', 'Cancel'),
+                              onPressed: _stopCapture,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
                             ),
-                            const SizedBox(width: spacer2),
-                          ],
+                          ),
+                          const SizedBox(width: spacer2),
                           Expanded(
                             child: DigitButton(
                               label: _t(loc, 'LOCATION_SAVE_POINT', 'Save'),
@@ -694,6 +737,18 @@ class _LatLngBuilderStatefulWrapperState
                           ),
                         ],
                       ),
+                      if (saveTimerLeft != null && saveTimerLeft > 0) ...[
+                        const SizedBox(height: spacer2),
+                        Text(
+                          _t(loc, 'LOCATION_SAVE_ENABLED_IN',
+                              'Save will be enabled in {}',
+                              _formatElapsed(saveTimerLeft)),
+                          textAlign: TextAlign.center,
+                          style: mutedStyle.copyWith(
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
                     ],
                   );
                 },

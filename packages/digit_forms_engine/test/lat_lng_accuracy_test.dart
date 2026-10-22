@@ -6,6 +6,92 @@ import 'package:digit_forms_engine/widgets/json_schema_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('canSaveLocation', () {
+    const timer = Duration(minutes: 1, seconds: 30);
+
+    test('needs a reading', () {
+      expect(
+          canSaveLocation(
+              level: null, elapsedSeconds: 200, saveEnabledAfter: timer),
+          isFalse);
+    });
+
+    test('without a timer, fair or good can be saved', () {
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.fair, elapsedSeconds: 0),
+          isTrue);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.good, elapsedSeconds: 0),
+          isTrue);
+    });
+
+    test('with a timer, only good accuracy saves before it runs out', () {
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.good,
+              elapsedSeconds: 0,
+              saveEnabledAfter: timer),
+          isTrue);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.fair,
+              elapsedSeconds: 89,
+              saveEnabledAfter: timer),
+          isFalse);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.fair,
+              elapsedSeconds: 90,
+              saveEnabledAfter: timer),
+          isTrue);
+    });
+
+    test('low accuracy only after the popup timer runs out', () {
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.low, elapsedSeconds: 600),
+          isFalse);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.low,
+              elapsedSeconds: 89,
+              saveEnabledAfter: timer),
+          isFalse);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.low,
+              elapsedSeconds: 90,
+              saveEnabledAfter: timer),
+          isTrue);
+    });
+  });
+
+  group('PopupTimer', () {
+    PropertySchema field(Map<String, dynamic> popupTimer) =>
+        PropertySchema.fromJson({
+          'type': 'string',
+          'format': 'latLng',
+          'popupTimer': popupTimer,
+        });
+
+    test('reads minutes and seconds', () {
+      expect(
+          field({'enabled': true, 'minutes': 1, 'seconds': '30'})
+              .popupTimer
+              ?.duration,
+          const Duration(minutes: 1, seconds: 30));
+    });
+
+    test('is on unless enabled is false', () {
+      expect(field({'enabled': false, 'minutes': 2}).popupTimer?.duration,
+          isNull);
+      expect(field({'minutes': 0, 'seconds': 59}).popupTimer?.duration,
+          const Duration(seconds: 59));
+    });
+  });
+
   group('classifyLocationAccuracy', () {
     LocationAccuracyLevel classify(double accuracy) => classifyLocationAccuracy(
           accuracy,

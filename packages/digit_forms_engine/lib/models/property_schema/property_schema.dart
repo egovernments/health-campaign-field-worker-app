@@ -90,6 +90,8 @@ class PropertySchema with _$PropertySchema {
     List<LabelPlaceHolder>? descriptionPlaceHolders,
     // Render page label/description outside the card (before it)
     bool? showLabelOutsideCard,
+    // latLng fields: capture time after which Save is enabled whatever the accuracy
+    @JsonKey(fromJson: _popupTimerOrNull) PopupTimer? popupTimer,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -195,6 +197,26 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
 
   factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
       _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class PopupTimer with _$PopupTimer {
+  const PopupTimer._();
+
+  const factory PopupTimer({
+    bool? enabled,
+    @JsonKey(fromJson: _intOrNull) int? minutes,
+    @JsonKey(fromJson: _intOrNull) int? seconds,
+  }) = _PopupTimer;
+
+  factory PopupTimer.fromJson(Map<String, dynamic> json) =>
+      _$PopupTimerFromJson(json);
+
+  /// Null when the timer is switched off. The console toggle defaults to on
+  /// and isn't always saved, so a missing `enabled` counts as on.
+  Duration? get duration => enabled == false
+      ? null
+      : Duration(minutes: minutes ?? 0, seconds: seconds ?? 0);
 }
 
 @freezed
@@ -382,6 +404,13 @@ ShowAlertPopUp? _showAlertOrNull(dynamic value) {
 ShowSecondaryAlertPopUp? _showSecondaryAlertOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+PopupTimer? _popupTimerOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return PopupTimer.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }
