@@ -3213,8 +3213,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       filteredLabels.remove(i18.home.db);
     }
 
-    filteredLabels.add(i18.home.outsideHouseholdVaccinationLabel);
-
     final List<Widget> widgetList = filteredLabels
         .where((label) => homeItemsMap.containsKey(label))
         .map((label) => homeItemsMap[label]!)
