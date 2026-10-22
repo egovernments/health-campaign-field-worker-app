@@ -1245,6 +1245,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     const stockRoles = {
       RolesType.warehouseManager,
       RolesType.distributor,
+      RolesType.healthFacilityWorker
     };
 
     final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
