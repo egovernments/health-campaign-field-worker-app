@@ -1799,6 +1799,32 @@
               "systemDate": true,
               "validations": [],
               "errorMessage": ""
+            },
+            {
+              "type": "string",
+              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_latlong",
+              "order": 3,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_latlong_helpText",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": false
             }
           ],
           "actionLabel": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
@@ -4353,6 +4379,32 @@
               "required.message":
                   "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
               "conditions": {"boldLabel": true}
+            },
+            {
+              "type": "string",
+              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_latlong",
+              "order": 4,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText":
+                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_latlong_helpText",
+              "infoText": "",
+              "readOnly": false,
+              "required": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": false
             }
           ],
           "actionLabel":

@@ -6,7 +6,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -51,7 +51,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           }
@@ -202,6 +202,7 @@ final jsonConfig = {
   // "clientReferenceId" mapping against individuals[index].clientReferenceId
   // (see transformer_service.dart:882–916).
   "bulkProjectBeneficiaryFromMembers": {
+    "fallbackModel": "ProjectBeneficiaryModel",
     "models": {
       "ProjectBeneficiaryModel": {
         "listSource": "__context:individuals",
@@ -224,7 +225,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -269,7 +270,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "caregiverConsent": "caregiverConsent.consentToParticipate",
             "negativeConsentReason": "caregiverConsent.negativeConsentReason",
             "locality": "__context:selectedBoundaryCode",
@@ -419,6 +420,7 @@ final jsonConfig = {
     }
   },
   "indirectBulkDelivery": {
+    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
@@ -624,9 +626,12 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // The ineligible branch is submitted from the eligibilityChecklist
+            // form, so the captured location lives under that page key. There
+            // is no `address` page in this flow.
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -654,6 +659,9 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -688,9 +696,11 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Location is captured on the unableToDeliver form itself; this
+            // flow has no `address` page and no DeliveryDetails page.
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -722,11 +732,9 @@ final jsonConfig = {
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
             "comment": "unableToDeliver.comment",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
-            "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]",
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -1719,6 +1727,7 @@ final jsonConfig = {
     }
   },
   "polioStockDetails": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1748,6 +1757,7 @@ final jsonConfig = {
     }
   },
   "polioIssuedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1781,6 +1791,7 @@ final jsonConfig = {
     }
   },
   "polioReturnedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1808,8 +1819,10 @@ final jsonConfig = {
                 "returnedVialDetails.unopenedSpoiltVialsReturned",
             "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
             "totalReturned": "returnedVialDetails.totalReturned",
-            "unusedDiluentsReturned": "returnedVialDetails.unusedDiluentsReturned",
-            "spoiledDiluentsReturned": "returnedVialDetails.spoiledDiluentsReturned",
+            "unusedDiluentsReturned":
+                "returnedVialDetails.unusedDiluentsReturned",
+            "spoiledDiluentsReturned":
+                "returnedVialDetails.spoiledDiluentsReturned",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1841,6 +1854,7 @@ final jsonConfig = {
     }
   },
   "clfSession": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1876,6 +1890,7 @@ final jsonConfig = {
     }
   },
   "transitSession": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1909,6 +1924,7 @@ final jsonConfig = {
     }
   },
   "groupVacChild": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1930,6 +1946,7 @@ final jsonConfig = {
             "childName": "childDetails.childName",
             "childSex": "childDetails.childSex",
             "ageBand": "childDetails.ageBand",
+            "childDob": "childDetails.childDob",
             "directionOfTravel": "childDetails.directionOfTravel",
             "nationality": "childDetails.nationality",
             "opvPrior": "childDetails.opvPrior",
@@ -1943,6 +1960,7 @@ final jsonConfig = {
     }
   },
   "groupVacReferral": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1972,6 +1990,7 @@ final jsonConfig = {
     }
   },
   "lqaClusterData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2009,6 +2028,7 @@ final jsonConfig = {
     }
   },
   "lqaChildData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2051,6 +2071,7 @@ final jsonConfig = {
     }
   },
   "lqaCloseoutData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -2080,6 +2101,7 @@ final jsonConfig = {
     }
   },
   "polioInsideHousehold": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {

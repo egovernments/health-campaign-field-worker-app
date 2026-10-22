@@ -1524,7 +1524,10 @@ void initializeFunctionRegistry() {
 
     // Return as dropdown format [{name: code, code: code}]
     return uniqueLocalities
-        .map((code) => {'name': code, 'code': code})
+        // `code` is the stored address.locality.code, which is now a
+        // dot-separated hierarchy path (MOZ.NAMPULA.MONAPO.ITOCULO).
+        // Filtering still matches the full code; only the label is trimmed.
+        .map((code) => {'name': code.split('.').last, 'code': code})
         .toList();
   });
 

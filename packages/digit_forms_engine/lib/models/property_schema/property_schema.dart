@@ -421,6 +421,7 @@ enum PropertySchemaFormat {
   select,
   numeric,
   dropdown,
+  multiSelectDropdown,
   checkbox,
   radio,
   dob,

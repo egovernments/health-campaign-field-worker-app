@@ -436,10 +436,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // assigned code by materializedPath (which is unique) and take
       // parent (boundaryNum-1) and child (boundaryNum+1) types.
       try {
-        final treeRows = prefetchedTree ??
-            await boundaryRemoteRepository.search(
-              BoundarySearchModel(),
-            );
+        // `??` only fires on null, so an empty list from a caller whose
+        // own fetch failed would be accepted and leave the parent/child
+        // type lookup with nothing to match. Treat empty as not prefetched.
+        final treeRows = (prefetchedTree != null && prefetchedTree.isNotEmpty)
+            ? prefetchedTree
+            : await boundaryRemoteRepository.search(
+                BoundarySearchModel(),
+              );
 
         // Locate the assigned row anywhere in the tree by exact code
         // match.
@@ -496,8 +500,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         // Any failure falls through to the single-type default below —
         // same behaviour the old MDMS path had when it couldn't find a
         // match.
-        debugPrint(
-            'boundary-derivation from search response failed: $e');
+        debugPrint('boundary-derivation from search response failed: $e');
       }
 
       boundaryTypes ??= [assignedBoundaryType];
@@ -537,8 +540,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
           await facilityLocalRepository.bulkCreate(facilities);
         } catch (e) {
-          debugPrint(
-              'facility fetch failed for chunk starting at $i: $e');
+          debugPrint('facility fetch failed for chunk starting at $i: $e');
         }
       }
     }
@@ -688,7 +690,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .whereType<String>()
             .join(',');
       }
-      debugPrint('[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
+      debugPrint(
+          '[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
 
       return individuals.map((ind) {
         final roles = ind.userUuid != null ? rolesByUuid[ind.userUuid] : null;
@@ -978,7 +981,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         final formConfigs = await mdmsRepository.searchMDMS(
           envConfig.variables.mdmsApiPath,
           tenantId: envConfig.variables.tenantId,
-          schemaCode: '${ModuleEnums.hcmAdminConsole.toValue()}.${MasterEnums.formConfig.toValue()}',
+          schemaCode:
+              '${ModuleEnums.hcmAdminConsole.toValue()}.${MasterEnums.formConfig.toValue()}',
           filters: {'project': event.model.referenceID},
         );
 
@@ -1072,9 +1076,29 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         event.model.address?.boundary,
       );
 
+      // The full-tree fetch above is deliberately non-fatal, so the prefix
+      // can be underivable for survivable reasons: a transient failure, an
+      // empty payload, or a project whose hierarchyType came from the env
+      // fallback and so is absent from the fetched tree. Persisting
+      // leaf-rooted paths in that state would ship a truncated hierarchy to
+      // the server, so prefer the already-stored rows and schedule a
+      // refetch — but never block entry to the project over it. If no local
+      // rows exist either, the empty-boundaries branch below still errors.
+      final assignedCode = event.model.address?.boundary;
+      final prefixResolved = assignedCode == null ||
+          fullBoundaryTree.any((b) => b.code == assignedCode);
+      if (!prefixResolved) {
+        debugPrint(
+          'ancestor prefix underivable for $assignedCode — '
+          'keeping stored boundaries and scheduling a refetch',
+        );
+        await localSecureStore.setBoundaryRefetch(true);
+      }
+
       reportSyncProgress('boundary');
-      if (rowversionList.firstOrNull?.version != serverVersion ||
-          boundaryRefetched) {
+      if (prefixResolved &&
+          (rowversionList.firstOrNull?.version != serverVersion ||
+              boundaryRefetched)) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
@@ -1108,7 +1132,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             codes: event.model.address?.boundary,
           ),
         );
-        if (boundaries.isEmpty) {
+        // Rows written by a build that predates ancestor prefixing are
+        // leaf-rooted. The egov-location rowversion does not change for
+        // them, so without this they stay stale until the next re-login.
+        // Scope the check to the assigned row: the local search matches
+        // materializedPath with `like('%code%')`, so siblings whose code
+        // merely contains the assigned one (MONAPO vs MONAPO_SUL) also come
+        // back and would never match the prefix, re-fetching every time.
+        final hasLeafRootedPath = ancestorPrefix != null &&
+            boundaries.any((b) =>
+                b.code == assignedCode &&
+                b.materializedPath != null &&
+                !b.materializedPath!.startsWith('$ancestorPrefix.'));
+        if (boundaries.isEmpty || hasLeafRootedPath) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
@@ -1157,7 +1193,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Load project facilities after project selection
     try {
       reportSyncProgress('projectFacility');
-      await _loadProjectFacilities(event.model, prefetchedTree: fullBoundaryTree);
+      await _loadProjectFacilities(event.model,
+          prefetchedTree: fullBoundaryTree);
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
@@ -1168,9 +1205,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     try {
-      // Trigger silent stock downsync after project facilities are loaded
-      reportSyncProgress('stock');
-      await _silentStockDownSync(event.model);
+      // Trigger silent stock downsync after project facilities are loaded.
+      //
+      // Only stock-handling roles need it. Without this gate every other
+      // role still pays for the two local searches inside the method before
+      // its own `receiverIds.isEmpty` check bails out, and still surfaces a
+      // `stockDownsync` sync error if any of that throws.
+      if (await _handlesStock()) {
+        reportSyncProgress('stock');
+        await _silentStockDownSync(event.model);
+      }
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
@@ -1187,6 +1231,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  /// Whether the logged-in user holds a role that receives dispatched stock.
+  ///
+  /// Gates [_silentStockDownSync] at its call site. Returns false when the
+  /// user can't be read, so an unreadable secure store skips the downsync
+  /// rather than running it for a user whose roles are unknown.
+  Future<bool> _handlesStock() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return false;
+
+    const stockRoles = {
+      RolesType.warehouseManager,
+      RolesType.distributor,
+    };
+
+    final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
+
+    return userObject.roles.any((role) => stockRoleCodes.contains(role.code));
   }
 
   /// Silently downloads dispatched stock from server without UI dialogs.

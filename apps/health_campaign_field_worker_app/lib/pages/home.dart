@@ -26,7 +26,6 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +37,6 @@ import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart';
 import 'package:sync_service/utils/utils.dart' as sync_utils;
-import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -57,14 +55,12 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
-import '../sampleJsonConfigs/polio_clf_vaccination.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
-import '../sampleJsonConfigs/polio_transit_vaccination.dart';
+import '../sampleJsonConfigs/polio_outside_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
 import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
-import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
@@ -2342,8 +2338,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                   isPolio ? 'hcm-householdstrategy-${context.selectedProject.referenceID},hcm-beneficiary' : 'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
+                final moduleName = isPolio
+                    ? 'hcm-householdstrategy-${context.selectedProject.referenceID},hcm-beneficiary'
+                    : 'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -2504,33 +2501,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      // --- CLF (Communal Living Facilities) — polio group vaccination ---
-      if (isPolio)
-        i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-          child: HomeItemCard(
-            icon: Icons.account_balance,
-            label: i18.home.clfLabel,
-            onPressed: () async {
-              context.router.push(CurrentBoundaryRoute(
-                onBoundarySelected: (ctx) => _openModule(() async {
-                  final moduleName =
-                      'hcm-clf-${ctx.selectedProject.referenceID}';
-                  triggerLocalization(module: moduleName);
-                  isTriggerLocalisation = false;
-
-                  await FlowNavigationUtils.navigateToFlowModule(
-                    context: ctx,
-                    config: FlowModuleConfig(
-                      schemaKey: 'CLF',
-                      sampleFlows: sampleClfVaccinationFlows,
-                    ),
-                  );
-                }),
-              ));
-            },
-          ),
-        ),
-
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
           icon: isPolio ? Icons.child_care : Icons.home,
@@ -2543,8 +2513,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                   isPolio ? 'hcm-missedchildren-${context.selectedProject.referenceID}' : 'hcm-closehousehold-${context.selectedProject.referenceID}';
+                final moduleName = isPolio
+                    ? 'hcm-missedchildren-${context.selectedProject.referenceID}'
+                    : 'hcm-closehousehold-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -3113,35 +3084,37 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
-          child: HomeItemCard(
-        icon: Icons.local_shipping_outlined,
-        label: i18.home.transitPostLabel,
-        onPressed: () async {
-          if (isPolio) {
+      // --- Outside household vaccination — polio ---
+      // Replaces the separate CLF and transit-post cards: both opened the same
+      // `sampleOutSideHouseholdVaccinationFlows` module and differed only in
+      // the delivery method they scoped to. The flow's own
+      // `selectVaccinationLocation` page is the transit-post / CLF chooser, so
+      // one card is enough.
+      i18.home.outsideHouseholdVaccinationLabel:
+          homeShowcaseData.transitPost.buildWith(
+        child: HomeItemCard(
+          icon: Icons.nature_people,
+          label: i18.home.outsideHouseholdVaccinationLabel,
+          onPressed: () async {
             await context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
                 final moduleName =
-                    'hcm-transitpost-${ctx.selectedProject.referenceID}';
+                    'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(
-                    schemaKey: 'TRANSITPOST',
-                    sampleFlows: sampleTransitVaccinationFlows,
+                    schemaKey: 'OUTSIDEHOUSEHOLD',
+                    sampleFlows: sampleOutSideHouseholdVaccinationFlows,
                   ),
                 );
               }),
             ));
-          } else {
-            const module = "hcm-base-transitpost-polio";
-            triggerLocalization(module: module);
-            context.router.push(const TransitPostWrapperRoute());
-          }
-        },
-      )),
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -3174,8 +3147,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioInsideMonitoringLabel:
           homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
-      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      // Inherits the transit-post showcase key — the card it replaced.
+      i18.home.outsideHouseholdVaccinationLabel:
+          homeShowcaseData.transitPost.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3185,8 +3159,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
-      i18.home.clfLabel,
-      i18.home.transitPostLabel,
+      i18.home.outsideHouseholdVaccinationLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,
       i18.home.polioInsideMonitoringLabel,
@@ -3208,13 +3181,11 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     // Second filter (on top of role-action `displayName` gating above):
     // hide method-bound cards when the current project's cycles don't carry
-    // a delivery for their method. Only the beneficiary / CLF / transit-post
-    // cards are method-bound today. Legacy configs where no cycle carries a
+    // a delivery for their method. Legacy configs where no cycle carries a
     // `deliveryMethod` are left alone by `hasDeliveryMethod`.
     final Map<String, String> labelToDeliveryMethod = {
       i18.home.beneficiaryLabel: isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION',
-      if (isPolio) i18.home.clfLabel: 'CLF',
-      if (isPolio) i18.home.transitPostLabel: 'TRANSITPOST',
+      i18.home.outsideHouseholdVaccinationLabel: 'OUTSIDEHOUSEHOLD',
     };
 
     final List<String> filteredLabels = homeItemsLabel
@@ -3227,11 +3198,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .where((element) {
-          final method = labelToDeliveryMethod[element];
-          if (method == null) return true;
-          return FlowBuilderSingleton().hasDeliveryMethod(method);
-        })
-        .toList();
+      final method = labelToDeliveryMethod[element];
+      if (method == null) return true;
+      return FlowBuilderSingleton().hasDeliveryMethod(method);
+    }).toList();
 
     final showcaseKeys = filteredLabels
         .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))
