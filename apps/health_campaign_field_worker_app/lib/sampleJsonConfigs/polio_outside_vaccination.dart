@@ -197,9 +197,24 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
       {
         "body": [
           {
+            // Search bar with headless proximity filter folded in. The
+            // `proximity` block subscribes to LocationBloc on mount and
+            // publishes a `within` filter under its own searchName as soon
+            // as GPS resolves — no visible toggle, always on. It is here
+            // because the `__distance` ordering below needs a centre point,
+            // and the `within` filter is what supplies one. The radius is
+            // deliberately wide: the intent is "rank by nearest", not "hide
+            // anything far", so it only excludes sessions that are
+            // implausibly distant. Its bounding box still earns its keep as
+            // a prefilter.
             "type": "template",
             "label": "GV_SESSION_SEARCH_PLACEHOLDER",
             "format": "searchBar",
+            "proximity": {
+              "radius": 100,
+              "searchName": "sessionProximity",
+              "root": "userAction"
+            },
             "onAction": [
               {
                 "actionType": "SEARCH_EVENT",
@@ -356,6 +371,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "category": "TRANSITPOST",
         "screenType": "TEMPLATE",
         "description": "GV_TRANSIT_SESSIONS_DESCRIPTION",
+        // Hold initActions until the searchBar's headless `proximity`
+        // block has published its `within` filter — see
+        // WidgetReadinessRegistry. Name must match the proximity
+        // searchName above. 3 s GPS fallback: if no fix arrives we fire
+        // without proximity and the first paint is unordered (same as a
+        // flow without this knob).
+        "waitForWidget": {"name": "sessionProximity", "timeoutMs": 3000},
         "initActions": [
           {
             "actionType": "SEARCH_EVENT",
@@ -450,7 +472,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": ["userAction"],
-            "orderBy": {"field": "clientCreatedTime", "order": "DESC"},
+            // Nearest session first. `__distance` is not a column — it sorts
+            // by distance from the centre of the `within` filter that the
+            // searchBar's `proximity` block applies, so the two have to stay
+            // together: drop the `proximity` block and the ordering is
+            // skipped (the query falls back to unordered, not an error).
+            "orderBy": {"field": "__distance", "order": "ASC"},
             "primary": "userAction"
           }
         }
@@ -1567,7 +1594,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "fieldName": "sessionSearch",
             "validations": [
               {"type": "minSearchChars", "value": 2}
-            ]
+            ],
+            "proximity": {
+              "radius": 100,
+              "searchName": "sessionProximity",
+              "root": "userAction"
+            }
           },
           {
             "type": "template",
@@ -1713,6 +1745,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "category": "COMMUNAL_LIVING_FACILITY",
         "screenType": "TEMPLATE",
         "description": "GV_CLF_SESSIONS_DESCRIPTION",
+        // See the transit-sessions page above for the full rationale.
+        "waitForWidget": {"name": "sessionProximity", "timeoutMs": 3000},
         "initActions": [
           {
             "actionType": "SEARCH_EVENT",
@@ -1804,7 +1838,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
             "select": ["userAction"],
-            "orderBy": {"field": "clientCreatedTime", "order": "DESC"},
+            // Nearest session first. `__distance` is not a column — it sorts
+            // by distance from the centre of the `within` filter that the
+            // searchBar's `proximity` block applies, so the two have to stay
+            // together: drop the `proximity` block and the ordering is
+            // skipped (the query falls back to unordered, not an error).
+            "orderBy": {"field": "__distance", "order": "ASC"},
             "primary": "userAction"
           }
         }
