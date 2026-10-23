@@ -925,7 +925,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                             "fieldName": "goForVaccinateButton",
                             "properties": {
                               "size": "medium",
-                              "type": "secondary",
+                              "type": "primary",
                               "bottomGap": 8,
                               "mainAxisSize": "max"
                             }
