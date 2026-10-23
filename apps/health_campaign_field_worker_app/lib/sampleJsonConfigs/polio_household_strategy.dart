@@ -5696,32 +5696,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "includeInSummary": true,
               "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
             },
-            {
-              "type": "string",
-              "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "latLng",
-              "mandatory": false,
-              "showLabel": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "additionalFields": true,
-              "includeInSummary": true
-            },
             // {
             //   "type": "string",
             //   "label": "UNABLETODELIVER_SITE_NAME_LABEL",
@@ -5783,24 +5757,9 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             // },
             {
               "type": "string",
-              "enums": [
-                {"code": "SCHOOL", "name": "VACCINATED_ELSEWHERE_ENUM_SCHOOL"},
-                {
-                  "code": "MARKETPLACE",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_MARKETPLACE"
-                },
-                {
-                  "code": "HEALTH_FACILITY",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_HEALTH_FACILITY"
-                },
-                {
-                  "code": "TRANSIT_POST",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_TRANSIT_POST"
-                },
-                {"code": "OTHER", "name": "VACCINATED_ELSEWHERE_ENUM_OTHER"}
-              ],
+              "enums": [],
               "label": "VACCINATED_ELSEWHERE_LOCATION_LABEL",
-              "order": 2,
+              "order": 1,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -5839,7 +5798,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "VACCINATED_ELSEWHERE_LOCATION_OTHER_LABEL",
-              "order": 3,
+              "order": 2,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5870,7 +5829,33 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   }
                 ]
               }
-            }
+            },
+            {
+              "type": "string",
+              "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "latLng",
+              "mandatory": false,
+              "showLabel": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true
+            },
           ],
           "actionLabel": "VACCINATED_ELSEWHERE_FLOW_ACTION_LABEL",
           "description": "VACCINATED_ELSEWHERE_FLOW_DESCRIPTION",
