@@ -52,11 +52,44 @@ class TextWidget extends ResolvedFlowWidget {
           color:
               _parseTextColor(context, properties['color']?.toString()) ?? null,
         ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: json["maxLines"] ?? 2,
+        textAlign: _parseTextAlign(properties['textAlign']?.toString()),
+        // `maxLines: 0` means "as many as it takes" — the only way for a
+        // config to ask for genuinely unbounded text, since omitting the key
+        // falls back to the two-line default. Ellipsis only makes sense when
+        // there is a line cap to overflow.
+        overflow: _maxLines(json) == null
+            ? TextOverflow.visible
+            : TextOverflow.ellipsis,
+        maxLines: _maxLines(json),
       ),
       properties,
     );
+  }
+
+  int? _maxLines(Map<String, dynamic> json) {
+    final raw = json["maxLines"];
+    if (raw == null) return 2;
+    final value = raw is num ? raw.toInt() : int.tryParse(raw.toString());
+    if (value == null) return 2;
+    return value <= 0 ? null : value;
+  }
+
+  /// Horizontal alignment for the rendered text. Without this a wrapped
+  /// string stays left-aligned inside its block even when the block itself
+  /// has been centred by the surrounding row.
+  TextAlign? _parseTextAlign(String? value) {
+    switch (value) {
+      case 'center':
+        return TextAlign.center;
+      case 'right':
+      case 'end':
+        return TextAlign.end;
+      case 'left':
+      case 'start':
+        return TextAlign.start;
+      default:
+        return null;
+    }
   }
 
   Color? _parseTextColor(BuildContext context, String? colorKey) {

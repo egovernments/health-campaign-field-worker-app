@@ -110,6 +110,17 @@ dev_dependencies:
   hrk_flutter_test_batteries: ^0.8.0
   chopper_generator: ^6.0.0
 
+dependency_overrides:
+  # Consume digit_ui_components from the shared UX-audit branch instead of
+  # pub.dev ^0.3.2. Kept here (tracked) so CI and other machines resolve the
+  # same build; pubspec_overrides.yaml is gitignored and carries a copy for
+  # local work alongside the in-repo path overrides.
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      path: flutter/digit-ui-components/digit_components
+      ref: UI/ux-audit-hcm-app-2005
+
 
 flutter_icons:
   android: 'ic_launcher'

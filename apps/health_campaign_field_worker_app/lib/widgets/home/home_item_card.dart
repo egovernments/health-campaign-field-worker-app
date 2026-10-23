@@ -90,13 +90,12 @@ class HomeItemCard extends StatelessWidget {
                 // bodyS on tablet is 16px * 1.37 line-height = ~44px for two
                 // lines; spacer10 (40) clipped the second line ("Stock
                 // Reconcili..."). spacer12 fits both mobile and tablet.
-                height: spacer12,
                 child: Center(
                   child: Text(
                     AppLocalizations.of(context).translate(label),
                     style: textTheme.bodyS,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

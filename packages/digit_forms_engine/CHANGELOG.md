@@ -1,3 +1,8 @@
+## Unreleased
+
+- `radio` fields now render `helpText`. `RadioList` has no `helpText` prop of its own, so the builder draws it under the options using the same style `DigitBaseFormInput` applies (bodyS, secondary text colour, truncated at 256 characters). An error suppresses it, matching how the components library replaces help text with the error rather than stacking both.
+- Added the `multiSelectDropdown` field format: renders `MultiSelectDropDown` from the field's `enums` without the config also having to set `isMultiSelect: true`. Selections are stored dot-joined, and the summary page splits and localizes them like other multi-select fields. Composer fields declared as `"type": "array"` already fall back to `string`, so they pick this up.
+
 ## 0.1.2
 
 - Fix multi-select summary rendering: gate the dot-split on the `isMultiSelect` schema flag instead of a regex that only accepted purely alphabetic dot-joined tokens, so enum codes with underscores or digits (e.g. `MOB_VAN`, `HEALTH_WORKER`) now localize instead of being shown raw with dots. Remove the now-unused `isDotSeparatedKey` helper.

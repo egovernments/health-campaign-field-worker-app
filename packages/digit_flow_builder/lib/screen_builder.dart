@@ -7,6 +7,7 @@ import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'blocs/widget_readiness_registry.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -89,12 +90,43 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Initialize FormSubmissionRegistry if not already done
         _initializeFormSubmissionRegistry();
 
         // Register form submission handler
         _registerFormHandler();
+
+        // Optional: hold the first dispatch until a sibling widget has
+        // contributed its init-time filter (e.g. the searchBar's
+        // headless `proximity` block). Without this, initActions fires
+        // immediately with the configured filters only, and the
+        // proximity SEARCH_EVENT lands moments later — causing a second
+        // search and a flash of unsorted results before `__distance`
+        // ordering kicks in. GPS failure is handled by `awaitSignal`'s
+        // timeout: if no fix lands in [timeoutMs], we fall through and
+        // fire initActions without the proximity filter (same behaviour
+        // as a flow with no `waitForWidget`).
+        final waitSpec = widget.config['waitForWidget'];
+        if (waitSpec != null) {
+          String? signalName;
+          var timeoutMs = 3000;
+          if (waitSpec is String) {
+            signalName = waitSpec;
+          } else if (waitSpec is Map) {
+            signalName = waitSpec['name'] as String?;
+            final rawTimeout = waitSpec['timeoutMs'];
+            if (rawTimeout is int) timeoutMs = rawTimeout;
+          }
+          if (signalName != null && signalName.isNotEmpty) {
+            await WidgetReadinessRegistry().awaitSignal(
+              _compositeKey,
+              signalName,
+              timeout: Duration(milliseconds: timeoutMs),
+            );
+          }
+        }
+        if (!mounted) return;
 
         debugPrint('ScreenBuilder: initActions for $_schemaKey, compositeKey=$_compositeKey');
         debugPrint('ScreenBuilder: navigationParams=${widget.navigationParams}');
@@ -191,6 +223,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         instanceId: _instanceId,
       );
     }
+    WidgetReadinessRegistry().dispose(_compositeKey);
     // Note: State disposal is handled by FlowBuilderHomePage using composite key
     // This ensures each page instance's state is disposed correctly
     super.dispose();

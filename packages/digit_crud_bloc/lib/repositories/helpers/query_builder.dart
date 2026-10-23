@@ -281,8 +281,8 @@ class QueryBuilder {
     final minLon = centerLon - deltaLon;
     final maxLon = centerLon + deltaLon;
 
-    return (latField as Expression<double>).isBetweenValues(minLat, maxLat) &
-        (lonField as Expression<double>).isBetweenValues(minLon, maxLon);
+    return _numericCoordinate(latField).isBetweenValues(minLat, maxLat) &
+        _numericCoordinate(lonField).isBetweenValues(minLon, maxLon);
   }
 
   /// Builds `(col1 = v OR col2 = v …)` for an `equalsAny` filter applied
@@ -780,8 +780,8 @@ class QueryBuilder {
         final minLon = centerLon - deltaLon;
         final maxLon = centerLon + deltaLon;
 
-        final latExpr = latField as Expression<double>;
-        final lonExpr = lonField as Expression<double>;
+        final latExpr = _numericCoordinate(latField);
+        final lonExpr = _numericCoordinate(lonField);
 
         final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
             lonExpr.isBetweenValues(minLon, maxLon);
@@ -928,10 +928,10 @@ class QueryBuilder {
         // but route through selectOnly so the full whereClauses (bounding
         // box + any cross-table extraConstraints) are honored — the previous
         // raw-SQL path silently dropped extraConstraints from the count.
-        final latCol = dynamicTable.$columns
-            .firstWhere((c) => c.$name == 'latitude') as Expression<double>;
-        final lonCol = dynamicTable.$columns
-            .firstWhere((c) => c.$name == 'longitude') as Expression<double>;
+        final latCol = _numericCoordinate(
+            dynamicTable.$columns.firstWhere((c) => c.$name == 'latitude'));
+        final lonCol = _numericCoordinate(
+            dynamicTable.$columns.firstWhere((c) => c.$name == 'longitude'));
         final geoQuery = sql.selectOnly(dynamicTable)
           ..addColumns([latCol, lonCol]);
         if (whereClauses.isNotEmpty) {
@@ -1007,22 +1007,56 @@ class QueryBuilder {
     // Apply ordering if provided
     if (orderBy != null && isPrimaryTable) {
       final SearchOrderBy searchOrder = orderBy;
-      final orderColumn = camelToSnake(searchOrder.field);
-      final col = dynamicTable.$columns.firstWhere(
-        (c) => c.$name == orderColumn,
-        orElse: () =>
-            throw Exception('Order column $orderColumn not found in $table'),
-      );
 
       final orderingMode = searchOrder.order.toUpperCase() == 'ASC'
           ? OrderingMode.asc
           : OrderingMode.desc;
 
-      dataQuery.orderBy([OrderingTerm(expression: col, mode: orderingMode)]);
+      Expression<Object>? orderExpression;
+
+      if (searchOrder.field == distanceOrderField) {
+        // Nearest-first. Only meaningful alongside a 'within' filter on this
+        // table, which is what supplies the centre — and which also means the
+        // bounding box is in `whereClauses`, so rows with a null lat/lon are
+        // already excluded. Without that they would sort to the very top,
+        // since SQLite orders NULLs first ascending.
+        if (centerLat != null && centerLon != null) {
+          orderExpression = _buildDistanceOrderExpression(
+            dynamicTable,
+            centerLat,
+            centerLon,
+          );
+        }
+        // No centre: leave the query unordered rather than throwing. A
+        // distance sort with nothing to measure from is a config mistake,
+        // not a reason to fail the whole search.
+      } else {
+        final orderColumn = camelToSnake(searchOrder.field);
+        orderExpression = dynamicTable.$columns.firstWhere(
+          (c) => c.$name == orderColumn,
+          orElse: () =>
+              throw Exception('Order column $orderColumn not found in $table'),
+        );
+      }
+
+      if (orderExpression != null) {
+        dataQuery.orderBy(
+          [OrderingTerm(expression: orderExpression, mode: orderingMode)],
+        );
+      }
     }
 
+    final bool geoActive =
+        centerLat != null && centerLon != null && radiusInKm != null;
+
     if (pagination != null && isPrimaryTable) {
-      dataQuery.limit(pagination.limit, offset: pagination.offset);
+      // The exact radius cut runs in Dart after this query, so a plain LIMIT
+      // hands back a short page: the bounding box is the square around the
+      // circle, and the corners it adds are ~21% of its area. Over-fetch by
+      // more than that margin and trim back to `limit` once the cut has run.
+      final fetchLimit =
+          geoActive ? (pagination.limit * 1.5).ceil() + 5 : pagination.limit;
+      dataQuery.limit(fetchLimit, offset: pagination.offset);
     }
 
     // Drift serializes statements on a single connection, so a "parallel"
@@ -1109,13 +1143,80 @@ class QueryBuilder {
       }
 
       rows = rows.where((row) {
-        final lat = row['latitude'] as double?;
-        final lon = row['longitude'] as double?;
+        final lat = _coordinateToDouble(row['latitude']);
+        final lon = _coordinateToDouble(row['longitude']);
         if (lat == null || lon == null) return false;
         return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
       }).toList();
+
+      // Trim the over-fetch back to the page the caller asked for.
+      if (pagination != null && isPrimaryTable && rows.length > pagination.limit) {
+        rows = rows.sublist(0, pagination.limit);
+      }
     }
 
     return rows;
+  }
+
+  /// A lat/lon column as a numeric SQL expression, whatever its declared
+  /// type.
+  ///
+  /// Most tables store coordinates as REAL (`address`, `household`), but some
+  /// store them as TEXT (`user_action`). Text can't be compared or ordered
+  /// numerically — '9.5' sorts after '10.2' — and casting the column object
+  /// straight to `Expression<double>` throws, because `GeneratedColumn<String>`
+  /// is not one. Route the text case through a SQL CAST instead.
+  static Expression<double> _numericCoordinate(GeneratedColumn<Object> column) {
+    final Expression<Object> expression = column;
+    if (expression is Expression<double>) return expression;
+    return expression.cast<double>();
+  }
+
+  /// Reads a coordinate out of a result row, tolerating both storage types.
+  static double? _coordinateToDouble(Object? value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  /// Squared planar distance from (centreLat, centreLon), as a SQL
+  /// expression — for ordering only, never for display.
+  ///
+  /// Sorting by this gives the same order as a true Haversine distance at
+  /// the scale this is used (a settlement or ward), because the two are
+  /// monotonic in each other over small spans. Using it instead of the real
+  /// thing keeps the sort inside SQLite: Haversine needs trig, which isn't
+  /// available there unless the build enables math functions, and the
+  /// alternative — pulling every row in the bounding box into Dart to sort
+  /// it — means decrypting those pages through SQLCipher on every search.
+  ///
+  /// Longitude degrees shrink towards the poles, so the longitude term is
+  /// scaled by cos(latitude). One cosine at the centre is accurate enough
+  /// across a span this small. The square root is skipped because it does
+  /// not change the ordering.
+  static Expression<double> _buildDistanceOrderExpression(
+    TableInfo<Table, Object?> table,
+    double centerLat,
+    double centerLon,
+  ) {
+    final latExpr = _numericCoordinate(table.$columns.firstWhere(
+      (c) => c.$name == 'latitude',
+      orElse: () => throw Exception(
+          'Latitude column not found in ${table.actualTableName}'),
+    ));
+    final lonExpr = _numericCoordinate(table.$columns.firstWhere(
+      (c) => c.$name == 'longitude',
+      orElse: () => throw Exception(
+          'Longitude column not found in ${table.actualTableName}'),
+    ));
+
+    const degToRad = math.pi / 180.0;
+    final lonScale = math.cos(centerLat * degToRad);
+
+    final dLat = latExpr - Variable<double>(centerLat);
+    final dLon =
+        (lonExpr - Variable<double>(centerLon)) * Variable<double>(lonScale);
+
+    return dLat * dLat + dLon * dLon;
   }
 }
