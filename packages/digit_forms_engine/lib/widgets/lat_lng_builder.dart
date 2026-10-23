@@ -29,6 +29,21 @@ LocationAccuracyLevel classifyLocationAccuracy(
   return LocationAccuracyLevel.low;
 }
 
+/// Popup timer used when the form config doesn't set one.
+const Duration kDefaultLocationPopupTimer = Duration(seconds: 30);
+
+/// The field's popup timer: [kDefaultLocationPopupTimer] when the config has
+/// no `popupTimer` or sets no time, none when it is switched off
+/// (`enabled: false`).
+@visibleForTesting
+Duration? locationPopupTimer(PopupTimer? popupTimer) {
+  if (popupTimer?.enabled == false) return null;
+  final duration = popupTimer?.duration;
+  return duration == null || duration <= Duration.zero
+      ? kDefaultLocationPopupTimer
+      : duration;
+}
+
 /// Save needs good accuracy (within accuracyThreshold, 5 m by default). With
 /// a popup timer ([saveEnabledAfter]), any reading can be saved once it runs
 /// out, so a worker is never stuck where accuracy won't improve.

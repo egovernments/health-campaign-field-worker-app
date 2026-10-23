@@ -92,6 +92,37 @@ void main() {
     });
   });
 
+  group('locationPopupTimer', () {
+    PopupTimer? timer(Map<String, dynamic>? popupTimer) =>
+        PropertySchema.fromJson({
+          'type': 'string',
+          'format': 'latLng',
+          if (popupTimer != null) 'popupTimer': popupTimer,
+        }).popupTimer;
+
+    test('defaults to 30 seconds when the config has no popupTimer', () {
+      expect(locationPopupTimer(timer(null)), const Duration(seconds: 30));
+      expect(kDefaultLocationPopupTimer, const Duration(seconds: 30));
+    });
+
+    test('defaults to 30 seconds when no time is set', () {
+      expect(locationPopupTimer(timer({'enabled': true})),
+          const Duration(seconds: 30));
+      expect(locationPopupTimer(timer({'minutes': 0, 'seconds': 0})),
+          const Duration(seconds: 30));
+    });
+
+    test('uses the configured time', () {
+      expect(locationPopupTimer(timer({'minutes': 0, 'seconds': 59})),
+          const Duration(seconds: 59));
+    });
+
+    test('no timer when switched off', () {
+      expect(
+          locationPopupTimer(timer({'enabled': false, 'seconds': 59})), isNull);
+    });
+  });
+
   group('classifyLocationAccuracy', () {
     LocationAccuracyLevel classify(double accuracy) => classifyLocationAccuracy(
           accuracy,
