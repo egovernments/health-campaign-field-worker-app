@@ -569,6 +569,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: _resolveLabel(widget.schema.label),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          validations: widget.schema.validations,
+          saveEnabledAfter: widget.schema.popupTimer?.duration,
         );
 
       case PropertySchemaFormat.textArea:
