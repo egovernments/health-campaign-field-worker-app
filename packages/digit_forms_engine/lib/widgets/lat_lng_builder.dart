@@ -1,13 +1,14 @@
 part of 'json_schema_builder.dart';
 
-/// Accuracy at or below [kDefaultLocationAccuracyThreshold] is good (best);
-/// at or below [kDefaultUnacceptableLocationAccuracyThreshold] is fair and can
-/// be saved; anything worse is low accuracy and cannot be saved.
+/// Accuracy at or below [kDefaultLocationAccuracyThreshold] is good and can be
+/// saved; anything worse is low accuracy. Both default to 5 m, so there is no
+/// fair band unless a field sets a wider unacceptableAccuracyThreshold, which
+/// only changes the colour and hints, never what can be saved.
 const double kDefaultLocationAccuracyThreshold = 5;
-const double kDefaultUnacceptableLocationAccuracyThreshold = 10;
+const double kDefaultUnacceptableLocationAccuracyThreshold = 5;
 
 /// Validation rule types used to override the thresholds per field, e.g.
-/// `{"type": "accuracyThreshold", "value": 10}`. The validator builder
+/// `{"type": "accuracyThreshold", "value": 3}`. The validator builder
 /// ignores unknown rule types, so these never become form validators.
 const String kAccuracyThresholdRule = 'accuracyThreshold';
 const String kUnacceptableAccuracyThresholdRule =
@@ -28,10 +29,9 @@ LocationAccuracyLevel classifyLocationAccuracy(
   return LocationAccuracyLevel.low;
 }
 
-/// Without a popup timer, Save needs a reading at fair or good accuracy.
-/// With one ([saveEnabledAfter]), Save needs good accuracy until the timer
-/// runs out, then any reading can be saved so a worker is never stuck where
-/// accuracy won't improve.
+/// Save needs good accuracy (within accuracyThreshold, 5 m by default). With
+/// a popup timer ([saveEnabledAfter]), any reading can be saved once it runs
+/// out, so a worker is never stuck where accuracy won't improve.
 @visibleForTesting
 bool canSaveLocation({
   required LocationAccuracyLevel? level,
@@ -40,8 +40,8 @@ bool canSaveLocation({
 }) {
   if (level == null) return false;
   if (level == LocationAccuracyLevel.good) return true;
-  if (saveEnabledAfter == null) return level == LocationAccuracyLevel.fair;
-  return elapsedSeconds >= saveEnabledAfter.inSeconds;
+  return saveEnabledAfter != null &&
+      elapsedSeconds >= saveEnabledAfter.inSeconds;
 }
 
 /// Seconds of capture before the dialog starts suggesting what to do.
@@ -201,8 +201,8 @@ class _CaptureProgress {
 
 /// Keeps listening to location updates while the capture dialog shows live
 /// accuracy, status, elapsed time and satellites. Save is enabled once the
-/// reading is within [unacceptableAccuracyThreshold], or at any accuracy once
-/// the popup timer runs out. Cancel closes the dialog without a value; a
+/// reading is within [accuracyThreshold], or at any accuracy once the popup
+/// timer runs out (see [canSaveLocation]). Cancel closes the dialog without a value; a
 /// required field then fails validation until it is captured again.
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
@@ -377,28 +377,17 @@ class _LatLngBuilderStatefulWrapperState
     return _t(loc, 'LOCATION_ACCURACY_M', '{} m', value);
   }
 
-  /// Save rule with the save threshold in bold, e.g. "You can save once
-  /// accuracy is **10 m or less**; 5 m or less is best." With a popup timer
-  /// only good accuracy saves early: "You can save once accuracy is **5 m or
-  /// less**, or when the timer ends."
+  /// Save rule with the save threshold in bold: "You can save once accuracy
+  /// is **5 m or less**." or, with a popup timer, "You can save once accuracy
+  /// is **5 m or less**, or when the timer ends."
   TextSpan _saveRuleSpan(FormLocalization loc, TextStyle boldStyle) {
-    final hasTimer = widget.saveEnabledAfter != null;
-    final template = hasTimer
+    final template = widget.saveEnabledAfter != null
         ? _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_TIMER',
             'You can save once accuracy is {save}, or when the timer ends.')
-        : _t(loc, 'LOCATION_CAPTURE_SAVE_RULE',
-                'You can save once accuracy is {save}; {best} or less is best.')
-            .replaceAll(
-                '{best}', _formatAccuracy(loc, widget.accuracyThreshold));
-    final save = _t(
-        loc,
-        'LOCATION_ACCURACY_OR_LESS',
-        '{} or less',
-        _formatAccuracy(
-            loc,
-            hasTimer
-                ? widget.accuracyThreshold
-                : widget.unacceptableAccuracyThreshold));
+        : _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_GOOD',
+            'You can save once accuracy is {save}.');
+    final save = _t(loc, 'LOCATION_ACCURACY_OR_LESS', '{} or less',
+        _formatAccuracy(loc, widget.accuracyThreshold));
     final parts = template.split('{save}');
     return TextSpan(children: [
       TextSpan(text: parts.first),
