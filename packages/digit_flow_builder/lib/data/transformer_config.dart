@@ -876,6 +876,8 @@ final jsonConfig = {
             "reasonForRedose": "RedoseDetails.reasonForRedose",
             "redoseComments": "RedoseDetails.redoseComments",
             "taskType": "__value:REDOSE",
+            // A redose is only given on a revisit.
+            "revisit": "__value:true",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -1642,7 +1644,10 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_SUCCESS",
+          // Not ADMINISTRATION_SUCCESS: the dose is counted where the child
+          // was vaccinated, so this task must not count as a household dose.
+          // "status": "__value:ADMINISTRATION_SUCCESS",
+          "status": "__value:VACCINATED_ELSEWHERE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -1686,11 +1691,16 @@ final jsonConfig = {
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "taskType": "__value:VACCINATED_ELSEWHERE",
+            // "true" from the revisit button, "false" from the first visit.
+            "revisit": "__context:isRevisit",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
-            "siteName": "vaccinatedElsewhere.siteName",
-            "region": "vaccinatedElsewhere.region",
+            // "siteName": "vaccinatedElsewhere.siteName",
+            // "region": "vaccinatedElsewhere.region",
+            "vaccinationLocation": "vaccinatedElsewhere.vaccinationLocation",
+            "vaccinationLocationOther":
+                "vaccinatedElsewhere.vaccinationLocationOther",
             "latitude": "vaccinatedElsewhere.latLng[0]",
             "longitude": "vaccinatedElsewhere.latLng[1]",
             "locationAccuracy": "vaccinatedElsewhere.latLng[2]",

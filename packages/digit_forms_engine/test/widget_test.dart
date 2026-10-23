@@ -155,6 +155,58 @@ void main() {
       expect(controls.containsKey('hidden'), isFalse);
     });
 
+    testWidgets(
+        'builds hidden custom fields kept in the form off screen, and nothing else',
+        (WidgetTester tester) async {
+      final schema = PropertySchema.fromJson({
+        'type': 'object',
+        'properties': {
+          'shown': {'type': 'dynamic', 'format': 'custom'},
+          'kept': {
+            'type': 'dynamic',
+            'format': 'custom',
+            'hidden': true,
+            'includeInForm': true,
+          },
+          'dropped': {'type': 'dynamic', 'format': 'custom', 'hidden': true},
+          'hiddenText': {
+            'type': 'string',
+            'label': 'Hidden text',
+            'hidden': true,
+            'includeInForm': true,
+          },
+        },
+      });
+      final form = FormGroup(JsonForms.getFormControls(schema));
+
+      await tester.pumpWidget(wrapWithMaterialApp(Scaffold(
+        body: ReactiveForm(
+          formGroup: form,
+          child: JsonForms(
+            propertySchema: schema,
+            pageName: 'page',
+            currentSchemaKey: 'schema',
+            childrens: const [
+              {'shown': Text('SHOWN')},
+              {'kept': Text('KEPT')},
+              {'dropped': Text('DROPPED')},
+            ],
+          ),
+        ),
+      )));
+      await tester.pumpAndSettle();
+
+      // Visible custom field: on screen, as before.
+      expect(find.text('SHOWN'), findsOneWidget);
+      // Hidden + includeInForm custom field: built, but only off screen.
+      expect(find.text('KEPT'), findsNothing);
+      expect(find.text('KEPT', skipOffstage: false), findsOneWidget);
+      // Hidden custom field not in the form: still not built.
+      expect(find.text('DROPPED', skipOffstage: false), findsNothing);
+      // Hidden + includeInForm non-custom field: still not built.
+      expect(find.text('Hidden text', skipOffstage: false), findsNothing);
+    });
+
     testWidgets('extracts form values correctly', (WidgetTester tester) async {
       final schema = PropertySchema.fromJson({
         'type': 'object',

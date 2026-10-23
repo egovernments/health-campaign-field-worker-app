@@ -48,6 +48,10 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   bool _toastShown = false;
 
+  // True when the schema hides this card (built off screen only to fill its
+  // value). A hidden card must not show or dismiss toasts on the page.
+  bool _hiddenFromSchema = false;
+
   // Memoized form and subscription management
   FormGroup? _memoizedForm;
   List<DeliveryProductVariant>? _lastProductVariants;
@@ -67,7 +71,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     }
     _formSubscriptions.clear();
     // Dismiss any active toasts when widget is disposed (e.g., page navigation)
-    ToastManager().dismissAll(showAnim: false);
+    if (!_hiddenFromSchema) ToastManager().dismissAll(showAnim: false);
     super.dispose();
   }
 
@@ -163,6 +167,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           // Found it; pull values
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
+          _hiddenFromSchema = schema.hidden == true;
           labelFromSchema = schema.label ?? schema.innerLabel;
 
           // Extract validation messages from schema
@@ -222,7 +227,8 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 // building. Both have to be deferred to after the frame.
 
                 // Show toast when field is invalid and touched (via ReactiveWrapperField)
-                if (field.control.invalid &&
+                if (!_hiddenFromSchema &&
+                    field.control.invalid &&
                     field.control.touched &&
                     !_toastShown) {
                   _toastShown = true;
@@ -239,7 +245,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 }
 
                 // Reset toast flag and dismiss any active toast when field becomes valid
-                if (!field.control.invalid) {
+                if (!_hiddenFromSchema && !field.control.invalid) {
                   _toastShown = false;
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (!mounted) return;
