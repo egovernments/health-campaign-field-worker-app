@@ -200,10 +200,11 @@ class _CaptureProgress {
 }
 
 /// Keeps listening to location updates while the capture dialog shows live
-/// accuracy, status, elapsed time and satellites. Save is enabled once the
-/// reading is within [accuracyThreshold], or at any accuracy once the popup
-/// timer runs out (see [canSaveLocation]). Cancel closes the dialog without a value; a
-/// required field then fails validation until it is captured again.
+/// accuracy, status, elapsed time and satellites. A reading within
+/// [accuracyThreshold] is saved and the dialog closed automatically; once the
+/// popup timer runs out, Save takes any reading (see [canSaveLocation]). The
+/// close icon closes the dialog without a value; a required field then fails
+/// validation until it is captured again.
 class _LatLngBuilderStatefulWrapperState
     extends State<_LatLngBuilderStatefulWrapper> {
   double? _accuracy;
@@ -321,6 +322,20 @@ class _LatLngBuilderStatefulWrapperState
       latLng: state.latLngString,
       accuracy: state.accuracy,
     );
+
+    // Good accuracy (accuracyThreshold, 5 m by default) needs no
+    // confirmation: save the reading and close the popup straight away.
+    final accuracy = state.accuracy;
+    if (accuracy != null &&
+        classifyLocationAccuracy(
+              accuracy,
+              accuracyThreshold: widget.accuracyThreshold,
+              unacceptableAccuracyThreshold:
+                  widget.unacceptableAccuracyThreshold,
+            ) ==
+            LocationAccuracyLevel.good) {
+      _acceptCurrentReading();
+    }
   }
 
   void _acceptCurrentReading() {
@@ -423,14 +438,16 @@ class _LatLngBuilderStatefulWrapperState
     }
   }
 
-  /// Title and save rule, then a reading card with a pulsing pin, the current
-  /// accuracy and a status chip coloured by level (low → fair → good), elapsed
-  /// time and satellites, and Save (enabled once accuracy is fair or good).
+  /// Shown with the shared [Popup], like the app's other popups: title with
+  /// a close icon, the save rule, a reading card with a pulsing pin, the
+  /// current accuracy and a status chip coloured by level, elapsed time and
+  /// satellites, and Save as the only action (enabled per [canSaveLocation]).
+  /// The close icon closes without a value, as Cancel did.
   void _showCaptureDialog() {
     final loc = FormLocalization.of(context);
     final isRequired = widget.isRequired ?? false;
 
-    showDialog<void>(
+    showCustomPopup(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
@@ -443,18 +460,9 @@ class _LatLngBuilderStatefulWrapperState
 
         return PopScope(
           canPop: false,
-          child: Dialog(
-            backgroundColor: colors.paper.primary,
-            insetPadding: const EdgeInsets.symmetric(
-                horizontal: spacer5, vertical: spacer6),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(spacer3),
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(spacer4),
-              child: ValueListenableBuilder<_CaptureProgress>(
-                valueListenable: _progress,
-                builder: (context, progress, _) {
+          child: ValueListenableBuilder<_CaptureProgress>(
+            valueListenable: _progress,
+            builder: (context, progress, _) {
                   final accuracy = progress.accuracy;
                   final level = accuracy == null
                       ? null
@@ -509,16 +517,17 @@ class _LatLngBuilderStatefulWrapperState
                       break;
                   }
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        _t(loc, 'CAPTURING_LOCATION', 'Capturing location'),
-                        style: textTheme.headingL
-                            .copyWith(color: colors.primary.primary2),
-                      ),
-                      const SizedBox(height: spacer1),
+                  return Popup(
+                    title: _t(loc, 'CAPTURING_LOCATION', 'Capturing location'),
+                    onCrossTap: _stopCapture,
+                    // One stretched column, as in the old dialog: Popup lays
+                    // its content out start-aligned, which would shrink the
+                    // reading card and left-align the centred countdown.
+                    additionalWidgets: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                       Text.rich(
                         TextSpan(children: [
                           TextSpan(
@@ -698,33 +707,19 @@ class _LatLngBuilderStatefulWrapperState
                           ),
                         ),
                       ],
+                      // Save sits at the end of the content rather than in
+                      // Popup.actions, which only takes buttons, so the
+                      // countdown can follow it. Same side padding and full
+                      // width as the other popups' primary button.
                       const SizedBox(height: spacer4),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DigitButton(
-                              label: _t(
-                                  loc, 'LOCATION_CANCEL_CAPTURE', 'Cancel'),
-                              onPressed: _stopCapture,
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.large,
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            ),
-                          ),
-                          const SizedBox(width: spacer2),
-                          Expanded(
-                            child: DigitButton(
-                              label: _t(loc, 'LOCATION_SAVE_POINT', 'Save'),
-                              isDisabled: !canSave,
-                              onPressed: _acceptCurrentReading,
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large,
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            ),
-                          ),
-                        ],
+                      DigitButton(
+                        label: _t(loc, 'LOCATION_SAVE_POINT', 'Save'),
+                        isDisabled: !canSave,
+                        onPressed: _acceptCurrentReading,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
                       ),
                       if (saveTimerLeft != null && saveTimerLeft > 0) ...[
                         const SizedBox(height: spacer2),
@@ -738,11 +733,11 @@ class _LatLngBuilderStatefulWrapperState
                           ),
                         ),
                       ],
+                        ],
+                      ),
                     ],
                   );
                 },
-              ),
-            ),
           ),
         );
       },
