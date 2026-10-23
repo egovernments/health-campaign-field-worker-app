@@ -92,6 +92,67 @@ void main() {
     });
   });
 
+  group('locationPopupTimer', () {
+    PopupTimer? timer(Map<String, dynamic>? popupTimer) =>
+        PropertySchema.fromJson({
+          'type': 'string',
+          'format': 'latLng',
+          if (popupTimer != null) 'popupTimer': popupTimer,
+        }).popupTimer;
+
+    test('defaults to 30 seconds when the config has no popupTimer', () {
+      expect(locationPopupTimer(timer(null)), const Duration(seconds: 30));
+      expect(kDefaultLocationPopupTimer, const Duration(seconds: 30));
+    });
+
+    test('defaults to 30 seconds when no time is set', () {
+      expect(locationPopupTimer(timer({'enabled': true})),
+          const Duration(seconds: 30));
+      expect(locationPopupTimer(timer({'minutes': 0, 'seconds': 0})),
+          const Duration(seconds: 30));
+    });
+
+    test('uses the configured time', () {
+      expect(locationPopupTimer(timer({'minutes': 0, 'seconds': 59})),
+          const Duration(seconds: 59));
+    });
+
+    test('any minutes / seconds combination from the campaign', () {
+      Duration? t(Map<String, dynamic> config) =>
+          locationPopupTimer(timer(config));
+      expect(t({'minutes': 1, 'seconds': 59}), const Duration(seconds: 119));
+      expect(t({'seconds': 59}), const Duration(seconds: 59));
+      expect(t({'minutes': 1}), const Duration(minutes: 1));
+      expect(t({'minutes': 1, 'seconds': 10}), const Duration(seconds: 70));
+      expect(t({'minutes': 0, 'seconds': 59}), const Duration(seconds: 59));
+      expect(t({'minutes': null, 'seconds': 59}), const Duration(seconds: 59));
+      expect(t({'minutes': '', 'seconds': 59}), const Duration(seconds: 59));
+    });
+
+    test('accepts numbers sent as text or decimals', () {
+      Duration? t(Map<String, dynamic> config) =>
+          locationPopupTimer(timer(config));
+      expect(t({'minutes': '1', 'seconds': '59'}), const Duration(seconds: 119));
+      expect(t({'minutes': '1.0', 'seconds': '59.0'}),
+          const Duration(seconds: 119));
+      expect(t({'minutes': 1.0, 'seconds': 59.0}), const Duration(seconds: 119));
+      expect(t({'minutes': ' 1 ', 'seconds': ' 10'}),
+          const Duration(seconds: 70));
+    });
+
+    test('accepts enabled sent as text', () {
+      expect(locationPopupTimer(timer({'enabled': 'true', 'minutes': 1})),
+          const Duration(minutes: 1));
+      expect(
+          locationPopupTimer(timer({'enabled': 'false', 'minutes': 1})), isNull);
+    });
+
+    test('no timer when switched off', () {
+      expect(
+          locationPopupTimer(timer({'enabled': false, 'seconds': 59})), isNull);
+    });
+  });
+
   group('classifyLocationAccuracy', () {
     LocationAccuracyLevel classify(double accuracy) => classifyLocationAccuracy(
           accuracy,
