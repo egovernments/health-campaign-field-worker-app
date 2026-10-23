@@ -90,6 +90,25 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
+
+      // Mark the page as loading from first paint when it has initActions
+      // to run — otherwise any widget consuming `FlowCrudState.isLoading`
+      // (e.g. listView's `showLoader`) sees "not loading, empty wrapper"
+      // during the window between page mount and the first SEARCH_EVENT
+      // reaching CrudBloc. That window can be hundreds of ms on its own
+      // and up to `waitForWidget.timeoutMs` when GPS is involved, long
+      // enough to flash an empty-state card before loading UI gets a
+      // chance. CrudBloc's own CrudStateLoading transition takes over
+      // once the first search dispatches.
+      if (initActions.isNotEmpty) {
+        final existing =
+            FlowCrudStateRegistry().getByCompositeKey(_compositeKey);
+        FlowCrudStateRegistry().updateByCompositeKey(
+          _compositeKey,
+          (existing ?? const FlowCrudState()).copyWith(isLoading: true),
+        );
+      }
+
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Initialize FormSubmissionRegistry if not already done
         _initializeFormSubmissionRegistry();
