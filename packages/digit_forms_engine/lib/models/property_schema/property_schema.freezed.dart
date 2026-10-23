@@ -3131,10 +3131,11 @@ PopupTimer _$PopupTimerFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PopupTimer {
+  @JsonKey(fromJson: _boolOrNull)
   bool? get enabled => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   int? get minutes => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   int? get seconds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -3150,9 +3151,9 @@ abstract class $PopupTimerCopyWith<$Res> {
       _$PopupTimerCopyWithImpl<$Res, PopupTimer>;
   @useResult
   $Res call(
-      {bool? enabled,
-      @JsonKey(fromJson: _intOrNull) int? minutes,
-      @JsonKey(fromJson: _intOrNull) int? seconds});
+      {@JsonKey(fromJson: _boolOrNull) bool? enabled,
+      @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+      @JsonKey(fromJson: _timerPartOrNull) int? seconds});
 }
 
 /// @nodoc
@@ -3198,9 +3199,9 @@ abstract class _$$PopupTimerImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool? enabled,
-      @JsonKey(fromJson: _intOrNull) int? minutes,
-      @JsonKey(fromJson: _intOrNull) int? seconds});
+      {@JsonKey(fromJson: _boolOrNull) bool? enabled,
+      @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+      @JsonKey(fromJson: _timerPartOrNull) int? seconds});
 }
 
 /// @nodoc
@@ -3239,21 +3240,22 @@ class __$$PopupTimerImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PopupTimerImpl extends _PopupTimer {
   const _$PopupTimerImpl(
-      {this.enabled,
-      @JsonKey(fromJson: _intOrNull) this.minutes,
-      @JsonKey(fromJson: _intOrNull) this.seconds})
+      {@JsonKey(fromJson: _boolOrNull) this.enabled,
+      @JsonKey(fromJson: _timerPartOrNull) this.minutes,
+      @JsonKey(fromJson: _timerPartOrNull) this.seconds})
       : super._();
 
   factory _$PopupTimerImpl.fromJson(Map<String, dynamic> json) =>
       _$$PopupTimerImplFromJson(json);
 
   @override
+  @JsonKey(fromJson: _boolOrNull)
   final bool? enabled;
   @override
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   final int? minutes;
   @override
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   final int? seconds;
 
   @override
@@ -3291,21 +3293,23 @@ class _$PopupTimerImpl extends _PopupTimer {
 
 abstract class _PopupTimer extends PopupTimer {
   const factory _PopupTimer(
-      {final bool? enabled,
-      @JsonKey(fromJson: _intOrNull) final int? minutes,
-      @JsonKey(fromJson: _intOrNull) final int? seconds}) = _$PopupTimerImpl;
+          {@JsonKey(fromJson: _boolOrNull) final bool? enabled,
+          @JsonKey(fromJson: _timerPartOrNull) final int? minutes,
+          @JsonKey(fromJson: _timerPartOrNull) final int? seconds}) =
+      _$PopupTimerImpl;
   const _PopupTimer._() : super._();
 
   factory _PopupTimer.fromJson(Map<String, dynamic> json) =
       _$PopupTimerImpl.fromJson;
 
   @override
+  @JsonKey(fromJson: _boolOrNull)
   bool? get enabled;
   @override
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   int? get minutes;
   @override
-  @JsonKey(fromJson: _intOrNull)
+  @JsonKey(fromJson: _timerPartOrNull)
   int? get seconds;
   @override
   @JsonKey(ignore: true)

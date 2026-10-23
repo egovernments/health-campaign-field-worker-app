@@ -316,9 +316,9 @@ Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
 
 _$PopupTimerImpl _$$PopupTimerImplFromJson(Map<String, dynamic> json) =>
     _$PopupTimerImpl(
-      enabled: json['enabled'] as bool?,
-      minutes: _intOrNull(json['minutes']),
-      seconds: _intOrNull(json['seconds']),
+      enabled: _boolOrNull(json['enabled']),
+      minutes: _timerPartOrNull(json['minutes']),
+      seconds: _timerPartOrNull(json['seconds']),
     );
 
 Map<String, dynamic> _$$PopupTimerImplToJson(_$PopupTimerImpl instance) =>
