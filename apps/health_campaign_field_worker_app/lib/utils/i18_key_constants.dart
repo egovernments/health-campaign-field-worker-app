@@ -942,6 +942,12 @@ class Home {
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 
+  /// Display label for the merged polio outside-household card, which
+  /// replaces the separate CLF and transit-post cards. The card is still
+  /// keyed on [transitPostLabel] so backend role actions keep gating it.
+  String get outsideHouseholdVaccinationLabel =>
+      'HOME_OUTSIDE_HOUSEHOLD_VACCINATION_LABEL';
+
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';

@@ -25,6 +25,96 @@ class FunctionRegistries {
     _registerFacilityFunctions();
     _registerStockFunctions();
     _registerViewTransactionFunctions();
+    _registerDeliveryAgeFunctions();
+  }
+
+  /// Exposes the campaign's eligible age window, in months, to configs.
+  ///
+  /// `{{fn:getDeliveryAgeLimit('min')}}` / `'max'` scan the active cycle's
+  /// `deliveries[].doseCriteria[].condition` expressions — the same source
+  /// the age-band dropdown derives its bands from — and return the lowest
+  /// and highest bound across all of them. Used to drive a DOB picker's
+  /// minAge / maxAge validations so the pickable range follows the campaign
+  /// config instead of a hardcoded span.
+  ///
+  /// Returns null when the campaign carries no age-tagged dose criteria, so
+  /// the picker simply applies no constraint rather than rejecting every date.
+  void _registerDeliveryAgeFunctions() {
+    FunctionRegistry.register('getDeliveryAgeLimit', (args, stateData) {
+      final wantMax =
+          args.isNotEmpty && args[0]?.toString().toLowerCase() == 'max';
+      final bounds = _deliveryAgeBoundsInMonths();
+      if (bounds == null) return null;
+      return wantMax ? bounds.$2 : bounds.$1;
+    });
+  }
+
+  /// (min, max) age in months across the active cycle's dose criteria.
+  ///
+  /// Accepts age on either side of the operator (`age >= 0 && age < 12` and
+  /// `0 <= age && age < 12`), strips whitespace, and splits on `&&` or a bare
+  /// `and`, matching the age-band dropdown's parsing of the same strings.
+  /// Strict `>` / `<` are nudged by one so the window stays inclusive.
+  (int, int)? _deliveryAgeBoundsInMonths() {
+    final cycles = FlowBuilderSingleton().projectType?.cycles;
+    if (cycles == null || cycles.isEmpty) return null;
+
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final activeCycle = cycles.firstWhere(
+      (c) => (c.startDate ?? 0) < now && (c.endDate ?? 0) > now,
+      orElse: () => cycles.first,
+    );
+
+    final ageRightMin = RegExp(r'age(>=?)(\d+)');
+    final ageRightMax = RegExp(r'age(<=?)(\d+)');
+    final ageLeftMin = RegExp(r'(\d+)(<=?)age');
+    final ageLeftMax = RegExp(r'(\d+)(>=?)age');
+
+    int? lowest;
+    int? highest;
+
+    for (final delivery in activeCycle.deliveries ?? []) {
+      for (final dc in delivery.doseCriteria ?? []) {
+        final raw = (dc.condition ?? '') as String;
+        if (raw.isEmpty) continue;
+        final normalized = raw.replaceAll(RegExp(r'\s+'), '');
+        final parts =
+            normalized.split(RegExp(r'&&|and', caseSensitive: false));
+
+        for (final part in parts) {
+          final rMin = ageRightMin.firstMatch(part);
+          if (rMin != null) {
+            final n = int.tryParse(rMin.group(2)!) ?? 0;
+            final min = rMin.group(1) == '>' ? n + 1 : n;
+            lowest = lowest == null || min < lowest ? min : lowest;
+            continue;
+          }
+          final rMax = ageRightMax.firstMatch(part);
+          if (rMax != null) {
+            final n = int.tryParse(rMax.group(2)!) ?? 0;
+            final max = rMax.group(1) == '<' ? n - 1 : n;
+            highest = highest == null || max > highest ? max : highest;
+            continue;
+          }
+          final lMin = ageLeftMin.firstMatch(part);
+          if (lMin != null) {
+            final n = int.tryParse(lMin.group(1)!) ?? 0;
+            final min = lMin.group(2) == '<' ? n + 1 : n;
+            lowest = lowest == null || min < lowest ? min : lowest;
+            continue;
+          }
+          final lMax = ageLeftMax.firstMatch(part);
+          if (lMax != null) {
+            final n = int.tryParse(lMax.group(1)!) ?? 0;
+            final max = lMax.group(2) == '>' ? n - 1 : n;
+            highest = highest == null || max > highest ? max : highest;
+          }
+        }
+      }
+    }
+
+    if (lowest == null || highest == null || highest < lowest) return null;
+    return (lowest, highest);
   }
 
   void _registerGenerateFunctions() {

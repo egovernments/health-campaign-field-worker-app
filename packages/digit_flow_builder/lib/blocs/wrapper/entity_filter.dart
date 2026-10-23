@@ -11,6 +11,20 @@ class EntityFilter {
 
   EntityFilter(this._resolver, {this.screenKey});
 
+  /// Resolves a filter value that may be a `{{fieldName}}` template pointing
+  /// at a `searchBar`'s entry in widgetData. Non-template values pass through
+  /// unchanged.
+  dynamic _resolveWidgetDataTemplate(
+    dynamic raw,
+    Map<String, dynamic>? widgetData,
+  ) {
+    if (raw is String && raw.contains('{{')) {
+      final key = raw.replaceAll('{{', '').replaceAll('}}', '').trim();
+      return widgetData?[key];
+    }
+    return raw;
+  }
+
   /// Checks whether a root entity passes all configured filters.
   bool passesFilters(
     dynamic root,
@@ -31,6 +45,12 @@ class EntityFilter {
       'navigation': navigationParams,
     };
 
+    // Search terms typed into a `searchBar` live in widgetData, keyed by the
+    // widget's fieldName — the same source [findRelatedEntities] reads for
+    // relation-level search.
+    final widgetData =
+        stateKey != null ? FlowCrudStateRegistry().get(stateKey)?.widgetData : null;
+
     for (final filter in filters) {
       final field = filter['field'];
       final equals = filter['equals'];
@@ -44,7 +64,28 @@ class EntityFilter {
           final resolvedEquals =
               _resolver.resolveValue(equalsFrom, root, resolveContext);
           if (resolvedEquals != null && value != resolvedEquals) return false;
-        } else if (equals != null && value != equals) return false;
+        } else if (filter.containsKey('contains')) {
+          // Case-insensitive substring match, mirroring the relation-level
+          // `contains` filter. An unset or empty term passes everything, so a
+          // cleared search box restores the full list.
+          final term = _resolveWidgetDataTemplate(filter['contains'], widgetData);
+          final termText = term?.toString() ?? '';
+          if (termText.isEmpty) continue;
+
+          // Optional. Set it to the search bar's `minSearchChars` when this
+          // filter refines one. Below that threshold the bar drops its own
+          // query filter and re-runs the base search, but deliberately keeps
+          // the term in widgetData so the visible text isn't erased — so this
+          // filter is what has to stand down, or the list stays narrowed by a
+          // term the bar already treats as inactive.
+          final minChars = (filter['minChars'] as num?)?.toInt();
+          if (minChars != null && termText.length < minChars) continue;
+
+          final actual = value?.toString().toLowerCase() ?? '';
+          if (!actual.contains(termText.toLowerCase())) return false;
+        } else if (equals != null && value != equals) {
+          return false;
+        }
       } else {
         final entityType = filter['entity'];
         final condition = filter['condition'];

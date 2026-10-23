@@ -224,13 +224,19 @@ class ActionPopupWidget extends ResolvedFlowWidget {
           // Otherwise fall back to the original close-only behavior.
           onCrossTap: showCloseButton
               ? () {
-                  final onCloseActions =
-                      popupConfig['onCloseAction'] as List?;
-                  if (onCloseActions == null || onCloseActions.isEmpty) {
+                  final onCloseActions = popupConfig['onCloseAction'];
+                  if (onCloseActions is! List || onCloseActions.isEmpty) {
                     Navigator.of(ctx, rootNavigator: true).pop();
                     return;
                   }
                   _runActions(onCloseActions, onAction);
+                  // Pop unless the config closes itself, otherwise an
+                  // `onCloseAction` declared purely for a side effect would
+                  // leave the dialog with no exit (`barrierDismissible` is
+                  // itself config-driven).
+                  if (!_declaresClosePopup(onCloseActions)) {
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                  }
                 }
               : null,
           actionSpacing: spacer2,
@@ -276,6 +282,20 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         );
       },
     );
+  }
+
+  /// Whether [actions] declares a CLOSE_POPUP anywhere, including inside a
+  /// conditional wrapper's nested `actions`. A shallow scan would miss the
+  /// nested form and pop here as well as in the executor, bouncing the user
+  /// off the underlying page.
+  bool _declaresClosePopup(List<dynamic> actions) {
+    for (final raw in actions) {
+      if (raw is! Map) continue;
+      if (raw['actionType'] == 'CLOSE_POPUP') return true;
+      final nested = raw['actions'];
+      if (nested is List && _declaresClosePopup(nested)) return true;
+    }
+    return false;
   }
 
   /// Runs a list of raw action-config maps through [onAction]. Silently

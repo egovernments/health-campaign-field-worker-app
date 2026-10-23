@@ -1,13 +1,126 @@
-final dynamic sampleTransitVaccinationFlows = {
-  "id": "856b0d77-50cc-4928-aa4e-88229c3c4a4f",
+final dynamic sampleOutSideHouseholdVaccinationFlows = {
+  "id": "2d01bdcd-0cdb-4f70-aa9e-88540cdf63d2",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
-  "uniqueIdentifier": "TRANSITPOST.POLIO",
+  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.POLIO",
   "data": {
-    "name": "TRANSITPOST",
+    "name": "OUTSIDEHOUSEHOLD",
     "flows": [
       {
         "body": [
+          {
+            "type": "template",
+            "format": "menu_card",
+            "icon": "DirectionsBus",
+            "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
+            "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION",
+            "styling": {
+              "iconPosition": "top",
+              "alignment": "center"
+            },
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "transitSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "transitPostOption"
+          },
+          {
+            "type": "template",
+            "format": "menu_card",
+            "icon": "Groups",
+            "heading": "GV_LOCATION_CLF_HEADING",
+            "description": "GV_LOCATION_CLF_DESCRIPTION",
+            "styling": {
+              "iconPosition": "top",
+              "alignment": "center"
+            },
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "clfSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "clfOption"
+          }
+        ],
+        "name": "selectVaccinationLocation",
+        "order": 1,
+        "canPop": true,
+        "footer": [],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {"name": "HOME", "type": "HOME"}
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_SELECT_VACCINATION_LOCATION_HEADING",
+        "category": "VACCINATION_LOCATION",
+        "screenType": "TEMPLATE",
+        "description": "GV_SELECT_VACCINATION_LOCATION_DESCRIPTION",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            // Search bar with headless proximity filter folded in. The
+            // `proximity` block subscribes to LocationBloc on mount and
+            // publishes a `within` filter under its own searchName as soon
+            // as GPS resolves — no visible toggle, always on. It is here
+            // because the `__distance` ordering below needs a centre point,
+            // and the `within` filter is what supplies one. The radius is
+            // deliberately wide: the intent is "rank by nearest", not "hide
+            // anything far", so it only excludes sessions that are
+            // implausibly distant. Its bounding box still earns its keep as
+            // a prefilter.
+            "type": "template",
+            "label": "GV_SESSION_SEARCH_PLACEHOLDER",
+            "format": "searchBar",
+            "proximity": {
+              "radius": 100,
+              "searchName": "sessionProximity",
+              "root": "userAction"
+            },
+            "onAction": [
+              {
+                "actionType": "SEARCH_EVENT",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "additionalFields",
+                      "root": "userAction",
+                      "value": "field.value",
+                      "operation": "matches"
+                    }
+                  ],
+                  "name": "sessionName",
+                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                }
+              }
+            ],
+            "fieldName": "sessionSearch",
+            "validations": [
+              {"type": "minSearchChars", "value": 2}
+            ]
+          },
           {
             "type": "template",
             "label": "GV_SESSIONS_EMPTY_MESSAGE",
@@ -31,20 +144,6 @@ final dynamic sampleTransitVaccinationFlows = {
                   "properties": {"style": "headingL", "bottomGap": 8}
                 },
                 {
-                  "type": "template",
-                  "label": "GV_SESSION_LAST_USED_ON",
-                  "labelArgs": [
-                    "{{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}"
-                  ],
-                  "format": "tag",
-                  "fieldName": "lastUsedChip",
-                  "properties": {
-                    "icon": "Schedule",
-                    "tagType": "monochrome",
-                    "bottomGap": 12
-                  }
-                },
-                {
                   "data": [
                     {
                       "key": "GV_SUMMARY_LOCATION_TYPE",
@@ -52,23 +151,9 @@ final dynamic sampleTransitVaccinationFlows = {
                           "{{item.UserActionModel.additionalFields.fields.transitLocationType}}"
                     },
                     {
-                      "key": "GV_SUMMARY_SESSION_DATE",
-                      "value":
-                          "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                      "key": "GV_SUMMARY_LOCATION_AREA",
+                      "value": "{{item.UserActionModel.boundaryCode}}"
                     },
-                    {
-                      "key": "GV_METRIC_VACCINATED_TODAY",
-                      "value": "{{item.children.length}}"
-                    },
-                    {
-                      "key": "GV_METRIC_VACCINATED_BY_GENDER",
-                      "value":
-                          "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
-                    },
-                    {
-                      "key": "GV_METRIC_CHILDREN_REFERRED",
-                      "value": "{{item.referrals.length}}"
-                    }
                   ],
                   "type": "template",
                   "format": "labelPairList",
@@ -76,7 +161,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 },
                 {
                   "type": "template",
-                  "label": "GV_RESUME_SESSION_BUTTON",
+                  "label": "GV_TRANSIT_SELECT_SESSION_BUTTON",
                   "format": "button",
                   "onAction": [
                     {
@@ -123,12 +208,22 @@ final dynamic sampleTransitVaccinationFlows = {
         "footer": [
           {
             "type": "template",
-            "label": "GV_START_SESSION_BUTTON",
+            "label": "GV_TRANSIT_START_SESSION_BUTTON",
             "format": "button",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"name": "transitSessionSetup", "type": "FORM"}
+                "properties": {
+                  "name": "transitSessionSetup",
+                  "type": "FORM",
+                  // Carry the search term over as the new session's name. The
+                  // key matches the setup form's `locationName` field, which
+                  // is how the forms engine prefills it — navigation params
+                  // are merged into the form's defaultValues.
+                  "data": [
+                    {"key": "locationName", "value": "{{searchBar}}"}
+                  ]
+                }
               }
             ],
             "fieldName": "startSession",
@@ -136,6 +231,7 @@ final dynamic sampleTransitVaccinationFlows = {
             "properties": {
               "size": "large",
               "type": "primary",
+              "prefixIcon": "AddCircle",
               "mainAxisSize": "max",
               "mainAxisAlignment": "center"
             }
@@ -156,9 +252,16 @@ final dynamic sampleTransitVaccinationFlows = {
           }
         ],
         "heading": "GV_TRANSIT_SESSIONS_HEADING",
-        "category": "TRANSITPOST_SESSIONS",
+        "category": "TRANSITPOST",
         "screenType": "TEMPLATE",
         "description": "GV_TRANSIT_SESSIONS_DESCRIPTION",
+        // Hold initActions until the searchBar's headless `proximity`
+        // block has published its `within` filter — see
+        // WidgetReadinessRegistry. Name must match the proximity
+        // searchName above. 3 s GPS fallback: if no fix arrives we fire
+        // without proximity and the first paint is unordered (same as a
+        // flow without this knob).
+        "waitForWidget": {"name": "sessionProximity", "timeoutMs": 3000},
         "initActions": [
           {
             "actionType": "SEARCH_EVENT",
@@ -193,54 +296,13 @@ final dynamic sampleTransitVaccinationFlows = {
             {
               "field": "additionalFields.fields.sessionType",
               "equals": "TRANSIT"
+            },
+            {
+              "field": "additionalFields.fields.locationName",
+              "contains": "{{searchBar}}",
+              "minChars": 2
             }
           ],
-          "computed": {
-            "_maxChildTs": {
-              "from": "children",
-              "order": 1,
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "fallback": 0,
-                "operation": "max"
-              }
-            },
-            "_maxActivityTs": {
-              "order": 3,
-              "fallback": 0,
-              "condition": {
-                "if": {
-                  "left": "{{_maxChildTs}}",
-                  "right": "{{_maxReferralTs}}",
-                  "operator": "gt"
-                },
-                "else": "{{_maxReferralTs}}",
-                "then": "{{_maxChildTs}}"
-              }
-            },
-            "_maxReferralTs": {
-              "from": "referrals",
-              "order": 2,
-              "reduce": {
-                "field": "clientAuditDetails.createdTime",
-                "fallback": 0,
-                "operation": "max"
-              }
-            },
-            "lastActivityTs": {
-              "order": 4,
-              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
-              "condition": {
-                "if": {
-                  "left": "{{_maxActivityTs}}",
-                  "right": 0,
-                  "operator": "gt"
-                },
-                "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
-                "then": "{{_maxActivityTs}}"
-              }
-            }
-          },
           "relations": [
             {
               "name": "children",
@@ -288,27 +350,18 @@ final dynamic sampleTransitVaccinationFlows = {
                   "equals": "FEMALE"
                 }
               ]
-            },
-            {
-              "name": "referrals",
-              "match": {
-                "field": "resourceTag",
-                "equalsFrom": "clientReferenceId"
-              },
-              "entity": "UserActionModel",
-              "filters": [
-                {
-                  "field": "additionalFields.fields.formType",
-                  "equals": "GROUP_VAC_REFERRAL"
-                }
-              ]
             }
           ],
           "rootEntity": "UserActionModel",
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": ["userAction"],
-            "orderBy": {"field": "clientCreatedTime", "order": "DESC"},
+            // Nearest session first. `__distance` is not a column — it sorts
+            // by distance from the centre of the `within` filter that the
+            // searchBar's `proximity` block applies, so the two have to stay
+            // together: drop the `proximity` block and the ordering is
+            // skipped (the query falls back to unordered, not an error).
+            "orderBy": {"field": "__distance", "order": "ASC"},
             "primary": "userAction"
           }
         }
@@ -531,7 +584,7 @@ final dynamic sampleTransitVaccinationFlows = {
         ],
         "project": "POLIO-SIA",
         "version": 1,
-        "category": "TRANSITPOST_SESSIONS",
+        "category": "TRANSITPOST",
         "disabled": false,
         "onAction": [
           {
@@ -737,28 +790,6 @@ final dynamic sampleTransitVaccinationFlows = {
             ],
             "fieldName": "vaccinatedTile",
             "properties": {"type": "primary"}
-          },
-          {
-            "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "value": "{{contextData.0.referrals.length}}",
-                "format": "textTemplate",
-                "fieldName": "referredCount",
-                "properties": {"style": "headingXl", "bottomGap": 4}
-              },
-              {
-                "type": "template",
-                "value": "GV_METRIC_CHILDREN_REFERRED",
-                "format": "textTemplate",
-                "fieldName": "referredLabel",
-                "properties": {"style": "bodyS"}
-              }
-            ],
-            "fieldName": "referredTile",
-            "properties": {"type": "primary"}
           }
         ],
         "name": "transitSessionOverview",
@@ -784,6 +815,14 @@ final dynamic sampleTransitVaccinationFlows = {
                       "key": "TransitLocationType",
                       "value":
                           "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                    },
+                    {
+                      "key": "minAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                    },
+                    {
+                      "key": "maxAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('max')}}"
                     }
                   ],
                   "name": "ADD_TRANSIT_CHILD",
@@ -796,35 +835,6 @@ final dynamic sampleTransitVaccinationFlows = {
             "properties": {
               "size": "large",
               "type": "primary",
-              "mainAxisSize": "max",
-              "mainAxisAlignment": "center"
-            }
-          },
-          {
-            "type": "template",
-            "label": "GV_ADD_REFERRAL_BUTTON",
-            "format": "button",
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "SessionClientReferenceId",
-                      "value":
-                          "{{contextData.0.UserActionModel.clientReferenceId}}"
-                    }
-                  ],
-                  "name": "ADD_TRANSIT_REFERRAL",
-                  "type": "FORM"
-                }
-              }
-            ],
-            "fieldName": "addReferral",
-            "mandatory": true,
-            "properties": {
-              "size": "large",
-              "type": "secondary",
               "mainAxisSize": "max",
               "mainAxisAlignment": "center"
             }
@@ -847,8 +857,9 @@ final dynamic sampleTransitVaccinationFlows = {
             "fieldName": "backLink"
           }
         ],
-        "heading": "GV_SESSION_OVERVIEW_HEADING",
-        "category": "TRANSITPOST_SESSIONS",
+        "heading": "GV_TRANSIT_SESSION_OVERVIEW_HEADING",
+        "description": "GV_TRANSIT_SESSION_OVERVIEW_DESCRIPTION",
+        "category": "TRANSITPOST",
         "screenType": "TEMPLATE",
         "initActions": [
           {
@@ -931,20 +942,6 @@ final dynamic sampleTransitVaccinationFlows = {
                   "equals": "FEMALE"
                 }
               ]
-            },
-            {
-              "name": "referrals",
-              "match": {
-                "field": "resourceTag",
-                "equalsFrom": "clientReferenceId"
-              },
-              "entity": "UserActionModel",
-              "filters": [
-                {
-                  "field": "additionalFields.fields.formType",
-                  "equals": "GROUP_VAC_REFERRAL"
-                }
-              ]
             }
           ],
           "rootEntity": "UserActionModel",
@@ -1007,12 +1004,14 @@ final dynamic sampleTransitVaccinationFlows = {
                 "order": 2,
                 "value": "",
                 "format": "text",
-                "hidden": true,
+                "hidden": false,
+                "required": true,
                 "tooltip": "",
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "childName",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1033,8 +1032,12 @@ final dynamic sampleTransitVaccinationFlows = {
               },
               {
                 "type": "string",
+                "enums": [
+                  {"code": "MALE", "name": "GV_ENUM_MALE"},
+                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
+                ],
                 "label": "GV_CHILD_SEX_LABEL",
-                "order": 2,
+                "order": 4,
                 "value": "",
                 "format": "select",
                 "hidden": false,
@@ -1060,29 +1063,44 @@ final dynamic sampleTransitVaccinationFlows = {
                 "isMultiSelect": false
               },
               {
-                "type": "dynamic",
-                "enums": [],
-                "label": "GV_AGE_BAND_LABEL",
-                "order": 4,
+                "type": "string",
+                "label": "GV_CHILD_DOB_LABEL",
+                "order": 3,
                 "value": "",
-                "format": "custom",
+                "format": "dob",
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
+                "ageRange": {
+                  "maxAge": "{{maxAgeMonths}}",
+                  "minAge": "{{minAgeMonths}}",
+                  "errorMessage": "GV_VALIDATION_INVALID_AGE"
+                },
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
                 "required": true,
-                "fieldName": "ageBand",
+                "fieldName": "childDob",
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
+                "schemaCode": null,
                 "systemDate": false,
                 "validations": [
                   {
                     "type": "required",
                     "value": true,
-                    "message": "GV_AGE_BAND_LABEL_VALIDATION_REQUIRED"
+                    "message": "GV_CHILD_DOB_LABEL_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "minAge",
+                    "value": "{{minAgeMonths}}",
+                    "message": "GV_VALIDATION_INVALID_AGE"
+                  },
+                  {
+                    "type": "maxAge",
+                    "value": "{{maxAgeMonths}}",
+                    "message": "GV_VALIDATION_INVALID_AGE"
                   }
                 ],
                 "errorMessage": "",
@@ -1096,12 +1114,12 @@ final dynamic sampleTransitVaccinationFlows = {
                 "value": "",
                 "format": "text",
                 "hidden": true,
-                "mandatory": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": true,
                 "fieldName": "ageBandVaccine",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1211,42 +1229,10 @@ final dynamic sampleTransitVaccinationFlows = {
                     }
                   ]
                 }
-              },
-              {
-                "type": "string",
-                "enums": [
-                  {"code": "YES", "name": "GV_ENUM_YES"},
-                  {"code": "NO", "name": "GV_ENUM_NO"}
-                ],
-                "label": "GV_IPV_PRIOR_LABEL",
-                "order": 8,
-                "value": "",
-                "format": "radio",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "ipvPrior",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "visibilityCondition": {
-                  "expression": [
-                    {
-                      "type": "custom",
-                      "condition":
-                          "navigation.TransitLocationType=='BORDER_CROSSING'"
-                    }
-                  ]
-                }
               }
             ],
             "systemDate": null,
-            "actionLabel": "GV_ACTION_CONTINUE",
+            "actionLabel": "GV_ACTION_VACCINATE",
             "description": "GV_CHILD_STEP_1_OF_2",
             "validations": null,
             "includeInForm": null,
@@ -1276,7 +1262,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "order": 1,
                 "value": true,
                 "format": "checkbox",
-                "hidden": true,
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -1297,7 +1283,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "order": 2,
                 "value": true,
                 "format": "checkbox",
-                "hidden": true,
+                "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -1323,9 +1309,9 @@ final dynamic sampleTransitVaccinationFlows = {
           }
         ],
         "project": "POLIO-SIA",
-        "summary": true,
+        "summary": false,
         "version": 1,
-        "category": "TRANSITPOST_VACCINATE",
+        "category": "TRANSITPOST",
         "disabled": false,
         "onAction": [
           {
@@ -1413,6 +1399,14 @@ final dynamic sampleTransitVaccinationFlows = {
                       {
                         "key": "TransitLocationType",
                         "value": "{{navigation.TransitLocationType}}"
+                      },
+                      {
+                        "key": "minAgeMonths",
+                        "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                      },
+                      {
+                        "key": "maxAgeMonths",
+                        "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       }
                     ],
                     "name": "ADD_TRANSIT_CHILD",
@@ -1452,19 +1446,299 @@ final dynamic sampleTransitVaccinationFlows = {
         "footer": [],
         "header": [],
         "heading": "",
-        "category": "TRANSITPOST_VACCINATE",
+        "category": "TRANSITPOST",
         "screenType": "TEMPLATE",
         "description": "",
         "initActions": [],
         "isSuccessorErrorScreen": true
       },
       {
-        "name": "ADD_TRANSIT_REFERRAL",
+        "body": [
+          {
+            "type": "template",
+            "label": "GV_SESSION_SEARCH_PLACEHOLDER",
+            "format": "searchBar",
+            "onAction": [
+              {
+                "actionType": "SEARCH_EVENT",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "additionalFields",
+                      "root": "userAction",
+                      "value": "field.value",
+                      "operation": "matches"
+                    }
+                  ],
+                  "name": "sessionName",
+                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                }
+              }
+            ],
+            "fieldName": "sessionSearch",
+            "validations": [
+              {"type": "minSearchChars", "value": 2}
+            ],
+            "proximity": {
+              "radius": 100,
+              "searchName": "sessionProximity",
+              "root": "userAction"
+            }
+          },
+          {
+            "type": "template",
+            "label": "GV_SESSIONS_EMPTY_MESSAGE",
+            "format": "infoCard",
+            "visible": "{{fn:isEmpty(contextData)}}",
+            "fieldName": "emptyState",
+            "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
+          },
+          {
+            "type": "template",
+            "child": {
+              "type": "template",
+              "format": "card",
+              "children": [
+                {
+                  "type": "template",
+                  "value":
+                      "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "format": "textTemplate",
+                  "fieldName": "sessionLocationName",
+                  "properties": {"style": "headingL", "bottomGap": 8}
+                },
+                {
+                  "data": [
+                    {
+                      "key": "GV_SUMMARY_LOCATION_TYPE",
+                      "value":
+                          "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                    },
+                    {
+                      "key": "GV_SUMMARY_LOCATION_AREA",
+                      "value": "{{item.UserActionModel.boundaryCode}}"
+                    },
+                    {
+                      "key": "GV_SUMMARY_SESSION_DATE",
+                      "value":
+                          "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_TODAY",
+                      "value": "{{item.children.length}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_BY_GENDER",
+                      "value":
+                          "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
+                    }
+                  ],
+                  "type": "template",
+                  "format": "labelPairList",
+                  "fieldName": "sessionSummary"
+                },
+                {
+                  "type": "template",
+                  "label": "GV_CLF_SELECT_SESSION_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "SessionClientReferenceId",
+                            "value":
+                                "{{item.UserActionModel.clientReferenceId}}"
+                          },
+                          {"key": "SessionType", "value": "CLF"}
+                        ],
+                        "name": "clfSessionOverview",
+                        "type": "TEMPLATE"
+                      }
+                    }
+                  ],
+                  "fieldName": "resumeSession",
+                  "mandatory": true,
+                  "properties": {
+                    "size": "medium",
+                    "type": "secondary",
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "center"
+                  }
+                }
+              ],
+              "fieldName": "sessionCard",
+              "properties": {
+                "type": "secondary",
+                "spacing": 0,
+                "cardType": "secondary"
+              }
+            },
+            "format": "listView",
+            "fieldName": "listViewSessions",
+            "properties": {"spacing": "spacer4"}
+          }
+        ],
+        "name": "clfSessionsList",
+        "order": 1,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_CLF_START_SESSION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "clfSessionSetup",
+                  "type": "FORM",
+                  "data": [
+                    {"key": "locationName", "value": "{{searchBar}}"}
+                  ]
+                }
+              }
+            ],
+            "fieldName": "startSession",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "prefixIcon": "AddCircle",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {"name": "HOME", "type": "HOME"}
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_CLF_SESSIONS_HEADING",
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "screenType": "TEMPLATE",
+        "description": "GV_CLF_SESSIONS_DESCRIPTION",
+        // See the transit-sessions page above for the full rationale.
+        "waitForWidget": {"name": "sessionProximity", "timeoutMs": 3000},
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "tenantId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "projectId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "boundaryCode",
+                  "root": "userAction",
+                  "value": "{{singleton.boundary.code}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "sessions",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {"field": "additionalFields.fields.sessionType", "equals": "CLF"},
+            {
+              "field": "additionalFields.fields.locationName",
+              "contains": "{{searchBar}}",
+              "minChars": 2
+            }
+          ],
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {"field": "additionalFields.fields.childSex", "equals": "MALE"}
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "ClfSessionsListWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            // Nearest session first. `__distance` is not a column — it sorts
+            // by distance from the centre of the `within` filter that the
+            // searchBar's `proximity` block applies, so the two have to stay
+            // together: drop the `proximity` block and the ordering is
+            // skipped (the query falls back to unordered, not an error).
+            "orderBy": {"field": "__distance", "order": "ASC"},
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "clfSessionSetup",
         "pages": [
           {
-            "page": "referralDetails",
+            "page": "sessionSetup",
             "type": "object",
-            "label": "GV_REFERRAL_PAGE_LABEL",
+            "label": "GV_CLF_SESSION_SETUP_LABEL",
             "order": 1,
             "value": null,
             "hidden": null,
@@ -1480,20 +1754,127 @@ final dynamic sampleTransitVaccinationFlows = {
             "properties": [
               {
                 "type": "string",
-                "label": "GV_REFERRAL_CONTACT_PERSON_LABEL",
+                "label": "GV_SESSION_DATE_LABEL",
                 "order": 1,
                 "value": "",
-                "format": "text",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {"code": "SCHOOL", "name": "GV_ENUM_SCHOOL"},
+                  {"code": "MARKET", "name": "GV_ENUM_MARKET"},
+                  {"code": "HEALTH_POST", "name": "GV_ENUM_HEALTH_POST"},
+                  {
+                    "code": "COMMUNITY_CENTRE",
+                    "name": "GV_ENUM_COMMUNITY_CENTRE"
+                  },
+                  {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                ],
+                "label": "GV_CLF_LOCATION_TYPE_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "dropdown",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "fieldName": "contactPerson",
+                "fieldName": "clfLocationType",
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_NAME_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_LOCATION_NAME_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "locationName",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -1507,12 +1888,43 @@ final dynamic sampleTransitVaccinationFlows = {
                   }
                 ],
                 "errorMessage": "",
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_RESPONSIBLE_PERSON_LABEL",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "responsiblePerson",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
                 "isMultiSelect": false
               },
               {
                 "type": "string",
-                "label": "GV_REFERRAL_CONTACT_NUMBER_LABEL",
-                "order": 2,
+                "label": "GV_CONTACT_NUMBER_LABEL",
+                "order": 7,
                 "value": "",
                 "format": "mobileNumber",
                 "hidden": false,
@@ -1521,7 +1933,6 @@ final dynamic sampleTransitVaccinationFlows = {
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "contactNumber",
-                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1533,7 +1944,6 @@ final dynamic sampleTransitVaccinationFlows = {
                 "validations": [
                   {
                     "type": "pattern",
-                    "value": "^[1-9]\\d*\$",
                     "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
                   },
                   {
@@ -1552,75 +1962,445 @@ final dynamic sampleTransitVaccinationFlows = {
               },
               {
                 "type": "string",
-                "label": "GV_REFERRAL_ADDRESS_LABEL",
-                "order": 3,
+                "label": "GV_WORKER_NAME_LABEL",
+                "order": 8,
                 "value": "",
                 "format": "text",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
-                "fieldName": "address",
-                "mandatory": true,
+                "readOnly": true,
+                "fieldName": "workerName",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "lengthRange": {
-                  "maxLength": "300",
-                  "minLength": "1",
-                  "errorMessage": "GV_VALIDATION_MAX_300"
-                },
-                "validations": [
-                  {
-                    "type": "maxLength",
-                    "value": "300",
-                    "message": "GV_VALIDATION_MAX_300"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "autoFillCondition": [
+                  {"value": "{{loggedInUserName}}", "expression": "true==true"}
+                ]
               },
               {
                 "type": "string",
-                "label": "GV_REFERRAL_REASON_LABEL",
-                "order": 4,
+                "label": "GV_WORKER_PHONE_LABEL",
+                "order": 9,
                 "value": "",
-                "format": "textArea",
+                "format": "mobileNumber",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
-                "readOnly": false,
-                "fieldName": "referralReason",
-                "mandatory": true,
+                "readOnly": true,
+                "fieldName": "workerPhone",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
-                "lengthRange": {
-                  "maxLength": "500",
-                  "minLength": "1",
-                  "errorMessage": "GV_VALIDATION_MAX_500"
-                },
-                "validations": [
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "autoFillCondition": [
                   {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
+                    "value": "{{loggedInUserMobileNumber}}",
+                    "expression": "true==true"
+                  }
+                ]
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_START_SESSION",
+            "description": "GV_CLF_SESSION_SETUP_DESC",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          }
+        ],
+        "project": "POLIO",
+        "version": 1,
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
+                }
+              ],
+              "configName": "clfSession"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "USERACTION",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "GV_ERROR_RECORD_DATA"}
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [],
+              "name": "clfSessionsList",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "GV_ERROR_NAVIGATION"}
+                }
+              ],
+              "navigationMode": "popUntilAndReplace",
+              "popUntilPageName": "clfSessionsList"
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value":
+                      "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                },
+                {"key": "SessionType", "value": "CLF"}
+              ],
+              "name": "clfSessionOverview",
+              "type": "TEMPLATE"
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "data": [
+                  {
+                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "value":
+                        "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
                   },
                   {
-                    "type": "maxLength",
-                    "value": "500",
-                    "message": "GV_VALIDATION_MAX_500"
+                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "value":
+                        "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
                   }
                 ],
-                "errorMessage": "",
-                "isMultiSelect": false
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "sessionDetails"
+              }
+            ],
+            "fieldName": "sessionCard",
+            "properties": {"type": "primary"}
+          },
+          {
+            "type": "template",
+            "value": "GV_SESSION_OVERVIEW_TODAY",
+            "format": "textTemplate",
+            "fieldName": "todaysProgressTitle",
+            "properties": {"style": "headingS", "bottomGap": 4}
+          },
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "value": "{{contextData.0.children.length}}",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedCount",
+                "properties": {"style": "headingXl", "bottomGap": 4}
               },
+              {
+                "type": "template",
+                "value": "GV_METRIC_VACCINATED_TODAY",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedLabel",
+                "mandatory": true,
+                "properties": {"style": "bodyS", "bottomGap": 4}
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.femaleChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "femaleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_FEMALE",
+                            "format": "textTemplate",
+                            "fieldName": "femaleLabel",
+                            "properties": {"color": "primary", "style": "bodyS"}
+                          }
+                        ],
+                        "fieldName": "femalePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "femalePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
+                  },
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.malesChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "maleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_MALE",
+                            "format": "textTemplate",
+                            "fieldName": "maleLabel",
+                            "properties": {"color": "primary", "style": "bodyS"}
+                          }
+                        ],
+                        "fieldName": "malePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "malePill",
+                    "properties": {"type": "secondary", "radius": "radius4"}
+                  }
+                ],
+                "fieldName": "vaccinatedSplit",
+                "properties": {"gap": 8}
+              }
+            ],
+            "fieldName": "vaccinatedTile",
+            "properties": {"type": "primary"}
+          }
+        ],
+        "name": "clfSessionOverview",
+        "order": 3,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_ADD_VACCINATION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "SessionClientReferenceId",
+                      "value":
+                          "{{contextData.0.UserActionModel.clientReferenceId}}"
+                    },
+                    {"key": "SessionType", "value": "CLF"},
+                    {
+                      "key": "minAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                    },
+                    {
+                      "key": "maxAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    }
+                  ],
+                  "name": "ADD_CLF_CHILD",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "addVaccination",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {"name": "clfSessionsList", "type": "TEMPLATE"}
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_CLF_SESSION_OVERVIEW_HEADING",
+        "description": "GV_CLF_SESSION_OVERVIEW_DESCRIPTION",
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "resourceTag",
+                  "root": "userAction",
+                  "value": "{{navigation.SessionClientReferenceId}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "session",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {"field": "additionalFields.fields.sessionType", "equals": "CLF"}
+          ],
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ],
+              "relations": [
+                {
+                  "name": "child",
+                  "match": {
+                    "field": "clientReferenceId",
+                    "equalsFrom": "clientReferenceId"
+                  },
+                  "entity": "UserActionModel"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {"field": "additionalFields.fields.childSex", "equals": "MALE"}
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "ClfSessionWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "ADD_CLF_CHILD",
+        "pages": [
+          {
+            "page": "childDetails",
+            "type": "object",
+            "label": "GV_CHILD_DETAILS_LABEL",
+            "order": 1,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
               {
                 "type": "string",
                 "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 5,
+                "order": 1,
                 "value": "",
                 "format": "latLng",
                 "hidden": false,
@@ -1628,7 +2408,7 @@ final dynamic sampleTransitVaccinationFlows = {
                 "helpText": "GV_GPS_START_HELPTEXT",
                 "infoText": "",
                 "readOnly": true,
-                "fieldName": "gpsReferral",
+                "fieldName": "gpsChild",
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1642,20 +2422,226 @@ final dynamic sampleTransitVaccinationFlows = {
                 "errorMessage": "",
                 "isMultiSelect": false,
                 "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_NAME_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "required": true,
+                "tooltip": "",
+                "helpText": "GV_CHILD_NAME_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "childName",
+                "deleteFlag": false,
+                "mandatory": true,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_DOB_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "dob",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "ageRange": {
+                  "maxAge": "{{maxAgeMonths}}",
+                  "minAge": "{{minAgeMonths}}",
+                  "errorMessage": "GV_VALIDATION_INVALID_AGE"
+                },
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "childDob",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": null,
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_CHILD_DOB_LABEL_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "minAge",
+                    "value": "{{minAgeMonths}}",
+                    "message": "GV_VALIDATION_INVALID_AGE"
+                  },
+                  {
+                    "type": "maxAge",
+                    "value": "{{maxAgeMonths}}",
+                    "message": "GV_VALIDATION_INVALID_AGE"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {"code": "MALE", "name": "GV_ENUM_MALE"},
+                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
+                ],
+                "label": "GV_CHILD_SEX_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "select",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "childSex",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_VACCINE_LABEL",
+                "order": 10,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "ageBandVaccine",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "systemDate": null,
-            "actionLabel": "GV_ACTION_CONFIRM_REFERRAL",
-            "description": "GV_REFERRAL_PAGE_DESCRIPTION",
+            "actionLabel": "GV_ACTION_VACCINATE",
+            "description": "GV_CHILD_STEP_1_OF_2",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          },
+          {
+            "page": "confirmVaccination",
+            "type": "object",
+            "label": "GV_CONFIRM_VACCINATION_LABEL",
+            "order": 2,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "boolean",
+                "label": "GV_TWO_DROPS_LABEL",
+                "order": 1,
+                "value": true,
+                "format": "checkbox",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "twoDropsAdministered",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "boolean",
+                "label": "GV_FINGER_MARKED_LABEL",
+                "order": 2,
+                "value": true,
+                "format": "checkbox",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "fingerMarked",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_CONFIRM_VACCINATION",
+            "description": "GV_CONFIRM_VACCINATION_DESC",
             "validations": null,
             "includeInForm": null,
             "isMultiSelect": null,
             "includeInSummary": null
           }
         ],
-        "project": "POLIO-SIA",
+        "project": "POLIO",
+        "summary": false,
         "version": 1,
-        "category": "TRANSITPOST_REFERRAL",
+        "category": "COMMUNAL_LIVING_FACILITY",
         "disabled": false,
         "onAction": [
           {
@@ -1673,7 +2659,7 @@ final dynamic sampleTransitVaccinationFlows = {
                   "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
                 }
               ],
-              "configName": "groupVacReferral"
+              "configName": "groupVacChild"
             }
           },
           {
@@ -1695,16 +2681,18 @@ final dynamic sampleTransitVaccinationFlows = {
                 {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
-                }
+                },
+                {"key": "SessionType", "value": "CLF"}
               ],
-              "name": "transitReferralSuccess",
+              "name": "clfVaccinationSuccess",
               "type": "TEMPLATE",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
                   "properties": {"message": "GV_ERROR_NAVIGATION"}
                 }
-              ]
+              ],
+              "category": "COMMUNAL_LIVING_FACILITY"
             }
           }
         ],
@@ -1717,13 +2705,13 @@ final dynamic sampleTransitVaccinationFlows = {
         "body": [
           {
             "type": "template",
-            "label": "GV_REFERRAL_SUCCESS_HEADING",
+            "label": "GV_VACCINATION_SUCCESS_HEADING",
             "format": "panelCard",
             "properties": {"type": "success"},
-            "description": "GV_REFERRAL_SUCCESS_MESSAGE",
+            "description": "GV_VACCINATION_SUCCESS_MESSAGE",
             "primaryAction": {
               "type": "template",
-              "label": "GV_SUCCESS_RECORD_ANOTHER_REFERRAL",
+              "label": "GV_SUCCESS_RECORD_ANOTHER",
               "format": "button",
               "onAction": [
                 {
@@ -1733,14 +2721,23 @@ final dynamic sampleTransitVaccinationFlows = {
                       {
                         "key": "SessionClientReferenceId",
                         "value": "{{navigation.SessionClientReferenceId}}"
+                      },
+                      {"key": "SessionType", "value": "CLF"},
+                      {
+                        "key": "minAgeMonths",
+                        "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                      },
+                      {
+                        "key": "maxAgeMonths",
+                        "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       }
                     ],
-                    "name": "ADD_TRANSIT_REFERRAL",
+                    "name": "ADD_CLF_CHILD",
                     "type": "FORM"
                   }
                 }
               ],
-              "fieldName": "recordAnotherReferral",
+              "fieldName": "recordAnother",
               "mandatory": true,
               "properties": {"type": "primary"}
             },
@@ -1753,10 +2750,10 @@ final dynamic sampleTransitVaccinationFlows = {
                   "actionType": "NAVIGATION",
                   "properties": {
                     "data": [],
-                    "name": "transitSessionsList",
+                    "name": "clfSessionsList",
                     "type": "TEMPLATE",
                     "navigationMode": "popUntilAndReplace",
-                    "popUntilPageName": "transitSessionsList"
+                    "popUntilPageName": "clfSessionsList"
                   }
                 }
               ],
@@ -1766,32 +2763,32 @@ final dynamic sampleTransitVaccinationFlows = {
             }
           }
         ],
-        "name": "transitReferralSuccess",
-        "order": 7,
+        "name": "clfVaccinationSuccess",
+        "order": 5,
         "canPop": false,
         "footer": [],
         "header": [],
         "heading": "",
-        "category": "TRANSITPOST_REFERRAL",
+        "category": "COMMUNAL_LIVING_FACILITY",
         "screenType": "TEMPLATE",
         "description": "",
         "initActions": [],
         "isSuccessorErrorScreen": true
       }
     ],
-    "order": 2,
+    "order": 3,
     "active": true,
     "project": "POLIO",
     "version": 1,
     "disabled": false,
     "isSelected": true,
-    "initialPage": "transitSessionsList"
+    "initialPage": "selectVaccinationLocation"
   },
   "isActive": true,
   "auditDetails": {
     "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
     "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
-    "createdTime": 1789645567189,
-    "lastModifiedTime": 1790683403970
+    "createdTime": 1789628239245,
+    "lastModifiedTime": 1790760453587
   }
 };

@@ -1763,7 +1763,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
-      } else if (rawValue is String && entry.value.isMultiSelect == true) {
+      } else if (rawValue is String &&
+          (entry.value.isMultiSelect == true ||
+              entry.value.format ==
+                  PropertySchemaFormat.multiSelectDropdown)) {
         displayValue = rawValue
             .split('.')
             .where((e) => e.trim().isNotEmpty)

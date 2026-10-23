@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/search_state_manager.dart';
+import '../../blocs/widget_readiness_registry.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
@@ -111,12 +114,98 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
   bool _syncingExternalValue = false;
   Timer? _debounceTimer;
 
+  // Headless proximity filter — see [_proximityConfig]. GPS fix is adopted
+  // once (first non-null state) and the within-filter SEARCH_EVENT fires
+  // exactly once per widget lifetime; refreshing the fix would re-dispatch
+  // the same filter with marginally updated coordinates for no gain.
+  String? _proximityLat;
+  String? _proximityLong;
+  double? _proximityAccuracy;
+  bool _proximityDispatched = false;
+
+  /// Returns the `proximity` block from the widget JSON if present.
+  /// When set, the search bar also holds a LocationBloc subscription and
+  /// publishes a `within` filter under its own searchName — see the
+  /// `proximitySearch` widget for the full rationale on headless mode.
+  Map<String, dynamic>? get _proximityConfig {
+    final raw = widget.json['proximity'];
+    return raw is Map<String, dynamic> ? raw : null;
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialValue);
     _lastHandledValue = widget.initialValue;
     _controller.addListener(_handleControllerChange);
+
+    // Prompt GPS acquisition only when a proximity block is configured.
+    // Mirrors `ProximitySearchWidget`: adopt the cached fix on mount so a
+    // transition-only `BlocListener` doesn't miss it.
+    if (_proximityConfig != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final locationBloc = context.read<LocationBloc>();
+        locationBloc.add(const LoadLocationEvent());
+        _adoptProximityLocation(locationBloc.state);
+      });
+    }
+  }
+
+  void _adoptProximityLocation(LocationState state) {
+    if (state.latitude == null || _proximityLat != null) {
+      _maybeDispatchProximity();
+      return;
+    }
+    setState(() {
+      _proximityLat = state.latitude?.toString();
+      _proximityLong = state.longitude?.toString();
+      _proximityAccuracy = state.accuracy;
+    });
+    _maybeDispatchProximity();
+  }
+
+  void _maybeDispatchProximity() {
+    if (_proximityDispatched) return;
+    final cfg = _proximityConfig;
+    if (cfg == null) return;
+    if (_proximityLat == null || _proximityLong == null) return;
+    _proximityDispatched = true;
+
+    final radius = cfg['radius'] ?? 100;
+    final searchName = (cfg['searchName'] as String?) ?? 'proximity';
+    final filterKey = (cfg['filterKey'] as String?) ?? searchName;
+    final root = cfg['root'];
+
+    widget.onAction(
+      ActionConfig.fromJson({
+        'actionType': 'SEARCH_EVENT',
+        'properties': {
+          'type': 'SEARCH_EVENT',
+          'name': searchName,
+          'data': [
+            {
+              'key': filterKey,
+              'value': radius,
+              if (root != null) 'root': root,
+              'lat': _proximityLat,
+              'long': _proximityLong,
+              'accuracy': _proximityAccuracy,
+              'operation': 'within',
+            },
+          ],
+        },
+      }),
+    );
+
+    // Unblock any `ScreenBuilder.initActions` awaiting this proximity
+    // filter — see `WidgetReadinessRegistry` for the full contract. Safe
+    // to call unconditionally: the registry is idempotent and no-ops if
+    // nobody is awaiting.
+    final compositeKey = widget.compositeKey;
+    if (compositeKey != null) {
+      WidgetReadinessRegistry().signal(compositeKey, searchName);
+    }
   }
 
   @override
@@ -471,8 +560,10 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
         FilteringTextInputFormatter.allow(RegExp(pattern)),
       if (widget.capitalizeWords) _CapitalizeWordsFormatter(),
     ];
+
+    Widget base;
     if (compositeKey == null) {
-      return DigitSearchBar(
+      base = DigitSearchBar(
         hintText: widget.hintText,
         controller: _controller,
         textCapitalization: widget.capitalizeWords
@@ -480,39 +571,50 @@ class _ReactiveSearchBarState extends State<_ReactiveSearchBar> {
             : TextCapitalization.none,
         inputFormatters: formatters,
       );
+    } else {
+      base = ValueListenableBuilder<FlowCrudState?>(
+        valueListenable: FlowCrudStateRegistry().listen(compositeKey),
+        builder: (context, flowState, child) {
+          final externalValue =
+              flowState?.widgetData?[widget.fieldName]?.toString() ?? '';
+
+          if (externalValue != _controller.text) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted || _controller.text == externalValue) {
+                return;
+              }
+
+              _syncingExternalValue = true;
+              _controller.value = TextEditingValue(
+                text: externalValue,
+                selection:
+                    TextSelection.collapsed(offset: externalValue.length),
+              );
+              _lastHandledValue = externalValue;
+              _syncingExternalValue = false;
+            });
+          }
+
+          return DigitSearchBar(
+            hintText: widget.hintText,
+            controller: _controller,
+            textCapitalization: widget.capitalizeWords
+                ? TextCapitalization.words
+                : TextCapitalization.none,
+            inputFormatters: formatters,
+          );
+        },
+      );
     }
 
-    return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
-      builder: (context, flowState, child) {
-        final externalValue =
-            flowState?.widgetData?[widget.fieldName]?.toString() ?? '';
+    if (_proximityConfig == null) return base;
 
-        if (externalValue != _controller.text) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted || _controller.text == externalValue) {
-              return;
-            }
-
-            _syncingExternalValue = true;
-            _controller.value = TextEditingValue(
-              text: externalValue,
-              selection: TextSelection.collapsed(offset: externalValue.length),
-            );
-            _lastHandledValue = externalValue;
-            _syncingExternalValue = false;
-          });
-        }
-
-        return DigitSearchBar(
-          hintText: widget.hintText,
-          controller: _controller,
-          textCapitalization: widget.capitalizeWords
-              ? TextCapitalization.words
-              : TextCapitalization.none,
-          inputFormatters: formatters,
-        );
-      },
+    // `BlocListener` fires only on transitions. The cached-fix case is
+    // handled by the `initState` poll above; this picks up GPS fixes that
+    // land after mount.
+    return BlocListener<LocationBloc, LocationState>(
+      listener: (context, state) => _adoptProximityLocation(state),
+      child: base,
     );
   }
 }

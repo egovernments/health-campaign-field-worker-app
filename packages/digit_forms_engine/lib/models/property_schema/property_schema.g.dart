@@ -162,6 +162,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.select: 'select',
   PropertySchemaFormat.numeric: 'numeric',
   PropertySchemaFormat.dropdown: 'dropdown',
+  PropertySchemaFormat.multiSelectDropdown: 'multiSelectDropdown',
   PropertySchemaFormat.checkbox: 'checkbox',
   PropertySchemaFormat.radio: 'radio',
   PropertySchemaFormat.dob: 'dob',
