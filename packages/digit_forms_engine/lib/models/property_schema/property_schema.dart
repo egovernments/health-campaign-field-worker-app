@@ -204,9 +204,9 @@ class PopupTimer with _$PopupTimer {
   const PopupTimer._();
 
   const factory PopupTimer({
-    bool? enabled,
-    @JsonKey(fromJson: _intOrNull) int? minutes,
-    @JsonKey(fromJson: _intOrNull) int? seconds,
+    @JsonKey(fromJson: _boolOrNull) bool? enabled,
+    @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+    @JsonKey(fromJson: _timerPartOrNull) int? seconds,
   }) = _PopupTimer;
 
   factory PopupTimer.fromJson(Map<String, dynamic> json) =>
@@ -404,6 +404,31 @@ ShowAlertPopUp? _showAlertOrNull(dynamic value) {
 ShowSecondaryAlertPopUp? _showSecondaryAlertOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+/// Console values can arrive as numbers or text ("1", "1.0"); null when
+/// missing, empty or negative.
+int? _timerPartOrNull(dynamic value) {
+  final number = value is num
+      ? value
+      : value is String
+          ? num.tryParse(value.trim())
+          : null;
+  return number == null || number < 0 ? null : number.round();
+}
+
+/// true / false, also as text ("true", "False"); null otherwise.
+bool? _boolOrNull(dynamic value) {
+  if (value is bool) return value;
+  if (value is String) {
+    switch (value.trim().toLowerCase()) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+    }
   }
   return null;
 }
