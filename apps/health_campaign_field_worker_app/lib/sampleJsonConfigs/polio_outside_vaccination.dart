@@ -14,10 +14,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "icon": "DirectionsBus",
             "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
             "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION",
-            "styling": {
-              "iconPosition": "top",
-              "alignment": "center"
-            },
+            "styling": {"iconPosition": "top", "alignment": "center"},
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -36,10 +33,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "icon": "Groups",
             "heading": "GV_LOCATION_CLF_HEADING",
             "description": "GV_LOCATION_CLF_DESCRIPTION",
-            "styling": {
-              "iconPosition": "top",
-              "alignment": "center"
-            },
+            "styling": {"iconPosition": "top", "alignment": "center"},
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -823,6 +817,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "maxAgeMonths",
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    },
+                    {
+                      "key": "gpsChild",
+                      "value":
+                          "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
                     }
                   ],
                   "name": "ADD_TRANSIT_CHILD",
@@ -972,32 +971,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "autoEnable": null,
             "innerLabel": null,
             "properties": [
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsChild",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
               {
                 "type": "string",
                 "label": "GV_CHILD_NAME_LABEL",
@@ -1321,7 +1294,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
-                }
+                },
+                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
               ],
               "onError": [
                 {
@@ -1356,7 +1330,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "TransitLocationType",
                   "value": "{{navigation.TransitLocationType}}"
-                }
+                },
+                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
               ],
               "name": "transitVaccinationSuccess",
               "type": "TEMPLATE",
@@ -1407,7 +1382,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       {
                         "key": "maxAgeMonths",
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
-                      }
+                      },
+                      {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
                     ],
                     "name": "ADD_TRANSIT_CHILD",
                     "type": "FORM"
@@ -2254,6 +2230,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "maxAgeMonths",
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    },
+                    {
+                      "key": "gpsChild",
+                      "value":
+                          "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
                     }
                   ],
                   "name": "ADD_CLF_CHILD",
@@ -2397,32 +2378,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "autoEnable": null,
             "innerLabel": null,
             "properties": [
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsChild",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
               {
                 "type": "string",
                 "label": "GV_CHILD_NAME_LABEL",
@@ -2651,7 +2606,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
-                }
+                },
+                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
               ],
               "onError": [
                 {
@@ -2682,7 +2638,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
-                {"key": "SessionType", "value": "CLF"}
+                {"key": "SessionType", "value": "CLF"},
+                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
               ],
               "name": "clfVaccinationSuccess",
               "type": "TEMPLATE",
@@ -2730,7 +2687,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       {
                         "key": "maxAgeMonths",
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
-                      }
+                      },
+                      {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
                     ],
                     "name": "ADD_CLF_CHILD",
                     "type": "FORM"
