@@ -848,7 +848,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "visible":
                         "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false && {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==false",
                     "fieldName": "notVisited",
-                    "properties": {"tagType": "info", "bottomGap": 16}
+                    "properties": {"tagType": "warning", "bottomGap": 16}
                   },
                   {
                     "type": "template",
