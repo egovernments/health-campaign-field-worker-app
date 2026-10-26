@@ -9,10 +9,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.digit.location_tracker"
+    private val gnssSatelliteHandler by lazy { GnssSatelliteStreamHandler(this) }
     private val locationReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val latitude = intent?.getDoubleExtra("latitude", 0.0)
@@ -75,6 +77,12 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        // Satellite counts for the forms engine's location capture dialog
+        EventChannel(
+            flutterEngine!!.dartExecutor.binaryMessenger,
+            GnssSatelliteStreamHandler.CHANNEL
+        ).setStreamHandler(gnssSatelliteHandler)
+
         // Register the receiver for location updates (not exported - internal use only)
         val filter = IntentFilter("LocationUpdate")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -88,6 +96,7 @@ class MainActivity : FlutterActivity() {
         super.onDestroy()
         // Unregister the receiver
         unregisterReceiver(locationReceiver)
+        gnssSatelliteHandler.unregister()
     }
 
     private fun startService(locationUpdateInterval: Long, stopAfterTimestamp: Long) {

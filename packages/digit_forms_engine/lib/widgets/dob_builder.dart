@@ -23,43 +23,64 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final minAge = _parseAgeConstraint('minAge', form, navigationParams);
     final maxAge = _parseAgeConstraint('maxAge', form, navigationParams);
     final validationMessages = buildValidationMessages(validations, loc);
+    final isRequiredField =
+        validations?.any((v) => v.type == 'required') ?? false;
 
     return ReactiveWrapperField(
       formControlName: formControlName,
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
-      builder: (field) => DigitDobPicker(
-        initialDate: initialDate ?? DateTime(1900),
-        datePickerFormControl: formControlName,
-        datePickerLabel: label ?? 'date of birth',
-        ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
-        yearsHintLabel: loc.translate(
-          'YEARS_HINT_TEXT',
+      // LabeledField wraps the whole picker so the label sits above the
+      // card (outside the box) and the required-asterisk is rendered.
+      // `DigitDobPicker` ships with its own internal LabeledField around
+      // the date input, so we pass an empty `datePickerLabel` to it to
+      // avoid a duplicate label inside the card — leaves a small blank
+      // slot where that inner label used to be. `labelInline: false`
+      // forces the stacked (label-above-child) layout on tablet/desktop
+      // too; the inline variant would put the label beside the card.
+      builder: (field) => LabeledField(
+        label: label,
+        isRequired: isRequiredField,
+        labelInline: false,
+        child: DigitDobPicker(
+          initialDate: initialDate ?? DateTime(1900),
+          datePickerFormControl: formControlName,
+          // Inner labels ("Date of birth" above the date input, "Age"
+          // above the year/month pair) stay visible so each section
+          // reads cleanly inside the card. We skip `isRequired` so the
+          // inner LabeledFields don't paint their own asterisks — the
+          // outer wrapper above the card already carries the only
+          // user-facing `*` for the whole field.
+          datePickerLabel: label ?? loc.translate('CORE_COMMON_DOB'),
+          ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
+          yearsHintLabel: loc.translate(
+            'YEARS_HINT_TEXT',
+          ),
+          monthsHintLabel: loc.translate(
+            'MONTHS_HINT_TEXT',
+          ),
+          separatorLabel: loc.translate(
+            'SEPARATOR_LABEL_TEXT',
+          ),
+          cancelText: loc.translate('CORE_COMMON_CANCEL'),
+          confirmText: loc.translate('CORE_COMMON_OK'),
+          initialValue: form.control(formControlName).value != null &&
+                  (form.control(formControlName).value as String)
+                      .trim()
+                      .isNotEmpty
+              ? form.control(formControlName).value as String
+              : null,
+          yearsAndMonthsErrMsg: '',
+          errorMessage: _getDobErrorMessage(field.control, context),
+          onChangeOfFormControl: (value) {
+            _handleDobValidation(
+              value,
+              form.control(formControlName),
+              minAge,
+              maxAge,
+            );
+          },
         ),
-        monthsHintLabel: loc.translate(
-          'MONTHS_HINT_TEXT',
-        ),
-        separatorLabel: loc.translate(
-          'SEPARATOR_LABEL_TEXT',
-        ),
-        cancelText: loc.translate('CORE_COMMON_CANCEL'),
-        confirmText: loc.translate('CORE_COMMON_OK'),
-        initialValue: form.control(formControlName).value != null &&
-                (form.control(formControlName).value as String)
-                    .trim()
-                    .isNotEmpty
-            ? form.control(formControlName).value as String
-            : null,
-        yearsAndMonthsErrMsg: '',
-        errorMessage: _getDobErrorMessage(field.control, context),
-        onChangeOfFormControl: (value) {
-          _handleDobValidation(
-            value,
-            form.control(formControlName),
-            minAge,
-            maxAge,
-          );
-        },
       ),
     );
   }

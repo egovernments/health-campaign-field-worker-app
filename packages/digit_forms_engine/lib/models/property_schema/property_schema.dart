@@ -90,6 +90,8 @@ class PropertySchema with _$PropertySchema {
     List<LabelPlaceHolder>? descriptionPlaceHolders,
     // Render page label/description outside the card (before it)
     bool? showLabelOutsideCard,
+    // latLng fields: capture time after which Save is enabled whatever the accuracy
+    @JsonKey(fromJson: _popupTimerOrNull) PopupTimer? popupTimer,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -195,6 +197,26 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
 
   factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
       _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class PopupTimer with _$PopupTimer {
+  const PopupTimer._();
+
+  const factory PopupTimer({
+    @JsonKey(fromJson: _boolOrNull) bool? enabled,
+    @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+    @JsonKey(fromJson: _timerPartOrNull) int? seconds,
+  }) = _PopupTimer;
+
+  factory PopupTimer.fromJson(Map<String, dynamic> json) =>
+      _$PopupTimerFromJson(json);
+
+  /// Null when the timer is switched off. The console toggle defaults to on
+  /// and isn't always saved, so a missing `enabled` counts as on.
+  Duration? get duration => enabled == false
+      ? null
+      : Duration(minutes: minutes ?? 0, seconds: seconds ?? 0);
 }
 
 @freezed
@@ -382,6 +404,38 @@ ShowAlertPopUp? _showAlertOrNull(dynamic value) {
 ShowSecondaryAlertPopUp? _showSecondaryAlertOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return ShowSecondaryAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+/// Console values can arrive as numbers or text ("1", "1.0"); null when
+/// missing, empty or negative.
+int? _timerPartOrNull(dynamic value) {
+  final number = value is num
+      ? value
+      : value is String
+          ? num.tryParse(value.trim())
+          : null;
+  return number == null || number < 0 ? null : number.round();
+}
+
+/// true / false, also as text ("true", "False"); null otherwise.
+bool? _boolOrNull(dynamic value) {
+  if (value is bool) return value;
+  if (value is String) {
+    switch (value.trim().toLowerCase()) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+    }
+  }
+  return null;
+}
+
+PopupTimer? _popupTimerOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return PopupTimer.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }

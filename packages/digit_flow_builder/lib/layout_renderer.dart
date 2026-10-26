@@ -645,8 +645,15 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                               if (widgets.isNotEmpty) widgets.removeLast();
                               return widgets;
                             })(),
-                            // Scroll loading indicator at bottom of content
-                            if (_showLoadingIndicator && isLoading)
+                            // Scroll-bottom "load more" indicator — only
+                            // meaningful once content is already showing;
+                            // for the initial-load + empty case a
+                            // widget-level loader (e.g.
+                            // `listView.showLoader`) handles it, and
+                            // firing this unconditionally doubled up.
+                            if (_showLoadingIndicator &&
+                                isLoading &&
+                                currentWrapperLength > 0)
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: spacer4),
@@ -660,8 +667,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                     ],
                   ),
                 ),
-                // Loading overlay when search/CRUD operation is in progress
-                if (isLoading) DigitLoaders.inlineLoader(),
+                // Refresh indicator: show only while existing content is
+                // being re-loaded. The empty-initial-load case is covered
+                // by widget-level loaders (e.g. `listView.showLoader`),
+                // so firing this unconditionally used to double up.
+                if (isLoading && currentWrapperLength > 0)
+                  DigitLoaders.inlineLoader(),
               ],
             ),
           ),
