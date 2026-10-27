@@ -674,8 +674,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 },
                 {
                   "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-                  "value":
-                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
+                  "value": "{{contextData.0.members.length}}",
                   "isActive": true
                 }
               ],
@@ -1335,8 +1334,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
               "format": "button",
               "visible": "{{latestBeneficiaryId}} != ''",
-              "disabled":
-                  "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -2123,6 +2120,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                       "actionType": "CLOSE_POPUP",
                       "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
+                    {"actionType": "LOAD_UNIQUE_ID_POOL"},
                     {
                       "actionType": "NAVIGATION",
                       "properties": {
@@ -2187,6 +2185,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
+            {"actionType": "LOAD_UNIQUE_ID_POOL"},
             {
               "actionType": "NAVIGATION",
               "properties": {
@@ -4405,33 +4404,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "errorMessage": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
               "isMultiSelect": false,
               "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
-              "order": 2,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_MEMBERS_1"
-              },
-              "value": "2",
-              "format": "numeric",
-              "hidden": false,
-              "fieldName": "memberCount",
-              "mandatory": true,
-              "validations": [
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MIN_MEMBERS_1"
-                },
-                {
-                  "type": "max",
-                  "value": "500",
-                  "message": "HCM_VALIDATION_MAX_MEMBERS_500"
-                }
-              ],
-              "includeInForm": true
             },
             {
               "type": "integer",
