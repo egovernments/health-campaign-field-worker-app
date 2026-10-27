@@ -469,6 +469,13 @@ String _translateWithLocalization(String text, dynamic localization) {
   final trimmed = text.trim();
   if (trimmed.isEmpty) return text;
 
+  // Bare numeric values (e.g. a resolved `.length` count or an id) must
+  // not be sent through localization — a stale catalog row keyed on a
+  // digit like "1"/"2" with an empty translation would wipe the cell.
+  if (RegExp(r'^-?\d+(\.\d+)?$').hasMatch(trimmed)) {
+    return text;
+  }
+
   try {
     final translated = localization.translate(trimmed);
     // Preserve original whitespace
