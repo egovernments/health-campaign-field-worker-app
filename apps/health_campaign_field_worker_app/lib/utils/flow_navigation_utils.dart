@@ -99,9 +99,7 @@ class FlowNavigationUtils {
           : config.sampleFlows;
       final rawFlows = sampleRoot["flows"] as List?;
       FlowRegistry.setConfig(
-        rawFlows
-                ?.map((e) => Map<String, dynamic>.from(e as Map))
-                .toList() ??
+        rawFlows?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ??
             <Map<String, dynamic>>[],
       );
       NavigationRegistry.setupNavigation(context);
