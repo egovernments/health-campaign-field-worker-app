@@ -482,6 +482,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.dob:
         return JsonSchemaDOBBuilder(
           label: _resolveLabel(widget.schema.label),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
