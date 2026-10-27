@@ -70,11 +70,28 @@ class _BoundarySelectionPageState
   /// each drill only pulls the delta.
   final Set<String> _fetchedBoundaryCodes = <String>{};
 
-  // Keys used by the Logout button in this page's header and its
+  /// Guards the body against painting until the in-memory localization
+  /// cache has been rebuilt against the page's `setModule('common') +
+  /// setCode([...])` filter. The initial app-startup cache was built
+  /// against the startup filter and may miss header strings like
+  /// `CORE_COMMON_LOGOUT` / `CORE_COMMON_HELP` under this page's filter —
+  /// a hot restart masked the problem by re-running `_loadLocale`
+  /// against the current filter during bloc re-creation. Flipped true in
+  /// a post-frame refresh (or immediately if no locale is set) and gates
+  /// the main body builder so the user never sees raw codes on first
+  /// paint.
+  bool _localizationReady = false;
+
+  // Keys used by the header's Logout + Help buttons and the logout
   // confirmation popup. This page only loads the codes it lists, so these
-  // must be included or they show as raw keys.
+  // must be included or they show as raw keys. `coreCommonHelp` lives on
+  // the same header widget via `BackNavigationHelpHeaderWidget` and would
+  // otherwise render as `CORE_COMMON_HELP`; `coreCommonBack` is the back
+  // button's label on the same header.
   static final List<String> _logoutLocalizationCodes = [
     i18.common.coreCommonLogout,
+    i18.common.coreCommonHelp,
+    i18.common.coreCommonBack,
     i18.common.logoutConfirmationHeading,
     i18.common.logoutConfirmationDescription,
     i18.common.coreCommonCancel,
@@ -100,6 +117,29 @@ class _BoundarySelectionPageState
           const HFReferralDownSyncResetStateEvent(),
         );
     super.initState();
+
+    // Rebuild `AppLocalizations._messagesByCode` against the filter set
+    // above so the header's Logout / Help / Back strings resolve on
+    // first paint. `_localizationReady` gates the body builder; the
+    // Scaffold's existing loading check already renders a spinner for
+    // the tiny window between page mount and this call completing.
+    final locBloc = context.read<LocalizationBloc>();
+    final selectedLocale = AppSharedPreferences().getSelectedLocale;
+    if (selectedLocale != null && selectedLocale.isNotEmpty) {
+      locBloc.refreshFlowBuilderLocalization(selectedLocale).then((_) {
+        if (!mounted) return;
+        setState(() => _localizationReady = true);
+      }).catchError((Object _) {
+        // Swallow refresh failures so a transient SQL error can't block
+        // the page forever; the drill-down's own update will re-run the
+        // same path and recover.
+        if (!mounted) return;
+        setState(() => _localizationReady = true);
+      });
+    } else {
+      _localizationReady = true;
+    }
+
     listenToSyncCount();
   }
 
@@ -202,8 +242,7 @@ class _BoundarySelectionPageState
         // rows become resolvable by translate(). onUpdateLocalizationIndex
         // is the existing "reload for this locale" event.
         final languages = appConfiguration.languages ?? [];
-        final idx =
-            languages.indexWhere((e) => e.value == selectedLocale);
+        final idx = languages.indexWhere((e) => e.value == selectedLocale);
         locBloc.add(LocalizationEvent.onUpdateLocalizationIndex(
           index: idx >= 0 ? idx : 0,
           code: selectedLocale,
@@ -211,8 +250,7 @@ class _BoundarySelectionPageState
       } catch (e) {
         // Roll back — allow next drill-down to retry this batch.
         _fetchedBoundaryCodes.removeAll(newCodes);
-        debugPrint(
-            'boundary drill-down localization refetch failed: $e');
+        debugPrint('boundary drill-down localization refetch failed: $e');
       }
     } finally {
       completer.complete();
@@ -248,7 +286,14 @@ class _BoundarySelectionPageState
             return Scaffold(
               body: Builder(
                 builder: (context) {
-                  if (state.loading) {
+                  // `_localizationReady` holds the first paint until the
+                  // in-memory localization cache has been rebuilt against
+                  // this page's filter — otherwise the header's Logout /
+                  // Help / Back labels render as raw codes on first mount
+                  // (fixed only after a hot restart, which incidentally
+                  // ran `_loadLocale`). Reuses the existing spinner UX
+                  // the BoundaryBloc.loading path already shows.
+                  if (state.loading || !_localizationReady) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
@@ -267,8 +312,8 @@ class _BoundarySelectionPageState
                         // level only update selectedBoundaryMap and don't need
                         // any localization work — matching the old branch
                         // behavior that kept the dropdown snappy.
-                        final listChanged =
-                            state.boundaryList.length != _lastBoundaryListLength;
+                        final listChanged = state.boundaryList.length !=
+                            _lastBoundaryListLength;
                         if (state.boundaryList.isNotEmpty && listChanged) {
                           _lastBoundaryListLength = state.boundaryList.length;
 
@@ -287,8 +332,7 @@ class _BoundarySelectionPageState
                               state.boundaryList.map((e) => e.code!).toList();
 
                           final labelCodeList = state.selectedBoundaryMap.keys
-                              .map((key) =>
-                                  '${runtimeHierarchyType()}_$key')
+                              .map((key) => '${runtimeHierarchyType()}_$key')
                               .toList();
 
                           final combinedCodes = [
@@ -360,7 +404,8 @@ class _BoundarySelectionPageState
                                             .read<BeneficiaryDownSyncBloc>()
                                             .add(
                                               DownSyncAllBoundariesEvent(
-                                                projectModel: context.selectedProject,
+                                                projectModel:
+                                                    context.selectedProject,
                                                 boundaries: boundaries,
                                                 batchSize: batchSize,
                                                 pendingSyncCount:
@@ -475,7 +520,8 @@ class _BoundarySelectionPageState
                                               i18.beneficiaryDetails
                                                   .dataDownloadInProgress,
                                             ),
-                                            projectModel: context.selectedProject,
+                                            projectModel:
+                                                context.selectedProject,
                                             boundaries: state
                                                 .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,
@@ -640,7 +686,8 @@ class _BoundarySelectionPageState
                                               i18.beneficiaryDetails
                                                   .dataDownloadInProgress,
                                             ),
-                                            projectModel: context.selectedProject,
+                                            projectModel:
+                                                context.selectedProject,
                                             boundaries: state
                                                 .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,
@@ -758,7 +805,8 @@ class _BoundarySelectionPageState
                                                             appConfiguration: [
                                                               appConfiguration,
                                                             ],
-                                                            projectModel: context.selectedProject,
+                                                            projectModel: context
+                                                                .selectedProject,
                                                             boundaries: context
                                                                 .read<
                                                                     BoundaryBloc>()
@@ -773,21 +821,15 @@ class _BoundarySelectionPageState
                                                     LocalizationParams()
                                                         .setModule(
                                                             'boundary', true);
-                                                    context
-                                                        .read<
-                                                            LocalizationBloc>()
-                                                        .add(LocalizationEvent
-                                                            .onUpdateLocalizationIndex(
-                                                                index: appConfiguration
-                                                                    .languages!
-                                                                    .indexWhere((element) =>
-                                                                        element
-                                                                            .value ==
-                                                                        AppSharedPreferences()
-                                                                            .getSelectedLocale),
-                                                                code:
+                                                    context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                        index: appConfiguration
+                                                            .languages!
+                                                            .indexWhere((element) =>
+                                                                element.value ==
                                                                 AppSharedPreferences()
-                                                                    .getSelectedLocale!));
+                                                                    .getSelectedLocale),
+                                                        code: AppSharedPreferences()
+                                                            .getSelectedLocale!));
                                                     Future.delayed(
                                                         const Duration(
                                                             milliseconds: 10),
@@ -960,16 +1002,16 @@ class _BoundarySelectionPageState
                                                             )
                                                           : null,
                                                       options: filteredItems
-                                                          .map(
-                                                              (e) =>
-                                                                  DropdownItem(
-                                                                    name: localizations.translate(
-                                                                        e.code ??
-                                                                            i18.common.coreCommonNoValue),
-                                                                    code:
-                                                                        e.code ??
-                                                                            '',
-                                                                  ))
+                                                          .map((e) =>
+                                                              DropdownItem(
+                                                                name: localizations
+                                                                    .translate(e
+                                                                            .code ??
+                                                                        i18.common
+                                                                            .coreCommonNoValue),
+                                                                code: e.code ??
+                                                                    '',
+                                                              ))
                                                           .toList(),
                                                       initialOptions:
                                                           filteredItems
@@ -980,9 +1022,10 @@ class _BoundarySelectionPageState
                                                                       e.code))
                                                               .map((e) =>
                                                                   DropdownItem(
-                                                                    name: localizations.translate(
-                                                                        e.code ??
-                                                                            i18.common.coreCommonNoValue),
+                                                                    name: localizations.translate(e
+                                                                            .code ??
+                                                                        i18.common
+                                                                            .coreCommonNoValue),
                                                                     code:
                                                                         e.code ??
                                                                             '',
@@ -1040,7 +1083,8 @@ class _BoundarySelectionPageState
                                                                 .noMatchFound,
                                                           ),
                                                           errorMessage: form
-                                                                  .control(label)
+                                                                  .control(
+                                                                      label)
                                                                   .hasErrors
                                                               ? localizations
                                                                   .translate(
@@ -1051,9 +1095,10 @@ class _BoundarySelectionPageState
                                                           items: filteredItems
                                                               .map((e) =>
                                                                   DropdownItem(
-                                                                    name: localizations.translate(
-                                                                        e.code ??
-                                                                            i18.common.coreCommonNoValue),
+                                                                    name: localizations.translate(e
+                                                                            .code ??
+                                                                        i18.common
+                                                                            .coreCommonNoValue),
                                                                     code:
                                                                         e.code ??
                                                                             '',
@@ -1062,18 +1107,17 @@ class _BoundarySelectionPageState
                                                           selectedOption: state
                                                                   .selectedLastLevelBoundaries
                                                                   .where((b) =>
-                                                                      filteredItems
-                                                                          .any((f) =>
-                                                                              f.code ==
-                                                                              b.code))
+                                                                      filteredItems.any((f) =>
+                                                                          f.code ==
+                                                                          b.code))
                                                                   .isNotEmpty
                                                               ? DropdownItem(
-                                                                  name: localizations.translate(
-                                                                      state
-                                                                              .selectedLastLevelBoundaries
-                                                                              .first
-                                                                              .code ??
-                                                                          i18.common.coreCommonNoValue),
+                                                                  name: localizations.translate(state
+                                                                          .selectedLastLevelBoundaries
+                                                                          .first
+                                                                          .code ??
+                                                                      i18.common
+                                                                          .coreCommonNoValue),
                                                                   code: state
                                                                           .selectedLastLevelBoundaries
                                                                           .first
@@ -1101,7 +1145,8 @@ class _BoundarySelectionPageState
                                                                     BoundaryBloc>()
                                                                 .add(
                                                                   BoundaryMultiSelectEvent(
-                                                                    label: label,
+                                                                    label:
+                                                                        label,
                                                                     selectedBoundaries: [
                                                                       selectedBoundary
                                                                     ],
@@ -1143,113 +1188,119 @@ class _BoundarySelectionPageState
                                                           sentenceCaseEnabled:
                                                               false,
                                                           items: filteredItems
-                                                          .map((e) => DropdownItem(
-                                                              name: localizations
-                                                                  .translate(e
+                                                              .map((e) => DropdownItem(
+                                                                  name: localizations.translate(e
                                                                           .code ??
-                                                                      i18.common.coreCommonNoValue),
-                                                              code:
-                                                                  e.code ?? ''))
-                                                          .toList(),
-                                                      onSelect: (value) {
-                                                        final selectedBoundary =
-                                                            filteredItems.firstWhere(
-                                                                (boundary) =>
-                                                                    boundary
-                                                                        .code ==
-                                                                    value.code);
+                                                                      i18.common
+                                                                          .coreCommonNoValue),
+                                                                  code:
+                                                                      e.code ??
+                                                                          ''))
+                                                              .toList(),
+                                                          onSelect: (value) {
+                                                            final selectedBoundary =
+                                                                filteredItems.firstWhere(
+                                                                    (boundary) =>
+                                                                        boundary
+                                                                            .code ==
+                                                                        value
+                                                                            .code);
 
-                                                        // Only reset children if value actually changed
-                                                        final previousValue =
-                                                            state.selectedBoundaryMap[
-                                                                label];
-                                                        if (previousValue
-                                                                ?.code ==
-                                                            selectedBoundary
-                                                                .code) {
-                                                          return;
-                                                        }
+                                                            // Only reset children if value actually changed
+                                                            final previousValue =
+                                                                state.selectedBoundaryMap[
+                                                                    label];
+                                                            if (previousValue
+                                                                    ?.code ==
+                                                                selectedBoundary
+                                                                    .code) {
+                                                              return;
+                                                            }
 
-                                                        context
-                                                            .read<
-                                                                BoundaryBloc>()
-                                                            .add(
-                                                              BoundarySearchEvent(
-                                                                boundaryNum:
-                                                                    (selectedBoundary)
-                                                                        .boundaryNum!,
-                                                                code:
-                                                                    (selectedBoundary)
+                                                            context
+                                                                .read<
+                                                                    BoundaryBloc>()
+                                                                .add(
+                                                                  BoundarySearchEvent(
+                                                                    boundaryNum:
+                                                                        (selectedBoundary)
+                                                                            .boundaryNum!,
+                                                                    code: (selectedBoundary)
                                                                         .code!,
-                                                              ),
-                                                            );
+                                                                  ),
+                                                                );
 
-                                                        context
-                                                            .read<
-                                                                BoundaryBloc>()
-                                                            .add(
-                                                              BoundarySelectEvent(
-                                                                label: label,
-                                                                selectedBoundary:
-                                                                    selectedBoundary,
-                                                              ),
-                                                            );
-                                                        formControls[label]
-                                                            ?.updateValue(
-                                                                selectedBoundary);
-                                                        resetChildDropdowns(
-                                                            label, state);
-                                                      },
-                                                      onChange: (value) {
-                                                        if (value.isEmpty) {
-                                                          if (labelIndex == 0) {
+                                                            context
+                                                                .read<
+                                                                    BoundaryBloc>()
+                                                                .add(
+                                                                  BoundarySelectEvent(
+                                                                    label:
+                                                                        label,
+                                                                    selectedBoundary:
+                                                                        selectedBoundary,
+                                                                  ),
+                                                                );
                                                             formControls[label]
                                                                 ?.updateValue(
-                                                                    null);
+                                                                    selectedBoundary);
                                                             resetChildDropdowns(
                                                                 label, state);
-                                                          } else {
-                                                            setState(() {
-                                                              resetChildDropdowns(
-                                                                  labelList.elementAt(
-                                                                      labelIndex -
-                                                                          1),
-                                                                  state);
-                                                            });
-                                                          }
-                                                        }
-                                                      },
-                                                      emptyItemText:
-                                                          localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .noMatchFound),
-                                                      errorMessage: form
-                                                              .control(label)
-                                                              .hasErrors
-                                                          ? localizations
-                                                              .translate(
-                                                              i18.common
-                                                                  .corecommonRequired,
-                                                            )
-                                                          : null,
-                                                      selectedOption: formControls[
-                                                                      label]
-                                                                  ?.value
-                                                                  ?.code !=
-                                                              null
-                                                          ? DropdownItem(
-                                                              name: localizations
-                                                                  .translate(formControls[
+                                                          },
+                                                          onChange: (value) {
+                                                            if (value.isEmpty) {
+                                                              if (labelIndex ==
+                                                                  0) {
+                                                                formControls[
+                                                                        label]
+                                                                    ?.updateValue(
+                                                                        null);
+                                                                resetChildDropdowns(
+                                                                    label,
+                                                                    state);
+                                                              } else {
+                                                                setState(() {
+                                                                  resetChildDropdowns(
+                                                                      labelList.elementAt(
+                                                                          labelIndex -
+                                                                              1),
+                                                                      state);
+                                                                });
+                                                              }
+                                                            }
+                                                          },
+                                                          emptyItemText:
+                                                              localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .noMatchFound),
+                                                          errorMessage: form
+                                                                  .control(
+                                                                      label)
+                                                                  .hasErrors
+                                                              ? localizations
+                                                                  .translate(
+                                                                  i18.common
+                                                                      .corecommonRequired,
+                                                                )
+                                                              : null,
+                                                          selectedOption: formControls[
+                                                                          label]
+                                                                      ?.value
+                                                                      ?.code !=
+                                                                  null
+                                                              ? DropdownItem(
+                                                                  name: localizations.translate(
+                                                                      formControls[
+                                                                              label]!
+                                                                          .value!
+                                                                          .code!),
+                                                                  code: formControls[
                                                                           label]!
                                                                       .value!
-                                                                      .code!),
-                                                              code: formControls[
-                                                                      label]!
-                                                                  .value!
-                                                                  .code!)
-                                                          : null,
-                                                    ),
+                                                                      .code!)
+                                                              : null,
+                                                        ),
                                             ),
                                           ),
                                         );
@@ -1325,8 +1376,7 @@ class _BoundarySelectionPageState
           LocalizationEvent.onUpdateLocalizationIndex(
               index: appConfiguration.languages!.indexWhere((element) =>
                   element.value == AppSharedPreferences().getSelectedLocale),
-              code: AppSharedPreferences()
-                  .getSelectedLocale!));
+              code: AppSharedPreferences().getSelectedLocale!));
     }
     for (int i = 0; i < labelList.length; i++) {
       final label = labelList[i];
