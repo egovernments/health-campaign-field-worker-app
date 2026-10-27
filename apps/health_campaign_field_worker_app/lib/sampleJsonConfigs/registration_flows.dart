@@ -2129,6 +2129,7 @@ final dynamic sampleFlows = {
                         "parentScreenKey": "searchBeneficiary"
                       }
                     },
+                    { "actionType": "LOAD_UNIQUE_ID_POOL" },
                     {
                       "actionType": "NAVIGATION",
                       "properties": {
@@ -2196,6 +2197,7 @@ final dynamic sampleFlows = {
           "format": "button",
           "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "onAction": [
+            { "actionType": "LOAD_UNIQUE_ID_POOL" },
             {
               "actionType": "NAVIGATION",
               "properties": {
