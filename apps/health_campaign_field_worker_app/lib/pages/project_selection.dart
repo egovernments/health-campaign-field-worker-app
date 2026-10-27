@@ -470,7 +470,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // leaving the other two unresolved because `_loadLocale` clears the
       // map and refills only what matches the current filter.
       locBloc.add(LocalizationEvent.onLoadLocalization(
-        module: '$fullModuleString,$permHandlerModule,$boundaryModule',
+        module:
+            '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,
