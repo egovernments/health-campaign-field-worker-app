@@ -1,4 +1,5 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/utils/scanner_comparison_utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
@@ -450,8 +451,14 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                   ...mergedNavParams,
                   if (isEdit) ...registryFormData,
                   // System values always present
-                  'administrativeArea': localizations
-                      .translate(FlowBuilderSingleton().boundary?.code ?? ''),
+                  // A worker-added settlement shows its own name; its code
+                  // is the parent's.
+                  'administrativeArea':
+                      (FlowBuilderSingleton().boundary?.isNewSettlement ??
+                              false)
+                          ? FlowBuilderSingleton().boundary?.name
+                          : localizations.translate(
+                              FlowBuilderSingleton().boundary?.code ?? ''),
                   'availableIDs': {'DEFAULT': IdGen.instance.identifier},
                   'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
                   'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,

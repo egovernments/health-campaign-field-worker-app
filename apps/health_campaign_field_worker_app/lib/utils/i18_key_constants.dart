@@ -15,6 +15,7 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
+const newSettlement = NewSettlement();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -1757,4 +1758,36 @@ class DatabaseError {
   String get databaseErrorMessage => 'DATABASE_ERROR_MESSAGE';
 
   String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
+}
+
+class NewSettlement {
+  const NewSettlement();
+
+  String get notFoundLabel => 'NEW_SETTLEMENT_NOT_FOUND_LABEL';
+
+  String get addAction => 'NEW_SETTLEMENT_ADD_ACTION';
+
+  String get title => 'NEW_SETTLEMENT_TITLE';
+
+  String get parentLabel => 'NEW_SETTLEMENT_PARENT_LABEL';
+
+  String get nameLabel => 'NEW_SETTLEMENT_NAME_LABEL';
+
+  String get nameRequired => 'NEW_SETTLEMENT_NAME_REQUIRED';
+
+  String get duplicateName => 'NEW_SETTLEMENT_DUPLICATE_NAME';
+
+  String get locationLabel => 'NEW_SETTLEMENT_LOCATION_LABEL';
+
+  String get locationCapturing => 'NEW_SETTLEMENT_LOCATION_CAPTURING';
+
+  String get locationUnavailable => 'NEW_SETTLEMENT_LOCATION_UNAVAILABLE';
+
+  String get retryLocation => 'NEW_SETTLEMENT_RETRY_LOCATION';
+
+  String get saveAction => 'NEW_SETTLEMENT_SAVE_ACTION';
+
+  String get savedToast => 'NEW_SETTLEMENT_SAVED_TOAST';
+
+  String get newTag => 'NEW_SETTLEMENT_NEW_TAG';
 }

@@ -103,3 +103,17 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     return materializedPath!.split('.');
   }
 }
+
+/// Marker for a worker-added settlement. It exists only on the device (as a
+/// NEW_SETTLEMENT user action) and is never written to the boundary table.
+const String newSettlementBoundaryType = 'NEW_SETTLEMENT';
+
+extension NewSettlementBoundary on BoundaryModel {
+  /// A new settlement carries its parent's [code] (that is what reaches the
+  /// server) and its own display [name].
+  bool get isNewSettlement => boundaryType == newSettlementBoundaryType;
+
+  /// Identity for selection and de-duplication. [code] alone is not unique
+  /// once new settlements share their parent's code.
+  String get selectionKey => isNewSettlement ? '$code::$name' : code ?? '';
+}
