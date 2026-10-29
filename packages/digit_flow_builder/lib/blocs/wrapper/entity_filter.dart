@@ -83,6 +83,13 @@ class EntityFilter {
 
           final actual = value?.toString().toLowerCase() ?? '';
           if (!actual.contains(termText.toLowerCase())) return false;
+        } else if (filter.containsKey('notEquals')) {
+          // Drop the root when the field DOES hold the value. Used to keep
+          // outside-household site links out of stock/facility lists.
+          if (value == filter['notEquals']) return false;
+        } else if (filter.containsKey('notIn')) {
+          final excluded = filter['notIn'];
+          if (excluded is List && excluded.contains(value)) return false;
         } else if (equals != null && value != equals) {
           return false;
         }

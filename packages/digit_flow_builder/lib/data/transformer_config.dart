@@ -1933,6 +1933,119 @@ final jsonConfig = {
       }
     }
   },
+  // Outside-household sites. A site is a Facility (type in `usage`) plus a
+  // project-facility link carrying the frontline worker. The link points at
+  // the facility's clientReferenceId until sync swaps in the server id.
+  "transitSite": {
+    "fallbackModel": "FacilityModel",
+    "models": {
+      "FacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:FacilityModel.clientReferenceId",
+          "tenantId": "__context:tenantId",
+          "name": "sessionSetup.locationName",
+          "usage": "__value:TRANSIT_POST",
+          "isPermanent": "__value:false",
+          "address": {
+            "tenantId": "__context:tenantId",
+            "relatedClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "latitude": "sessionSetup.gpsStart[0]",
+            "longitude": "sessionSetup.gpsStart[1]",
+            "locationAccuracy": "sessionSetup.gpsStart[2]",
+            "type": "__value:PERMANENT",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:selectedBoundaryName",
+              "tenantId": "__context:tenantId"
+            },
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "outsideHouseholdCategory": "sessionSetup.transitLocationType",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea"
+          }
+        }
+      },
+      "ProjectFacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:ProjectFacilityModel.clientReferenceId",
+          "facilityId": "__ref:FacilityModel.clientReferenceId",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "frontlineWorkerName": "sessionSetup.workerName",
+            "frontlineWorkerPhone": "sessionSetup.workerPhone",
+            "facilityClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "facilityLevel": "__value:site"
+          }
+        }
+      }
+    }
+  },
+  "clfSite": {
+    "fallbackModel": "FacilityModel",
+    "models": {
+      "FacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:FacilityModel.clientReferenceId",
+          "tenantId": "__context:tenantId",
+          "name": "sessionSetup.locationName",
+          "usage": "__value:OUTSIDE_HOUSEHOLD_PLACES",
+          "isPermanent": "__value:true",
+          "address": {
+            "tenantId": "__context:tenantId",
+            "relatedClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "latitude": "sessionSetup.gpsStart[0]",
+            "longitude": "sessionSetup.gpsStart[1]",
+            "locationAccuracy": "sessionSetup.gpsStart[2]",
+            "type": "__value:PERMANENT",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:selectedBoundaryName",
+              "tenantId": "__context:tenantId"
+            },
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "outsideHouseholdCategory": "sessionSetup.clfLocationType",
+            "responsiblePerson": "sessionSetup.responsiblePerson",
+            "contactNumber": "sessionSetup.contactNumber",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea"
+          }
+        }
+      },
+      "ProjectFacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:ProjectFacilityModel.clientReferenceId",
+          "facilityId": "__ref:FacilityModel.clientReferenceId",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "frontlineWorkerName": "sessionSetup.workerName",
+            "frontlineWorkerPhone": "sessionSetup.workerPhone",
+            "facilityClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "facilityLevel": "__value:site"
+          }
+        }
+      }
+    }
+  },
   "groupVacChild": {
     "fallbackModel": "UserActionModel",
     "models": {

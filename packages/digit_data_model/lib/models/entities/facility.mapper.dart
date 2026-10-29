@@ -27,6 +27,10 @@ class FacilitySearchModelMapper
   static List<String>? _$id(FacilitySearchModel v) => v.id;
   static const Field<FacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
+  static List<String>? _$clientReferenceId(FacilitySearchModel v) =>
+      v.clientReferenceId;
+  static const Field<FacilitySearchModel, List<String>> _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static bool? _$isPermanent(FacilitySearchModel v) => v.isPermanent;
   static const Field<FacilitySearchModel, bool> _f$isPermanent =
       Field('isPermanent', _$isPermanent, opt: true);
@@ -55,6 +59,7 @@ class FacilitySearchModelMapper
   final MappableFields<FacilitySearchModel> fields = const {
     #name: _f$name,
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
     #storageCapacity: _f$storageCapacity,
@@ -78,6 +83,7 @@ class FacilitySearchModelMapper
     return FacilitySearchModel.ignoreDeleted(
         name: data.dec(_f$name),
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
         storageCapacity: data.dec(_f$storageCapacity),
@@ -141,10 +147,13 @@ extension FacilitySearchModelValueCopy<$R, $Out>
 abstract class FacilitySearchModelCopyWith<$R, $In extends FacilitySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId;
   @override
   $R call(
       {String? name,
       List<String>? id,
+      List<String>? clientReferenceId,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -169,9 +178,18 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
               (v) => call(id: v))
           : null;
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId => $value.clientReferenceId != null
+          ? ListCopyWith(
+              $value.clientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceId: v))
+          : null;
+  @override
   $R call(
           {Object? name = $none,
           Object? id = $none,
+          Object? clientReferenceId = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
@@ -180,6 +198,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (name != $none) #name: name,
         if (id != $none) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
         if (storageCapacity != $none) #storageCapacity: storageCapacity,
@@ -191,6 +210,8 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
       FacilitySearchModel.ignoreDeleted(
           name: data.get(#name, or: $value.name),
           id: data.get(#id, or: $value.id),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
           isPermanent: data.get(#isPermanent, or: $value.isPermanent),
           usage: data.get(#usage, or: $value.usage),
           storageCapacity:
@@ -225,6 +246,9 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
       Field('additionalFields', _$additionalFields, opt: true);
   static String _$id(FacilityModel v) => v.id;
   static const Field<FacilityModel, String> _f$id = Field('id', _$id);
+  static String? _$clientReferenceId(FacilityModel v) => v.clientReferenceId;
+  static const Field<FacilityModel, String> _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static bool? _$isPermanent(FacilityModel v) => v.isPermanent;
   static const Field<FacilityModel, bool> _f$isPermanent =
       Field('isPermanent', _$isPermanent, opt: true);
@@ -265,6 +289,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
   final MappableFields<FacilityModel> fields = const {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
     #storageCapacity: _f$storageCapacity,
@@ -292,6 +317,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
     return FacilityModel(
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
         storageCapacity: data.dec(_f$storageCapacity),
@@ -370,6 +396,7 @@ abstract class FacilityModelCopyWith<$R, $In extends FacilityModel, $Out>
   $R call(
       {FacilityAdditionalFields? additionalFields,
       String? id,
+      String? clientReferenceId,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -411,6 +438,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? additionalFields = $none,
           String? id,
+          Object? clientReferenceId = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
@@ -425,6 +453,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != null) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
         if (storageCapacity != $none) #storageCapacity: storageCapacity,
@@ -444,6 +473,8 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
+      clientReferenceId:
+          data.get(#clientReferenceId, or: $value.clientReferenceId),
       isPermanent: data.get(#isPermanent, or: $value.isPermanent),
       usage: data.get(#usage, or: $value.usage),
       storageCapacity: data.get(#storageCapacity, or: $value.storageCapacity),

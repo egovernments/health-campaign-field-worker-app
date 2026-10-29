@@ -36,6 +36,10 @@ class DigitCrudService extends CrudService {
     } else if (entity is ProjectFacilityModel) {
       return context.repository<ProjectFacilityModel,
           ProjectFacilitySearchModel>(context);
+    } else if (entity is FacilityModel) {
+      // Outside-household sites (Transit Posts / Outside Household Places)
+      // are created from the app as facilities.
+      return context.repository<FacilityModel, FacilitySearchModel>(context);
     } else if (entity is ProductVariantModel) {
       return context
           .repository<ProductVariantModel, ProductVariantSearchModel>(context);

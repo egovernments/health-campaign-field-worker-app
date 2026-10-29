@@ -25,6 +25,11 @@ class ProjectFacilitySearchModelMapper
   static List<String>? _$id(ProjectFacilitySearchModel v) => v.id;
   static const Field<ProjectFacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
+  static List<String>? _$clientReferenceId(ProjectFacilitySearchModel v) =>
+      v.clientReferenceId;
+  static const Field<ProjectFacilitySearchModel, List<String>>
+      _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static List<String>? _$facilityId(ProjectFacilitySearchModel v) =>
       v.facilityId;
   static const Field<ProjectFacilitySearchModel, List<String>> _f$facilityId =
@@ -55,6 +60,7 @@ class ProjectFacilitySearchModelMapper
   @override
   final MappableFields<ProjectFacilitySearchModel> fields = const {
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #facilityId: _f$facilityId,
     #projectId: _f$projectId,
     #tenantId: _f$tenantId,
@@ -77,6 +83,7 @@ class ProjectFacilitySearchModelMapper
   static ProjectFacilitySearchModel _instantiate(DecodingData data) {
     return ProjectFacilitySearchModel.ignoreDeleted(
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         tenantId: data.dec(_f$tenantId),
@@ -144,6 +151,8 @@ abstract class ProjectFacilitySearchModelCopyWith<
     $In extends ProjectFacilitySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get facilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -151,6 +160,7 @@ abstract class ProjectFacilitySearchModelCopyWith<
   @override
   $R call(
       {List<String>? id,
+      List<String>? clientReferenceId,
       List<String>? facilityId,
       List<String>? projectId,
       String? tenantId,
@@ -175,6 +185,14 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
       $value.id != null
           ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId => $value.clientReferenceId != null
+          ? ListCopyWith(
+              $value.clientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceId: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -203,6 +221,7 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? id = $none,
+          Object? clientReferenceId = $none,
           Object? facilityId = $none,
           Object? projectId = $none,
           Object? tenantId = $none,
@@ -210,6 +229,7 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (facilityId != $none) #facilityId: facilityId,
         if (projectId != $none) #projectId: projectId,
         if (tenantId != $none) #tenantId: tenantId,
@@ -220,6 +240,8 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
   ProjectFacilitySearchModel $make(CopyWithData data) =>
       ProjectFacilitySearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
           facilityId: data.get(#facilityId, or: $value.facilityId),
           projectId: data.get(#projectId, or: $value.projectId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
@@ -255,6 +277,10 @@ class ProjectFacilityModelMapper
       Field('additionalFields', _$additionalFields, opt: true);
   static String _$id(ProjectFacilityModel v) => v.id;
   static const Field<ProjectFacilityModel, String> _f$id = Field('id', _$id);
+  static String? _$clientReferenceId(ProjectFacilityModel v) =>
+      v.clientReferenceId;
+  static const Field<ProjectFacilityModel, String> _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static String _$facilityId(ProjectFacilityModel v) => v.facilityId;
   static const Field<ProjectFacilityModel, String> _f$facilityId =
       Field('facilityId', _$facilityId);
@@ -288,6 +314,7 @@ class ProjectFacilityModelMapper
   final MappableFields<ProjectFacilityModel> fields = const {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #facilityId: _f$facilityId,
     #projectId: _f$projectId,
     #nonRecoverableError: _f$nonRecoverableError,
@@ -312,6 +339,7 @@ class ProjectFacilityModelMapper
     return ProjectFacilityModel(
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
@@ -390,6 +418,7 @@ abstract class ProjectFacilityModelCopyWith<
   $R call(
       {ProjectFacilityAdditionalFields? additionalFields,
       String? id,
+      String? clientReferenceId,
       String? facilityId,
       String? projectId,
       bool? nonRecoverableError,
@@ -426,6 +455,7 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? additionalFields = $none,
           String? id,
+          Object? clientReferenceId = $none,
           String? facilityId,
           String? projectId,
           Object? nonRecoverableError = $none,
@@ -437,6 +467,7 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != null) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (facilityId != null) #facilityId: facilityId,
         if (projectId != null) #projectId: projectId,
         if (nonRecoverableError != $none)
@@ -453,6 +484,8 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
+      clientReferenceId:
+          data.get(#clientReferenceId, or: $value.clientReferenceId),
       facilityId: data.get(#facilityId, or: $value.facilityId),
       projectId: data.get(#projectId, or: $value.projectId),
       nonRecoverableError:
