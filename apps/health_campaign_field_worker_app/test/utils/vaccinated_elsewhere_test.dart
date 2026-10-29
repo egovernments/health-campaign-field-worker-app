@@ -611,15 +611,22 @@ void main() {
       final button = field('revisitVaccinatedElsewhereButton');
       expect(button['label'], 'HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL');
       expect(button['format'], 'button');
-      final action = (button['onAction'] as List).single as Map;
+      // final action = (button['onAction'] as List).single as Map;
+      // Inside the revisit popup now, so it closes the popup first.
+      final actions = button['onAction'] as List;
+      expect(actions.first['actionType'], 'CLOSE_POPUP');
+      final action = actions.last as Map;
       expect(action['actionType'], 'CHECK_ELIGIBILITY_AND_NAVIGATE');
       expect(action['properties']['name'], 'VACCINATED_ELSEWHERE');
       expect(action['properties']['type'], 'FORM');
     });
 
     test('revisit button passes everything the save mapping needs', () {
+      // final action =
+      //     (field('revisitVaccinatedElsewhereButton')['onAction'] as List).single
+      //         as Map;
       final action =
-          (field('revisitVaccinatedElsewhereButton')['onAction'] as List).single
+          (field('revisitVaccinatedElsewhereButton')['onAction'] as List).last
               as Map;
       final keys = [
         for (final d in action['properties']['data'] as List) d['key'],
@@ -653,12 +660,25 @@ void main() {
       expect(rules.where((r) => r.contains('wasAbsentForCurrentCycle')), isEmpty);
     });
 
-    test('redose button sits directly above the revisit button', () {
-      expect(
-          (field('redoseButton')['properties'] as Map).containsKey('bottomGap'),
-          isFalse);
-      expect(field('revisitVaccinatedElsewhereButton')['properties']['topGap'],
-          16);
+    // test('redose button sits directly above the revisit button', () {
+    //   expect(
+    //       (field('redoseButton')['properties'] as Map).containsKey('bottomGap'),
+    //       isFalse);
+    //   expect(field('revisitVaccinatedElsewhereButton')['properties']['topGap'],
+    //       16);
+    // });
+
+    test('second visit: one action button whose popup holds both buttons', () {
+      final popup = field('revisitActionButton');
+      expect(popup['format'], 'actionPopup');
+      expect(popup['label'], 'HCM_HOUSEHOLD_OVERVIEW_ACTION_BUTTON');
+      final body = popup['properties']['popupConfig']['body'] as List;
+      expect([for (final b in body) b['fieldName']],
+          ['redoseButton', 'revisitVaccinatedElsewhereButton']);
+      for (final b in body) {
+        expect((b['onAction'] as List).first['actionType'], 'CLOSE_POPUP');
+      }
+      expect(popup['visible'], field('redoseButton')['visible']);
     });
   });
 
@@ -688,8 +708,12 @@ void main() {
       expect(veProperty('region'), isNull);
     });
 
-    test('GPS field is still shown', () {
-      expect(veProperty('latLng')!['hidden'], isFalse);
+    // test('GPS field is still shown', () {
+    //   expect(veProperty('latLng')!['hidden'], isFalse);
+    // });
+    // The household's location is used instead of a per-member capture.
+    test('GPS field is removed', () {
+      expect(veProperty('latLng'), isNull);
     });
 
     test('location dropdown: required, after GPS, options from MDMS', () {
@@ -854,11 +878,16 @@ void main() {
       expect(field(t, 'vaccinationLocationOther'), 'Mosque');
     });
 
-    test('GPS coordinates are saved in additional fields', () {
-      final t = save({
-        'vaccinationLocation': 'SCHOOL',
-        'latLng': [12.5, 7.25, 4.0],
-      }).whereType<TaskModel>().single;
+    // test('GPS coordinates are saved in additional fields', () {
+    //   final t = save({
+    //     'vaccinationLocation': 'SCHOOL',
+    //     'latLng': [12.5, 7.25, 4.0],
+    //   }).whereType<TaskModel>().single;
+    test('household GPS coordinates are saved in additional fields', () {
+      final t = save({'vaccinationLocation': 'SCHOOL'},
+              ctx: {...context, 'householdLatLng': '12.5,7.25,4.0'})
+          .whereType<TaskModel>()
+          .single;
       expect(field(t, 'latitude'), '12.5');
       expect(field(t, 'longitude'), '7.25');
       expect(field(t, 'locationAccuracy'), '4.0');
