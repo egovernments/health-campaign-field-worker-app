@@ -242,7 +242,8 @@ class Common {
       'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
   String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
-  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
+  String get logoutConfirmationDescription =>
+      'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -962,8 +963,7 @@ class Home {
   String get polioLqaDataCollectionLabel =>
       'HOME_POLIO_LQA_DATA_COLLECTION_LABEL';
 
-  String get polioInsideMonitoringLabel =>
-      'HOME_POLIO_INSIDE_MONITORING_LABEL';
+  String get polioInsideMonitoringLabel => 'HOME_POLIO_INSIDE_MONITORING_LABEL';
 
   String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
 
@@ -1007,11 +1007,13 @@ class BeneficiaryID {
 
   String get dataFoundBeneficiaryIds => 'DATA_FOUND_BENEFICIARY_IDS';
 
-  String get dataFoundBeneficiaryIdsContent => 'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
+  String get dataFoundBeneficiaryIdsContent =>
+      'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
 
   String get dataNotFoundBeneficiaryIds => 'DATA_NOT_FOUND_BENEFICIARY_IDS';
 
-  String get dataNotFoundBeneficiaryIdsContent => 'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
+  String get dataNotFoundBeneficiaryIdsContent =>
+      'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
 }
 
 class DataShare {
@@ -1541,7 +1543,8 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get proceedWithoutDownloading => 'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
+  String get proceedWithoutDownloading =>
+      'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
 
@@ -1741,8 +1744,7 @@ class FaceAuth {
   // Re-verification popup / overlay
   String get scanToProceed => 'FACE_AUTH_SCAN_TO_PROCEED';
   String get verifyToContinue => 'FACE_AUTH_VERIFY_TO_CONTINUE';
-  String get verifyToContinueWorking =>
-      'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
+  String get verifyToContinueWorking => 'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
   String get systemUserVerifyFirst => 'FACE_AUTH_SYSTEM_USER_VERIFY_FIRST';
   String get coWorkerVerification => 'FACE_AUTH_COWORKER_VERIFICATION';
   String get scanEachFace => 'FACE_AUTH_SCAN_EACH_FACE';
@@ -1760,34 +1762,14 @@ class DatabaseError {
   String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
 }
 
+/// Codes for adding a missed place at the lowest boundary level. Messages
+/// use `{LEVEL}` for that level's localized name (Settlement, Village, ...).
 class NewSettlement {
   const NewSettlement();
 
-  String get notFoundLabel => 'NEW_SETTLEMENT_NOT_FOUND_LABEL';
+  String get notFoundLabel => 'MISSED_PLACE_NOT_FOUND_LABEL';
 
-  String get addAction => 'NEW_SETTLEMENT_ADD_ACTION';
+  String get addAction => 'MISSED_PLACE_ADD_ACTION';
 
-  String get title => 'NEW_SETTLEMENT_TITLE';
-
-  String get parentLabel => 'NEW_SETTLEMENT_PARENT_LABEL';
-
-  String get nameLabel => 'NEW_SETTLEMENT_NAME_LABEL';
-
-  String get nameRequired => 'NEW_SETTLEMENT_NAME_REQUIRED';
-
-  String get duplicateName => 'NEW_SETTLEMENT_DUPLICATE_NAME';
-
-  String get locationLabel => 'NEW_SETTLEMENT_LOCATION_LABEL';
-
-  String get locationCapturing => 'NEW_SETTLEMENT_LOCATION_CAPTURING';
-
-  String get locationUnavailable => 'NEW_SETTLEMENT_LOCATION_UNAVAILABLE';
-
-  String get retryLocation => 'NEW_SETTLEMENT_RETRY_LOCATION';
-
-  String get saveAction => 'NEW_SETTLEMENT_SAVE_ACTION';
-
-  String get savedToast => 'NEW_SETTLEMENT_SAVED_TOAST';
-
-  String get newTag => 'NEW_SETTLEMENT_NEW_TAG';
+  String get savedToast => 'MISSED_PLACE_SAVED_TOAST';
 }

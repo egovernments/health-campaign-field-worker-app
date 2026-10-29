@@ -20,7 +20,6 @@ import '../pages/acknowledgement.dart';
 import '../pages/attendance_qr_scanner.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/create_settlement.dart';
 import '../pages/current_boundary.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -154,10 +153,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: CurrentBoundaryRoute.page,
           path: 'current-boundary',
-        ),
-        AutoRoute(
-          page: CreateSettlementRoute.page,
-          path: 'create-settlement',
         ),
 
         // Forms Route

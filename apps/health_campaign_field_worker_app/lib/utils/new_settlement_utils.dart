@@ -6,15 +6,22 @@ import '../blocs/localization/app_localization.dart';
 /// User-action `action` value for a worker-added settlement.
 const String newSettlementAction = 'NEW_SETTLEMENT';
 
-/// Key under `additionalFields` holding the settlement's display name.
+/// Schema key of the form-builder version in `app_config_schemas`.
+const String newSettlementSchemaKey = 'MISSEDPLACE';
+
+/// `additionalFields` key holding the typed name (set by the `newSettlement`
+/// transformer).
 const String settlementNameKey = 'settlementName';
 
-String? settlementNameOf(UserActionModel action) => action
-    .additionalFields?.fields
-    .where((f) => f.key == settlementNameKey)
-    .firstOrNull
-    ?.value
-    ?.toString();
+/// Token in missed-place messages replaced with the lowest level's name.
+const String levelPlaceholder = '{LEVEL}';
+
+String? settlementNameOf(UserActionModel action) =>
+    action.additionalFields?.fields
+        .where((f) => f.key == settlementNameKey)
+        .firstOrNull
+        ?.value
+        ?.toString();
 
 /// Builds the in-memory last-level entry for a NEW_SETTLEMENT user action.
 /// It keeps the [parent]'s code, path and level so everything sent to the
@@ -42,10 +49,5 @@ BoundaryModel newSettlementBoundary({
 String boundaryDisplayName(
   BoundaryModel boundary,
   AppLocalizations localizations,
-) {
-  if (boundary.isNewSettlement && (boundary.name?.isNotEmpty ?? false)) {
-    return boundary.name!;
-  }
-
-  return localizations.translate(boundary.code ?? '');
-}
+) =>
+    boundary.displayName(localizations.translate);

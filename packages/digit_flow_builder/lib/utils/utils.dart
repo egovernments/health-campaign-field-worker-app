@@ -236,6 +236,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'type': pageMap['type'],
         'format': pageMap['format'],
         'description': pageMap['description'],
+        'labelPlaceHolders': pageMap['labelPlaceHolders'],
+        'descriptionPlaceHolders': pageMap['descriptionPlaceHolders'],
         'actionLabel': pageMap['actionLabel'],
         'properties': properties,
         'value': pageMap['value'],

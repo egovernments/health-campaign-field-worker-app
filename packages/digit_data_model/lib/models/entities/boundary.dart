@@ -116,4 +116,11 @@ extension NewSettlementBoundary on BoundaryModel {
   /// Identity for selection and de-duplication. [code] alone is not unique
   /// once new settlements share their parent's code.
   String get selectionKey => isNewSettlement ? '$code::$name' : code ?? '';
+
+  /// Text to show for this boundary: a new settlement's own name, any other
+  /// boundary its [code] passed through [translate].
+  String displayName(String Function(String code) translate) =>
+      isNewSettlement && (name?.isNotEmpty ?? false)
+          ? name!
+          : translate(code ?? '');
 }

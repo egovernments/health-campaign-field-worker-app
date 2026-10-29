@@ -41,6 +41,9 @@ import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/mdms_enum_utils.dart';
+import '../../data/new_settlement_downsync.dart';
+import '../../sampleJsonConfigs/new_settlement.dart';
+import '../../utils/new_settlement_utils.dart';
 import '../../utils/utils.dart';
 import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
@@ -86,6 +89,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       faceAuthEventRemoteRepository;
   final LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
       faceAuthEventLocalRepository;
+
+  /// userLocation API (nullable — only when the service registry has it).
+  /// New settlements are created and searched through it.
+  final RemoteRepository<UserActionModel, UserActionSearchModel>?
+      userLocationRemoteRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -168,6 +176,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.userActionRemoteRepository,
     this.faceAuthEventRemoteRepository,
     this.faceAuthEventLocalRepository,
+    this.userLocationRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -990,6 +999,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);
         }
+
+        // Until the missed-place FormConfig is published, store the local
+        // sample so its options are filled from MDMS the same way. A copy,
+        // since enrichment mutates the config in place.
+        if (!formConfigs
+            .any((config) => config['name'] == newSettlementSchemaKey)) {
+          await enrichFormSchemasWithEnumsForForms(
+            json.decode(json.encode(sampleNewSettlementFlows)),
+          );
+        }
       } catch (e) {
         emit(
           state.copyWith(
@@ -1223,6 +1242,30 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         syncError: ProjectSyncErrorType.stockDownsync,
       ));
       return;
+    }
+
+    final userLocationRemote = userLocationRemoteRepository;
+    if (userLocationRemote != null) {
+      try {
+        reportSyncProgress('newSettlement');
+        await NewSettlementDownsync(
+          remote: userLocationRemote,
+          local: userActionLocalRepository,
+          onProgress: (downloaded) =>
+              reportSyncProgress('newSettlement ($downloaded)'),
+        ).run(event.model.id);
+      } catch (error) {
+        AppLogger.instance.error(
+          title: 'ProjectBloc: new settlement downsync',
+          message: '$error',
+        );
+        emit(state.copyWith(
+          selectedProject: event.model,
+          loading: false,
+          syncError: ProjectSyncErrorType.missedPlaces,
+        ));
+        return;
+      }
     }
 
     final getSelectedProject = await localSecureStore.selectedProject;
@@ -1843,5 +1886,7 @@ enum ProjectSyncErrorType {
   appConfig,
   attendance,
   userAction,
-  stockDownsync
+  stockDownsync,
+  // Shown as MISSEDPLACES_ERROR.
+  missedPlaces
 }

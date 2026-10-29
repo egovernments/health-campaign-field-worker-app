@@ -79,19 +79,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CreateSettlementRoute.name: (routeData) {
-      final args = routeData.argsAs<CreateSettlementRouteArgs>();
-      return AutoRoutePage<BoundaryModel>(
-        routeData: routeData,
-        child: CreateSettlementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          parent: args.parent,
-          label: args.label,
-          existingNames: args.existingNames,
-        ),
-      );
-    },
     CurrentBoundaryRoute.name: (routeData) {
       final args = routeData.argsAs<CurrentBoundaryRouteArgs>(
           orElse: () => const CurrentBoundaryRouteArgs());
@@ -525,59 +512,6 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [CreateSettlementPage]
-class CreateSettlementRoute extends PageRouteInfo<CreateSettlementRouteArgs> {
-  CreateSettlementRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    required BoundaryModel parent,
-    required String label,
-    List<String> existingNames = const [],
-    List<PageRouteInfo>? children,
-  }) : super(
-          CreateSettlementRoute.name,
-          args: CreateSettlementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            parent: parent,
-            label: label,
-            existingNames: existingNames,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CreateSettlementRoute';
-
-  static const PageInfo<CreateSettlementRouteArgs> page =
-      PageInfo<CreateSettlementRouteArgs>(name);
-}
-
-class CreateSettlementRouteArgs {
-  const CreateSettlementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.parent,
-    required this.label,
-    this.existingNames = const [],
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final BoundaryModel parent;
-
-  final String label;
-
-  final List<String> existingNames;
-
-  @override
-  String toString() {
-    return 'CreateSettlementRouteArgs{key: $key, appLocalizations: $appLocalizations, parent: $parent, label: $label, existingNames: $existingNames}';
   }
 }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -435,9 +436,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                             // (defaults to true when absent).
                             if (widget.config['showLocationTag'] != false) ...[
                               Tag(
-                                label: localizations.translate(
-                                    FlowBuilderSingleton().boundary?.code ??
-                                        ""),
+                                // A new settlement shows its own name; its
+                                // code is the parent's.
+                                label: FlowBuilderSingleton()
+                                        .boundary
+                                        ?.displayName(localizations.translate) ??
+                                    localizations.translate(""),
                                 isIcon: true,
                                 isStroke: true,
                                 borderColor: Theme.of(context)

@@ -453,12 +453,10 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                   // System values always present
                   // A worker-added settlement shows its own name; its code
                   // is the parent's.
-                  'administrativeArea':
-                      (FlowBuilderSingleton().boundary?.isNewSettlement ??
-                              false)
-                          ? FlowBuilderSingleton().boundary?.name
-                          : localizations.translate(
-                              FlowBuilderSingleton().boundary?.code ?? ''),
+                  'administrativeArea': FlowBuilderSingleton()
+                          .boundary
+                          ?.displayName(localizations.translate) ??
+                      localizations.translate(''),
                   'availableIDs': {'DEFAULT': IdGen.instance.identifier},
                   'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
                   'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,
