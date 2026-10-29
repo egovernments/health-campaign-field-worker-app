@@ -646,11 +646,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 }
               ],
               "fieldName": "householdEditButton",
-              "prefixIcon": "Edit",
               "properties": {
                 "icon": "Edit",
                 "size": "large",
                 "type": "secondary",
+                "prefixIcon": "Edit",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
@@ -679,8 +679,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 },
                 {
                   "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-                  "value":
-                      "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
+                  "value": "{{contextData.0.members.length}}",
                   "isActive": true
                 }
               ],
@@ -756,11 +755,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           }
                         ],
                         "fieldName": "editIndividualButton",
-                        "prefixIcon": "Edit",
                         "properties": {
                           "icon": "Edit",
                           "size": "large",
                           "type": "tertiary",
+                          "prefixIcon": "Edit",
                           "mainAxisSize": "min",
                           "mainAxisAlignment": "center"
                         }
@@ -1429,8 +1428,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "format": "actionPopup",
               "visible":
                   "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-              "disabled":
-                  "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "fieldName": "beneficiaryIdMinCheck",
               "properties": {
                 "icon": "FileDownload",
@@ -1522,8 +1519,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
               "format": "button",
               "visible": "{{latestBeneficiaryId}} != ''",
-              "disabled":
-                  "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "onAction": [
                 {
                   "actionType": "NAVIGATION",
@@ -1577,16 +1572,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "actionType": "NAVIGATION",
               "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
             }
-          ],
-          "popupConfig": {
-            "title": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
-            "condition":
-                "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==false",
-            "titleIcon": "Warning",
-            "cancelLabel": "HCM_COMMON_CANCEL_LABEL",
-            "description": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
-            "confirmLabel": "HCM_COMMON_CONTINUE_LABEL"
-          }
+          ]
         }
       ],
       "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
@@ -1828,6 +1814,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 "popupConfig": {
                   "body": [
                     {
+                      "key": 1,
                       "type": "template",
                       "format": "card",
                       "children": [
@@ -1859,7 +1846,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                               }
                             }
                           ],
-                          "fieldName": "proximitySearch",
+                          "fieldName": "proximitySearchRegistration",
                           "mandatory": true,
                           "schemaCode": null,
                           "validations": [
@@ -1871,9 +1858,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           ]
                         }
                       ],
+                      "fieldName": "card",
                       "properties": {"type": "secondary"}
                     },
                     {
+                      "key": 2,
                       "type": "template",
                       "format": "card",
                       "children": [
@@ -1897,6 +1886,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           "validations": []
                         }
                       ],
+                      "fieldName": "card",
                       "properties": {"type": "secondary"}
                     },
                     {
@@ -2407,7 +2397,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
           "isGS1": false,
           "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
           "format": "qrScanner",
-          "hidden": false,
+          "hidden": true,
           "onAction": [
             {
               "actionType": "OPEN_SCANNER",
@@ -2932,30 +2922,23 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_VACCINATION",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText":
                   "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE_VACCINATION",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -2970,29 +2953,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_VACCINATION",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -3531,32 +3507,24 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 7,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
               "includeInSummary": true,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
               "visibilityCondition": {
                 "expression": [
                   {
@@ -3577,32 +3545,24 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 8,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
               "includeInSummary": true,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
               "visibilityCondition": {
                 "expression": [
                   {
@@ -3617,10 +3577,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
               // "order": 8,
               // Synced with MDMS HOUSEHOLDSTRATEGY: after zeroDoseDTP and prevRoundDose.
-              "order": 10,
+              "order": 9,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4344,7 +4304,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4611,65 +4571,6 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "errorMessage": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
               "isMultiSelect": false,
               "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
-              "order": 2,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_MEMBERS_1"
-              },
-              "value": "2",
-              "format": "numeric",
-              "hidden": false,
-              "fieldName": "memberCount",
-              "mandatory": true,
-              "validations": [
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MIN_MEMBERS_1"
-                },
-                {
-                  "type": "max",
-                  "value": "500",
-                  "message": "HCM_VALIDATION_MAX_MEMBERS_500"
-                }
-              ],
-              "includeInForm": true
-            },
-            {
-              "type": "integer",
-              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
-              "order": 4,
-              "range": {
-                "min": "1",
-                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
-              },
-              "value": "1",
-              "format": "numeric",
-              "hidden": true,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "childrenCount",
-              "mandatory": false,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
-                }
-              ],
-              "errorMessage": "REGISTRATION_HOUSEHOLD_childrenCount_ERROR",
-              "isMultiSelect": false
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
@@ -4925,38 +4826,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             },
             {
               "type": "string",
-              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "latLng",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
-              "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
-              "isMultiSelect": false,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
-            {
-              "type": "string",
               "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
-              "order": 4,
+              "order": 3,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -4995,7 +4866,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -5034,7 +4905,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_LANDMARK_LABEL",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -5073,7 +4944,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "integer",
               "label": "HCM_REGISTRATION_PINCODE_LABEL",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -5144,6 +5015,36 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
               "includeInSummary": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
@@ -5493,7 +5394,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "ABSENCE", "name": "UNABLETODELIVER_ABSENCE"}
               ],
               "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
-              "order": 2,
+              "order": 1,
               "value": "",
               "format": "radio",
               "hidden": false,
@@ -5561,7 +5462,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHERS", "name": "UNABLETODELIVER_ENUM_OTHERS"}
               ],
               "label": "UNABLETODELIVER_REFUSAL_REASON_LABEL",
-              "order": 3,
+              "order": 2,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -5589,17 +5490,14 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.reason=='REFUSED'"
-                  }
+                  {"condition": "unableToDeliver.reason=='REFUSED'"}
                 ]
               }
             },
             {
               "type": "string",
               "label": "UNABLETODELIVER_OTHER_REFUSAL_REASON_LABEL",
-              "order": 4,
+              "order": 3,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5627,10 +5525,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.refusalReason=='OTHERS'"
-                  }
+                  {"condition": "unableToDeliver.refusalReason=='OTHERS'"}
                 ]
               }
             },
@@ -5648,7 +5543,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHER", "name": "UNABLETODELIVER_ENUM_OTHER"}
               ],
               "label": "UNABLETODELIVER_ABSENCE_REASON_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -5676,17 +5571,14 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.reason=='ABSENCE'"
-                  }
+                  {"condition": "unableToDeliver.reason=='ABSENCE'"}
                 ]
               }
             },
             {
               "type": "string",
               "label": "UNABLETODELIVER_OTHER_ABSENCE_REASON_LABEL",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5714,10 +5606,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.absenceReason=='OTHER'"
-                  }
+                  {"condition": "unableToDeliver.absenceReason=='OTHER'"}
                 ]
               }
             }
@@ -5907,65 +5796,65 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "includeInSummary": true,
               "required.message": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE"
             },
-            // {
-            //   "type": "string",
-            //   "label": "UNABLETODELIVER_SITE_NAME_LABEL",
-            //   "order": 2,
-            //   "value": "",
-            //   "format": "text",
-            //   "hidden": true,
-            //   "isMdms": false,
-            //   "tooltip": "",
-            //   "helpText": "",
-            //   "infoText": "",
-            //   "readOnly": false,
-            //   "fieldName": "siteName",
-            //   "mandatory": false,
-            //   "deleteFlag": false,
-            //   "innerLabel": "",
-            //   "schemaCode": null,
-            //   "systemDate": false,
-            //   "validations": [
-            //     {
-            //       "type": "pattern",
-            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-            //     }
-            //   ],
-            //   "errorMessage":
-            //       "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
-            //   "isMultiSelect": false,
-            //   "additionalFields": true
-            // },
-            // {
-            //   "type": "string",
-            //   "label": "UNABLETODELIVER_REGION_LABEL",
-            //   "order": 3,
-            //   "value": "",
-            //   "format": "text",
-            //   "hidden": true,
-            //   "isMdms": false,
-            //   "tooltip": "",
-            //   "helpText": "",
-            //   "infoText": "",
-            //   "readOnly": false,
-            //   "fieldName": "region",
-            //   "mandatory": false,
-            //   "deleteFlag": false,
-            //   "innerLabel": "",
-            //   "schemaCode": null,
-            //   "systemDate": false,
-            //   "validations": [
-            //     {
-            //       "type": "pattern",
-            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-            //     }
-            //   ],
-            //   "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
-            //   "isMultiSelect": false,
-            //   "additionalFields": true
-            // },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_SITE_NAME_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "siteName",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage":
+                  "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
+              "isMultiSelect": false,
+              "additionalFields": true
+            },
+            {
+              "type": "string",
+              "label": "UNABLETODELIVER_REGION_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "region",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
+              "isMultiSelect": false,
+              "additionalFields": true
+            },
             {
               "type": "string",
               // "enums": [],
@@ -5976,7 +5865,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OUTSIDE_HH_PLACE", "name": "GV_ENUM_OUTSIDE_HH_PLACE"}
               ],
               "label": "VACCINATED_ELSEWHERE_LOCATION_LABEL",
-              "order": 1,
+              "order": 3,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -6017,7 +5906,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "VACCINATED_ELSEWHERE_TRANSIT_POST_LABEL",
-              "order": 2,
+              "order": 4,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -6050,7 +5939,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "VACCINATED_ELSEWHERE_OUTSIDE_HH_PLACE_LABEL",
-              "order": 3,
+              "order": 5,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -6084,7 +5973,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "type": "string",
               "label": "VACCINATED_ELSEWHERE_LOCATION_OTHER_LABEL",
               // "order": 2,
-              "order": 4,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -6443,29 +6332,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_DOSE",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -6480,29 +6362,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_DOSE",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
