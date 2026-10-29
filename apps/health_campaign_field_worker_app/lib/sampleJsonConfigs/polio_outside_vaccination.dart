@@ -18,8 +18,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -30,11 +30,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {"type": "minSearchChars", "value": 2}
             ],
@@ -270,7 +265,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
             "select": ["facility", "userAction"],
-            "orderBy": {"field": "__distance", "order": "ASC"},
+            "orderBy": {"field": "name", "order": "ASC"},
             "primary": "facility"
           }
         },
@@ -1255,8 +1250,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -1267,11 +1262,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {"type": "minSearchChars", "value": 2}
             ],
@@ -1507,7 +1497,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": ["facility", "userAction"],
-            "orderBy": {"field": "__distance", "order": "ASC"},
+            "orderBy": {"field": "name", "order": "ASC"},
             "primary": "facility"
           }
         },

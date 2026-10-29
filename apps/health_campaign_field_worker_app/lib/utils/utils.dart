@@ -741,6 +741,12 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   LocalRepository<FaceAuthEventModel,
                       FaceAuthEventSearchModel>>(),
+              // Outside-household sites created on the phone.
+              context.read<
+                  LocalRepository<FacilityModel, FacilitySearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectFacilityModel,
+                      ProjectFacilitySearchModel>>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -776,6 +782,11 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   RemoteRepository<FaceAuthEventModel,
                       FaceAuthEventSearchModel>>(),
+              context.read<
+                  RemoteRepository<FacilityModel, FacilitySearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectFacilityModel,
+                      ProjectFacilitySearchModel>>(),
             ],
           ),
         );
