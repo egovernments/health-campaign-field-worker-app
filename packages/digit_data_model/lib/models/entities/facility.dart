@@ -109,7 +109,9 @@ class FacilityAdditionalFields extends AdditionalFields
     with FacilityAdditionalFieldsMappable {
   FacilityAdditionalFields({
     super.schema = 'Facility',
-    required super.version,
+    // Sites added by the planner come down with schema/version null in
+    // additionalFields, so the version defaults instead of failing decode.
+    super.version = 1,
     super.fields,
   });
 }

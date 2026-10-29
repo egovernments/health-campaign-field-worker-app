@@ -516,7 +516,7 @@ class FacilityAdditionalFieldsMapper
       Field('schema', _$schema, opt: true, def: 'Facility');
   static int _$version(FacilityAdditionalFields v) => v.version;
   static const Field<FacilityAdditionalFields, int> _f$version =
-      Field('version', _$version);
+      Field('version', _$version, opt: true, def: 1);
   static List<AdditionalField> _$fields(FacilityAdditionalFields v) => v.fields;
   static const Field<FacilityAdditionalFields, List<AdditionalField>>
       _f$fields = Field('fields', _$fields, opt: true, def: const []);
