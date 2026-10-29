@@ -3112,8 +3112,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                     sampleFlows: sampleOutSideHouseholdVaccinationFlows,
                     // Local dev override: the MDMS copy of this flow on dev
                     // is still the UserAction-based shape, so debug builds
-                    // run the local sample flows (Facility-based sites).
-                    preferSampleFlows: kDebugMode,
+                    // and DEV-environment builds run the local sample flows
+                    // (Facility-based sites).
+                    preferSampleFlows: kDebugMode ||
+                        envConfig.variables.envType == EnvType.dev,
                     // Sites are facilities. The list/overview screens search
                     // the facility table, filter by boundary through the
                     // address row, and pull the children vaccinated at a
@@ -3230,12 +3232,13 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     // Local dev override: the dev role-action mapping does not yet carry
-    // HOME_OUTSIDE_HOUSEHOLD_VACCINATION_LABEL, so debug builds show the
-    // outside-household card regardless of role actions. Release builds
-    // keep the role-action gate.
-    final debugOnlyLabels = kDebugMode
-        ? <String>{i18.home.outsideHouseholdVaccinationLabel}
-        : const <String>{};
+    // HOME_OUTSIDE_HOUSEHOLD_VACCINATION_LABEL, so debug builds and builds
+    // pointed at the DEV environment show the outside-household card
+    // regardless of role actions. Other environments keep the gate.
+    final debugOnlyLabels =
+        (kDebugMode || envConfig.variables.envType == EnvType.dev)
+            ? <String>{i18.home.outsideHouseholdVaccinationLabel}
+            : const <String>{};
 
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
