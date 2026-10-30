@@ -1,7 +1,8 @@
-// T1 - RC-01: FETCH_TRANSFORMER_CONFIG replaces the instance state with
-// const FlowCrudState().copyWith(formData: ...) (transformer_executor.dart
-// :84, :98), before the mapping. Widget data (ID, count, searchBar) and the
-// results are gone.
+// T1 - RC-01: FETCH_TRANSFORMER_CONFIG must update only the form data of the
+// screen's state. It used to replace the whole state with
+// const FlowCrudState().copyWith(formData: ...), so a transformer run from a
+// search result card wiped the results and the widget data (search bar, pool
+// count, next beneficiary ID), and Register fell back to a DEFAULT ID.
 import 'package:digit_flow_builder/action_handler/action_config.dart';
 import 'package:digit_flow_builder/action_handler/executors/transformer_executor.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
@@ -28,7 +29,7 @@ void main() {
         properties: {'configName': 'bulkProjectBeneficiaryFromMembers'},
       );
 
-  testWidgets('T1: the transformer wipes widget data, results and form data',
+  testWidgets('T1: the transformer keeps widget data and results',
       (tester) async {
     FlowCrudStateRegistry().updateByCompositeKey(key, seededSearchState());
     final before = FlowCrudStateRegistry().getByCompositeKey(key)!;
@@ -48,19 +49,18 @@ void main() {
       {'wrappers': const [], '_compositeKey': key},
     );
 
-    final after = FlowCrudStateRegistry().getByCompositeKey(key);
-    expect(after, isNotNull, reason: 'the key still exists ...');
-    expect(after!.widgetData, isNull,
-        reason: '... but widgetData (ID, count, searchBar) is gone');
-    expect(after.stateWrapper, isNull, reason: 'results are gone');
-    expect(after.base, isNull);
+    final after = FlowCrudStateRegistry().getByCompositeKey(key)!;
+    expect(after.widgetData?['latestBeneficiaryId'], 'SMC-0001');
+    expect(after.widgetData?['uniqueIdPoolCount'], 40);
+    expect(after.widgetData?['searchBar'], 'John');
+    expect(after.stateWrapper, before.stateWrapper, reason: 'results are kept');
     expect(after.formData, isNull,
-        reason: 'no formData in the action context, so nothing is kept');
+        reason: 'form data is replaced exactly as before: none in the context');
     expect(out['entities'], isEmpty,
         reason: 'no individuals in context: nothing is mapped');
   });
 
-  testWidgets('T1: with formData in the context only formData survives',
+  testWidgets('T1: with formData in the context only formData changes',
       (tester) async {
     FlowCrudStateRegistry().updateByCompositeKey(key, seededSearchState());
     final context = await pumpContext(tester);
@@ -77,8 +77,8 @@ void main() {
 
     final after = FlowCrudStateRegistry().getByCompositeKey(key)!;
     expect(after.formData, {'x': 1});
-    expect(after.widgetData, isNull);
-    expect(after.stateWrapper, isNull);
+    expect(after.widgetData?['searchBar'], 'John');
+    expect(after.stateWrapper, isNotEmpty);
   });
 
   testWidgets('T1: without a composite key the write lands on the bare config name',
