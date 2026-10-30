@@ -600,13 +600,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   /// Downloads the outside-household sites of the worker's area and their
   /// links to this project.
   ///
-  /// The facility search only returns sites when `usage` is given, and
-  /// `boundaryCode` matches a site's own boundary (not the ones below it),
-  /// so there is one call per site type per boundary code on the lowest two
-  /// levels. The project-facility search by project id alone leaves site
-  /// links out on purpose; they are fetched by facility id. Links are tagged
-  /// `facilityLevel = site` so stock and referral facility pickers, which
-  /// keep `current` links only, never show a site.
+  /// The facility search only returns sites when `usage` is given. A
+  /// `boundaryCode` covers the boundaries below it, so the codes one level
+  /// above the lowest are enough to reach every lowest-level boundary: one
+  /// call per site type per such code. A tree with a single level is
+  /// searched by its own codes. The project-facility search by project id
+  /// alone leaves site links out on purpose; they are fetched by facility
+  /// id. Links are tagged `facilityLevel = site` so stock and referral
+  /// facility pickers, which keep `current` links only, never show a site.
   FutureOr<void> _loadOutsideHouseholdSites(
     ProjectModel project, {
     List<BoundaryModel>? prefetchedTree,
@@ -630,13 +631,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final levels = flat.map((b) => b.boundaryNum).whereType<int>().toList();
     if (levels.isEmpty) return;
     final lowest = levels.reduce((a, b) => a > b ? a : b);
-    final codes = flat
-        .where((b) =>
-            b.code != null &&
-            b.boundaryNum != null &&
-            b.boundaryNum! >= lowest - 1)
+    Set<String> codesAt(int level) => flat
+        .where((b) => b.code != null && b.boundaryNum == level)
         .map((b) => b.code!)
         .toSet();
+    final aboveLowest = codesAt(lowest - 1);
+    final codes = aboveLowest.isNotEmpty ? aboveLowest : codesAt(lowest);
     if (codes.isEmpty) return;
 
     final sites = <FacilityModel>[];
