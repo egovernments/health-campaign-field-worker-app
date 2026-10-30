@@ -118,9 +118,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
@@ -1350,9 +1350,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
