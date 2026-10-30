@@ -607,8 +607,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .any((d) => d.deliveryMethod == 'OUTSIDEHOUSEHOLD'));
   }
 
-  /// Downloads the outside-household sites of the worker's area and their
-  /// links to this project.
+  /// Downloads the active outside-household sites of the worker's area (the
+  /// ones linked to this project) and their links.
   ///
   /// The facility search only returns sites when `usage` is given. A
   /// `boundaryCode` covers the boundaries below it, so the codes one level
@@ -693,27 +693,39 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ? f.copyWith(clientReferenceId: f.id)
             : f)
         .toList();
-    await facilityLocalRepository.bulkCreate(normalised);
 
+    // Only sites linked to this project are kept: a site set Inactive loses
+    // its link, and sites of other campaigns in the area never had one. A
+    // chunk whose link fetch fails saves none of its sites.
     final siteIds = normalised.map((f) => f.id).toSet().toList();
+    final links = <ProjectFacilityModel>[];
     const chunkSize = 100;
     for (var i = 0; i < siteIds.length; i += chunkSize) {
       final end =
           (i + chunkSize < siteIds.length) ? i + chunkSize : siteIds.length;
       try {
-        final links = await projectFacilityRemoteRepository.search(
+        links.addAll(await projectFacilityRemoteRepository.search(
           ProjectFacilitySearchModel(
             projectId: [project.id],
             facilityId: siteIds.sublist(i, end),
           ),
-        );
-        await projectFacilityLocalRepository.bulkCreate(
-          links.map(_tagAsSiteLink).toList(),
-        );
+        ));
       } catch (e) {
         debugPrint('site link fetch failed for chunk starting at $i: $e');
       }
     }
+
+    final activeLinks = links.where((l) => l.isDeleted != true).toList();
+    final linkedIds = activeLinks.map((l) => l.facilityId).toSet();
+    final activeSites = normalised
+        .where((f) => f.isDeleted != true && linkedIds.contains(f.id))
+        .toList();
+    if (activeSites.isEmpty) return;
+
+    await facilityLocalRepository.bulkCreate(activeSites);
+    await projectFacilityLocalRepository.bulkCreate(
+      activeLinks.map(_tagAsSiteLink).toList(),
+    );
   }
 
   /// The remote repository stamps every link `facilityLevel = current`;
