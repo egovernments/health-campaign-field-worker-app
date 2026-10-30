@@ -1623,7 +1623,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -1975,7 +1975,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -2536,7 +2536,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -2818,7 +2818,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
