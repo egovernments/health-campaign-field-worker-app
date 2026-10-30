@@ -740,6 +740,10 @@ Map<String, dynamic> singletonToMap() {
     "projectType": s.projectType?.toJson(),
     "selectedProject": s.selectedProject?.toJson(),
     "boundary": s.boundary?.toJson(),
+    // Selected boundary code plus its parent's, comma-separated for an `in`
+    // search filter. The parent is the second-last segment of
+    // materializedPath (codes joined by '.').
+    "boundaryAndParentCodes": _boundaryAndParentCodes(s.boundary),
     "persistenceConfiguration": s.persistenceConfiguration?.toString(),
     "loggedInUser": s.loggedInUser?.toJson(),
     "userRoles": s.userRoles,
@@ -748,6 +752,17 @@ Map<String, dynamic> singletonToMap() {
     "beneficiaryIdMinCount": s.beneficiaryIdMinCount,
     "activeDeliveryMethod": s.activeDeliveryMethod,
   };
+}
+
+String? _boundaryAndParentCodes(BoundaryModel? boundary) {
+  final code = boundary?.code;
+  if (code == null || code.isEmpty) return null;
+  final segments = (boundary?.materializedPath ?? '')
+      .split('.')
+      .where((s) => s.isNotEmpty)
+      .toList();
+  final parent = segments.length > 1 ? segments[segments.length - 2] : null;
+  return [if (parent != null && parent != code) parent, code].join(',');
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths

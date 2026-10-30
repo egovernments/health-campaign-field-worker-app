@@ -140,7 +140,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 12; // Increment schema version
+  int get schemaVersion => 13; // Increment schema version
 
   Future<void> _createTaskSearchIndexes() async {
     await customStatement('''
@@ -211,6 +211,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             await _createTaskSearchIndexes();
             await _createNameAndEntityClientRefIndexes();
             await _createV12HotPathIndexes();
+            await _createOutsideHouseholdSiteIndexes();
             await customStatement('ANALYZE');
           } catch (e) {
             if (kDebugMode) {
@@ -470,6 +471,28 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             }
           }
 
+          if (from < 13) {
+            // v13: outside-household sites are stored as facilities. The
+            // facility table gains the app-generated clientReferenceId and a
+            // denormalised GPS copy (for nearest-first ordering); the
+            // project-facility table gains an app-local clientReferenceId so
+            // a link can be queued before its facility has a server id.
+            try {
+              await migrator.addColumn(facility, facility.clientReferenceId);
+              await migrator.addColumn(facility, facility.latitude);
+              await migrator.addColumn(facility, facility.longitude);
+              await migrator.addColumn(facility, facility.locationAccuracy);
+              await migrator.addColumn(
+                  projectFacility, projectFacility.clientReferenceId);
+              await _createOutsideHouseholdSiteIndexes();
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add outside-household site columns in v13 "
+                    "migration: $e");
+              }
+            }
+          }
+
           if (from < 12) {
             // v12: add hot-path indexes that were previously missing on
             // localization (composite locale+module), pgr_service,
@@ -517,6 +540,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             await _createTaskSearchIndexes();
             await _createNameAndEntityClientRefIndexes();
             await _createV12HotPathIndexes();
+            await _createOutsideHouseholdSiteIndexes();
           } catch (e) {
             if (kDebugMode) {
               print("beforeOpen index backfill failed: $e");
@@ -564,6 +588,24 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// Indexes that were originally declared via `@TableIndex` on the
   /// Name, Individual, and Household tables. Idempotent — safe to call on
   /// both fresh-installs (no-op via IF NOT EXISTS) and upgrades.
+  /// Indexes for outside-household site lookups: sites are filtered by
+  /// `usage` (site type) and resolved by `client_reference_id` after sync.
+  /// Every statement is IF NOT EXISTS so this is safe to run on every open.
+  Future<void> _createOutsideHouseholdSiteIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS facility_clientref
+      ON facility (client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS facility_usage
+      ON facility (usage);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_clientref
+      ON project_facility (client_reference_id);
+    ''');
+  }
+
   Future<void> _createNameAndEntityClientRefIndexes() async {
     await customStatement('''
       CREATE INDEX IF NOT EXISTS name_givenname

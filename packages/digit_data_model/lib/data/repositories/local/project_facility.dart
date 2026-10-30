@@ -19,6 +19,11 @@ class ProjectFacilityLocalRepository
             ..where(
               buildAnd(
                 [
+                  if (query.id != null)
+                    sql.projectFacility.id.isIn(query.id!),
+                  if (query.clientReferenceId != null)
+                    sql.projectFacility.clientReferenceId
+                        .isIn(query.clientReferenceId!),
                   if (query.projectId != null)
                     sql.projectFacility.projectId.isIn(query.projectId!),
                   if (query.facilityId != null)
@@ -37,6 +42,7 @@ class ProjectFacilityLocalRepository
           tenantId: projectFacility.tenantId,
           rowVersion: projectFacility.rowVersion,
           id: projectFacility.id,
+          clientReferenceId: projectFacility.clientReferenceId,
           isDeleted: projectFacility.isDeleted,
           additionalFields: projectFacility.additionalFields != null
               ? ProjectFacilityAdditionalFieldsMapper.fromJson(
@@ -47,10 +53,13 @@ class ProjectFacilityLocalRepository
     });
   }
 
+  /// Links created on the phone (outside-household sites) must reach the
+  /// server, so an oplog entry is written by default. Downloads go through
+  /// [bulkCreate], which never writes one.
   @override
   FutureOr<void> create(
     ProjectFacilityModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
     DataOperation dataOperation = DataOperation.create,
   }) async {
     return retryLocalCallOperation(() async {
@@ -84,6 +93,23 @@ class ProjectFacilityLocalRepository
           mode: InsertMode.insertOrReplace,
         );
       });
+    });
+  }
+
+  /// Replaces the placeholder [id] (the app-local clientReferenceId) of a
+  /// link created on the phone with the id the server assigned to it.
+  Future<void> applyServerGeneratedId({
+    required String clientReferenceId,
+    required String serverGeneratedId,
+    int? rowVersion,
+  }) async {
+    return retryLocalCallOperation(() async {
+      await (sql.update(sql.projectFacility)
+            ..where((t) => t.clientReferenceId.equals(clientReferenceId)))
+          .write(ProjectFacilityCompanion(
+        id: Value(serverGeneratedId),
+        rowVersion: Value(rowVersion),
+      ));
     });
   }
 

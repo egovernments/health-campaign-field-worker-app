@@ -54,6 +54,7 @@ import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/sync_registry.dart';
+import '../data/outside_household_site_sync_registry.dart';
 import '../data/sync_service_mapper.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
@@ -439,8 +440,14 @@ class Constants {
       entityMapper: SyncServiceMapper(),
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
-    SyncServiceSingleton().registries?.registerSyncRegistries(
-        {DataModelType.complaints: (remote) => CustomSyncRegistry(remote)});
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+      // Outside-household sites: facilities + links created on the phone.
+      DataModelType.facility: (remote) =>
+          OutsideHouseholdSiteSyncRegistry(remote),
+      DataModelType.projectFacility: (remote) =>
+          OutsideHouseholdSiteSyncRegistry(remote),
+    });
   }
 }
 

@@ -3110,6 +3110,41 @@ class _HomePageState extends LocalizedState<HomePage> {
                   config: FlowModuleConfig(
                     schemaKey: 'OUTSIDEHOUSEHOLD',
                     sampleFlows: sampleOutSideHouseholdVaccinationFlows,
+                    // Sites are facilities. The list/overview screens search
+                    // the facility table, filter by boundary through the
+                    // address row, and pull the children vaccinated at a
+                    // site (UserActions tagged with the site's
+                    // clientReferenceId) and the site's campaign link.
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'address',
+                          to: 'facility',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'userAction',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'resourceTag'),
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'facility',
+                        fields: {
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                        },
+                      ),
+                    ],
                   ),
                 );
               }),

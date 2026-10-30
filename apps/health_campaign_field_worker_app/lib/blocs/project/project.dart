@@ -588,6 +588,161 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  /// Site type codes from MDMS `HCM.OUTSIDE_HOUSEHOLD_TYPES`. A facility
+  /// whose `usage` is one of these is an outside-household site.
+  static const outsideHouseholdSiteTypes = [
+    'TRANSIT_POST',
+    'OUTSIDE_HOUSEHOLD_PLACES',
+  ];
+
+  /// Mirrors `FlowBuilderSingleton.hasDeliveryMethod`, which is not yet
+  /// populated at project-select time.
+  static bool _hasOutsideHouseholdDelivery(ProjectModel project) {
+    final cycles = project.additionalDetails?.projectType?.cycles;
+    if (cycles == null || cycles.isEmpty) return true;
+    final anyTagged = cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
+    if (!anyTagged) return true;
+    return cycles.any((c) => (c.deliveries ?? const [])
+        .any((d) => d.deliveryMethod == 'OUTSIDEHOUSEHOLD'));
+  }
+
+  /// Downloads the active outside-household sites of the worker's area (the
+  /// ones linked to this project) and their links.
+  ///
+  /// The facility search only returns sites when `usage` is given. A
+  /// `boundaryCode` covers the boundaries below it, so the codes one level
+  /// above the lowest are enough to reach every lowest-level boundary: one
+  /// call per site type per such code. A tree with a single level is
+  /// searched by its own codes. The project-facility search by project id
+  /// alone leaves site links out on purpose; they are fetched by facility
+  /// id. Links are tagged `facilityLevel = site` so stock and referral
+  /// facility pickers, which keep `current` links only, never show a site.
+  FutureOr<void> _loadOutsideHouseholdSites(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
+    if (!_hasOutsideHouseholdDelivery(project)) return;
+
+    final tree = (prefetchedTree != null && prefetchedTree.isNotEmpty)
+        ? prefetchedTree
+        : await boundaryLocalRepository.search(BoundarySearchModel());
+
+    final flat = <BoundaryModel>[];
+    void walk(List<BoundaryModel> nodes) {
+      for (final node in nodes) {
+        flat.add(node);
+        if (node.children.isNotEmpty) walk(node.children);
+      }
+    }
+
+    walk(tree);
+
+    // The prefetched tree is the whole tenant's hierarchy; keep only the
+    // project's assigned boundary and the ones below it.
+    final assignedCode = project.address?.boundary;
+    final assignedPath = flat
+        .firstWhere((b) => b.code == assignedCode,
+            orElse: () => BoundaryModel())
+        .materializedPath;
+    if (assignedPath != null && assignedPath.isNotEmpty) {
+      flat.retainWhere((b) =>
+          b.materializedPath == assignedPath ||
+          (b.materializedPath?.startsWith('$assignedPath.') ?? false));
+    } else if (identical(tree, prefetchedTree)) {
+      // Can't scope the tenant tree: use the stored rows, which already hold
+      // only the project's boundaries.
+      flat.clear();
+      walk(await boundaryLocalRepository.search(BoundarySearchModel()));
+    }
+
+    final levels = flat.map((b) => b.boundaryNum).whereType<int>().toList();
+    if (levels.isEmpty) return;
+    final lowest = levels.reduce((a, b) => a > b ? a : b);
+    Set<String> codesAt(int level) => flat
+        .where((b) => b.code != null && b.boundaryNum == level)
+        .map((b) => b.code!)
+        .toSet();
+    final aboveLowest = codesAt(lowest - 1);
+    final codes = aboveLowest.isNotEmpty ? aboveLowest : codesAt(lowest);
+    if (codes.isEmpty) return;
+
+    final sites = <FacilityModel>[];
+    for (final code in codes) {
+      for (final usage in outsideHouseholdSiteTypes) {
+        try {
+          sites.addAll(await facilityRemoteRepository.search(
+            FacilitySearchModel(
+              tenantId: envConfig.variables.tenantId,
+              usage: usage,
+              boundaryCode: code,
+            ),
+          ));
+        } catch (e) {
+          debugPrint('site fetch failed for $usage in $code: $e');
+        }
+      }
+    }
+    if (sites.isEmpty) return;
+
+    // The app keys a site by its clientReferenceId (children vaccinated
+    // there carry it as resourceTag), so give planner-added sites that lack
+    // one the server id as a stable stand-in.
+    final normalised = sites
+        .map((f) => f.clientReferenceId == null
+            ? f.copyWith(clientReferenceId: f.id)
+            : f)
+        .toList();
+
+    // Only sites linked to this project are kept: a site set Inactive loses
+    // its link, and sites of other campaigns in the area never had one. A
+    // chunk whose link fetch fails saves none of its sites.
+    final siteIds = normalised.map((f) => f.id).toSet().toList();
+    final links = <ProjectFacilityModel>[];
+    const chunkSize = 100;
+    for (var i = 0; i < siteIds.length; i += chunkSize) {
+      final end =
+          (i + chunkSize < siteIds.length) ? i + chunkSize : siteIds.length;
+      try {
+        links.addAll(await projectFacilityRemoteRepository.search(
+          ProjectFacilitySearchModel(
+            projectId: [project.id],
+            facilityId: siteIds.sublist(i, end),
+          ),
+        ));
+      } catch (e) {
+        debugPrint('site link fetch failed for chunk starting at $i: $e');
+      }
+    }
+
+    final activeLinks = links.where((l) => l.isDeleted != true).toList();
+    final linkedIds = activeLinks.map((l) => l.facilityId).toSet();
+    final activeSites = normalised
+        .where((f) => f.isDeleted != true && linkedIds.contains(f.id))
+        .toList();
+    if (activeSites.isEmpty) return;
+
+    await facilityLocalRepository.bulkCreate(activeSites);
+    await projectFacilityLocalRepository.bulkCreate(
+      activeLinks.map(_tagAsSiteLink).toList(),
+    );
+  }
+
+  /// The remote repository stamps every link `facilityLevel = current`;
+  /// a site link is re-tagged `site` so facility pickers skip it.
+  static ProjectFacilityModel _tagAsSiteLink(ProjectFacilityModel link) {
+    final fields = (link.additionalFields?.fields ?? const [])
+        .where((f) => f.key != 'facilityLevel')
+        .toList();
+    return link.copyWith(
+      additionalFields: ProjectFacilityAdditionalFields(
+        schema: link.additionalFields?.schema ?? 'OutsideHouseholdAssignment',
+        version: link.additionalFields?.version ?? 1,
+        fields: [...fields, const AdditionalField('facilityLevel', 'site')],
+      ),
+    );
+  }
+
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
     final configs = await isar.appConfigurations.where().findAll();
     final userObject = await localSecureStore.userRequestModel;
@@ -1231,6 +1386,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       reportSyncProgress('projectFacility');
       await _loadProjectFacilities(event.model,
           prefetchedTree: fullBoundaryTree);
+      // Outside-household sites never come back from the project-id search
+      // above, so they get their own download. A failure here must not
+      // block project selection.
+      try {
+        await _loadOutsideHouseholdSites(event.model,
+            prefetchedTree: fullBoundaryTree);
+      } catch (e) {
+        debugPrint('outside-household site download failed: $e');
+      }
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,

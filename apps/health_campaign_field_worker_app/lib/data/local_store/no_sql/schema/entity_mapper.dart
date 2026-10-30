@@ -87,6 +87,16 @@ class EntityMapper extends EntityMapperListener {
         final entity = FaceAuthEventModelMapper.fromJson(entityString);
         return entity;
 
+      // Outside-household sites created on the phone are queued as a
+      // facility plus its project-facility link.
+      case "facility":
+        final entity = FacilityModelMapper.fromJson(entityString);
+        return entity;
+
+      case "projectFacility":
+        final entity = ProjectFacilityModelMapper.fromJson(entityString);
+        return entity;
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
         return entity;

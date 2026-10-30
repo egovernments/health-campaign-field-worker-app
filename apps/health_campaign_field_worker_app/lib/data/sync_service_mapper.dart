@@ -105,6 +105,17 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .map((e) => FaceAuthEventModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
+      // Outside-household sites and their project links.
+      case "Facilities":
+        final entity = entityList
+            .map((e) => FacilityModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "ProjectFacilities":
+        final entity = entityList
+            .map((e) => ProjectFacilityModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
       default:
         final entity = entityList
             .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
@@ -131,6 +142,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.attendance:
           case DataModelType.service:
           case DataModelType.faceAuthEvent:
+          case DataModelType.facility:
+          case DataModelType.projectFacility:
             // case DataModelType.userAction:
             return true;
           default:
@@ -154,6 +167,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.userLocation:
           case DataModelType.userAction:
           case DataModelType.faceAuthEvent:
+          case DataModelType.facility:
+          case DataModelType.projectFacility:
             return true;
           default:
             return false;
@@ -318,6 +333,131 @@ class SyncServiceMapper extends SyncEntityMapperListener {
                 entity.copyWith(
                   nonRecoverableError: true,
                 ),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      // Outside-household sites: a facility created on the phone is pushed
+      // in bulk when no single-create endpoint is configured, in which case
+      // the server id has to be looked up by clientReferenceId here. The
+      // link that refers to it is uploaded on the next pass, once
+      // `applyServerGeneratedId` has pointed it at the server id.
+      case DataModelType.facility:
+        responseEntities = await remote.search(FacilitySearchModel(
+          clientReferenceId: entities
+              .whereType<FacilityModel>()
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+          isDeleted: true,
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as FacilityModel;
+          final clientReferenceId = entity.clientReferenceId;
+          if (clientReferenceId == null) continue;
+          final responseEntity =
+              responseEntities.whereType<FacilityModel>().firstWhereOrNull(
+                    (e) => e.clientReferenceId == clientReferenceId,
+                  );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+                nonRecoverableError: element.nonRecoverableError,
+              ),
+            );
+            if (local is FacilityLocalRepository) {
+              await local.applyServerGeneratedId(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                rowVersion: rowVersion,
+              );
+            }
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(clientReferenceId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      case DataModelType.projectFacility:
+        // The oplog copy of a link still holds the facility placeholder, so
+        // read the current rows to get the resolved facilityId.
+        final queued = entities.whereType<ProjectFacilityModel>().toList();
+        final clientReferenceIds =
+            queued.map((e) => e.clientReferenceId).whereNotNull().toList();
+        if (clientReferenceIds.isEmpty) break;
+        final current = await local.search(ProjectFacilitySearchModel(
+          clientReferenceId: clientReferenceIds,
+        ));
+        final currentLinks = current.whereType<ProjectFacilityModel>().toList();
+        if (currentLinks.isEmpty) break;
+
+        responseEntities = await remote.search(ProjectFacilitySearchModel(
+          projectId: currentLinks.map((e) => e.projectId).toSet().toList(),
+          facilityId: currentLinks.map((e) => e.facilityId).toSet().toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as ProjectFacilityModel;
+          final clientReferenceId = entity.clientReferenceId;
+          if (clientReferenceId == null) continue;
+          final link = currentLinks
+              .firstWhereOrNull((e) => e.clientReferenceId == clientReferenceId);
+          if (link == null) continue;
+          final responseEntity = responseEntities
+              .whereType<ProjectFacilityModel>()
+              .firstWhereOrNull((e) =>
+                  e.projectId == link.projectId &&
+                  e.facilityId == link.facilityId);
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+                nonRecoverableError: element.nonRecoverableError,
+              ),
+            );
+            if (local is ProjectFacilityLocalRepository) {
+              await local.applyServerGeneratedId(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                rowVersion: rowVersion,
+              );
+            }
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(clientReferenceId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
                 createOpLog: false,
               );
             }

@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../utils/utils.dart' show getEntityTypeName;
 import 'value_resolver.dart';
 
 /// Groups entities by their runtime type or by custom field values.
@@ -13,7 +14,9 @@ class EntityGrouper {
   Map<String, List<dynamic>> groupEntitiesByType(List<EntityModel> entities) {
     final map = <String, List<dynamic>>{};
     for (final entity in entities) {
-      final typeName = entity.runtimeType.toString();
+      // `is`-based name: runtimeType.toString() is minified in obfuscated
+      // release builds, which made `config['rootEntity']` lookups miss.
+      final typeName = getEntityTypeName(entity);
       map.putIfAbsent(typeName, () => []).add(entity);
     }
     return map;
