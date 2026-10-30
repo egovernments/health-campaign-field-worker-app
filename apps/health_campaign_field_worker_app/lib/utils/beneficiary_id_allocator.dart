@@ -72,6 +72,7 @@ class BeneficiaryIdAllocator {
     this.uniqueIdType = 'UNIQUE_BENEFICIARY_ID',
     this.defaultIdType = 'DEFAULT',
     this.upgradeDefault = true,
+    this.keepOwnAssigned = false,
   });
 
   final LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel> repository;
@@ -90,6 +91,11 @@ class BeneficiaryIdAllocator {
   /// When true, a DEFAULT identifier is replaced by a free pool ID if one
   /// exists for this user.
   final bool upgradeDefault;
+
+  /// Edit mode. An existing beneficiary already carries its ID, and that row
+  /// is ASSIGNED; keep it instead of treating it as stale. A row owned by
+  /// another user is still replaced.
+  final bool keepOwnAssigned;
 
   final Set<String> _claimed = <String>{};
 
@@ -110,6 +116,18 @@ class BeneficiaryIdAllocator {
         return BeneficiaryIdDecision(
           identifier: identifier,
           outcome: BeneficiaryIdOutcome.untouched,
+          previousId: requestedId,
+        );
+      }
+
+      if (keepOwnAssigned &&
+          row.status == IdStatus.assigned.toValue() &&
+          _isOwnedByUser(row) &&
+          !_claimed.contains(row.id)) {
+        _claimed.add(row.id);
+        return BeneficiaryIdDecision(
+          identifier: identifier,
+          outcome: BeneficiaryIdOutcome.kept,
           previousId: requestedId,
         );
       }
@@ -171,11 +189,11 @@ class BeneficiaryIdAllocator {
   bool _isUsable(UniqueIdPoolModel row) {
     if (row.status != _unAssigned) return false;
     if (_claimed.contains(row.id)) return false;
-    if (_hasUser && row.userUuid != null && row.userUuid != userUuid) {
-      return false;
-    }
-    return true;
+    return _isOwnedByUser(row);
   }
+
+  bool _isOwnedByUser(UniqueIdPoolModel row) =>
+      !_hasUser || row.userUuid == null || row.userUuid == userUuid;
 
   Future<UniqueIdPoolModel?> _rowById(String id) async {
     final rows = await repository.search(UniqueIdPoolSearchModel(id: id));

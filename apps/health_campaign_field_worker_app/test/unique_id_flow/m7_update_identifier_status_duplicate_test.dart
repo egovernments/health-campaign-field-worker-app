@@ -203,6 +203,66 @@ void main() {
     verifyNever(() => repo.update(any()));
   });
 
+  group('edit mode (RC-14)', () {
+    final editAction = ActionConfig(
+        action: '',
+        actionType: 'UPDATE_IDENTIFIER_STATUS',
+        properties: const {'mode': 'edit'});
+
+    testWidgets('T7: editing keeps the beneficiary\'s own ASSIGNED ID',
+        (tester) async {
+      stubPool(repo, [
+        poolRow('SMC-0001', status: assigned),
+        poolRow('SMC-0002'),
+      ]);
+      final context = await pumpContext(tester, repo: repo);
+
+      final input = {
+        'entities': [individualWith(identifierId: 'SMC-0001')]
+      };
+      final result = await UpdateIdentifierStatusExecutor()
+          .execute(editAction, context, input);
+
+      expect(identical(result, input), isTrue);
+      verifyNever(() => repo.update(any()));
+    });
+
+    testWidgets('T7: editing gives a pool ID to a beneficiary saved with DEFAULT',
+        (tester) async {
+      stubPool(repo, [poolRow('SMC-0002')]);
+      final context = await pumpContext(tester, repo: repo);
+
+      final result = await UpdateIdentifierStatusExecutor().execute(
+          editAction, context, {
+        'entities': [
+          individualWith(identifierType: 'DEFAULT', identifierId: 'old-uuid')
+        ]
+      });
+
+      final saved = savedIdentifiers(result).single;
+      expect(saved.identifierType, 'UNIQUE_BENEFICIARY_ID');
+      expect(saved.identifierId, 'SMC-0002');
+      expect(saved.clientReferenceId, 'idf-ind-1',
+          reason: 'the same identifier record is updated, not a new one');
+      expect(updatedRows().single.status, assigned);
+    });
+
+    testWidgets('T7: editing still replaces an ID owned by another user',
+        (tester) async {
+      stubPool(repo, [
+        poolRow('SMC-9001', status: assigned, userUuid: 'U9'),
+        poolRow('SMC-0002'),
+      ]);
+      final context = await pumpContext(tester, repo: repo);
+
+      final result = await UpdateIdentifierStatusExecutor().execute(
+          editAction, context,
+          {'entities': [individualWith(identifierId: 'SMC-9001')]});
+
+      expect(savedIdentifiers(result).single.identifierId, 'SMC-0002');
+    });
+  });
+
   testWidgets('T7: an empty identifierId is skipped', (tester) async {
     stubPool(repo, []);
     final context = await pumpContext(tester, repo: repo);

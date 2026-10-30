@@ -20,6 +20,11 @@ import '../utils/beneficiary_id_allocator.dart';
 /// - a DEFAULT identifier is replaced by a free pool ID when one exists
 ///   (disable with `"upgradeDefault": false`).
 ///
+/// With `"mode": "edit"` (in the edit branches, before UPDATE_EVENT) an ID
+/// that is already ASSIGNED and owned by this user is kept, because the
+/// beneficiary being edited already carries it; a DEFAULT identifier is still
+/// upgraded, so an edit can give a pool ID to a person registered without one.
+///
 /// The pool rows it hands out are marked ASSIGNED, and the corrected
 /// individuals replace the originals in `contextData['entities']`, so the
 /// following CREATE_EVENT saves the identifier that was actually allocated.
@@ -36,6 +41,7 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
     final identifierType = action.properties['identifierType'] as String? ??
         'UNIQUE_BENEFICIARY_ID';
     final upgradeDefault = action.properties['upgradeDefault'] as bool? ?? true;
+    final isEdit = action.properties['mode'] == 'edit';
 
     final entities = contextData['entities'] as List<dynamic>?;
     if (entities == null || entities.isEmpty) {
@@ -64,6 +70,7 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
       newDefaultId: () => IdGen.instance.identifier,
       uniqueIdType: identifierType,
       upgradeDefault: upgradeDefault,
+      keepOwnAssigned: isEdit,
     );
 
     final rowsToAssign = <UniqueIdPoolModel>[];
