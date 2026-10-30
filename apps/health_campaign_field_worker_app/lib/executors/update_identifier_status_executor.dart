@@ -6,6 +6,23 @@ import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../utils/beneficiary_id_allocator.dart';
+
+/// UPDATE_IDENTIFIER_STATUS runs between FETCH_TRANSFORMER_CONFIG and
+/// CREATE_EVENT when a beneficiary is registered.
+///
+/// It decides the beneficiary ID at save time from the local pool, not from
+/// the value the search screen held when Register was tapped:
+/// - a requested pool ID is kept only if it is still UN_ASSIGNED, owned by the
+///   logged-in user and not already given to another individual in this save;
+/// - otherwise the oldest free pool ID of this user replaces it, or a DEFAULT
+///   UUID when the pool is empty (never a duplicate);
+/// - a DEFAULT identifier is replaced by a free pool ID when one exists
+///   (disable with `"upgradeDefault": false`).
+///
+/// The pool rows it hands out are marked ASSIGNED, and the corrected
+/// individuals replace the originals in `contextData['entities']`, so the
+/// following CREATE_EVENT saves the identifier that was actually allocated.
 class UpdateIdentifierStatusExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'UPDATE_IDENTIFIER_STATUS';
@@ -16,145 +33,117 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    debugPrint('UPDATE_IDENTIFIER_STATUS: ========== STARTING ==========');
-
     final identifierType = action.properties['identifierType'] as String? ??
         'UNIQUE_BENEFICIARY_ID';
-
-    debugPrint(
-        'UPDATE_IDENTIFIER_STATUS: Looking for identifier type: $identifierType');
+    final upgradeDefault = action.properties['upgradeDefault'] as bool? ?? true;
 
     final entities = contextData['entities'] as List<dynamic>?;
     if (entities == null || entities.isEmpty) {
-      debugPrint(
-          'UPDATE_IDENTIFIER_STATUS: No entities found in contextData[entities]');
+      debugPrint('UPDATE_IDENTIFIER_STATUS: no entities in contextData');
+      return contextData;
+    }
+    if (!entities.any((e) => e is IndividualModel)) {
+      debugPrint('UPDATE_IDENTIFIER_STATUS: no IndividualModel entities');
       return contextData;
     }
 
-    final individualEntities = entities.whereType<IndividualModel>().toList();
-
-    if (individualEntities.isEmpty) {
-      debugPrint('UPDATE_IDENTIFIER_STATUS: No IndividualModel entities found');
+    final LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
+        repository;
+    try {
+      repository = context
+          .read<LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>();
+    } catch (e) {
+      debugPrint('UPDATE_IDENTIFIER_STATUS: pool repository unavailable: $e');
       return contextData;
     }
 
-    debugPrint(
-        'UPDATE_IDENTIFIER_STATUS: Found ${individualEntities.length} IndividualModel entities');
+    final currentUserUuid = FlowBuilderSingleton().loggedInUserUuid;
+    final allocator = BeneficiaryIdAllocator(
+      repository: repository,
+      userUuid: currentUserUuid,
+      newDefaultId: () => IdGen.instance.identifier,
+      uniqueIdType: identifierType,
+      upgradeDefault: upgradeDefault,
+    );
 
-    final uniqueIdPoolToUpdate = <UniqueIdPoolModel>[];
-    bool foundMatch = false;
+    final rowsToAssign = <UniqueIdPoolModel>[];
+    final updatedEntities = <dynamic>[];
+    var anyChanged = false;
 
-    for (final individual in individualEntities) {
-      final identifiers = individual.identifiers;
-      if (identifiers == null || identifiers.isEmpty) {
-        debugPrint(
-            'UPDATE_IDENTIFIER_STATUS: Individual ${individual.clientReferenceId} has no identifiers');
+    for (final entity in entities) {
+      if (entity is! IndividualModel ||
+          entity.identifiers == null ||
+          entity.identifiers!.isEmpty) {
+        updatedEntities.add(entity);
         continue;
       }
 
-      for (final id in identifiers) {
-        if (id.identifierType == identifierType) {
-          foundMatch = true;
-          final identifierId = id.identifierId;
-          debugPrint(
-              'UPDATE_IDENTIFIER_STATUS: Found matching identifier: $identifierId with type $identifierType');
-
-          if (identifierId == null || identifierId.isEmpty) {
-            debugPrint(
-                'UPDATE_IDENTIFIER_STATUS: Identifier ID is null or empty, skipping');
-            continue;
-          }
-
-          try {
-            final repository = context.read<
-                LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>();
-
-            final searchResult = repository.search(UniqueIdPoolSearchModel(
-              id: identifierId,
-            ));
-
-            List<UniqueIdPoolModel> searchResults;
-            if (searchResult is Future) {
-              searchResults =
-                  await (searchResult as Future<List<UniqueIdPoolModel>>);
-            } else {
-              searchResults =
-                  List<UniqueIdPoolModel>.from(searchResult as List);
-            }
-
-            if (searchResults.isEmpty) {
-              debugPrint(
-                  'UPDATE_IDENTIFIER_STATUS: No UniqueIdPoolModel found for id: $identifierId');
-              continue;
-            }
-
-            final uniqueIdPoolModel = searchResults.first;
-
-            final now = DateTime.now().millisecondsSinceEpoch;
-            final currentUserUuid =
-                FlowBuilderSingleton().loggedInUserUuid ?? '';
-
-            final updatedClientAudit =
-                uniqueIdPoolModel.clientAuditDetails != null
-                    ? uniqueIdPoolModel.clientAuditDetails!.copyWith(
-                        lastModifiedBy: currentUserUuid,
-                        lastModifiedTime: now,
-                      )
-                    : ClientAuditDetails(
-                        createdBy: uniqueIdPoolModel.auditDetails?.createdBy ??
-                            currentUserUuid,
-                        createdTime:
-                            uniqueIdPoolModel.auditDetails?.createdTime ?? now,
-                        lastModifiedBy: currentUserUuid,
-                        lastModifiedTime: now,
-                      );
-
-            final updatedUniqueId = uniqueIdPoolModel.copyWith(
-              status: IdStatus.assigned.toValue(),
-              clientAuditDetails: updatedClientAudit,
-            );
-
-            uniqueIdPoolToUpdate.add(updatedUniqueId);
-            debugPrint(
-                'UPDATE_IDENTIFIER_STATUS: Prepared UniqueIdPoolModel update: $identifierId -> ASSIGNED');
-          } catch (e) {
-            debugPrint(
-                'UPDATE_IDENTIFIER_STATUS: Error searching/updating UniqueIdPoolModel: $e');
-          }
+      final newIdentifiers = <IdentifierModel>[];
+      var individualChanged = false;
+      for (final identifier in entity.identifiers!) {
+        final BeneficiaryIdDecision decision;
+        try {
+          decision = await allocator.resolve(identifier);
+        } catch (e) {
+          debugPrint('UPDATE_IDENTIFIER_STATUS: could not check '
+              '${identifier.identifierId}: $e');
+          newIdentifiers.add(identifier);
+          continue;
         }
+
+        if (decision.poolRow != null) rowsToAssign.add(decision.poolRow!);
+        if (decision.changed) {
+          individualChanged = true;
+          debugPrint('UPDATE_IDENTIFIER_STATUS: ${decision.outcome.name} '
+              'individual=${entity.clientReferenceId} '
+              '${decision.previousId} -> ${decision.identifier.identifierId}');
+        }
+        newIdentifiers.add(decision.identifier);
+      }
+
+      if (individualChanged) {
+        anyChanged = true;
+        updatedEntities.add(entity.copyWith(identifiers: newIdentifiers));
+      } else {
+        updatedEntities.add(entity);
       }
     }
 
-    if (!foundMatch) {
-      debugPrint(
-          'UPDATE_IDENTIFIER_STATUS: No identifiers found with type $identifierType - skipping');
-      return contextData;
+    if (rowsToAssign.isNotEmpty) {
+      await _markAssigned(repository, rowsToAssign, currentUserUuid ?? '');
     }
 
-    if (uniqueIdPoolToUpdate.isEmpty) {
-      debugPrint(
-          'UPDATE_IDENTIFIER_STATUS: No UniqueIdPoolModels to update - skipping');
-      return contextData;
-    }
+    if (!anyChanged) return contextData;
+    return {...contextData, 'entities': updatedEntities};
+  }
 
-    debugPrint(
-        'UPDATE_IDENTIFIER_STATUS: Updating ${uniqueIdPoolToUpdate.length} UniqueIdPoolModels to ASSIGNED via local repository');
-
-    try {
-      final repository = context
-          .read<LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>();
-
-      for (final uniqueIdModel in uniqueIdPoolToUpdate) {
-        await repository.update(uniqueIdModel);
+  Future<void> _markAssigned(
+    LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel> repository,
+    List<UniqueIdPoolModel> rows,
+    String currentUserUuid,
+  ) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    for (final row in rows) {
+      final clientAudit = row.clientAuditDetails != null
+          ? row.clientAuditDetails!.copyWith(
+              lastModifiedBy: currentUserUuid,
+              lastModifiedTime: now,
+            )
+          : ClientAuditDetails(
+              createdBy: row.auditDetails?.createdBy ?? currentUserUuid,
+              createdTime: row.auditDetails?.createdTime ?? now,
+              lastModifiedBy: currentUserUuid,
+              lastModifiedTime: now,
+            );
+      try {
+        await repository.update(row.copyWith(
+          status: IdStatus.assigned.toValue(),
+          clientAuditDetails: clientAudit,
+        ));
+      } catch (e) {
+        debugPrint('UPDATE_IDENTIFIER_STATUS: could not mark ${row.id} '
+            'ASSIGNED: $e');
       }
-
-      debugPrint(
-          'UPDATE_IDENTIFIER_STATUS: Successfully updated UniqueIdPoolModels');
-    } catch (e) {
-      debugPrint(
-          'UPDATE_IDENTIFIER_STATUS: Error updating UniqueIdPoolModels: $e');
     }
-
-    return contextData;
   }
 }

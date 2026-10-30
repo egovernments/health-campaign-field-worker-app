@@ -9,6 +9,8 @@ import 'package:digit_data_model/models/entities/id_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../utils/beneficiary_id_allocator.dart';
+
 part 'unique_id.freezed.dart';
 
 typedef UniqueIdEmitter = Emitter<UniqueIdState>;
@@ -76,6 +78,12 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
         return;
       }
 
+      final locallyAssignedIds = (await uniqueIdPoolLocalRepository.search(
+        UniqueIdPoolSearchModel(status: IdStatus.assigned.toValue()),
+      ))
+          .map((row) => row.id)
+          .toSet();
+
       int offset = 0;
       int totalFetched = 0;
       List<UniqueIdPoolModel> allFetchedIds = [];
@@ -103,7 +111,10 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
           searchModel,
         );
 
-        final List<UniqueIdPoolModel> batch = response.models;
+        // A re-download returns IDs used on this device but not yet synced
+        // as free; keep them ASSIGNED so they are not handed out again.
+        final List<UniqueIdPoolModel> batch =
+            keepLocallyAssigned(response.models, locallyAssignedIds);
         final int fetchLimit = response.fetchLimit;
         totalLimit = response.totalLimit;
 
