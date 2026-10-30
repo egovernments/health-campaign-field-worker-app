@@ -109,17 +109,17 @@ class _BoundarySelectionPageState
         () => DropdownItem(name: name, code: code),
       );
 
+  /// The missed-place modules carry the create form's labels and its option
+  /// labels (keyed by the MDMS codes): the base module and the one published
+  /// with the project's MDMS FormConfig.
+  String get _missedPlaceModules =>
+      'common,${Constants.missedPlaceLocalizationModule},'
+      '${missedPlaceProjectModule(context.selectedProject.referenceID)}';
+
   @override
   void initState() {
     context.syncRefresh();
-    // The missed-place modules carry the create form's labels and its
-    // option labels (keyed by the MDMS codes): the base module and the one
-    // published with the project's MDMS FormConfig.
-    LocalizationParams().setModule(
-      'common,${Constants.missedPlaceLocalizationModule},'
-      '${missedPlaceProjectModule(context.selectedProject.referenceID)}',
-      false,
-    );
+    LocalizationParams().setModule(_missedPlaceModules, false);
     LocalizationParams().setCode([
       i18.common.coreCommonContinue,
       i18.common.coreCommonSubmit,
@@ -1545,6 +1545,18 @@ class _BoundarySelectionPageState
     required List<BoundaryModel> siblings,
   }) async {
     final before = _newSettlements.map((a) => a.clientReferenceId).toSet();
+
+    // The form's strings are written to SQL at project selection, but that
+    // write doesn't reload the in-memory caches the flow reads from. Reload
+    // them for the missed-place modules before the form renders.
+    final locale = AppSharedPreferences().getSelectedLocale;
+    if (locale != null && locale.isNotEmpty) {
+      LocalizationParams().setModule(_missedPlaceModules, false);
+      await context
+          .read<LocalizationBloc>()
+          .refreshFlowBuilderLocalization(locale);
+      if (!mounted) return null;
+    }
 
     await FlowNavigationUtils.navigateToFlowModule(
       context: context,
