@@ -223,7 +223,12 @@ class Variables {
         ? _envName.value
         : _dotEnv.get(_envName.key, fallback: _envName.value);
 
-    return EnvType.values.firstWhereOrNull((env) => env.name == envName) ??
+    // ENV_NAME holds the upper-case code ("DEV", "QA", ...), which is the
+    // enum's `env` value, not its Dart `name`. Comparing `name` never
+    // matched, so every build resolved to dev.
+    return EnvType.values.firstWhereOrNull(
+          (env) => env.env.toUpperCase() == envName.trim().toUpperCase(),
+        ) ??
         EnvType.dev;
   }
 }
