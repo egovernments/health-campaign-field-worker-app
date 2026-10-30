@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 
 import '../flow_crud_bloc.dart';
+import '../../utils/utils.dart' show getEntityTypeName;
 import 'entity_field_accessor.dart';
 import 'value_resolver.dart';
 
@@ -147,7 +148,7 @@ class EntityFilter {
     // Create a local context that includes both the current entity and wrapper data
     final localContext = <String, dynamic>{
       ...wrapperData,
-      if (root is EntityModel) root.runtimeType.toString(): root,
+      if (root is EntityModel) getEntityTypeName(root): root,
     };
 
     final equalsValue = equalsFrom != null

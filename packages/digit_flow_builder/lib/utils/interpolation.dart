@@ -429,8 +429,8 @@ String interpolateWithCrudStates({
 
 String getEntityKey(dynamic entity) {
   if (entity is EntityModel) {
-    return entity.runtimeType
-        .toString()
+    // Obfuscation-safe: see getEntityTypeName.
+    return getEntityTypeName(entity)
         .replaceAll(RegExp(r'^_+\$?'), '')
         .replaceAll(RegExp(r'Impl$'), '');
   }
