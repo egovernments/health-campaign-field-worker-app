@@ -194,8 +194,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "localityBoundaryCode",
                   "root": "address",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
@@ -1426,8 +1426,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "localityBoundaryCode",
                   "root": "address",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
