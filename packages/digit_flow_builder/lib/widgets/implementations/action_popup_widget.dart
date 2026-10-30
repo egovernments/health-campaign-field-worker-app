@@ -194,6 +194,16 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         popupConfig['barrierDismissible'] as bool? ?? true;
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
+
+    // Footer actions use original context which has LocalizationContext in its
+    // tree. A button whose `visible` rule is false builds to an empty widget,
+    // so keep only real buttons instead of casting every result.
+    final footerButtons = footerActions
+        .whereType<Map<String, dynamic>>()
+        .map((actionJson) =>
+            FlowWidgetFactory.build(actionJson, context, onAction))
+        .whereType<DigitButton>()
+        .toList();
     final popupType = popupConfig['type'] as String? ?? 'simple';
 
     return showCustomPopup(
@@ -266,18 +276,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
               return const SizedBox.shrink();
             }),
           ],
-          actions: footerActions.isEmpty
-              ? null
-              : footerActions
-                  .whereType<Map<String, dynamic>>()
-                  .map((actionJson) {
-                  // Footer actions use original context which has LocalizationContext in its tree
-                  return FlowWidgetFactory.build(
-                    actionJson,
-                    context,
-                    onAction,
-                  ) as DigitButton;
-                }).toList(),
+          actions: footerButtons.isEmpty ? null : footerButtons,
           inlineActions: true,
         );
       },
