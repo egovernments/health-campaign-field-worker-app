@@ -628,6 +628,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     walk(tree);
 
+    // The prefetched tree is the whole tenant's hierarchy; keep only the
+    // project's assigned boundary and the ones below it.
+    final assignedCode = project.address?.boundary;
+    final assignedPath = flat
+        .firstWhere((b) => b.code == assignedCode,
+            orElse: () => BoundaryModel())
+        .materializedPath;
+    if (assignedPath != null && assignedPath.isNotEmpty) {
+      flat.retainWhere((b) =>
+          b.materializedPath == assignedPath ||
+          (b.materializedPath?.startsWith('$assignedPath.') ?? false));
+    } else if (identical(tree, prefetchedTree)) {
+      // Can't scope the tenant tree: use the stored rows, which already hold
+      // only the project's boundaries.
+      flat.clear();
+      walk(await boundaryLocalRepository.search(BoundarySearchModel()));
+    }
+
     final levels = flat.map((b) => b.boundaryNum).whereType<int>().toList();
     if (levels.isEmpty) return;
     final lowest = levels.reduce((a, b) => a > b ? a : b);
