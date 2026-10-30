@@ -92,6 +92,15 @@ class CrudExecutor extends ActionExecutor {
     }
 
     debugPrint('CREATE_EVENT: Creating ${entities.length} entities');
+
+    // `awaitCreate: true` writes through CrudService and waits, for flows
+    // that leave the page right after and read the record back (the
+    // CrudBloc is closed with the page, so a queued create could be lost).
+    if (action.properties['awaitCreate'] == true) {
+      await CrudBlocSingleton().crudService.createEntities(entities);
+      return contextData;
+    }
+
     // Prefer the CrudBloc captured by the calling widget at build time.
     // The button's own context may be deactivated by the time this runs,
     // making `context.read<CrudBloc>()` throw the "deactivated widget's

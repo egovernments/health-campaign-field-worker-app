@@ -2041,6 +2041,31 @@ final jsonConfig = {
             "frontlineWorkerPhone": "sessionSetup.workerPhone",
             "facilityClientReferenceId": "__ref:FacilityModel.clientReferenceId",
             "facilityLevel": "__value:site"
+  // A worker-added settlement: a NEW_SETTLEMENT user action against the
+  // parent boundary's code. Context keys come from the form's
+  // FETCH_TRANSFORMER_CONFIG data (navigation params).
+  "newSettlement": {
+    "fallbackModel": "UserActionModel",
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "boundaryCode": "__context:parentBoundaryCode",
+          "action": "__value:NEW_SETTLEMENT",
+          "latitude": "settlementDetails.gps[0]",
+          "longitude": "settlementDetails.gps[1]",
+          "locationAccuracy": "settlementDetails.gps[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementName": "settlementDetails.settlementName",
+            "settlementType": "settlementDetails.settlementType",
+            "securityLevel": "settlementDetails.securityLevel",
+            "accessRoute": "settlementDetails.accessRoute"
           }
         }
       }

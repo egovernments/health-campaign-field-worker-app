@@ -52,6 +52,9 @@ Map<String, String Function(Object)> buildValidationMessages(
       case 'notEqualTo':
         messages['notEqualTo'] = (_) => finalMessage;
         break;
+      case 'notIn':
+        messages['notIn'] = (_) => finalMessage;
+        break;
       case 'scanLimit':
         messages['scanLimit'] = (_) => translated;
         break;
