@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../router/app_router.dart';
 import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/new_settlement_utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -92,9 +93,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  localizations.translate(
-                                    boundary.code ?? 'No Value',
-                                  ),
+                                  boundaryDisplayName(boundary, localizations),
                                   style: theme
                                       .digitTextTheme(context)
                                       .headingM

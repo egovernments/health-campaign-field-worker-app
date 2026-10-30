@@ -124,7 +124,8 @@ class Constants {
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
-    'hcm-dashboard'
+    'hcm-dashboard',
+    missedPlaceLocalizationModule
   ];
 
   // Modules to load when inside packages
@@ -149,8 +150,14 @@ class Constants {
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
-    'hcm-dashboard'
+    'hcm-dashboard',
+    missedPlaceLocalizationModule
   ];
+
+  /// MISSED_PLACE_* strings: adding a missed place on boundary selection, its
+  /// create form, and the download error on project selection.
+  static const String missedPlaceLocalizationModule =
+      'hcm-base-missedplace-polio';
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
@@ -404,7 +411,7 @@ class Constants {
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) =>
-    element.entityName == entityName && element.action == action)
+            element.entityName == entityName && element.action == action)
         ?.path;
 
     return actionResult ?? '';
