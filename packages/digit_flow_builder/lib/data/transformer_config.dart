@@ -1913,7 +1913,8 @@ final jsonConfig = {
           "additionalFields": {
             "frontlineWorkerName": "sessionSetup.workerName",
             "frontlineWorkerPhone": "sessionSetup.workerPhone",
-            "facilityClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "facilityClientReferenceId":
+                "__ref:FacilityModel.clientReferenceId",
             "facilityLevel": "__value:site"
           }
         }
@@ -1969,8 +1970,14 @@ final jsonConfig = {
           "additionalFields": {
             "frontlineWorkerName": "sessionSetup.workerName",
             "frontlineWorkerPhone": "sessionSetup.workerPhone",
-            "facilityClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "facilityClientReferenceId":
+                "__ref:FacilityModel.clientReferenceId",
             "facilityLevel": "__value:site"
+          }
+        }
+      }
+    }
+  },
   // A worker-added settlement: a NEW_SETTLEMENT user action against the
   // parent boundary's code. Context keys come from the form's
   // FETCH_TRANSFORMER_CONFIG data (navigation params).
