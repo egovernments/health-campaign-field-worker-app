@@ -392,7 +392,12 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               module: module,
               tenantId: envConfig.variables.tenantId,
             );
+            debugPrint('localization: $module returned ${results.length} '
+                'messages for $selectedLocale');
             await LocalizationLocalRepository().create(results, locBloc.sql);
+          } else {
+            debugPrint('localization: $module already cached '
+                '(${localResults.length} messages for $selectedLocale)');
           }
         } catch (e) {
           debugPrint('error caching $module localization for $selectedLocale: $e');
