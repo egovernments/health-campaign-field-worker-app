@@ -1885,8 +1885,8 @@ final jsonConfig = {
             "locationAccuracy": "sessionSetup.gpsStart[2]",
             "type": "__value:PERMANENT",
             "locality": {
-              "code": "__context:selectedBoundaryCode",
-              "name": "__context:selectedBoundaryName",
+              "code": "__context:parentBoundaryCode",
+              "name": "__context:parentBoundaryName",
               "tenantId": "__context:tenantId"
             },
             "clientAuditDetails": "__generate:clientAudit",
@@ -1940,8 +1940,8 @@ final jsonConfig = {
             "locationAccuracy": "sessionSetup.gpsStart[2]",
             "type": "__value:PERMANENT",
             "locality": {
-              "code": "__context:selectedBoundaryCode",
-              "name": "__context:selectedBoundaryName",
+              "code": "__context:parentBoundaryCode",
+              "name": "__context:parentBoundaryName",
               "tenantId": "__context:tenantId"
             },
             "clientAuditDetails": "__generate:clientAudit",

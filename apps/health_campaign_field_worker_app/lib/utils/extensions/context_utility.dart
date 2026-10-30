@@ -116,6 +116,8 @@ extension ContextUtilityExtensions on BuildContext {
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
     FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+    FlowBuilderSingleton()
+        .setParentBoundary(boundary: _parentOf(selectedBoundary));
     return selectedBoundary;
   }
 
@@ -126,6 +128,28 @@ extension ContextUtilityExtensions on BuildContext {
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
     FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+    FlowBuilderSingleton()
+        .setParentBoundary(boundary: _parentOf(selectedBoundary));
+  }
+
+  /// The loaded boundary whose code is [boundary]'s parent code, searched
+  /// through the boundary bloc's tree; null when it isn't loaded.
+  BoundaryModel? _parentOf(BoundaryModel boundary) {
+    final parentCode = parentBoundaryCodeOf(boundary);
+    if (parentCode == null) return null;
+
+    BoundaryModel? find(Iterable<BoundaryModel> nodes) {
+      for (final node in nodes) {
+        if (node.code == parentCode && !node.isNewSettlement) return node;
+        final hit = find(node.children);
+        if (hit != null) return hit;
+      }
+      return null;
+    }
+
+    final state = _get<BoundaryBloc>().state;
+    return find(state.selectedBoundaryMap.values.whereType<BoundaryModel>()) ??
+        find(state.boundaryList);
   }
 
   BoundaryModel? get boundaryOrNull {

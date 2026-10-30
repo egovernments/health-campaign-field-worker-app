@@ -48,6 +48,17 @@ class FlowBuilderSingleton {
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
+    // A parent set for an earlier boundary must not outlive it; callers that
+    // know the parent set it after this.
+    _parentBoundaryModel = null;
+  }
+
+  BoundaryModel? _parentBoundaryModel;
+
+  /// Parent of [boundary], when the host app can resolve it (null at the
+  /// top level). Used for records kept one level above the selection.
+  void setParentBoundary({BoundaryModel? boundary}) {
+    _parentBoundaryModel = boundary;
   }
 
   void setPersistenceConfiguration(
@@ -170,6 +181,8 @@ class FlowBuilderSingleton {
   ProjectModel? get selectedProject => _selectedProject;
 
   BoundaryModel? get boundary => _boundaryModel;
+
+  BoundaryModel? get parentBoundary => _parentBoundaryModel;
 
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
@@ -757,12 +770,21 @@ Map<String, dynamic> singletonToMap() {
 String? _boundaryAndParentCodes(BoundaryModel? boundary) {
   final code = boundary?.code;
   if (code == null || code.isEmpty) return null;
+  final parent = parentBoundaryCodeOf(boundary);
+  return [if (parent != null && parent != code) parent, code].join(',');
+}
+
+/// Code of [boundary]'s parent: the second-last segment of its
+/// materializedPath (codes joined by '.'), or null at the top level or
+/// when the path is unknown. A worker-added settlement already carries its
+/// parent's code.
+String? parentBoundaryCodeOf(BoundaryModel? boundary) {
+  if (boundary != null && boundary.isNewSettlement) return boundary.code;
   final segments = (boundary?.materializedPath ?? '')
       .split('.')
       .where((s) => s.isNotEmpty)
       .toList();
-  final parent = segments.length > 1 ? segments[segments.length - 2] : null;
-  return [if (parent != null && parent != code) parent, code].join(',');
+  return segments.length > 1 ? segments[segments.length - 2] : null;
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths
