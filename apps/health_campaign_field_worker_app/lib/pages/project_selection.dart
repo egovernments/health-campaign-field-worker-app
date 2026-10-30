@@ -23,6 +23,7 @@ import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/new_settlement_utils.dart';
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/download_progress/download_spinner_content.dart';
@@ -370,27 +371,32 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             .firstWhere((element) => element.boundaryList.isNotEmpty),
       ]);
 
-      // Cache permission handler localizations for the SELECTED locale only.
+      // Cache permission handler localizations for the SELECTED locale only,
+      // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
+      // which the boundary page opens before any home card loads it.
       final permHandlerModule = 'hcm-permissionhandler-$projectReferenceId';
-      try {
-        final localResults =
-            await LocalizationLocalRepository().fetchLocalization(
-          sql: locBloc.sql,
-          locale: selectedLocale,
-          module: permHandlerModule,
-        );
-        if (localResults.isEmpty) {
-          final results = await locBloc.localizationRepository.loadLocalization(
-            path: Constants.localizationApiPath,
+      final missedPlaceModule = missedPlaceProjectModule(projectReferenceId);
+      for (final module in [permHandlerModule, missedPlaceModule]) {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
             locale: selectedLocale,
-            module: permHandlerModule,
-            tenantId: envConfig.variables.tenantId,
+            module: module,
           );
-          await LocalizationLocalRepository().create(results, locBloc.sql);
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: selectedLocale,
+              module: module,
+              tenantId: envConfig.variables.tenantId,
+            );
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          }
+        } catch (e) {
+          debugPrint('error caching $module localization for $selectedLocale: $e');
         }
-      } catch (e) {
-        debugPrint(
-            'error caching permission handler localization for $selectedLocale: $e');
       }
 
       // Cache boundary localization for the SELECTED locale in the main
@@ -477,7 +483,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       locBloc.add(LocalizationEvent.onLoadLocalization(
         module:
             '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
-            '${Constants.missedPlaceLocalizationModule}',
+            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,

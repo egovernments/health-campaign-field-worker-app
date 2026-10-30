@@ -16,6 +16,11 @@ const String settlementNameKey = 'settlementName';
 /// Token in missed-place messages replaced with the lowest level's name.
 const String levelPlaceholder = '{LEVEL}';
 
+/// Localization module of the missed-place form published with the
+/// project's MDMS FormConfig ([newSettlementSchemaKey]).
+String missedPlaceProjectModule(String? projectReferenceId) =>
+    'hcm-${newSettlementSchemaKey.toLowerCase()}-${projectReferenceId ?? ''}';
+
 /// Role codes in the MDMS `HCM.ROLES_FOR_MISSED_PLACES` records. A record
 /// names a role in `code`, or several in `roles` (codes or `{code}` maps);
 /// records with `active: false` are skipped.

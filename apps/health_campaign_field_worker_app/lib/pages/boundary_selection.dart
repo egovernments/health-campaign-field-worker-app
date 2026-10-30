@@ -112,10 +112,12 @@ class _BoundarySelectionPageState
   @override
   void initState() {
     context.syncRefresh();
-    // The missed-place module carries the create form's labels and its
-    // option labels (keyed by the MDMS codes).
+    // The missed-place modules carry the create form's labels and its
+    // option labels (keyed by the MDMS codes): the base module and the one
+    // published with the project's MDMS FormConfig.
     LocalizationParams().setModule(
-      'common,${Constants.missedPlaceLocalizationModule}',
+      'common,${Constants.missedPlaceLocalizationModule},'
+      '${missedPlaceProjectModule(context.selectedProject.referenceID)}',
       false,
     );
     LocalizationParams().setCode([
