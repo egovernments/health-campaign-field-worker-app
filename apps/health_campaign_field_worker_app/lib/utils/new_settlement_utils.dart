@@ -16,6 +16,26 @@ const String settlementNameKey = 'settlementName';
 /// Token in missed-place messages replaced with the lowest level's name.
 const String levelPlaceholder = '{LEVEL}';
 
+/// Role codes in the MDMS `HCM.ROLES_FOR_MISSED_PLACES` records. A record
+/// names a role in `code`, or several in `roles` (codes or `{code}` maps);
+/// records with `active: false` are skipped.
+List<String> missedPlaceRoleCodes(List<dynamic> records) {
+  final codes = <String>{};
+  for (final record in records.whereType<Map>()) {
+    if (record['active'] == false) continue;
+    final code = record['code'];
+    if (code is String && code.isNotEmpty) codes.add(code);
+    final roles = record['roles'];
+    if (roles is List) {
+      for (final role in roles) {
+        final roleCode = role is Map ? role['code'] : role;
+        if (roleCode is String && roleCode.isNotEmpty) codes.add(roleCode);
+      }
+    }
+  }
+  return codes.toList();
+}
+
 String? settlementNameOf(UserActionModel action) =>
     action.additionalFields?.fields
         .where((f) => f.key == settlementNameKey)

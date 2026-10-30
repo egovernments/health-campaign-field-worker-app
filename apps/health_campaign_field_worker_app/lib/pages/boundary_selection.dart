@@ -268,6 +268,11 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
+    // Only the roles in MDMS HCM.ROLES_FOR_MISSED_PLACES may add one.
+    final missedPlaceRoles = AppSharedPreferences().missedPlaceRoles;
+    final canAddMissedPlace = context.loggedInUserRoles
+        .any((role) => missedPlaceRoles.contains(role.code));
+
     bool isHealthFacilityWorkerOnly = isHealthFacilityWorker && !isDistributor;
 
     return PopScope(
@@ -1311,7 +1316,8 @@ class _BoundarySelectionPageState
                                           ),
                                         );
 
-                                        if (lastLevelParent == null) {
+                                        if (lastLevelParent == null ||
+                                            !canAddMissedPlace) {
                                           return field;
                                         }
 

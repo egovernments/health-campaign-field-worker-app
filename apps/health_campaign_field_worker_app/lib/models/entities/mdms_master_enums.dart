@@ -72,5 +72,7 @@ enum MasterEnums {
   @MappableValue("projectTypes")
   projectTypes,
   @MappableValue("FormConfig")
-  formConfig
+  formConfig,
+  @MappableValue("ROLES_FOR_MISSED_PLACES")
+  rolesForMissedPlaces
 }

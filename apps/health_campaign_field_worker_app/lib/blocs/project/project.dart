@@ -24,6 +24,7 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
@@ -1021,6 +1022,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           debugPrint(e.toString());
         }
         return;
+      }
+
+      // Roles that may add a missed place on the boundary page. A failed
+      // fetch keeps the roles saved last time.
+      try {
+        final roleRecords = await mdmsRepository.searchMDMS(
+          envConfig.variables.mdmsApiPath,
+          tenantId: envConfig.variables.tenantId,
+          schemaCode:
+              '${ModuleEnums.hcm.toValue()}.${MasterEnums.rolesForMissedPlaces.toValue()}',
+        );
+        await AppSharedPreferences()
+            .setMissedPlaceRoles(missedPlaceRoleCodes(roleRecords));
+      } catch (e) {
+        debugPrint('missed-place roles fetch failed: $e');
       }
 
       reportSyncProgress('projectType');
