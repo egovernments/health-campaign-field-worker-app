@@ -170,7 +170,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",
-                "properties": {"name": "HOME", "type": "HOME"}
+                "properties": {"name": "selectVaccinationLocation"}
               }
             ],
             "fieldName": "backLink"
@@ -1402,7 +1402,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",
-                "properties": {"name": "HOME", "type": "HOME"}
+                "properties": {"name": "selectVaccinationLocation"}
               }
             ],
             "fieldName": "backLink"
