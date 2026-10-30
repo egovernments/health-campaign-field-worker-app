@@ -1,8 +1,8 @@
 final dynamic sampleOutSideHouseholdVaccinationFlows = {
-  "id": "c52102a0-080f-4fad-b88e-5aa22627d4ce",
-  "tenantId": "qa",
-  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfig",
-  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.CMP-2026-10-27-011213",
+  "id": "2d01bdcd-0cdb-4f70-aa9e-88540cdf63d2",
+  "tenantId": "mz",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.POLIO",
   "data": {
     "name": "OUTSIDEHOUSEHOLD",
     "flows": [
@@ -18,8 +18,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -30,11 +30,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {"type": "minSearchChars", "value": 2}
             ],
@@ -57,8 +52,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               "children": [
                 {
                   "type": "template",
-                  "value":
-                      "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
@@ -79,11 +73,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "GV_SUMMARY_LOCATION_TYPE",
                       "value":
-                          "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                          "{{item.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "GV_SUMMARY_LOCATION_AREA",
-                      "value": "{{item.UserActionModel.boundaryCode}}"
+                      "value": "{{item.FacilityModel.address.locality.code}}"
                     }
                   ],
                   "type": "template",
@@ -101,8 +95,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "data": [
                           {
                             "key": "SessionClientReferenceId",
-                            "value":
-                                "{{item.UserActionModel.clientReferenceId}}"
+                            "value": "{{item.FacilityModel.clientReferenceId}}"
                           },
                           {"key": "SessionType", "value": "CLF"}
                         ],
@@ -123,9 +116,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
@@ -175,7 +168,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",
-                "properties": {"name": "HOME", "type": "HOME"}
+                "properties": {"name": "selectVaccinationLocation"}
               }
             ],
             "fieldName": "backLink"
@@ -191,22 +184,16 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "key": "usage",
+                  "root": "facility",
+                  "value": "OUTSIDE_HOUSEHOLD_PLACES",
                   "operation": "equals"
                 },
                 {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "key": "localityBoundaryCode",
+                  "root": "address",
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
@@ -216,12 +203,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         ],
         "wrapperConfig": {
           "filters": [
-            {"field": "additionalFields.fields.sessionType", "equals": "CLF"},
-            {
-              "field": "additionalFields.fields.locationName",
-              "contains": "{{searchBar}}",
-              "minChars": 2
-            }
+            {"field": "usage", "equals": "OUTSIDE_HOUSEHOLD_PLACES"},
+            {"field": "name", "contains": "{{searchBar}}", "minChars": 2}
           ],
           "relations": [
             {
@@ -272,17 +255,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
-            "select": ["userAction"],
-            // Nearest session first. `__distance` is not a column — it sorts
-            // by distance from the centre of the `within` filter that the
-            // searchBar's `proximity` block applies, so the two have to stay
-            // together: drop the `proximity` block and the ordering is
-            // skipped (the query falls back to unordered, not an error).
-            "orderBy": {"field": "__distance", "order": "ASC"},
-            "primary": "userAction"
+            "select": ["facility", "userAction"],
+            "orderBy": {"field": "name", "order": "ASC"},
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -299,13 +277,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "data": [
                   {
                     "key": "GV_SUMMARY_LOCATION_NAME",
-                    "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                    "value": "{{contextData.0.FacilityModel.name}}"
                   },
                   {
                     "key": "GV_SUMMARY_LOCATION_TYPE",
                     "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
+                        "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
                 ],
                 "type": "template",
@@ -530,7 +507,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "SessionClientReferenceId",
                       "value":
-                          "{{contextData.0.UserActionModel.clientReferenceId}}"
+                          "{{contextData.0.FacilityModel.clientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "CLF"},
                     {
@@ -542,9 +519,19 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
                     },
                     {
-                      "key": "gpsChild",
+                      "key": "latitude",
                       "value":
-                          "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
+                          "{{contextData.0.FacilityModel.address.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value":
+                          "{{contextData.0.FacilityModel.address.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value":
+                          "{{contextData.0.FacilityModel.address.locationAccuracy}}"
                     }
                   ],
                   "name": "ADD_CLF_CHILD",
@@ -586,8 +573,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {
               "data": [
                 {
-                  "key": "resourceTag",
-                  "root": "userAction",
+                  "key": "clientReferenceId",
+                  "root": "facility",
                   "value": "{{navigation.SessionClientReferenceId}}",
                   "operation": "equals"
                 }
@@ -599,7 +586,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         ],
         "wrapperConfig": {
           "filters": [
-            {"field": "additionalFields.fields.sessionType", "equals": "CLF"}
+            {"field": "usage", "equals": "OUTSIDE_HOUSEHOLD_PLACES"}
           ],
           "relations": [
             {
@@ -660,11 +647,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "ClfSessionWrapper",
           "searchConfig": {
-            "select": ["userAction"],
-            "primary": "userAction"
+            "select": ["facility", "userAction"],
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -705,7 +692,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "key": "maxAgeMonths",
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       },
-                      {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                      {"key": "latitude", "value": "{{navigation.latitude}}"},
+                      {"key": "longitude", "value": "{{navigation.longitude}}"},
+                      {
+                        "key": "locationAccuracy",
+                        "value": "{{navigation.locationAccuracy}}"
+                      }
                     ],
                     "name": "ADD_TRANSIT_CHILD",
                     "type": "FORM"
@@ -787,7 +779,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "key": "maxAgeMonths",
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       },
-                      {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                      {"key": "latitude", "value": "{{navigation.latitude}}"},
+                      {"key": "longitude", "value": "{{navigation.longitude}}"},
+                      {
+                        "key": "locationAccuracy",
+                        "value": "{{navigation.locationAccuracy}}"
+                      }
                     ],
                     "name": "ADD_CLF_CHILD",
                     "type": "FORM"
@@ -849,13 +846,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "data": [
                   {
                     "key": "GV_SUMMARY_LOCATION_NAME",
-                    "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                    "value": "{{contextData.0.FacilityModel.name}}"
                   },
                   {
                     "key": "GV_SUMMARY_LOCATION_TYPE",
                     "value":
-                        "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                        "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
                 ],
                 "type": "template",
@@ -1079,13 +1075,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "SessionClientReferenceId",
                       "value":
-                          "{{contextData.0.UserActionModel.clientReferenceId}}"
+                          "{{contextData.0.FacilityModel.clientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "TRANSIT"},
                     {
                       "key": "TransitLocationType",
                       "value":
-                          "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                          "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "minAgeMonths",
@@ -1096,9 +1092,19 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
                     },
                     {
-                      "key": "gpsChild",
+                      "key": "latitude",
                       "value":
-                          "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
+                          "{{contextData.0.FacilityModel.address.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value":
+                          "{{contextData.0.FacilityModel.address.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value":
+                          "{{contextData.0.FacilityModel.address.locationAccuracy}}"
                     }
                   ],
                   "name": "ADD_TRANSIT_CHILD",
@@ -1143,40 +1149,20 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
+                  "key": "clientReferenceId",
+                  "root": "facility",
+                  "value": "{{navigation.SessionClientReferenceId}}",
                   "operation": "equals"
                 }
               ],
-              "name": "sessions",
+              "name": "session",
               "type": "SEARCH_EVENT"
             }
           }
         ],
         "wrapperConfig": {
           "filters": [
-            {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "TRANSIT"
-            },
-            {
-              "field": "additionalFields.fields.locationName",
-              "contains": "{{searchBar}}",
-              "minChars": 2
-            }
+            {"field": "usage", "equals": "TRANSIT_POST"}
           ],
           "relations": [
             {
@@ -1190,6 +1176,16 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "field": "additionalFields.fields.formType",
                   "equals": "GROUP_VAC_CHILD"
+                }
+              ],
+              "relations": [
+                {
+                  "name": "child",
+                  "match": {
+                    "field": "clientReferenceId",
+                    "equalsFrom": "clientReferenceId"
+                  },
+                  "entity": "UserActionModel"
                 }
               ]
             },
@@ -1227,12 +1223,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
-          "wrapperName": "TransitSessionsListWrapper",
+          "rootEntity": "FacilityModel",
+          "wrapperName": "TransitSessionWrapper",
           "searchConfig": {
-            "select": ["userAction"],
-            "orderBy": {"field": "__distance", "order": "ASC"},
-            "primary": "userAction"
+            "select": ["facility", "userAction"],
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -1242,16 +1237,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
       {
         "body": [
           {
-            // Search bar with headless proximity filter folded in. The
-            // `proximity` block subscribes to LocationBloc on mount and
-            // publishes a `within` filter under its own searchName as soon
-            // as GPS resolves — no visible toggle, always on. It is here
-            // because the `__distance` ordering below needs a centre point,
-            // and the `within` filter is what supplies one. The radius is
-            // deliberately wide: the intent is "rank by nearest", not "hide
-            // anything far", so it only excludes sessions that are
-            // implausibly distant. Its bounding box still earns its keep as
-            // a prefilter.
             "type": "template",
             "label": "GV_SESSION_SEARCH_PLACEHOLDER",
             "format": "searchBar",
@@ -1261,8 +1246,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -1273,11 +1258,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {"type": "minSearchChars", "value": 2}
             ],
@@ -1300,8 +1280,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               "children": [
                 {
                   "type": "template",
-                  "value":
-                      "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
@@ -1322,11 +1301,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "GV_SUMMARY_LOCATION_TYPE",
                       "value":
-                          "{{item.UserActionModel.additionalFields.fields.transitLocationType}}"
+                          "{{item.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "GV_SUMMARY_LOCATION_AREA",
-                      "value": "{{item.UserActionModel.boundaryCode}}"
+                      "value": "{{item.FacilityModel.address.locality.code}}"
                     }
                   ],
                   "type": "template",
@@ -1344,8 +1323,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "data": [
                           {
                             "key": "SessionClientReferenceId",
-                            "value":
-                                "{{item.UserActionModel.clientReferenceId}}"
+                            "value": "{{item.FacilityModel.clientReferenceId}}"
                           },
                           {"key": "SessionType", "value": "TRANSIT"}
                         ],
@@ -1366,9 +1344,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
@@ -1390,10 +1368,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "actionType": "NAVIGATION",
                 "properties": {
-                  // Carry the search term over as the new session's name. The
-                  // key matches the setup form's `locationName` field, which
-                  // is how the forms engine prefills it — navigation params
-                  // are merged into the form's defaultValues.
                   "data": [
                     {"key": "locationName", "value": "{{searchBar}}"}
                   ],
@@ -1422,7 +1396,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "onAction": [
               {
                 "actionType": "BACK_NAVIGATION",
-                "properties": {"name": "HOME", "type": "HOME"}
+                "properties": {"name": "selectVaccinationLocation"}
               }
             ],
             "fieldName": "backLink"
@@ -1438,22 +1412,16 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "key": "usage",
+                  "root": "facility",
+                  "value": "TRANSIT_POST",
                   "operation": "equals"
                 },
                 {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "key": "localityBoundaryCode",
+                  "root": "address",
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
@@ -1463,15 +1431,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         ],
         "wrapperConfig": {
           "filters": [
-            {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "TRANSIT"
-            },
-            {
-              "field": "additionalFields.fields.locationName",
-              "contains": "{{searchBar}}",
-              "minChars": 2
-            }
+            {"field": "usage", "equals": "TRANSIT_POST"},
+            {"field": "name", "contains": "{{searchBar}}", "minChars": 2}
           ],
           "relations": [
             {
@@ -1522,17 +1483,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
-            "select": ["userAction"],
-            // Nearest session first. `__distance` is not a column — it sorts
-            // by distance from the centre of the `within` filter that the
-            // searchBar's `proximity` block applies, so the two have to stay
-            // together: drop the `proximity` block and the ordering is
-            // skipped (the query falls back to unordered, not an error).
-            "orderBy": {"field": "__distance", "order": "ASC"},
-            "primary": "userAction"
+            "select": ["facility", "userAction"],
+            "orderBy": {"field": "name", "order": "ASC"},
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -1651,13 +1607,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
                     }
                   ],
-                  "configName": "clfSession"
+                  "configName": "clfSite"
                 }
               },
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -1689,7 +1645,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "SessionClientReferenceId",
                       "value":
-                          "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                          "{{contextData.entities.FacilityModel.clientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "CLF"}
                   ],
@@ -1767,7 +1723,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "common-masters.GroupVaccinationLocationsCLF",
+                "schemaCode":
+                    "HCM.OUTSIDE_HOUSEHOLD_TYPES:OUTSIDE_HOUSEHOLD_PLACES",
                 "systemDate": false,
                 "validations": [
                   {
@@ -2003,13 +1960,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
                 }
               ],
-              "configName": "clfSession"
+              "configName": "clfSite"
             }
           },
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -2041,7 +1998,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "SessionClientReferenceId",
                   "value":
-                      "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                      "{{contextData.entities.FacilityModel.clientReferenceId}}"
                 },
                 {"key": "SessionType", "value": "CLF"}
               ],
@@ -2094,7 +2051,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "SessionClientReferenceId",
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "onError": [
                     {
@@ -2126,7 +2088,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "CLF"},
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "name": "clfVaccinationSuccess",
                   "type": "TEMPLATE",
@@ -2324,7 +2291,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "SessionClientReferenceId",
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "onError": [
                     {
@@ -2356,7 +2328,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "CLF"},
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "name": "clfVaccinationSuccess",
                   "type": "TEMPLATE",
@@ -2442,7 +2419,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
-                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                {"key": "latitude", "value": "{{navigation.latitude}}"},
+                {"key": "longitude", "value": "{{navigation.longitude}}"},
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
+                }
               ],
               "onError": [
                 {
@@ -2474,7 +2456,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
                 {"key": "SessionType", "value": "CLF"},
-                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                {"key": "latitude", "value": "{{navigation.latitude}}"},
+                {"key": "longitude", "value": "{{navigation.longitude}}"},
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
+                }
               ],
               "name": "clfVaccinationSuccess",
               "type": "TEMPLATE",
@@ -2534,13 +2521,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
                     }
                   ],
-                  "configName": "transitSession"
+                  "configName": "transitSite"
                 }
               },
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -2572,7 +2559,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     {
                       "key": "SessionClientReferenceId",
                       "value":
-                          "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                          "{{contextData.entities.FacilityModel.clientReferenceId}}"
                     },
                     {"key": "SessionType", "value": "TRANSIT"}
                   ],
@@ -2650,7 +2637,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "common-masters.GroupVaccinationLocations",
+                "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:TRANSIT_POST",
                 "systemDate": false,
                 "validations": [
                   {
@@ -2816,13 +2803,13 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "properties": {"message": "GV_ERROR_FETCH_CONFIG"}
                 }
               ],
-              "configName": "transitSession"
+              "configName": "transitSite"
             }
           },
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -2854,7 +2841,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 {
                   "key": "SessionClientReferenceId",
                   "value":
-                      "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                      "{{contextData.entities.FacilityModel.clientReferenceId}}"
                 },
                 {"key": "SessionType", "value": "TRANSIT"}
               ],
@@ -2907,7 +2894,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "SessionClientReferenceId",
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "onError": [
                     {
@@ -2943,7 +2935,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "TransitLocationType",
                       "value": "{{navigation.TransitLocationType}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "name": "transitVaccinationSuccess",
                   "type": "TEMPLATE",
@@ -3268,7 +3265,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "SessionClientReferenceId",
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "onError": [
                     {
@@ -3304,7 +3306,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                       "key": "TransitLocationType",
                       "value": "{{navigation.TransitLocationType}}"
                     },
-                    {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                    {"key": "latitude", "value": "{{navigation.latitude}}"},
+                    {"key": "longitude", "value": "{{navigation.longitude}}"},
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
+                    }
                   ],
                   "name": "transitVaccinationSuccess",
                   "type": "TEMPLATE",
@@ -3389,7 +3396,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "key": "SessionClientReferenceId",
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
-                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                {"key": "latitude", "value": "{{navigation.latitude}}"},
+                {"key": "longitude", "value": "{{navigation.longitude}}"},
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
+                }
               ],
               "onError": [
                 {
@@ -3425,7 +3437,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "key": "TransitLocationType",
                   "value": "{{navigation.TransitLocationType}}"
                 },
-                {"key": "gpsChild", "value": "{{navigation.gpsChild}}"}
+                {"key": "latitude", "value": "{{navigation.latitude}}"},
+                {"key": "longitude", "value": "{{navigation.longitude}}"},
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
+                }
               ],
               "name": "transitVaccinationSuccess",
               "type": "TEMPLATE",
@@ -3445,19 +3462,19 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "scrollListener": {}
       }
     ],
-    "order": 2,
+    "order": 3,
     "active": true,
-    "project": "CMP-2026-10-27-011213",
-    "version": 2,
+    "project": "POLIO",
+    "version": 1,
     "disabled": false,
     "isSelected": true,
     "initialPage": "selectVaccinationLocation"
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
-    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
-    "createdTime": 1793081587928,
-    "lastModifiedTime": 1793081740739
+    "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
+    "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
+    "createdTime": 1789628239245,
+    "lastModifiedTime": 1790760453587
   }
 };

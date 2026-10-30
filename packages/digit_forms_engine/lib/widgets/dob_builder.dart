@@ -14,6 +14,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     this.initialDate,
     this.navigationParams,
     super.validations,
+    super.innerLabel,
   });
 
   @override
@@ -51,7 +52,15 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
           // inner LabeledFields don't paint their own asterisks — the
           // outer wrapper above the card already carries the only
           // user-facing `*` for the whole field.
-          datePickerLabel: label ?? loc.translate('CORE_COMMON_DOB'),
+          //
+          // Prefers the schema's own `innerLabel` so the config can
+          // differ from the outer `label` (e.g. outer "Date of birth or
+          // age" above the card, inner "Date of birth" above the date
+          // input). Falls back to the outer label — and finally to
+          // `CORE_COMMON_DOB` — for configs that only define one.
+          datePickerLabel: (innerLabel != null && innerLabel!.isNotEmpty)
+              ? innerLabel!
+              : (label ?? loc.translate('CORE_COMMON_DOB')),
           ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
           yearsHintLabel: loc.translate(
             'YEARS_HINT_TEXT',

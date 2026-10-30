@@ -2,12 +2,17 @@ import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/repositories/local/new_settlement.dart';
+import 'new_settlement_utils.dart';
 
 /// Configuration for a module's flow navigation
 class FlowModuleConfig {
@@ -40,9 +45,14 @@ class FlowNavigationUtils {
   /// - Initializing WidgetRegistry
   /// - Loading schema from SharedPreferences or using sample flows as fallback
   /// - Navigating to the FlowBuilderHomeRoute
+  ///
+  /// [navigationParams] are passed to the first page. With [awaitPop] the
+  /// returned future completes only when that page is popped.
   static Future<void> navigateToFlowModule({
     required BuildContext context,
     required FlowModuleConfig config,
+    Map<String, dynamic>? navigationParams,
+    bool awaitPop = false,
   }) async {
     try {
       // Scope any downstream delivery-method filtering (registry helpers,
@@ -58,6 +68,7 @@ class FlowNavigationUtils {
           relationshipMap: config.relationshipMappings,
           nestedModelMappings: config.nestedModelMappings,
           searchEntityRepository: context.read<SearchEntityRepository>(),
+          repositoryOverride: (entity) => _repositoryOverride(context, entity),
         ),
         dynamicEntityModelListener: EntityModelMapMapper(),
       );
@@ -83,9 +94,13 @@ class FlowNavigationUtils {
           FlowRegistry.setConfig(flowsData);
           NavigationRegistry.setupNavigation(context);
 
-          context.router.push(
-            FlowBuilderHomeRoute(pageName: moduleData["initialPage"]),
+          final route = context.router.push(
+            FlowBuilderHomeRoute(
+              pageName: moduleData["initialPage"],
+              navigationParams: navigationParams,
+            ),
           );
+          if (awaitPop) await route;
           return;
         }
       }
@@ -99,18 +114,34 @@ class FlowNavigationUtils {
           : config.sampleFlows;
       final rawFlows = sampleRoot["flows"] as List?;
       FlowRegistry.setConfig(
-        rawFlows
-                ?.map((e) => Map<String, dynamic>.from(e as Map))
-                .toList() ??
+        rawFlows?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ??
             <Map<String, dynamic>>[],
       );
       NavigationRegistry.setupNavigation(context);
 
-      context.router.push(
-        FlowBuilderHomeRoute(pageName: sampleRoot["initialPage"]),
+      final route = context.router.push(
+        FlowBuilderHomeRoute(
+          pageName: sampleRoot["initialPage"],
+          navigationParams: navigationParams,
+        ),
       );
+      if (awaitPop) await route;
     } catch (e) {
       debugPrint('FlowNavigationUtils error: $e');
     }
+  }
+
+  /// NEW_SETTLEMENT user actions sync through the userLocation endpoint, so
+  /// they are saved with [NewSettlementLocalRepository].
+  static DataRepository<EntityModel, EntitySearchModel>? _repositoryOverride(
+    BuildContext context,
+    EntityModel entity,
+  ) {
+    if (entity is UserActionModel && entity.action == newSettlementAction) {
+      return context.read<NewSettlementLocalRepository>()
+          as DataRepository<EntityModel, EntitySearchModel>;
+    }
+
+    return null;
   }
 }

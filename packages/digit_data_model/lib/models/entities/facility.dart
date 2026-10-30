@@ -9,6 +9,7 @@ part 'facility.mapper.dart';
 class FacilitySearchModel extends EntitySearchModel
     with FacilitySearchModelMappable {
   final List<String>? id;
+  final List<String>? clientReferenceId;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -17,6 +18,7 @@ class FacilitySearchModel extends EntitySearchModel
   FacilitySearchModel({
     this.name,
     this.id,
+    this.clientReferenceId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -29,6 +31,7 @@ class FacilitySearchModel extends EntitySearchModel
   FacilitySearchModel.ignoreDeleted({
     this.name,
     this.id,
+    this.clientReferenceId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -42,6 +45,11 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
   static const schemaName = 'Facility';
 
   final String id;
+
+  /// App-generated id of a site created on the phone. Until the server
+  /// assigns an [id], the app stores the same value in both fields; the
+  /// oplog manager treats `id == clientReferenceId` as "not yet synced".
+  final String? clientReferenceId;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -55,6 +63,7 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
   FacilityModel({
     this.additionalFields,
     required this.id,
+    this.clientReferenceId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -81,6 +90,10 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
         additionalFields: Value(additionalFields?.toJson()),
         isDeleted: Value(isDeleted),
         id: Value(id),
+        clientReferenceId: Value(clientReferenceId),
+        latitude: Value(address?.latitude),
+        longitude: Value(address?.longitude),
+        locationAccuracy: Value(address?.locationAccuracy),
         isPermanent: Value(isPermanent),
         usage: Value(usage),
         storageCapacity: Value(storageCapacity),
@@ -96,7 +109,9 @@ class FacilityAdditionalFields extends AdditionalFields
     with FacilityAdditionalFieldsMappable {
   FacilityAdditionalFields({
     super.schema = 'Facility',
-    required super.version,
+    // Sites added by the planner come down with schema/version null in
+    // additionalFields, so the version defaults instead of failing decode.
+    super.version = 1,
     super.fields,
   });
 }

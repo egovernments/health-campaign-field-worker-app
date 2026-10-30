@@ -76,6 +76,13 @@ class LabelPairListWidget extends ResolvedFlowWidget {
             .split('.')
             .map((part) => localization?.translate(part) ?? part)
             .join(', ');
+      } else if (_isNumericValue(valueText)) {
+        // Numeric values (e.g. `.length` counts, raw ids) shouldn't be
+        // sent through localization — a stale catalog row keyed on a bare
+        // digit like "1" / "2" with an empty translation renders the
+        // whole cell blank. The resolver already ran translate once on
+        // the full template; skipping here prevents the second strike.
+        displayValue = valueText;
       } else {
         displayValue = localization?.translate(valueText) ?? valueText;
       }
@@ -95,6 +102,14 @@ class LabelPairListWidget extends ResolvedFlowWidget {
       padding: const EdgeInsets.all(0),
       items: filteredItems,
     );
+  }
+
+  /// Whether [value] is a plain integer or decimal string (optionally
+  /// signed). Used to short-circuit the localization lookup for bare
+  /// numeric cells — see the `.length` / count rendering path above.
+  bool _isNumericValue(String value) {
+    if (value.isEmpty) return false;
+    return RegExp(r'^-?\d+(\.\d+)?$').hasMatch(value);
   }
 
   /// Process an iterate directive to dynamically generate label-value pairs

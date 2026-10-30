@@ -23,6 +23,7 @@ import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/new_settlement_utils.dart';
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/download_progress/download_spinner_content.dart';
@@ -91,7 +92,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   state.selectedProject?.address?.boundary != null;
 
               if ((syncDialogRoute?.isActive ?? false) && !willNavigate) {
-                Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .removeRoute(syncDialogRoute!);
               }
 
               if (error != null) {
@@ -111,7 +113,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           ? (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true)
+                                    .removeRoute(syncDialogRoute!);
                               }
                               context
                                   .read<ProjectBloc>()
@@ -120,7 +123,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           : (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true)
+                                    .removeRoute(syncDialogRoute!);
                               }
                               cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
@@ -135,14 +139,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ),
                       action: (context) {
                         if (syncDialogRoute?.isActive ?? false) {
-                          Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
+                          Navigator.of(context, rootNavigator: true)
+                              .removeRoute(syncDialogRoute!);
                         }
                       },
                     ),
                   ),
                 );
 
-                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .push(syncDialogRoute!);
 
                 return;
               } else if (state.loading) {
@@ -169,7 +175,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   ),
                 );
 
-                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .push(syncDialogRoute!);
               }
 
               final selectedProject = state.selectedProject;
@@ -226,7 +233,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                                 context
                                     .read<AuthBloc>()
                                     .add(const AuthLogoutEvent());
-                              },                            ),
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -285,7 +293,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     const moduleKey = 'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,'
         'CLOSEHOUSEHOLD,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,'
         'CHECKLIST,STOCK,LQA,INSIDEMONITORING,CLF,TRANSITPOST,'
-        'HOUSEHOLDSTRATEGY,MISSEDCHILDREN';
+        'OUTSIDEHOUSEHOLD,HOUSEHOLDSTRATEGY,MISSEDCHILDREN';
     final keys = moduleKey.split(',').map((e) => e.trim()).toList();
     final moduleNames =
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
@@ -329,16 +337,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     // every project selection for no gain.
     final campaignCacheFuture = () async {
       try {
-        final cachedRows = await LocalizationLocalRepository().fetchLocalization(
+        final cachedRows =
+            await LocalizationLocalRepository().fetchLocalization(
           sql: locBloc.sql,
           locale: selectedLocale,
           module: fullModuleString,
         );
         final cachedModules = cachedRows.map((l) => l.module).toSet();
         final requestedModules = moduleNames.toList();
-        final missingModules = requestedModules
-            .where((m) => !cachedModules.contains(m))
-            .toList();
+        final missingModules =
+            requestedModules.where((m) => !cachedModules.contains(m)).toList();
         if (missingModules.isEmpty) return;
         final results = await locBloc.localizationRepository.loadLocalization(
           path: Constants.localizationApiPath,
@@ -363,28 +371,37 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             .firstWhere((element) => element.boundaryList.isNotEmpty),
       ]);
 
-      // Cache permission handler localizations for the SELECTED locale only.
-      final permHandlerModule =
-          'hcm-permissionhandler-$projectReferenceId';
-      try {
-        final localResults =
-            await LocalizationLocalRepository().fetchLocalization(
-          sql: locBloc.sql,
-          locale: selectedLocale,
-          module: permHandlerModule,
-        );
-        if (localResults.isEmpty) {
-          final results = await locBloc.localizationRepository.loadLocalization(
-            path: Constants.localizationApiPath,
+      // Cache permission handler localizations for the SELECTED locale only,
+      // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
+      // which the boundary page opens before any home card loads it.
+      final permHandlerModule = 'hcm-permissionhandler-$projectReferenceId';
+      final missedPlaceModule = missedPlaceProjectModule(projectReferenceId);
+      for (final module in [permHandlerModule, missedPlaceModule]) {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
             locale: selectedLocale,
-            module: permHandlerModule,
-            tenantId: envConfig.variables.tenantId,
+            module: module,
           );
-          await LocalizationLocalRepository().create(results, locBloc.sql);
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: selectedLocale,
+              module: module,
+              tenantId: envConfig.variables.tenantId,
+            );
+            debugPrint('localization: $module returned ${results.length} '
+                'messages for $selectedLocale');
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          } else {
+            debugPrint('localization: $module already cached '
+                '(${localResults.length} messages for $selectedLocale)');
+          }
+        } catch (e) {
+          debugPrint('error caching $module localization for $selectedLocale: $e');
         }
-      } catch (e) {
-        debugPrint(
-            'error caching permission handler localization for $selectedLocale: $e');
       }
 
       // Cache boundary localization for the SELECTED locale in the main
@@ -445,8 +462,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           locale: selectedLocale,
           codes: allBoundaryCodes,
         );
-        final missingCodes =
-            allBoundaryCodes.difference(cachedCodes).toList();
+        final missingCodes = allBoundaryCodes.difference(cachedCodes).toList();
         if (missingCodes.isNotEmpty) {
           final results = await locBloc.localizationRepository.loadLocalization(
             path: Constants.localizationApiPath,
@@ -470,7 +486,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // leaving the other two unresolved because `_loadLocale` clears the
       // map and refills only what matches the current filter.
       locBloc.add(LocalizationEvent.onLoadLocalization(
-        module: '$fullModuleString,$permHandlerModule,$boundaryModule',
+        module:
+            '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
+            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,
@@ -494,8 +512,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // equal state that Bloc suppresses). Without the cap this
       // `firstWhere` would hang forever behind the sync dialog.
       final currentState = locBloc.state;
-      final alreadySettled = currentState.index == resolvedIndex &&
-          !currentState.loading;
+      final alreadySettled =
+          currentState.index == resolvedIndex && !currentState.loading;
       if (!alreadySettled) {
         try {
           await locBloc.stream

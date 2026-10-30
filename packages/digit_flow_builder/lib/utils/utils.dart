@@ -236,6 +236,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'type': pageMap['type'],
         'format': pageMap['format'],
         'description': pageMap['description'],
+        'labelPlaceHolders': pageMap['labelPlaceHolders'],
+        'descriptionPlaceHolders': pageMap['descriptionPlaceHolders'],
         'actionLabel': pageMap['actionLabel'],
         'properties': properties,
         'value': pageMap['value'],
@@ -468,6 +470,13 @@ bool _isResolutionEmpty(dynamic value) {
 String _translateWithLocalization(String text, dynamic localization) {
   final trimmed = text.trim();
   if (trimmed.isEmpty) return text;
+
+  // Bare numeric values (e.g. a resolved `.length` count or an id) must
+  // not be sent through localization — a stale catalog row keyed on a
+  // digit like "1"/"2" with an empty translation would wipe the cell.
+  if (RegExp(r'^-?\d+(\.\d+)?$').hasMatch(trimmed)) {
+    return text;
+  }
 
   try {
     final translated = localization.translate(trimmed);
@@ -731,6 +740,10 @@ Map<String, dynamic> singletonToMap() {
     "projectType": s.projectType?.toJson(),
     "selectedProject": s.selectedProject?.toJson(),
     "boundary": s.boundary?.toJson(),
+    // Selected boundary code plus its parent's, comma-separated for an `in`
+    // search filter. The parent is the second-last segment of
+    // materializedPath (codes joined by '.').
+    "boundaryAndParentCodes": _boundaryAndParentCodes(s.boundary),
     "persistenceConfiguration": s.persistenceConfiguration?.toString(),
     "loggedInUser": s.loggedInUser?.toJson(),
     "userRoles": s.userRoles,
@@ -739,6 +752,17 @@ Map<String, dynamic> singletonToMap() {
     "beneficiaryIdMinCount": s.beneficiaryIdMinCount,
     "activeDeliveryMethod": s.activeDeliveryMethod,
   };
+}
+
+String? _boundaryAndParentCodes(BoundaryModel? boundary) {
+  final code = boundary?.code;
+  if (code == null || code.isEmpty) return null;
+  final segments = (boundary?.materializedPath ?? '')
+      .split('.')
+      .where((s) => s.isNotEmpty)
+      .toList();
+  final parent = segments.length > 1 ? segments[segments.length - 2] : null;
+  return [if (parent != null && parent != code) parent, code].join(',');
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths

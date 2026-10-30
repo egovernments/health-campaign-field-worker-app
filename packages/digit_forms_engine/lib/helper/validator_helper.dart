@@ -199,6 +199,16 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
           }
           break;
 
+        case 'notIn':
+          // value: a list, or a navigation reference to one
+          // (e.g. "navigation.existingNames").
+          if (schemaKey != null) {
+            validators.add(Validators.delegate(
+              (control) => _notInValidator(rule.value, control, schemaKey),
+            ) as Validator<T>);
+          }
+          break;
+
         default:
           if (kDebugMode) {
             // print('Unknown validation type: ${rule.type}');
@@ -265,6 +275,19 @@ int? getMaxLength(List<ValidationRule>? validations) {
 
 /// Custom validator that checks if a field's value is not equal to another field's value
 /// Supports both current page fields and cross-page references using dot notation (e.g., 'warehouseDetails.facilityFromWhich')
+/// Fails when the control's value matches an entry of [listOrReference],
+/// ignoring case and surrounding spaces. Empty values pass (required handles
+/// those).
+Map<String, dynamic>? _notInValidator(dynamic listOrReference,
+    AbstractControl<dynamic> control, String schemaKey) {
+  final list = _resolveNavigationValue(listOrReference, schemaKey);
+  final value = control.value?.toString().trim().toLowerCase() ?? '';
+  if (list is! List || value.isEmpty) return null;
+
+  final taken = list.any((e) => e?.toString().trim().toLowerCase() == value);
+  return taken ? {'notIn': true} : null;
+}
+
 Map<String, dynamic>? _notEqualToValidator(
     String otherFieldName, AbstractControl<dynamic> control, String schemaKey) {
   final form = control.parent;

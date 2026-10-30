@@ -2300,6 +2300,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                       "actionType": "CLOSE_POPUP",
                       "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
+                    {"actionType": "LOAD_UNIQUE_ID_POOL"},
                     {
                       "actionType": "NAVIGATION",
                       "properties": {
@@ -2364,6 +2365,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==true",
           "disabled": "{{searchBar}} == null || {{searchBar}} == ''",
           "onAction": [
+            {"actionType": "LOAD_UNIQUE_ID_POOL"},
             {
               "actionType": "NAVIGATION",
               "properties": {
@@ -4571,6 +4573,38 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "errorMessage": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
               "isMultiSelect": false,
               "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            },
+            {
+              "type": "integer",
+              "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
+              "order": 4,
+              "range": {
+                "min": "1",
+                "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
+              },
+              "value": "1",
+              "format": "numeric",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "childrenCount",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": "1",
+                  "message": "HCM_VALIDATION_MIN_CHILDREN_1"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_childrenCount_ERROR",
+              "isMultiSelect": false
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",

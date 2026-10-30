@@ -69,7 +69,12 @@ final dynamic sampleInventoryFlows = {
         "wrapperName": "InventoryWrapper",
         "groupByType": true,
         "rootEntity": "ProjectFacilityModel",
-        "filters": [],
+        "filters": [
+          {
+            "field": "additionalFields.fields.facilityLevel",
+            "notEquals": "site"
+          }
+        ],
         "relations": [
           {
             "name": "facility",
@@ -670,7 +675,12 @@ final dynamic sampleInventoryFlows = {
         "wrapperName": "InventoryWrapper",
         "groupByType": true,
         "rootEntity": "ProjectFacilityModel",
-        "filters": [],
+        "filters": [
+          {
+            "field": "additionalFields.fields.facilityLevel",
+            "notEquals": "site"
+          }
+        ],
         "relations": [
           {
             "name": "facility",
@@ -1525,7 +1535,12 @@ final dynamic sampleInventoryFlows = {
         "wrapperName": "InventoryWrapper",
         "groupByType": true,
         "rootEntity": "ProjectFacilityModel",
-        "filters": [],
+        "filters": [
+          {
+            "field": "additionalFields.fields.facilityLevel",
+            "notEquals": "site"
+          }
+        ],
         "relations": [
           {
             "name": "facility",

@@ -54,6 +54,7 @@ import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/sync_registry.dart';
+import '../data/outside_household_site_sync_registry.dart';
 import '../data/sync_service_mapper.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
@@ -123,7 +124,8 @@ class Constants {
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
-    'hcm-dashboard'
+    'hcm-dashboard',
+    missedPlaceLocalizationModule
   ];
 
   // Modules to load when inside packages
@@ -148,8 +150,14 @@ class Constants {
     'hcm-peer-to-peer',
     'hcm-transit-post',
     'hcm-attendance',
-    'hcm-dashboard'
+    'hcm-dashboard',
+    missedPlaceLocalizationModule
   ];
+
+  /// MISSED_PLACE_* strings: adding a missed place on boundary selection, its
+  /// create form, and the download error on project selection.
+  static const String missedPlaceLocalizationModule =
+      'hcm-base-missedplace-polio';
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
@@ -403,7 +411,7 @@ class Constants {
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) =>
-    element.entityName == entityName && element.action == action)
+            element.entityName == entityName && element.action == action)
         ?.path;
 
     return actionResult ?? '';
@@ -432,8 +440,14 @@ class Constants {
       entityMapper: SyncServiceMapper(),
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
-    SyncServiceSingleton().registries?.registerSyncRegistries(
-        {DataModelType.complaints: (remote) => CustomSyncRegistry(remote)});
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+      // Outside-household sites: facilities + links created on the phone.
+      DataModelType.facility: (remote) =>
+          OutsideHouseholdSiteSyncRegistry(remote),
+      DataModelType.projectFacility: (remote) =>
+          OutsideHouseholdSiteSyncRegistry(remote),
+    });
   }
 }
 

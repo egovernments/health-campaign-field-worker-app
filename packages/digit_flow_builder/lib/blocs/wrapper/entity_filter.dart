@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 
 import '../flow_crud_bloc.dart';
+import '../../utils/utils.dart' show getEntityTypeName;
 import 'entity_field_accessor.dart';
 import 'value_resolver.dart';
 
@@ -83,6 +84,13 @@ class EntityFilter {
 
           final actual = value?.toString().toLowerCase() ?? '';
           if (!actual.contains(termText.toLowerCase())) return false;
+        } else if (filter.containsKey('notEquals')) {
+          // Drop the root when the field DOES hold the value. Used to keep
+          // outside-household site links out of stock/facility lists.
+          if (value == filter['notEquals']) return false;
+        } else if (filter.containsKey('notIn')) {
+          final excluded = filter['notIn'];
+          if (excluded is List && excluded.contains(value)) return false;
         } else if (equals != null && value != equals) {
           return false;
         }
@@ -140,7 +148,7 @@ class EntityFilter {
     // Create a local context that includes both the current entity and wrapper data
     final localContext = <String, dynamic>{
       ...wrapperData,
-      if (root is EntityModel) root.runtimeType.toString(): root,
+      if (root is EntityModel) getEntityTypeName(root): root,
     };
 
     final equalsValue = equalsFrom != null
