@@ -23,18 +23,11 @@ class FlowModuleConfig {
   /// Nested model mappings for the CRUD service
   final List<NestedModelMapping> nestedModelMappings;
 
-  /// When true the downloaded MDMS schema for [schemaKey] is ignored and
-  /// [sampleFlows] is used directly. Meant for local development while the
-  /// server copy of a flow lags behind the app (the dev MDMS copy of
-  /// OUTSIDEHOUSEHOLD still has the UserAction-based shape, for example).
-  final bool preferSampleFlows;
-
   const FlowModuleConfig({
     required this.schemaKey,
     required this.sampleFlows,
     this.relationshipMappings = const [],
     this.nestedModelMappings = const [],
-    this.preferSampleFlows = false,
   });
 }
 
@@ -74,8 +67,7 @@ class FlowNavigationUtils {
 
       // Get schema from shared preferences
       final prefs = await SharedPreferences.getInstance();
-      final schemaJsonRaw =
-          config.preferSampleFlows ? null : prefs.getString('app_config_schemas');
+      final schemaJsonRaw = prefs.getString('app_config_schemas');
 
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;

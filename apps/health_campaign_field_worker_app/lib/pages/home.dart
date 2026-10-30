@@ -3110,12 +3110,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                   config: FlowModuleConfig(
                     schemaKey: 'OUTSIDEHOUSEHOLD',
                     sampleFlows: sampleOutSideHouseholdVaccinationFlows,
-                    // Local dev override: the MDMS copy of this flow on dev
-                    // is still the UserAction-based shape, so debug builds
-                    // and DEV-environment builds run the local sample flows
-                    // (Facility-based sites).
-                    preferSampleFlows: kDebugMode ||
-                        envConfig.variables.envType == EnvType.dev,
                     // Sites are facilities. The list/overview screens search
                     // the facility table, filter by boundary through the
                     // address row, and pull the children vaccinated at a
@@ -3231,23 +3225,13 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.outsideHouseholdVaccinationLabel: 'OUTSIDEHOUSEHOLD',
     };
 
-    // Local dev override: the dev role-action mapping does not yet carry
-    // HOME_OUTSIDE_HOUSEHOLD_VACCINATION_LABEL, so debug builds and builds
-    // pointed at the DEV environment show the outside-household card
-    // regardless of role actions. Other environments keep the gate.
-    final debugOnlyLabels =
-        (kDebugMode || envConfig.variables.envType == EnvType.dev)
-            ? <String>{i18.home.outsideHouseholdVaccinationLabel}
-            : const <String>{};
-
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
             state.actionsWrapper.actions
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            debugOnlyLabels.contains(element))
+            element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .where((element) {
