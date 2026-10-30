@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -10,24 +8,19 @@ import 'package:sync_service/data/repositories/sync/sync_up.dart';
 /// (Transit Posts / Outside Household Places) and the project-facility links
 /// that record their use in this campaign.
 ///
-/// Within one sync pass facilities are pushed before links ([DataModelType]
-/// order). A facility goes through the single `_create` endpoint when the
-/// service registry configures one, so the server id comes back in the
-/// response and the queued link is pointed at it straight away. Otherwise it
-/// is created in bulk and the id is looked up by clientReferenceId during
-/// sync-down (`SyncServiceMapper.syncDownEntityResponse`). A link whose
-/// facility has no server id yet is left pending and retried on the next
-/// pass.
+/// Both go through the bulk `_create` endpoints, which return no ids. Within
+/// one sync pass facilities are pushed before links ([DataModelType] order);
+/// a facility's server id is looked up by clientReferenceId during sync-down
+/// (`SyncServiceMapper.syncDownEntityResponse`), which also points the queued
+/// link at it. A link whose facility has no server id yet is left pending and
+/// retried on the next pass.
 class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
   final RemoteRepository remote;
 
   /// Oplog entries pushed by [create] whose sync-up still has to be
-  /// recorded by [localMarkSyncUp]. Entries created through the single
-  /// endpoint are marked inside [create] already, so they are tracked in
-  /// [_markedEntryIds] instead. Anything in neither set was skipped and
+  /// recorded by [localMarkSyncUp]. Anything not in this set was skipped and
   /// stays pending.
   final Set<int> _pushedEntryIds = {};
-  final Set<int> _markedEntryIds = {};
 
   OutsideHouseholdSiteSyncRegistry(this.remote);
 
@@ -56,15 +49,12 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         await _createFacilities(
           entry,
           entities.whereType<FacilityModel>().toList(),
-          local,
-          operationGroupedEntity.key,
         );
       case DataModelType.projectFacility:
         await _createLinks(
           entry,
           entities.whereType<ProjectFacilityModel>().toList(),
           local,
-          operationGroupedEntity.key,
         );
       default:
         await remote.bulkCreate(entities);
@@ -75,8 +65,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
   Future<void> _createFacilities(
     List<OpLogEntry<EntityModel>> entry,
     List<FacilityModel> facilities,
-    LocalRepository<EntityModel, EntitySearchModel> local,
-    DataOperation operation,
   ) async {
     final bulk = <Map<String, dynamic>>[];
     final bulkEntryIds = <int>[];
@@ -89,47 +77,8 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         continue;
       }
 
-      final payload = _facilityPayload(facility);
-
-      if (remote.createPath.isEmpty) {
-        bulk.add(payload);
-        bulkEntryIds.add(opLog.id!);
-        continue;
-      }
-
-      final response = await remote.dio.post(
-        remote.createPath,
-        data: {'Facility': payload},
-      );
-      final created = _entityFromResponse(response, 'Facility');
-      final serverGeneratedId = created?['id']?.toString();
-      if (serverGeneratedId == null || serverGeneratedId.isEmpty) {
-        throw InvalidApiResponseException(
-          data: payload,
-          path: remote.createPath,
-          response: response.data,
-        );
-      }
-      final rowVersion = created?['rowVersion'] is int
-          ? created!['rowVersion'] as int
-          : facility.rowVersion;
-
-      await _recordServerId(
-        local: local,
-        opLog: opLog,
-        clientReferenceId: clientReferenceId,
-        serverGeneratedId: serverGeneratedId,
-        rowVersion: rowVersion,
-        operation: operation,
-      );
-      if (local is FacilityLocalRepository) {
-        await local.applyServerGeneratedId(
-          clientReferenceId: clientReferenceId,
-          serverGeneratedId: serverGeneratedId,
-          rowVersion: rowVersion,
-        );
-      }
-      debugPrint('SITE SYNC: facility $clientReferenceId -> $serverGeneratedId');
+      bulk.add(_facilityPayload(facility));
+      bulkEntryIds.add(opLog.id!);
     }
 
     if (bulk.isNotEmpty) {
@@ -147,7 +96,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     List<OpLogEntry<EntityModel>> entry,
     List<ProjectFacilityModel> links,
     LocalRepository<EntityModel, EntitySearchModel> local,
-    DataOperation operation,
   ) async {
     final bulk = <Map<String, dynamic>>[];
     final bulkEntryIds = <int>[];
@@ -178,47 +126,8 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         continue;
       }
 
-      final payload = _linkPayload(current);
-
-      if (remote.createPath.isEmpty) {
-        bulk.add(payload);
-        bulkEntryIds.add(opLog.id!);
-        continue;
-      }
-
-      final response = await remote.dio.post(
-        remote.createPath,
-        data: {'ProjectFacility': payload},
-      );
-      final created = _entityFromResponse(response, 'ProjectFacility');
-      final serverGeneratedId = created?['id']?.toString();
-      if (serverGeneratedId == null || serverGeneratedId.isEmpty) {
-        throw InvalidApiResponseException(
-          data: payload,
-          path: remote.createPath,
-          response: response.data,
-        );
-      }
-      final rowVersion = created?['rowVersion'] is int
-          ? created!['rowVersion'] as int
-          : current.rowVersion;
-
-      await _recordServerId(
-        local: local,
-        opLog: opLog,
-        clientReferenceId: clientReferenceId,
-        serverGeneratedId: serverGeneratedId,
-        rowVersion: rowVersion,
-        operation: operation,
-      );
-      if (local is ProjectFacilityLocalRepository) {
-        await local.applyServerGeneratedId(
-          clientReferenceId: clientReferenceId,
-          serverGeneratedId: serverGeneratedId,
-          rowVersion: rowVersion,
-        );
-      }
-      debugPrint('SITE SYNC: link $clientReferenceId -> $serverGeneratedId');
+      bulk.add(_linkPayload(current));
+      bulkEntryIds.add(opLog.id!);
     }
 
     if (bulk.isNotEmpty) {
@@ -230,32 +139,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
       );
       _pushedEntryIds.addAll(bulkEntryIds);
     }
-  }
-
-  /// Marks the entry synced up and stores the server id on it, which also
-  /// marks it synced down (nothing is left to look up).
-  Future<void> _recordServerId({
-    required LocalRepository<EntityModel, EntitySearchModel> local,
-    required OpLogEntry<EntityModel> opLog,
-    required String clientReferenceId,
-    required String serverGeneratedId,
-    required int? rowVersion,
-    required DataOperation operation,
-  }) async {
-    await local.markSyncedUp(
-      entry: opLog,
-      clientReferenceId: clientReferenceId,
-      nonRecoverableError: opLog.nonRecoverableError,
-    );
-    await local.opLogManager.updateServerGeneratedIds(
-      model: UpdateServerGeneratedIdModel(
-        clientReferenceId: clientReferenceId,
-        serverGeneratedId: serverGeneratedId,
-        dataOperation: operation,
-        rowVersion: rowVersion,
-      ),
-    );
-    _markedEntryIds.add(opLog.id!);
   }
 
   /// The facility as the server expects it: no placeholder id (the server
@@ -301,18 +184,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     return value?.toString();
   }
 
-  static Map<String, dynamic>? _entityFromResponse(
-    Response response,
-    String key,
-  ) {
-    final data = response.data is String
-        ? jsonDecode(response.data as String)
-        : response.data;
-    if (data is! Map) return null;
-    final entity = data[key];
-    return entity is Map ? Map<String, dynamic>.from(entity) : null;
-  }
-
   @override
   Future<void> update(
       List<EntityModel> entities, LocalRepository local) async {
@@ -342,7 +213,7 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
   ) async {
     for (final syncedEntity in entity) {
       final id = syncedEntity.id;
-      if (id == null || _markedEntryIds.contains(id)) continue;
+      if (id == null) continue;
       if (!_pushedEntryIds.contains(id)) continue; // skipped: stays pending
 
       await local.markSyncedUp(
