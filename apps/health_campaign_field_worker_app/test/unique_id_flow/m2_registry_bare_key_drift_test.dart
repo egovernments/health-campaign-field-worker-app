@@ -1,6 +1,7 @@
-// T2 - RC-02: header/footer are mapped with the bare screenKey, so every
-// bare-key write lands on whatever instance `_instanceIds` currently points
-// to, and dispose never rewinds the pointer.
+// T2 - RC-02: every bare-key write lands on whatever instance `_instanceIds`
+// currently points to, and dispose never rewinds the pointer. LayoutRenderer
+// now maps header and footer with the instance key (see T11), so the footer no
+// longer reads through the bare key; this pins the registry behaviour itself.
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
