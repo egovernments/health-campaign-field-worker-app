@@ -1876,7 +1876,7 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "name": "sessionSetup.locationName",
           "usage": "__value:TRANSIT_POST",
-          "isPermanent": "__value:false",
+          "isPermanent": "__value:true",
           "address": {
             "tenantId": "__context:tenantId",
             "relatedClientReferenceId": "__ref:FacilityModel.clientReferenceId",
