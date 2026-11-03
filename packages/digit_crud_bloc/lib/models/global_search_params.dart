@@ -14,6 +14,15 @@ part 'global_search_params.g.dart';
 /// centre point. Without one the ordering is skipped.
 const String distanceOrderField = '__distance';
 
+/// A `within` that also keeps rows with no recorded location (null
+/// coordinates, or 0/0). Located rows still have to be inside the radius;
+/// unlocated ones can't be placed, so they pass and, under a
+/// [distanceOrderField] sort, come after every located row.
+///
+/// For lists where a missing GPS fix must not hide a record, such as
+/// outside-household sites added by planners without coordinates.
+const String withinOrUnlocatedOperator = 'withinOrUnlocated';
+
 /// Defines how filters across multiple tables are combined.
 enum MultiTableFilterLogic {
   /// All filters must match (intersection). Default behavior.

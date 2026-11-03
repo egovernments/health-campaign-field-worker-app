@@ -3105,6 +3105,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
+                // Site lists show each site's parent boundary code. Its
+                // translation is in SQL from project selection but not yet
+                // in the flow-builder cache, so reload that before the list
+                // renders instead of showing the raw code first.
+                final locale = AppSharedPreferences().getSelectedLocale;
+                if (locale != null && locale.isNotEmpty) {
+                  await ctx
+                      .read<LocalizationBloc>()
+                      .refreshFlowBuilderLocalization(locale);
+                }
+                if (!ctx.mounted) return;
+
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(

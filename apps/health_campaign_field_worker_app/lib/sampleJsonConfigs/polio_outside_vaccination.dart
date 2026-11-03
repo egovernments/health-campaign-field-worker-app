@@ -10,39 +10,174 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "body": [
           {
             "type": "template",
-            "label": "GV_SESSION_SEARCH_PLACEHOLDER",
-            "format": "searchBar",
-            "onAction": [
+            "format": "row",
+            "children": [
               {
-                "actionType": "SEARCH_EVENT",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "name",
-                      "root": "facility",
-                      "value": "field.value",
-                      "operation": "matches"
+                "type": "template",
+                "label": "GV_SESSION_SEARCH_PLACEHOLDER",
+                "format": "searchBar",
+                "onAction": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "data": [
+                        {
+                          "key": "name",
+                          "root": "facility",
+                          "value": "field.value",
+                          "operation": "matches"
+                        }
+                      ],
+                      "name": "sessionName",
+                      "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
                     }
-                  ],
-                  "name": "sessionName",
-                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                  }
+                ],
+                "fieldName": "sessionSearch",
+                "validations": [
+                  {"type": "minSearchChars", "value": 2}
+                ],
+                "minSearchChars": 2
+              },
+              {
+                "icon": "FilterAlt",
+                "type": "template",
+                "label": "GV_SITE_FILTER_LABEL",
+                "format": "actionPopup",
+                "fieldName": "siteFilter",
+                "properties": {
+                  "icon": "FilterAlt",
+                  "size": "medium",
+                  "type": "tertiary",
+                  "suffixIcon": "FilterAlt",
+                  "popupConfig": {
+                    "body": [
+                      {
+                        "type": "template",
+                        "enums": [
+                          {"code": "SCHOOL", "name": "GV_ENUM_SCHOOL"},
+                          {"code": "MARKET", "name": "GV_ENUM_MARKET"},
+                          {
+                            "code": "HEALTH_POST",
+                            "name": "GV_ENUM_HEALTH_POST"
+                          },
+                          {
+                            "code": "COMMUNITY_CENTRE",
+                            "name": "GV_ENUM_COMMUNITY_CENTRE"
+                          },
+                          {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                        ],
+                        "schemaCode":
+                            "HCM.OUTSIDE_HOUSEHOLD_TYPES:OUTSIDE_HOUSEHOLD_PLACES",
+                        "showWhenSingleOption": true,
+                        "label": "GV_SITE_FILTER_TYPE_LABEL",
+                        "format": "dropdownTemplate",
+                        "valueKey": "code",
+                        "fieldName": "siteType"
+                      },
+                      {
+                        "type": "template",
+                        "enums": "{{fn:getBoundaryAndParentOptions()}}",
+                        "showWhenSingleOption": true,
+                        "label": "GV_SITE_FILTER_AREA_LABEL",
+                        "format": "dropdownTemplate",
+                        "valueKey": "code",
+                        "fieldName": "siteArea"
+                      }
+                    ],
+                    "type": "default",
+                    "title": "GV_SITE_FILTER_LABEL",
+                    "titleIcon": "FilterAlt",
+                    "description": "",
+                    "footerActions": [
+                      {
+                        "type": "template",
+                        "label": "GV_SITE_FILTER_CLEAR_LABEL",
+                        "format": "button",
+                        "onAction": [
+                          {
+                            "actionType": "CLEAR_STATE",
+                            "properties": {
+                              "name": "sessions",
+                              "widgetKeys": ["siteType", "siteArea"],
+                              "triggerSearch": true
+                            }
+                          },
+                          {"actionType": "CLOSE_POPUP", "properties": {}}
+                        ],
+                        "fieldName": "clearSiteFilter",
+                        "properties": {
+                          "size": "large",
+                          "type": "secondary",
+                          "mainAxisSize": "max"
+                        }
+                      },
+                      {
+                        "type": "template",
+                        "label": "GV_SITE_FILTER_APPLY_LABEL",
+                        "format": "button",
+                        "onAction": [
+                          {
+                            "actionType": "SEARCH_EVENT",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "usage",
+                                  "root": "facility",
+                                  "value": "OUTSIDE_HOUSEHOLD_PLACES",
+                                  "operation": "equals"
+                                },
+                                {
+                                  "key": "localityBoundaryCode",
+                                  "root": "address",
+                                  "value":
+                                      "{{singleton.boundaryAndParentCodes}}",
+                                  "operation": "in"
+                                }
+                              ],
+                              "name": "sessions",
+                              "type": "SEARCH_EVENT"
+                            }
+                          },
+                          {"actionType": "CLOSE_POPUP", "properties": {}}
+                        ],
+                        "fieldName": "applySiteFilter",
+                        "properties": {
+                          "size": "large",
+                          "type": "primary",
+                          "mainAxisSize": "max"
+                        }
+                      }
+                    ],
+                    "onCloseAction": [
+                      {
+                        "actionType": "CLEAR_STATE",
+                        "properties": {
+                          "name": "sessions",
+                          "widgetKeys": ["siteType", "siteArea"],
+                          "triggerSearch": true
+                        }
+                      },
+                      {"actionType": "CLOSE_POPUP", "properties": {}}
+                    ],
+                    "showCloseButton": true,
+                    "barrierDismissible": false
+                  },
+                  "mainAxisSize": "min",
+                  "mainAxisAlignment": "start"
                 }
               }
-            ],
-            "fieldName": "sessionSearch",
-            "validations": [
-              {"type": "minSearchChars", "value": 2}
-            ],
-            "minSearchChars": 2
+            ]
           },
           {
             "type": "template",
-            "label": "GV_CLF_SESSIONS_EMPTY_MESSAGE",
-            "format": "noResultCard",
-            "fieldName": "emptyState",
-            "schemaCode": null,
-            "description": "GV_CLF_SESSIONS_EMPTY_DESCRIPTION",
-            "showOnEmptySearch": true
+            "label": "GV_CLF_NEARBY_COUNT",
+            "format": "textTemplate",
+            "fieldName": "nearbySiteCount",
+            "labelPlaceHolders": [
+              {"key": "COUNT", "value": "{{fn:countLocatedSites(contextData)}}"}
+            ],
+            "properties": {"style": "bodyS"}
           },
           {
             "type": "template",
@@ -128,6 +263,47 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {"spacing": "spacer4"},
             "schemaCode": null,
             "showLoader": true
+          },
+          {
+            "type": "template",
+            "label": "GV_CLF_SESSIONS_EMPTY_MESSAGE",
+            "format": "noResultCard",
+            "fieldName": "emptyState",
+            "schemaCode": null,
+            "description": "GV_CLF_SESSIONS_EMPTY_DESCRIPTION",
+            "showOnEmptySearch": true
+          },
+          {
+            "type": "template",
+            "label": "",
+            "format": "proximitySearch",
+            "hideSwitch": true,
+            "defaultValue": true,
+            "onAction": [
+              {
+                "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "",
+                      "root": "facility",
+                      "value": 5,
+                      "operation": "withinOrUnlocated"
+                    }
+                  ],
+                  "name": "siteProximity",
+                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+                }
+              }
+            ],
+            "fieldName": "siteProximity",
+            "validations": [
+              {
+                "key": "proximityRadius",
+                "value": 5,
+                "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+              }
+            ]
           }
         ],
         "name": "clfSessionsList",
@@ -206,7 +382,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "wrapperConfig": {
           "filters": [
             {"field": "usage", "equals": "OUTSIDE_HOUSEHOLD_PLACES"},
-            {"field": "name", "contains": "{{searchBar}}", "minChars": 2}
+            {"field": "name", "contains": "{{searchBar}}", "minChars": 2},
+            {
+              "field": "additionalFields.fields.outsideHouseholdCategory",
+              "equals": "{{siteType}}"
+            },
+            {"field": "address.locality.code", "equals": "{{siteArea}}"}
           ],
           "relations": [
             {
@@ -261,7 +442,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
             "select": ["facility", "userAction"],
-            "orderBy": {"field": "name", "order": "ASC"},
+            "orderBy": {"field": "__distance", "order": "ASC"},
             "primary": "facility"
           }
         },
@@ -1244,39 +1425,177 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "body": [
           {
             "type": "template",
-            "label": "GV_SESSION_SEARCH_PLACEHOLDER",
-            "format": "searchBar",
-            "onAction": [
+            "format": "row",
+            "children": [
               {
-                "actionType": "SEARCH_EVENT",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "name",
-                      "root": "facility",
-                      "value": "field.value",
-                      "operation": "matches"
+                "type": "template",
+                "label": "GV_SESSION_SEARCH_PLACEHOLDER",
+                "format": "searchBar",
+                "onAction": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "data": [
+                        {
+                          "key": "name",
+                          "root": "facility",
+                          "value": "field.value",
+                          "operation": "matches"
+                        }
+                      ],
+                      "name": "sessionName",
+                      "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
                     }
-                  ],
-                  "name": "sessionName",
-                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                  }
+                ],
+                "fieldName": "sessionSearch",
+                "validations": [
+                  {"type": "minSearchChars", "value": 2}
+                ],
+                "minSearchChars": 2
+              },
+              {
+                "icon": "FilterAlt",
+                "type": "template",
+                "label": "GV_SITE_FILTER_LABEL",
+                "format": "actionPopup",
+                "fieldName": "siteFilter",
+                "properties": {
+                  "icon": "FilterAlt",
+                  "size": "medium",
+                  "type": "tertiary",
+                  "suffixIcon": "FilterAlt",
+                  "popupConfig": {
+                    "body": [
+                      {
+                        "type": "template",
+                        "enums": [
+                          {
+                            "code": "BUS_STATION",
+                            "name": "GV_ENUM_BUS_STATION"
+                          },
+                          {
+                            "code": "BORDER_CROSSING",
+                            "name": "GV_ENUM_BORDER_CROSSING"
+                          },
+                          {"code": "CHECKPOINT", "name": "GV_ENUM_CHECKPOINT"},
+                          {
+                            "code": "FERRY_TERMINAL",
+                            "name": "GV_ENUM_FERRY_TERMINAL"
+                          },
+                          {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                        ],
+                        "schemaCode":
+                            "HCM.OUTSIDE_HOUSEHOLD_TYPES:TRANSIT_POST",
+                        "showWhenSingleOption": true,
+                        "label": "GV_SITE_FILTER_TYPE_LABEL",
+                        "format": "dropdownTemplate",
+                        "valueKey": "code",
+                        "fieldName": "siteType"
+                      },
+                      {
+                        "type": "template",
+                        "enums": "{{fn:getBoundaryAndParentOptions()}}",
+                        "showWhenSingleOption": true,
+                        "label": "GV_SITE_FILTER_AREA_LABEL",
+                        "format": "dropdownTemplate",
+                        "valueKey": "code",
+                        "fieldName": "siteArea"
+                      }
+                    ],
+                    "type": "default",
+                    "title": "GV_SITE_FILTER_LABEL",
+                    "titleIcon": "FilterAlt",
+                    "description": "",
+                    "footerActions": [
+                      {
+                        "type": "template",
+                        "label": "GV_SITE_FILTER_CLEAR_LABEL",
+                        "format": "button",
+                        "onAction": [
+                          {
+                            "actionType": "CLEAR_STATE",
+                            "properties": {
+                              "name": "sessions",
+                              "widgetKeys": ["siteType", "siteArea"],
+                              "triggerSearch": true
+                            }
+                          },
+                          {"actionType": "CLOSE_POPUP", "properties": {}}
+                        ],
+                        "fieldName": "clearSiteFilter",
+                        "properties": {
+                          "size": "large",
+                          "type": "secondary",
+                          "mainAxisSize": "max"
+                        }
+                      },
+                      {
+                        "type": "template",
+                        "label": "GV_SITE_FILTER_APPLY_LABEL",
+                        "format": "button",
+                        "onAction": [
+                          {
+                            "actionType": "SEARCH_EVENT",
+                            "properties": {
+                              "data": [
+                                {
+                                  "key": "usage",
+                                  "root": "facility",
+                                  "value": "TRANSIT_POST",
+                                  "operation": "equals"
+                                },
+                                {
+                                  "key": "localityBoundaryCode",
+                                  "root": "address",
+                                  "value":
+                                      "{{singleton.boundaryAndParentCodes}}",
+                                  "operation": "in"
+                                }
+                              ],
+                              "name": "sessions",
+                              "type": "SEARCH_EVENT"
+                            }
+                          },
+                          {"actionType": "CLOSE_POPUP", "properties": {}}
+                        ],
+                        "fieldName": "applySiteFilter",
+                        "properties": {
+                          "size": "large",
+                          "type": "primary",
+                          "mainAxisSize": "max"
+                        }
+                      }
+                    ],
+                    "onCloseAction": [
+                      {
+                        "actionType": "CLEAR_STATE",
+                        "properties": {
+                          "name": "sessions",
+                          "widgetKeys": ["siteType", "siteArea"],
+                          "triggerSearch": true
+                        }
+                      },
+                      {"actionType": "CLOSE_POPUP", "properties": {}}
+                    ],
+                    "showCloseButton": true,
+                    "barrierDismissible": false
+                  },
+                  "mainAxisSize": "min",
+                  "mainAxisAlignment": "start"
                 }
               }
-            ],
-            "fieldName": "sessionSearch",
-            "validations": [
-              {"type": "minSearchChars", "value": 2}
-            ],
-            "minSearchChars": 2
+            ]
           },
           {
             "type": "template",
-            "label": "GV_TRANSIT_SESSIONS_EMPTY_MESSAGE",
-            "format": "noResultCard",
-            "fieldName": "emptyState",
-            "schemaCode": null,
-            "description": "GV_TRANSIT_SESSIONS_EMPTY_DESCRIPTION",
-            "showOnEmptySearch": true
+            "label": "GV_TRANSIT_NEARBY_COUNT",
+            "format": "textTemplate",
+            "fieldName": "nearbySiteCount",
+            "labelPlaceHolders": [
+              {"key": "COUNT", "value": "{{fn:countLocatedSites(contextData)}}"}
+            ],
+            "properties": {"style": "bodyS"}
           },
           {
             "type": "template",
@@ -1362,6 +1681,47 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "properties": {"spacing": "spacer4"},
             "schemaCode": null,
             "showLoader": true
+          },
+          {
+            "type": "template",
+            "label": "GV_TRANSIT_SESSIONS_EMPTY_MESSAGE",
+            "format": "noResultCard",
+            "fieldName": "emptyState",
+            "schemaCode": null,
+            "description": "GV_TRANSIT_SESSIONS_EMPTY_DESCRIPTION",
+            "showOnEmptySearch": true
+          },
+          {
+            "type": "template",
+            "label": "",
+            "format": "proximitySearch",
+            "hideSwitch": true,
+            "defaultValue": true,
+            "onAction": [
+              {
+                "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "",
+                      "root": "facility",
+                      "value": 5,
+                      "operation": "withinOrUnlocated"
+                    }
+                  ],
+                  "name": "siteProximity",
+                  "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
+                }
+              }
+            ],
+            "fieldName": "siteProximity",
+            "validations": [
+              {
+                "key": "proximityRadius",
+                "value": 5,
+                "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+              }
+            ]
           }
         ],
         "name": "transitSessionsList",
@@ -1440,7 +1800,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "wrapperConfig": {
           "filters": [
             {"field": "usage", "equals": "TRANSIT_POST"},
-            {"field": "name", "contains": "{{searchBar}}", "minChars": 2}
+            {"field": "name", "contains": "{{searchBar}}", "minChars": 2},
+            {
+              "field": "additionalFields.fields.outsideHouseholdCategory",
+              "equals": "{{siteType}}"
+            },
+            {"field": "address.locality.code", "equals": "{{siteArea}}"}
           ],
           "relations": [
             {
@@ -1495,7 +1860,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": ["facility", "userAction"],
-            "orderBy": {"field": "name", "order": "ASC"},
+            "orderBy": {"field": "__distance", "order": "ASC"},
             "primary": "facility"
           }
         },

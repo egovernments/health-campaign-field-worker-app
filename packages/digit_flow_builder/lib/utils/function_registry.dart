@@ -1426,6 +1426,46 @@ void initializeFunctionRegistry() {
   ///
   /// This function checks if the next cycle is within the valid range of cycles
   /// and if delivery recording is allowed based on the current project configuration.
+  /// Number of sites in a site list that have a recorded location.
+  ///
+  /// Under the outside-household proximity search those are exactly the
+  /// sites within the radius; sites without coordinates (null or 0/0) are
+  /// listed too but aren't "nearby", so they're not counted.
+  ///
+  /// - **Function Name**: `'countLocatedSites'`
+  /// - **Arguments**: the list's wrapper items (`contextData`).
+  /// - **Returns**: the count, 0 for anything that isn't a list.
+  FunctionRegistry.register("countLocatedSites", (args, stateData) {
+    final items = args.isNotEmpty ? args.first : null;
+    if (items is! List) return 0;
+    return items.where((item) {
+      final site = item is Map ? item['FacilityModel'] : item;
+      if (site is! FacilityModel) return false;
+      final lat = site.address?.latitude;
+      final lon = site.address?.longitude;
+      return lat != null && lon != null && !(lat == 0 && lon == 0);
+    }).length;
+  });
+
+  /// Area options for lists scoped to the selected boundary and its parent
+  /// (the `boundaryAndParentCodes` singleton): the parent first, then the
+  /// selected boundary. `name` is the boundary code, which the dropdown
+  /// localises to the boundary's name.
+  ///
+  /// - **Function Name**: `'getBoundaryAndParentOptions'`
+  /// - **Arguments**: none.
+  /// - **Returns**: `[{name, code}]`, empty when no boundary is selected.
+  FunctionRegistry.register("getBoundaryAndParentOptions", (args, stateData) {
+    final boundary = FlowBuilderSingleton().boundary;
+    final code = boundary?.code;
+    if (code == null || code.isEmpty) return <Map<String, dynamic>>[];
+    final parent = parentBoundaryCodeOf(boundary);
+    return [
+      if (parent != null && parent != code) parent,
+      code,
+    ].map((c) => <String, dynamic>{'name': c, 'code': c}).toList();
+  });
+
   /// Registers a function to get unique complaint types from ComplaintWrapper.
   ///
   /// - **Function Name**: `'getUniqueComplaintTypes'`

@@ -55,23 +55,25 @@ class BoundaryLocalRepository
       )
           .join([]);
 
-      final sQuery = sql.selectOnly(sql.boundary)
-        ..addColumns(
-            [sql.boundary.boundaryNum, sql.boundary.boundaryNum.max()]);
-
-      final result = await sQuery.getSingle();
-      final r = result.read(sql.boundary.boundaryNum);
-
       if (query.isSingle == true) {
-        // Local table is empty (e.g. cold restart with selectedProject in
-        // secure store but boundaries not yet downloaded). Return [] instead
-        // of crashing on r!.
-        if (r == null) return <BoundaryModel>[];
+        // One row per level, root to leaf. The level order on the boundary
+        // page comes from this list, so it must be ordered by boundaryNum:
+        // without an ORDER BY, SQLite may return rows in any order, and it
+        // stops matching insertion order once a re-login has rewritten the
+        // table (e.g. Village showing up above Locality).
         (selectQuery
-              ..where(buildAnd([
-                sql.boundary.boundaryNum.isSmallerOrEqualValue(r),
-              ])))
-            .limit(r);
+          ..where(buildAnd([
+            sql.boundary.boundaryNum.isNotNull(),
+            sql.boundary.code.isNotNull(),
+            sql.boundary.code.isNotIn(['']),
+          ]))
+          ..orderBy([OrderingTerm.asc(sql.boundary.boundaryNum)]));
+
+        final rows = (await selectQuery.get())
+            .map((e) => _toModel(e.readTable(sql.boundary)))
+            .toList();
+
+        return _singleChain(rows);
       } else {
         (selectQuery
           ..where(buildAnd([
@@ -89,24 +91,43 @@ class BoundaryLocalRepository
       }
       final results = await selectQuery.get();
 
-      final queriedBoundaries = results.map((e) {
-        final data = e.readTable(sql.boundary);
-
-        return BoundaryModel(
-          tenantId: data.tenantId,
-          rowVersion: data.rowVersion,
-          name: data.name,
-          code: data.code,
-          label: data.label,
-          boundaryNum: data.boundaryNum,
-          materializedPath: data.materializedPath,
-          latitude: data.latitude,
-          longitude: data.longitude,
-        );
-      }).toList();
-
-      return queriedBoundaries;
+      return results.map((e) => _toModel(e.readTable(sql.boundary))).toList();
     });
+  }
+
+  BoundaryModel _toModel(BoundaryData data) => BoundaryModel(
+        tenantId: data.tenantId,
+        rowVersion: data.rowVersion,
+        name: data.name,
+        code: data.code,
+        label: data.label,
+        boundaryNum: data.boundaryNum,
+        materializedPath: data.materializedPath,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      );
+
+  /// From rows sorted by boundaryNum, picks one row per level, preferring a
+  /// row that sits under the row picked for the level above, so the result
+  /// is a root-to-leaf chain whatever order the rows were stored in.
+  List<BoundaryModel> _singleChain(List<BoundaryModel> sorted) {
+    final byLevel = <int, List<BoundaryModel>>{};
+    for (final row in sorted) {
+      byLevel.putIfAbsent(row.boundaryNum!, () => []).add(row);
+    }
+
+    final chain = <BoundaryModel>[];
+    for (final rows in byLevel.values) {
+      final parentPath = chain.lastOrNull?.materializedPath;
+      chain.add(parentPath == null
+          ? rows.first
+          : rows.firstWhere(
+              (b) => b.materializedPath?.startsWith('$parentPath.') ?? false,
+              orElse: () => rows.first,
+            ));
+    }
+
+    return chain;
   }
 
   @override

@@ -189,6 +189,12 @@ class TransformerExecutor extends ActionExecutor {
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
+      // The selected boundary's parent; falls back to the selected code when
+      // the parent is unknown (top level or no materializedPath).
+      "parentBoundaryCode": FlowBuilderSingleton().parentBoundary?.code ??
+          parentBoundaryCodeOf(FlowBuilderSingleton().boundary) ??
+          FlowBuilderSingleton().boundary?.code,
+      "parentBoundaryName": FlowBuilderSingleton().parentBoundary?.name,
       // Friendly display name for the selected boundary (used for
       // locality.name — display only, not sent to any backend hierarchy field).
       "selectedBoundaryName": FlowBuilderSingleton().boundary?.name,

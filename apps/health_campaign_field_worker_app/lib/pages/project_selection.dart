@@ -365,11 +365,21 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
     try {
       // Wait for both campaign caching and boundary finding concurrently
-      await Future.wait([
-        campaignCacheFuture,
-        boundaryBloc.stream
-            .firstWhere((element) => element.boundaryList.isNotEmpty),
-      ]);
+      // Wait for the find to finish, not just for any state with
+      // boundaries: on a re-login the bloc still holds the previous
+      // session's list, so `boundaryList.isNotEmpty` alone would match the
+      // find's own `loading` state. The timeout keeps the sync dialog from
+      // hanging if the find never settles; stored boundaries are enough
+      // to continue.
+      final boundariesFound = boundaryBloc.stream
+          .firstWhere((s) => !s.loading && s.boundaryList.isNotEmpty)
+          .timeout(const Duration(seconds: 30), onTimeout: () {
+        if (boundaryBloc.state.boundaryList.isEmpty) {
+          throw TimeoutException('No boundaries found for $boundary');
+        }
+        return boundaryBloc.state;
+      });
+      await Future.wait([campaignCacheFuture, boundariesFound]);
 
       // Cache permission handler localizations for the SELECTED locale only,
       // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
@@ -440,6 +450,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       final allBoundaryCodes = allBoundaries
           .expand((b) => [
                 b.code,
+                // Ancestors above the assigned boundary aren't stored as
+                // rows, but screens still show them (e.g. a village's
+                // parent locality), so fetch their names too. Every row's
+                // materializedPath holds its full root-to-self code chain.
+                ...?b.materializedPath?.split('.'),
                 if (b.label != null && b.label!.isNotEmpty)
                   '${hierarchyType}_${b.label}',
               ])

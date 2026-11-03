@@ -17,6 +17,26 @@ class TextWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
+    // A text with no `value` shows its `label`, already translated and with
+    // `labelPlaceHolders` filled in (e.g. "{COUNT} transit posts near you").
+    if (json['value'] == null && resolved.resolvedLabel != null) {
+      final properties = json['properties'] as Map<String, dynamic>? ?? {};
+      final style = _applyTextStyle(
+        _parseTextStyle(context, properties['style']?.toString())?.copyWith(
+          color: _parseTextColor(context, properties['color']?.toString()),
+        ),
+        properties['textStyle'],
+      );
+      return WidgetParsers.wrapWithBottomGap(
+        Text(
+          resolved.resolvedLabel!,
+          style: style,
+          textAlign: _parseTextAlign(properties['textAlign']?.toString()),
+        ),
+        properties,
+      );
+    }
+
     // Use the pre-resolved label, or resolve 'value' field as fallback
     final value = json['value'] ?? '';
 

@@ -91,6 +91,15 @@ class EntityFilter {
         } else if (filter.containsKey('notIn')) {
           final excluded = filter['notIn'];
           if (excluded is List && excluded.contains(value)) return false;
+        } else if (equals is String && equals.contains('{{')) {
+          // A `{{key}}` value is a selection held in widgetData (e.g. a
+          // filter popup's dropdown). Nothing selected passes everything,
+          // as relation-level `equals` filters already do.
+          final expected = _resolveWidgetDataTemplate(equals, widgetData);
+          if (expected == null || (expected is String && expected.isEmpty)) {
+            continue;
+          }
+          if (value?.toString() != expected.toString()) return false;
         } else if (equals != null && value != equals) {
           return false;
         }
