@@ -267,7 +267,11 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
             "lat": _lat,
             "long": _long,
             "accuracy": _accuracy,
-            "operation": "within"
+            // A config can ask for `withinOrUnlocated` to keep records that
+            // have no location; anything else is a plain radius filter.
+            "operation": item is Map && item['operation'] == 'withinOrUnlocated'
+                ? 'withinOrUnlocated'
+                : 'within'
           };
         }).toList();
       }
