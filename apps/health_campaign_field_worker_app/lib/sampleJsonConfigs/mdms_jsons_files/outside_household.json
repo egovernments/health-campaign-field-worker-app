@@ -1,8 +1,8 @@
 {
-  "id": "c52102a0-080f-4fad-b88e-5aa22627d4ce",
+  "id": "874189db-2674-4515-b3c7-39978c584232",
   "tenantId": "qa",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfig",
-  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.CMP-2026-10-27-011213",
+  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.CMP-2026-11-03-011330",
   "data": {
     "name": "OUTSIDEHOUSEHOLD",
     "flows": [
@@ -18,8 +18,8 @@
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -30,11 +30,6 @@
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {
                 "type": "minSearchChars",
@@ -60,7 +55,7 @@
               "children": [
                 {
                   "type": "template",
-                  "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
@@ -80,11 +75,11 @@
                   "data": [
                     {
                       "key": "GV_SUMMARY_LOCATION_TYPE",
-                      "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                      "value": "{{item.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "GV_SUMMARY_LOCATION_AREA",
-                      "value": "{{item.UserActionModel.boundaryCode}}"
+                      "value": "{{item.FacilityModel.address.locality.code}}"
                     }
                   ],
                   "type": "template",
@@ -102,7 +97,7 @@
                         "data": [
                           {
                             "key": "SessionClientReferenceId",
-                            "value": "{{item.UserActionModel.clientReferenceId}}"
+                            "value": "{{item.FacilityModel.clientReferenceId}}"
                           },
                           {
                             "key": "SessionType",
@@ -126,9 +121,9 @@
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
@@ -184,8 +179,7 @@
               {
                 "actionType": "BACK_NAVIGATION",
                 "properties": {
-                  "name": "HOME",
-                  "type": "HOME"
+                  "name": "selectVaccinationLocation"
                 }
               }
             ],
@@ -202,22 +196,16 @@
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "key": "usage",
+                  "root": "facility",
+                  "value": "OUTSIDE_HOUSEHOLD_PLACES",
                   "operation": "equals"
                 },
                 {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "key": "localityBoundaryCode",
+                  "root": "address",
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
@@ -228,11 +216,11 @@
         "wrapperConfig": {
           "filters": [
             {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "CLF"
+              "field": "usage",
+              "equals": "OUTSIDE_HOUSEHOLD_PLACES"
             },
             {
-              "field": "additionalFields.fields.locationName",
+              "field": "name",
               "contains": "{{searchBar}}",
               "minChars": 2
             }
@@ -289,17 +277,18 @@
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
             "select": [
+              "facility",
               "userAction"
             ],
             "orderBy": {
-              "field": "__distance",
+              "field": "name",
               "order": "ASC"
             },
-            "primary": "userAction"
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -315,11 +304,11 @@
               {
                 "data": [
                   {
-                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "key": "GV_CLF_SUMMARY_LOCATION_NAME",
                     "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
                   },
                   {
-                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "key": "GV_CLF_SUMMARY_LOCATION_TYPE",
                     "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
                   }
                 ],
@@ -550,7 +539,7 @@
                   "data": [
                     {
                       "key": "SessionClientReferenceId",
-                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                      "value": "{{contextData.0.FacilityModel.clientReferenceId}}"
                     },
                     {
                       "key": "SessionType",
@@ -565,8 +554,16 @@
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
+                      "key": "latitude",
+                      "value": "{{contextData.0.FacilityModel.address.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{contextData.0.FacilityModel.address.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{contextData.0.FacilityModel.address.locationAccuracy}}"
                     }
                   ],
                   "name": "ADD_CLF_CHILD",
@@ -611,8 +608,8 @@
             "properties": {
               "data": [
                 {
-                  "key": "resourceTag",
-                  "root": "userAction",
+                  "key": "clientReferenceId",
+                  "root": "facility",
                   "value": "{{navigation.SessionClientReferenceId}}",
                   "operation": "equals"
                 }
@@ -625,8 +622,8 @@
         "wrapperConfig": {
           "filters": [
             {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "CLF"
+              "field": "usage",
+              "equals": "OUTSIDE_HOUSEHOLD_PLACES"
             }
           ],
           "relations": [
@@ -691,13 +688,14 @@
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "ClfSessionWrapper",
           "searchConfig": {
             "select": [
+              "facility",
               "userAction"
             ],
-            "primary": "userAction"
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -744,8 +742,16 @@
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       },
                       {
-                        "key": "gpsChild",
-                        "value": "{{navigation.gpsChild}}"
+                        "key": "latitude",
+                        "value": "{{navigation.latitude}}"
+                      },
+                      {
+                        "key": "longitude",
+                        "value": "{{navigation.longitude}}"
+                      },
+                      {
+                        "key": "locationAccuracy",
+                        "value": "{{navigation.locationAccuracy}}"
                       }
                     ],
                     "name": "ADD_TRANSIT_CHILD",
@@ -841,8 +847,16 @@
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
                       },
                       {
-                        "key": "gpsChild",
-                        "value": "{{navigation.gpsChild}}"
+                        "key": "latitude",
+                        "value": "{{navigation.latitude}}"
+                      },
+                      {
+                        "key": "longitude",
+                        "value": "{{navigation.longitude}}"
+                      },
+                      {
+                        "key": "locationAccuracy",
+                        "value": "{{navigation.locationAccuracy}}"
                       }
                     ],
                     "name": "ADD_CLF_CHILD",
@@ -911,11 +925,11 @@
               {
                 "data": [
                   {
-                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "key": "GV_TRANSIT_SUMMARY_LOCATION_NAME",
                     "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
                   },
                   {
-                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "key": "GV_TRANSIT_SUMMARY_LOCATION_TYPE",
                     "value": "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
                   }
                 ],
@@ -1145,7 +1159,7 @@
                   "data": [
                     {
                       "key": "SessionClientReferenceId",
-                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                      "value": "{{contextData.0.FacilityModel.clientReferenceId}}"
                     },
                     {
                       "key": "SessionType",
@@ -1153,7 +1167,7 @@
                     },
                     {
                       "key": "TransitLocationType",
-                      "value": "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                      "value": "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "minAgeMonths",
@@ -1164,8 +1178,16 @@
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{fn:joinLatLng(contextData.0.UserActionModel.latitude, contextData.0.UserActionModel.longitude, contextData.0.UserActionModel.locationAccuracy)}}"
+                      "key": "latitude",
+                      "value": "{{contextData.0.FacilityModel.address.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{contextData.0.FacilityModel.address.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{contextData.0.FacilityModel.address.locationAccuracy}}"
                     }
                   ],
                   "name": "ADD_TRANSIT_CHILD",
@@ -1210,25 +1232,13 @@
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
+                  "key": "clientReferenceId",
+                  "root": "facility",
+                  "value": "{{navigation.SessionClientReferenceId}}",
                   "operation": "equals"
                 }
               ],
-              "name": "sessions",
+              "name": "session",
               "type": "SEARCH_EVENT"
             }
           }
@@ -1236,13 +1246,8 @@
         "wrapperConfig": {
           "filters": [
             {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "TRANSIT"
-            },
-            {
-              "field": "additionalFields.fields.locationName",
-              "contains": "{{searchBar}}",
-              "minChars": 2
+              "field": "usage",
+              "equals": "TRANSIT_POST"
             }
           ],
           "relations": [
@@ -1257,6 +1262,16 @@
                 {
                   "field": "additionalFields.fields.formType",
                   "equals": "GROUP_VAC_CHILD"
+                }
+              ],
+              "relations": [
+                {
+                  "name": "child",
+                  "match": {
+                    "field": "clientReferenceId",
+                    "equalsFrom": "clientReferenceId"
+                  },
+                  "entity": "UserActionModel"
                 }
               ]
             },
@@ -1297,17 +1312,14 @@
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
-          "wrapperName": "TransitSessionsListWrapper",
+          "rootEntity": "FacilityModel",
+          "wrapperName": "TransitSessionWrapper",
           "searchConfig": {
             "select": [
+              "facility",
               "userAction"
             ],
-            "orderBy": {
-              "field": "__distance",
-              "order": "ASC"
-            },
-            "primary": "userAction"
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -1326,8 +1338,8 @@
                 "properties": {
                   "data": [
                     {
-                      "key": "additionalFields",
-                      "root": "userAction",
+                      "key": "name",
+                      "root": "facility",
                       "value": "field.value",
                       "operation": "matches"
                     }
@@ -1338,11 +1350,6 @@
               }
             ],
             "fieldName": "sessionSearch",
-            "proximity": {
-              "root": "userAction",
-              "radius": 100,
-              "searchName": "sessionProximity"
-            },
             "validations": [
               {
                 "type": "minSearchChars",
@@ -1368,7 +1375,7 @@
               "children": [
                 {
                   "type": "template",
-                  "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
@@ -1388,11 +1395,11 @@
                   "data": [
                     {
                       "key": "GV_SUMMARY_LOCATION_TYPE",
-                      "value": "{{item.UserActionModel.additionalFields.fields.transitLocationType}}"
+                      "value": "{{item.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                     },
                     {
                       "key": "GV_SUMMARY_LOCATION_AREA",
-                      "value": "{{item.UserActionModel.boundaryCode}}"
+                      "value": "{{item.FacilityModel.address.locality.code}}"
                     }
                   ],
                   "type": "template",
@@ -1410,7 +1417,7 @@
                         "data": [
                           {
                             "key": "SessionClientReferenceId",
-                            "value": "{{item.UserActionModel.clientReferenceId}}"
+                            "value": "{{item.FacilityModel.clientReferenceId}}"
                           },
                           {
                             "key": "SessionType",
@@ -1434,9 +1441,9 @@
               ],
               "fieldName": "sessionCard",
               "properties": {
-                "type": "secondary",
+                "type": "primary",
                 "spacing": 0,
-                "cardType": "secondary"
+                "cardType": "primary"
               }
             },
             "format": "listView",
@@ -1492,8 +1499,7 @@
               {
                 "actionType": "BACK_NAVIGATION",
                 "properties": {
-                  "name": "HOME",
-                  "type": "HOME"
+                  "name": "selectVaccinationLocation"
                 }
               }
             ],
@@ -1510,22 +1516,16 @@
             "properties": {
               "data": [
                 {
-                  "key": "tenantId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "key": "usage",
+                  "root": "facility",
+                  "value": "TRANSIT_POST",
                   "operation": "equals"
                 },
                 {
-                  "key": "projectId",
-                  "root": "userAction",
-                  "value": "{{singleton.selectedProject.id}}",
-                  "operation": "equals"
-                },
-                {
-                  "key": "boundaryCode",
-                  "root": "userAction",
-                  "value": "{{singleton.boundary.code}}",
-                  "operation": "equals"
+                  "key": "localityBoundaryCode",
+                  "root": "address",
+                  "value": "{{singleton.boundaryAndParentCodes}}",
+                  "operation": "in"
                 }
               ],
               "name": "sessions",
@@ -1536,11 +1536,11 @@
         "wrapperConfig": {
           "filters": [
             {
-              "field": "additionalFields.fields.sessionType",
-              "equals": "TRANSIT"
+              "field": "usage",
+              "equals": "TRANSIT_POST"
             },
             {
-              "field": "additionalFields.fields.locationName",
+              "field": "name",
               "contains": "{{searchBar}}",
               "minChars": 2
             }
@@ -1597,17 +1597,18 @@
               ]
             }
           ],
-          "rootEntity": "UserActionModel",
+          "rootEntity": "FacilityModel",
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": [
+              "facility",
               "userAction"
             ],
             "orderBy": {
-              "field": "__distance",
+              "field": "name",
               "order": "ASC"
             },
-            "primary": "userAction"
+            "primary": "facility"
           }
         },
         "submitCondition": null,
@@ -1741,13 +1742,13 @@
                       }
                     }
                   ],
-                  "configName": "clfSession"
+                  "configName": "clfSite"
                 }
               },
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -1782,7 +1783,7 @@
                   "data": [
                     {
                       "key": "SessionClientReferenceId",
-                      "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                      "value": "{{contextData.entities.FacilityModel.clientReferenceId}}"
                     },
                     {
                       "key": "SessionType",
@@ -1838,7 +1839,28 @@
               },
               {
                 "type": "string",
-                "enums": null,
+                "enums": [
+                  {
+                    "code": "SCHOOL",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_SCHOOL"
+                  },
+                  {
+                    "code": "MARKET",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_MARKET"
+                  },
+                  {
+                    "code": "HEALTH_POST",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_HEALTH_POST"
+                  },
+                  {
+                    "code": "COMMUNITY_CENTRE",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_COMMUNITY_CENTRE"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_OTHER"
+                  }
+                ],
                 "label": "GV_CLF_LOCATION_TYPE_LABEL",
                 "order": 2,
                 "value": "",
@@ -1854,7 +1876,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "common-masters.GroupVaccinationLocationsCLF",
+                "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:OUTSIDE_HOUSEHOLD_PLACES",
                 "systemDate": false,
                 "validations": [
                   {
@@ -2097,13 +2119,13 @@
                   }
                 }
               ],
-              "configName": "clfSession"
+              "configName": "clfSite"
             }
           },
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -2138,7 +2160,7 @@
               "data": [
                 {
                   "key": "SessionClientReferenceId",
-                  "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                  "value": "{{contextData.entities.FacilityModel.clientReferenceId}}"
                 },
                 {
                   "key": "SessionType",
@@ -2195,8 +2217,16 @@
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "onError": [
@@ -2237,8 +2267,16 @@
                       "value": "CLF"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "name": "clfVaccinationSuccess",
@@ -2266,7 +2304,6 @@
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": false,
@@ -2338,7 +2375,16 @@
               },
               {
                 "type": "string",
-                "enums": null,
+                "enums": [
+                  {
+                    "code": "MALE",
+                    "name": "MALE"
+                  },
+                  {
+                    "code": "FEMALE",
+                    "name": "FEMALE"
+                  }
+                ],
                 "label": "GV_CHILD_SEX_LABEL",
                 "order": 3,
                 "value": "",
@@ -2443,8 +2489,16 @@
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "onError": [
@@ -2485,8 +2539,16 @@
                       "value": "CLF"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "name": "clfVaccinationSuccess",
@@ -2576,8 +2638,16 @@
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
                 {
-                  "key": "gpsChild",
-                  "value": "{{navigation.gpsChild}}"
+                  "key": "latitude",
+                  "value": "{{navigation.latitude}}"
+                },
+                {
+                  "key": "longitude",
+                  "value": "{{navigation.longitude}}"
+                },
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
                 }
               ],
               "onError": [
@@ -2618,8 +2688,16 @@
                   "value": "CLF"
                 },
                 {
-                  "key": "gpsChild",
-                  "value": "{{navigation.gpsChild}}"
+                  "key": "latitude",
+                  "value": "{{navigation.latitude}}"
+                },
+                {
+                  "key": "longitude",
+                  "value": "{{navigation.longitude}}"
+                },
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
                 }
               ],
               "name": "clfVaccinationSuccess",
@@ -2684,13 +2762,13 @@
                       }
                     }
                   ],
-                  "configName": "transitSession"
+                  "configName": "transitSite"
                 }
               },
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
-                  "entity": "USERACTION",
+                  "entity": "FACILITY",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
@@ -2725,7 +2803,7 @@
                   "data": [
                     {
                       "key": "SessionClientReferenceId",
-                      "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                      "value": "{{contextData.entities.FacilityModel.clientReferenceId}}"
                     },
                     {
                       "key": "SessionType",
@@ -2781,7 +2859,32 @@
               },
               {
                 "type": "string",
-                "enums": null,
+                "enums": [
+                  {
+                    "code": "BUS_STATION",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_BUS_STATION"
+                  },
+                  {
+                    "code": "BORDER_CROSSING",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_BORDER_CROSSING"
+                  },
+                  {
+                    "code": "CHECKPOINT",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_CHECKPOINT"
+                  },
+                  {
+                    "code": "FERRY_TERMINAL",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_FERRY_TERMINAL"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_OTHER"
+                  },
+                  {
+                    "code": "WATERING_POINT",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_WATERING_POINT"
+                  }
+                ],
                 "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
                 "order": 2,
                 "value": "",
@@ -2797,7 +2900,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "common-masters.GroupVaccinationLocations",
+                "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:TRANSIT_POST",
                 "systemDate": false,
                 "validations": [
                   {
@@ -2970,13 +3073,13 @@
                   }
                 }
               ],
-              "configName": "transitSession"
+              "configName": "transitSite"
             }
           },
           {
             "actionType": "CREATE_EVENT",
             "properties": {
-              "entity": "USERACTION",
+              "entity": "FACILITY",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -3011,7 +3114,7 @@
               "data": [
                 {
                   "key": "SessionClientReferenceId",
-                  "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                  "value": "{{contextData.entities.FacilityModel.clientReferenceId}}"
                 },
                 {
                   "key": "SessionType",
@@ -3068,8 +3171,16 @@
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "onError": [
@@ -3114,8 +3225,16 @@
                       "value": "{{navigation.TransitLocationType}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "name": "transitVaccinationSuccess",
@@ -3142,7 +3261,6 @@
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": false,
@@ -3215,7 +3333,16 @@
               },
               {
                 "type": "string",
-                "enums": null,
+                "enums": [
+                  {
+                    "code": "MALE",
+                    "name": "MALE"
+                  },
+                  {
+                    "code": "FEMALE",
+                    "name": "FEMALE"
+                  }
+                ],
                 "label": "GV_CHILD_SEX_LABEL",
                 "order": 3,
                 "value": "",
@@ -3510,8 +3637,16 @@
                       "value": "{{navigation.SessionClientReferenceId}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "onError": [
@@ -3556,8 +3691,16 @@
                       "value": "{{navigation.TransitLocationType}}"
                     },
                     {
-                      "key": "gpsChild",
-                      "value": "{{navigation.gpsChild}}"
+                      "key": "latitude",
+                      "value": "{{navigation.latitude}}"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "{{navigation.longitude}}"
+                    },
+                    {
+                      "key": "locationAccuracy",
+                      "value": "{{navigation.locationAccuracy}}"
                     }
                   ],
                   "name": "transitVaccinationSuccess",
@@ -3646,8 +3789,16 @@
                   "value": "{{navigation.SessionClientReferenceId}}"
                 },
                 {
-                  "key": "gpsChild",
-                  "value": "{{navigation.gpsChild}}"
+                  "key": "latitude",
+                  "value": "{{navigation.latitude}}"
+                },
+                {
+                  "key": "longitude",
+                  "value": "{{navigation.longitude}}"
+                },
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
                 }
               ],
               "onError": [
@@ -3692,8 +3843,16 @@
                   "value": "{{navigation.TransitLocationType}}"
                 },
                 {
-                  "key": "gpsChild",
-                  "value": "{{navigation.gpsChild}}"
+                  "key": "latitude",
+                  "value": "{{navigation.latitude}}"
+                },
+                {
+                  "key": "longitude",
+                  "value": "{{navigation.longitude}}"
+                },
+                {
+                  "key": "locationAccuracy",
+                  "value": "{{navigation.locationAccuracy}}"
                 }
               ],
               "name": "transitVaccinationSuccess",
@@ -3718,7 +3877,7 @@
     ],
     "order": 2,
     "active": true,
-    "project": "CMP-2026-10-27-011213",
+    "project": "CMP-2026-11-03-011330",
     "version": 2,
     "disabled": false,
     "isSelected": true,
@@ -3726,9 +3885,9 @@
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
-    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
-    "createdTime": 1793081587928,
-    "lastModifiedTime": 1793081740739
+    "createdBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "lastModifiedBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "createdTime": 1793645761008,
+    "lastModifiedTime": 1793646687688
   }
 }
