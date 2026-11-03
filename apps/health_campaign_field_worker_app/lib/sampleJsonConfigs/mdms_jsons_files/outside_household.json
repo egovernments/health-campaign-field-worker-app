@@ -112,7 +112,9 @@
                   "fieldName": "resumeSession",
                   "mandatory": true,
                   "properties": {
-                    "size": "medium",
+                    "size": "large",
+                    "shadow": true,
+                    "topGap": 8,
                     "type": "secondary",
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
@@ -305,11 +307,11 @@
                 "data": [
                   {
                     "key": "GV_CLF_SUMMARY_LOCATION_NAME",
-                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                    "value": "{{contextData.0.FacilityModel.name}}" 
                   },
                   {
                     "key": "GV_CLF_SUMMARY_LOCATION_TYPE",
-                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
+                    "value": "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
                 ],
                 "type": "template",
@@ -353,7 +355,7 @@
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4,
+                  "bottomGap": 0,
                   "textStyle": {
                     "color": "#0B4B66",
                     "fontSize": "24px",
@@ -437,7 +439,7 @@
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -445,7 +447,11 @@
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {
+                        "vertical": 6,
+                        "horizontal": 8
+                      },
                       "cardType": "secondary"
                     }
                   },
@@ -499,7 +505,7 @@
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -507,20 +513,25 @@
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {
+                        "vertical": 6,
+                        "horizontal": 8
+                      },
                       "cardType": "secondary"
                     }
                   }
                 ],
                 "fieldName": "vaccinatedSplit",
                 "properties": {
-                  "gap": 8
+                  "gap": 16
                 }
               }
             ],
             "fieldName": "vaccinatedTile",
             "properties": {
-              "type": "primary"
+              "type": "primary",
+              "spacing": 12
             },
             "schemaCode": null
           }
@@ -926,11 +937,11 @@
                 "data": [
                   {
                     "key": "GV_TRANSIT_SUMMARY_LOCATION_NAME",
-                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                    "value": "{{contextData.0.FacilityModel.name}}"
                   },
                   {
                     "key": "GV_TRANSIT_SUMMARY_LOCATION_TYPE",
-                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                    "value": "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
                 ],
                 "type": "template",
@@ -974,7 +985,7 @@
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4,
+                  "bottomGap": 0,
                   "textStyle": {
                     "color": "#0B4B66",
                     "fontSize": "24px",
@@ -1057,7 +1068,7 @@
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -1065,7 +1076,11 @@
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {
+                        "vertical": 6,
+                        "horizontal": 8
+                      },
                       "cardType": "secondary"
                     }
                   },
@@ -1119,7 +1134,7 @@
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -1127,20 +1142,25 @@
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {
+                        "vertical": 6,
+                        "horizontal": 8
+                      },
                       "cardType": "secondary"
                     }
                   }
                 ],
                 "fieldName": "vaccinatedSplit",
                 "properties": {
-                  "gap": 8
+                  "gap": 16
                 }
               }
             ],
             "fieldName": "vaccinatedTile",
             "properties": {
-              "type": "primary"
+              "type": "primary",
+              "spacing": 12
             },
             "schemaCode": null
           }
@@ -1432,7 +1452,9 @@
                   "fieldName": "resumeSession",
                   "mandatory": true,
                   "properties": {
-                    "size": "medium",
+                    "size": "large",
+                    "shadow": true,
+                    "topGap": 8,
                     "type": "secondary",
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
@@ -1624,7 +1646,8 @@
             "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
             "styling": {
               "alignment": "center",
-              "iconPosition": "top"
+              "iconPosition": "top",
+              "iconSize": 34
             },
             "onAction": [
               {
@@ -1644,13 +1667,14 @@
             "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION"
           },
           {
-            "icon": "Groups",
+            "icon": "NaturePeople",
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_CLF_HEADING",
             "styling": {
               "alignment": "center",
-              "iconPosition": "top"
+              "iconPosition": "top",
+              "iconSize": 34
             },
             "onAction": [
               {
@@ -1664,7 +1688,7 @@
             ],
             "fieldName": "clfOption",
             "properties": {
-              "icon": "Groups"
+              "icon": "NaturePeople"
             },
             "schemaCode": null,
             "description": "GV_LOCATION_CLF_DESCRIPTION"
@@ -1806,7 +1830,6 @@
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_LOCATION_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": true,
@@ -2191,7 +2214,7 @@
             "order": 1,
             "footer": [
               {
-                "label": "GV_ACTION_VACCINATE",
+                "label": "CORE_COMMON_CONTINUE",
                 "format": "button",
                 "onAction": [],
                 "properties": {
@@ -2448,7 +2471,7 @@
                 "includeInSummary": true
               }
             ],
-            "actionLabel": "GV_ACTION_VACCINATE",
+            "actionLabel": "CORE_COMMON_CONTINUE",
             "description": "GV_CHILD_STEP_1_OF_2",
             "showTabView": false,
             "submitCondition": null,
@@ -2826,7 +2849,6 @@
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_TRANSIT_SITE_LANDMARK_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": true,
@@ -3145,7 +3167,7 @@
             "order": 1,
             "footer": [
               {
-                "label": "GV_ACTION_VACCINATE",
+                "label": "CORE_COMMON_CONTINUE",
                 "format": "button",
                 "onAction": [],
                 "properties": {
@@ -3596,7 +3618,7 @@
                 }
               }
             ],
-            "actionLabel": "GV_ACTION_VACCINATE",
+            "actionLabel": "CORE_COMMON_CONTINUE",
             "description": "GV_CHILD_STEP_1_OF_2",
             "showTabView": false,
             "submitCondition": null,

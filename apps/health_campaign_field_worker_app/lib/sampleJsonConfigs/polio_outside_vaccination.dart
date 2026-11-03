@@ -1,8 +1,8 @@
 final dynamic sampleOutSideHouseholdVaccinationFlows = {
-  "id": "2d01bdcd-0cdb-4f70-aa9e-88540cdf63d2",
-  "tenantId": "mz",
-  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
-  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.POLIO",
+  "id": "874189db-2674-4515-b3c7-39978c584232",
+  "tenantId": "qa",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfig",
+  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.CMP-2026-11-03-011330",
   "data": {
     "name": "OUTSIDEHOUSEHOLD",
     "flows": [
@@ -107,7 +107,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "fieldName": "resumeSession",
                   "mandatory": true,
                   "properties": {
-                    "size": "medium",
+                    "size": "large",
+                    "shadow": true,
+                    "topGap": 8,
                     "type": "secondary",
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
@@ -276,11 +278,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "data": [
                   {
-                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "key": "GV_CLF_SUMMARY_LOCATION_NAME",
                     "value": "{{contextData.0.FacilityModel.name}}"
                   },
                   {
-                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "key": "GV_CLF_SUMMARY_LOCATION_TYPE",
                     "value":
                         "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
@@ -324,7 +326,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4,
+                  "bottomGap": 0,
                   "textStyle": {
                     "color": "#0B4B66",
                     "fontSize": "24px",
@@ -408,7 +410,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -416,7 +418,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {"vertical": 6, "horizontal": 8},
                       "cardType": "secondary"
                     }
                   },
@@ -470,7 +473,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -478,17 +481,18 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {"vertical": 6, "horizontal": 8},
                       "cardType": "secondary"
                     }
                   }
                 ],
                 "fieldName": "vaccinatedSplit",
-                "properties": {"gap": 8}
+                "properties": {"gap": 16}
               }
             ],
             "fieldName": "vaccinatedTile",
-            "properties": {"type": "primary"},
+            "properties": {"type": "primary", "spacing": 12},
             "schemaCode": null
           }
         ],
@@ -845,11 +849,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "data": [
                   {
-                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "key": "GV_TRANSIT_SUMMARY_LOCATION_NAME",
                     "value": "{{contextData.0.FacilityModel.name}}"
                   },
                   {
-                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "key": "GV_TRANSIT_SUMMARY_LOCATION_TYPE",
                     "value":
                         "{{contextData.0.FacilityModel.additionalFields.fields.outsideHouseholdCategory}}"
                   }
@@ -893,7 +897,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4,
+                  "bottomGap": 0,
                   "textStyle": {
                     "color": "#0B4B66",
                     "fontSize": "24px",
@@ -976,7 +980,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -984,7 +988,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {"vertical": 6, "horizontal": 8},
                       "cardType": "secondary"
                     }
                   },
@@ -1038,7 +1043,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                         "properties": {
                           "gap": 4,
                           "mainAxisSize": "max",
-                          "mainAxisAlignment": "center",
+                          "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
                         }
                       }
@@ -1046,17 +1051,18 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4",
+                      "radius": "radius1",
+                      "padding": {"vertical": 6, "horizontal": 8},
                       "cardType": "secondary"
                     }
                   }
                 ],
                 "fieldName": "vaccinatedSplit",
-                "properties": {"gap": 8}
+                "properties": {"gap": 16}
               }
             ],
             "fieldName": "vaccinatedTile",
-            "properties": {"type": "primary"},
+            "properties": {"type": "primary", "spacing": 12},
             "schemaCode": null
           }
         ],
@@ -1335,7 +1341,9 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "fieldName": "resumeSession",
                   "mandatory": true,
                   "properties": {
-                    "size": "medium",
+                    "size": "large",
+                    "shadow": true,
+                    "topGap": 8,
                     "type": "secondary",
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
@@ -1502,7 +1510,11 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
-            "styling": {"alignment": "center", "iconPosition": "top"},
+            "styling": {
+              "alignment": "center",
+              "iconPosition": "top",
+              "iconSize": 34
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -1519,11 +1531,15 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION"
           },
           {
-            "icon": "Groups",
+            "icon": "NaturePeople",
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_CLF_HEADING",
-            "styling": {"alignment": "center", "iconPosition": "top"},
+            "styling": {
+              "alignment": "center",
+              "iconPosition": "top",
+              "iconSize": 34
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -1535,7 +1551,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               }
             ],
             "fieldName": "clfOption",
-            "properties": {"icon": "Groups"},
+            "properties": {"icon": "NaturePeople"},
             "schemaCode": null,
             "description": "GV_LOCATION_CLF_DESCRIPTION"
           }
@@ -1665,7 +1681,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_LOCATION_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": true,
@@ -1699,14 +1714,30 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "type": "string",
                 "enums": [
-                  {"code": "SCHOOL", "name": "GV_ENUM_SCHOOL"},
-                  {"code": "MARKET", "name": "GV_ENUM_MARKET"},
-                  {"code": "HEALTH_POST", "name": "GV_ENUM_HEALTH_POST"},
+                  {
+                    "code": "SCHOOL",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_SCHOOL"
+                  },
+                  {
+                    "code": "MARKET",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_MARKET"
+                  },
+                  {
+                    "code": "HEALTH_POST",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_HEALTH_POST"
+                  },
                   {
                     "code": "COMMUNITY_CENTRE",
-                    "name": "GV_ENUM_COMMUNITY_CENTRE"
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_COMMUNITY_CENTRE"
                   },
-                  {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                  {
+                    "code": "OTHER",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_OTHER"
+                  }
                 ],
                 "label": "GV_CLF_LOCATION_TYPE_LABEL",
                 "order": 2,
@@ -2026,7 +2057,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "order": 1,
             "footer": [
               {
-                "label": "GV_ACTION_VACCINATE",
+                "label": "CORE_COMMON_CONTINUE",
                 "format": "button",
                 "onAction": [],
                 "properties": {
@@ -2118,7 +2149,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": false,
@@ -2191,8 +2221,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "type": "string",
                 "enums": [
-                  {"code": "MALE", "name": "GV_ENUM_MALE"},
-                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
+                  {"code": "MALE", "name": "MALE"},
+                  {"code": "FEMALE", "name": "FEMALE"}
                 ],
                 "label": "GV_CHILD_SEX_LABEL",
                 "order": 3,
@@ -2251,7 +2281,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "includeInSummary": true
               }
             ],
-            "actionLabel": "GV_ACTION_VACCINATE",
+            "actionLabel": "CORE_COMMON_CONTINUE",
             "description": "GV_CHILD_STEP_1_OF_2",
             "showTabView": false,
             "submitCondition": null,
@@ -2579,7 +2609,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_TRANSIT_SITE_LANDMARK_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": true,
@@ -2613,14 +2642,35 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "type": "string",
                 "enums": [
-                  {"code": "BUS_STATION", "name": "GV_ENUM_BUS_STATION"},
+                  {
+                    "code": "BUS_STATION",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_BUS_STATION"
+                  },
                   {
                     "code": "BORDER_CROSSING",
-                    "name": "GV_ENUM_BORDER_CROSSING"
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_BORDER_CROSSING"
                   },
-                  {"code": "CHECKPOINT", "name": "GV_ENUM_CHECKPOINT"},
-                  {"code": "FERRY_TERMINAL", "name": "GV_ENUM_FERRY_TERMINAL"},
-                  {"code": "OTHER", "name": "GV_ENUM_OTHER"}
+                  {
+                    "code": "CHECKPOINT",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_CHECKPOINT"
+                  },
+                  {
+                    "code": "FERRY_TERMINAL",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_FERRY_TERMINAL"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_OTHER"
+                  },
+                  {
+                    "code": "WATERING_POINT",
+                    "name":
+                        "HCM_ADMIN_CONSOLE_OUTSIDE_HOUSEHOLD_CATEGORY_WATERING_POINT"
+                  }
                 ],
                 "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
                 "order": 2,
@@ -2869,7 +2919,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "order": 1,
             "footer": [
               {
-                "label": "GV_ACTION_VACCINATE",
+                "label": "CORE_COMMON_CONTINUE",
                 "format": "button",
                 "onAction": [],
                 "properties": {
@@ -2964,7 +3014,6 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 "hidden": false,
                 "isMdms": false,
                 "tooltip": "",
-                "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
                 "required": false,
@@ -3038,8 +3087,8 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
               {
                 "type": "string",
                 "enums": [
-                  {"code": "MALE", "name": "GV_ENUM_MALE"},
-                  {"code": "FEMALE", "name": "GV_ENUM_FEMALE"}
+                  {"code": "MALE", "name": "MALE"},
+                  {"code": "FEMALE", "name": "FEMALE"}
                 ],
                 "label": "GV_CHILD_SEX_LABEL",
                 "order": 3,
@@ -3225,7 +3274,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 }
               }
             ],
-            "actionLabel": "GV_ACTION_VACCINATE",
+            "actionLabel": "CORE_COMMON_CONTINUE",
             "description": "GV_CHILD_STEP_1_OF_2",
             "showTabView": false,
             "submitCondition": null,
@@ -3462,19 +3511,19 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
         "scrollListener": {}
       }
     ],
-    "order": 3,
+    "order": 2,
     "active": true,
-    "project": "POLIO",
-    "version": 1,
+    "project": "CMP-2026-11-03-011330",
+    "version": 2,
     "disabled": false,
     "isSelected": true,
     "initialPage": "selectVaccinationLocation"
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
-    "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
-    "createdTime": 1789628239245,
-    "lastModifiedTime": 1790760453587
+    "createdBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "lastModifiedBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "createdTime": 1793645761008,
+    "lastModifiedTime": 1793646687688
   }
 };

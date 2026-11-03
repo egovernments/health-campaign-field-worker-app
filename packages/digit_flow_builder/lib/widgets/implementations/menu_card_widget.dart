@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/flow_icon_mapping.dart';
 import '../localization_context.dart';
 import '../resolved_flow_widget.dart';
 
@@ -23,7 +22,7 @@ class MenuCardWidget extends ResolvedFlowWidget {
   ) {
     final heading = _localizeText(context, json['heading']) ?? "";
     final description = _localizeText(context, json['description']);
-    final icon = FlowIconMapping.getIcon(json['icon']);
+    final icon = DigitIconMapping.getIcon(json['icon']);
     void handleTap() => _runOnTap(json, resolved, onAction);
 
     final styling = json['styling'];
@@ -281,6 +280,7 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
               )
             : null,
         child: DigitCard(
+          padding: const EdgeInsets.all(18),
           spacing: 12,
           children: [
             iconAndHeading,

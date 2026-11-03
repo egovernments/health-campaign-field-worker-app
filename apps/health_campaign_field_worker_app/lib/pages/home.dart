@@ -2331,7 +2331,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
-          icon: isPolio ? Icons.vaccines : Icons.all_inbox,
+          icon: isPolio ? Icons.family_restroom : Icons.all_inbox,
           label: isPolio
               ? i18.home.polioRegistrationLabel
               : i18.home.beneficiaryLabel,
@@ -2505,7 +2505,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
-          icon: isPolio ? Icons.child_care : Icons.home,
+          icon: isPolio ? Icons.person_search : Icons.home,
           enableCustomIcon: !isPolio,
           customIconSize: 40,
           customIcon: isPolio ? "" : Constants.closedHouseholdSvg,
@@ -3095,7 +3095,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.outsideHouseholdVaccinationLabel:
           homeShowcaseData.transitPost.buildWith(
         child: HomeItemCard(
-          icon: Icons.nature_people,
+          icon: Icons.signpost,
           label: i18.home.outsideHouseholdVaccinationLabel,
           onPressed: () async {
             await context.router.push(CurrentBoundaryRoute(
