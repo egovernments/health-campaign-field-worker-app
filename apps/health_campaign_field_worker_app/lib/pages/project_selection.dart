@@ -440,6 +440,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       final allBoundaryCodes = allBoundaries
           .expand((b) => [
                 b.code,
+                // Ancestors above the assigned boundary aren't stored as
+                // rows, but screens still show them (e.g. a village's
+                // parent locality), so fetch their names too. Every row's
+                // materializedPath holds its full root-to-self code chain.
+                ...?b.materializedPath?.split('.'),
                 if (b.label != null && b.label!.isNotEmpty)
                   '${hierarchyType}_${b.label}',
               ])
