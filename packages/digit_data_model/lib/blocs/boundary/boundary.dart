@@ -39,6 +39,11 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundaryFindEvent event,
     BoundaryEmitter emit,
   ) async {
+    // Always emit a change, even when the result equals the current state
+    // (e.g. a re-login that finds the same boundaries). Bloc drops an emit
+    // equal to the current state, so a caller waiting on the stream for the
+    // result would otherwise wait forever.
+    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
         codes: event.code,

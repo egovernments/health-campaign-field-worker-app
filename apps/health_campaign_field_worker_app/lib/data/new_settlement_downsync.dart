@@ -34,6 +34,7 @@ class NewSettlementDownsync {
     ).toMap();
 
     var downloaded = 0;
+    final seen = <Object>{};
     for (var offset = 0;; offset += _limit) {
       final response = await remote.dio.post(
         remote.searchPath,
@@ -80,12 +81,23 @@ class NewSettlementDownsync {
       }
       onProgress?.call(downloaded);
 
-      final totalCount = (body as Map<String, dynamic>)['totalCount'];
+      // The search response spells it `TotalCount`.
+      final map = body as Map<String, dynamic>;
+      final totalCount = map['TotalCount'] ?? map['totalCount'];
       final fetched = offset + records.length;
       if (records.length < _limit ||
           (totalCount is int && fetched >= totalCount)) {
         break;
       }
+
+      // A full page made only of records already seen in this run means
+      // the server isn't advancing with `offset`; stop rather than loop.
+      final ids = records
+          .whereType<Map<String, dynamic>>()
+          .map((r) => r['clientReferenceId'] ?? r['id'])
+          .whereType<Object>();
+      if (ids.every(seen.contains)) break;
+      seen.addAll(ids);
     }
   }
 }
