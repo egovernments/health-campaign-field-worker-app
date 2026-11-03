@@ -26,6 +26,25 @@ class FunctionRegistries {
     _registerStockFunctions();
     _registerViewTransactionFunctions();
     _registerDeliveryAgeFunctions();
+    _registerLocationFunctions();
+  }
+
+  /// `{{fn:joinLatLng(lat, lng, accuracy)}}` builds the "lat,lng,accuracy"
+  /// string a latLng field stores, so a form can be prefilled with an
+  /// already captured location (e.g. a transit post's location on Child
+  /// Details). A prefilled latLng field skips the capture popup.
+  ///
+  /// Returns '' when lat/lng are missing, which leaves the field empty so the
+  /// capture popup starts as usual. Not null: an unresolved nav value would
+  /// fall back to the raw template string.
+  void _registerLocationFunctions() {
+    FunctionRegistry.register('joinLatLng', (args, stateData) {
+      final lat = args.isNotEmpty ? args[0] : null;
+      final lng = args.length > 1 ? args[1] : null;
+      final accuracy = args.length > 2 ? args[2] : null;
+      if (lat == null || lng == null) return '';
+      return accuracy == null ? '$lat,$lng' : '$lat,$lng,$accuracy';
+    });
   }
 
   /// Exposes the campaign's eligible age window, in months, to configs.

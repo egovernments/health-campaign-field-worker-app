@@ -493,10 +493,11 @@ class _LatLngBuilderStatefulWrapperState
                         elapsedSeconds: progress.elapsedSeconds,
                         saveEnabledAfter: widget.saveEnabledAfter,
                       );
-                  final saveTimer = widget.saveEnabledAfter;
-                  final saveTimerLeft = saveTimer == null || canSave
-                      ? null
-                      : saveTimer.inSeconds - progress.elapsedSeconds;
+                  // Only used by the hidden "Save will be enabled in" countdown.
+                  // final saveTimer = widget.saveEnabledAfter;
+                  // final saveTimerLeft = saveTimer == null || canSave
+                  //     ? null
+                  //     : saveTimer.inSeconds - progress.elapsedSeconds;
                   final hint = _hintText(loc, progress);
 
                   final Color color;
@@ -736,18 +737,19 @@ class _LatLngBuilderStatefulWrapperState
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                       ),
-                      if (saveTimerLeft != null && saveTimerLeft > 0) ...[
-                        const SizedBox(height: spacer2),
-                        Text(
-                          _t(loc, 'LOCATION_SAVE_ENABLED_IN',
-                              'Save will be enabled in {}',
-                              _formatElapsed(saveTimerLeft)),
-                          textAlign: TextAlign.center,
-                          style: mutedStyle.copyWith(
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                          ),
-                        ),
-                      ],
+                      // "Save will be enabled in …" countdown below the Save button: hidden.
+                      // if (saveTimerLeft != null && saveTimerLeft > 0) ...[
+                      //   const SizedBox(height: spacer2),
+                      //   Text(
+                      //     _t(loc, 'LOCATION_SAVE_ENABLED_IN',
+                      //         'Save will be enabled in {}',
+                      //         _formatElapsed(saveTimerLeft)),
+                      //     textAlign: TextAlign.center,
+                      //     style: mutedStyle.copyWith(
+                      //       fontFeatures: const [FontFeature.tabularFigures()],
+                      //     ),
+                      //   ),
+                      // ],
                         ],
                       ),
                     ],

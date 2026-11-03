@@ -294,6 +294,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   {
                     "key": "eligibleProductVariants",
                     "value": "{{contextData.0.eligibleProductVariants}}"
+                  },
+                  {
+                    "key": "householdLatLng",
+                    "value": "{{navigation.householdLatLng}}"
                   }
                 ],
                 "name": "DELIVERY",
@@ -612,6 +616,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
         {
           "type": "template",
           "format": "row",
+          "hidden": true,
           "children": [
             {
               "type": "template",
@@ -641,11 +646,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 }
               ],
               "fieldName": "householdEditButton",
-              "prefixIcon": "Edit",
               "properties": {
                 "icon": "Edit",
                 "size": "large",
                 "type": "secondary",
+                "prefixIcon": "Edit",
                 "mainAxisSize": "min",
                 "mainAxisAlignment": "center"
               }
@@ -750,11 +755,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           }
                         ],
                         "fieldName": "editIndividualButton",
-                        "prefixIcon": "Edit",
                         "properties": {
                           "icon": "Edit",
                           "size": "large",
                           "type": "tertiary",
+                          "prefixIcon": "Edit",
                           "mainAxisSize": "min",
                           "mainAxisAlignment": "center"
                         }
@@ -847,7 +852,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "visible":
                         "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false && {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==false",
                     "fieldName": "notVisited",
-                    "properties": {"tagType": "info", "bottomGap": 16}
+                    "properties": {"tagType": "warning", "bottomGap": 16}
                   },
                   {
                     "type": "template",
@@ -914,6 +919,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                                       "key": "cycleIndex",
                                       "value":
                                           "{{contextData.0.currentRunningCycle}}"
+                                    },
+                                    {
+                                      "key": "householdLatLng",
+                                      "value":
+                                          "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
                                     }
                                   ],
                                   "name": "beneficiaryDetails",
@@ -968,7 +978,12 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                                           "{{contextData.0.currentRunningCycle}}"
                                     },
                                     {"key": "doseIndex", "value": "1"},
-                                    {"key": "isRevisit", "value": "false"}
+                                    {"key": "isRevisit", "value": "false"},
+                                    {
+                                      "key": "householdLatLng",
+                                      "value":
+                                          "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                    }
                                   ],
                                   "name": "VACCINATED_ELSEWHERE",
                                   "type": "FORM",
@@ -997,6 +1012,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                                 "HCM_HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                             "format": "button",
                             "onAction": [
+                              {"actionType": "CLOSE_POPUP"},
                               {
                                 "actionType": "NAVIGATION",
                                 "properties": {
@@ -1023,7 +1039,12 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                                       "value":
                                           "{{contextData.0.currentRunningCycle}}"
                                     },
-                                    {"key": "doseIndex", "value": "1"}
+                                    {"key": "doseIndex", "value": "1"},
+                                    {
+                                      "key": "householdLatLng",
+                                      "value":
+                                          "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                    }
                                   ],
                                   "name": "UNABLETODELIVER",
                                   "type": "FORM"
@@ -1047,117 +1068,282 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                       "mainAxisAlignment": "center"
                     }
                   },
+                  // Second visit (after Unable to vaccinate): one action button
+                  // whose popup holds Revisit and Mark as vaccinated elsewhere,
+                  // same as the first-visit action popup.
                   {
                     "type": "template",
-                    "label": "HCM_REDOSE_BUTTON",
-                    "format": "button",
+                    "label": "HCM_HOUSEHOLD_OVERVIEW_ACTION_BUTTON",
+                    "format": "actionPopup",
                     "visible":
                         "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
-                    "onAction": [
-                      {
-                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
-                        "properties": {
-                          "data": [
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "cycleIndex",
-                              "value": "{{contextData.0.currentRunningCycle}}"
-                            },
-                            {"key": "doseIndex", "value": "1"},
-                            {
-                              "key": "selectedIndividualAgeInMonths",
-                              "value":
-                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            }
-                          ],
-                          "name": "REDOSE",
-                          "type": "FORM",
-                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
-                          "eligibilityParams": [
-                            {
-                              "type": "int",
-                              "navKey": "selectedIndividualAgeInMonths",
-                              "conditionVar": "age"
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "fieldName": "redoseButton",
+                    "fieldName": "revisitActionButton",
                     "mandatory": true,
                     "properties": {
                       "size": "medium",
-                      "type": "secondary",
+                      "type": "primary",
+                      "bottomGap": 16,
+                      "popupConfig": {
+                        "body": [
+                          {
+                            "type": "template",
+                            "label": "HCM_REDOSE_BUTTON",
+                            "format": "button",
+                            "visible":
+                                "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                            "onAction": [
+                              {"actionType": "CLOSE_POPUP"},
+                              {
+                                "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key":
+                                          "ProjectBeneficiaryClientReferenceId",
+                                      "value":
+                                          "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "cycleIndex",
+                                      "value":
+                                          "{{contextData.0.currentRunningCycle}}"
+                                    },
+                                    {"key": "doseIndex", "value": "1"},
+                                    {
+                                      "key": "selectedIndividualAgeInMonths",
+                                      "value":
+                                          "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                    },
+                                    {
+                                      "key": "householdLatLng",
+                                      "value":
+                                          "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                    }
+                                  ],
+                                  "name": "REDOSE",
+                                  "type": "FORM",
+                                  "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                                  "eligibilityParams": [
+                                    {
+                                      "type": "int",
+                                      "navKey": "selectedIndividualAgeInMonths",
+                                      "conditionVar": "age"
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "fieldName": "redoseButton",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "primary",
+                              "bottomGap": 8,
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label":
+                                "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
+                            "format": "button",
+                            "visible":
+                                "{{fn:wasAbsentOrRefusedForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                            "onAction": [
+                              {"actionType": "CLOSE_POPUP"},
+                              {
+                                "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key":
+                                          "ProjectBeneficiaryClientReferenceId",
+                                      "value":
+                                          "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value":
+                                          "{{item.member.0.householdClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "cycleIndex",
+                                      "value":
+                                          "{{contextData.0.currentRunningCycle}}"
+                                    },
+                                    {"key": "doseIndex", "value": "1"},
+                                    {
+                                      "key": "selectedIndividualAgeInMonths",
+                                      "value":
+                                          "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                    },
+                                    {"key": "isRevisit", "value": "true"},
+                                    {
+                                      "key": "householdLatLng",
+                                      "value":
+                                          "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                    }
+                                  ],
+                                  "name": "VACCINATED_ELSEWHERE",
+                                  "type": "FORM",
+                                  "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                                  "eligibilityParams": [
+                                    {
+                                      "type": "int",
+                                      "navKey": "selectedIndividualAgeInMonths",
+                                      "conditionVar": "age"
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "fieldName": "revisitVaccinatedElsewhereButton",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center"
+                            }
+                          }
+                        ],
+                        "title": "REGISTRATION_HOUSEHOLDOVERVIEW_POPUP_TITLE",
+                        "description": "",
+                        "showCloseButton": true,
+                        "barrierDismissible": true
+                      },
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
                   },
-                  {
-                    "type": "template",
-                    "label":
-                        "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
-                    "format": "button",
-                    "visible":
-                        "{{fn:wasAbsentOrRefusedForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
-                    "onAction": [
-                      {
-                        "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
-                        "properties": {
-                          "data": [
-                            {
-                              "key": "ProjectBeneficiaryClientReferenceId",
-                              "value":
-                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
-                            },
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
-                            },
-                            {
-                              "key": "cycleIndex",
-                              "value": "{{contextData.0.currentRunningCycle}}"
-                            },
-                            {"key": "doseIndex", "value": "1"},
-                            {
-                              "key": "selectedIndividualAgeInMonths",
-                              "value":
-                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                            },
-                            {"key": "isRevisit", "value": "true"}
-                          ],
-                          "name": "VACCINATED_ELSEWHERE",
-                          "type": "FORM",
-                          "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
-                          "eligibilityParams": [
-                            {
-                              "type": "int",
-                              "navKey": "selectedIndividualAgeInMonths",
-                              "conditionVar": "age"
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "fieldName": "revisitVaccinatedElsewhereButton",
-                    "mandatory": true,
-                    "properties": {
-                      "size": "medium",
-                      "type": "secondary",
-                      "topGap": 16,
-                      "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
-                    }
-                  },
+                  // Moved into the revisitActionButton popup above.
+                  // {
+                  //   "type": "template",
+                  //   "label": "HCM_REDOSE_BUTTON",
+                  //   "format": "button",
+                  //   "visible":
+                  //       "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                  //   "onAction": [
+                  //     {
+                  //       "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                  //       "properties": {
+                  //         "data": [
+                  //           {
+                  //             "key": "ProjectBeneficiaryClientReferenceId",
+                  //             "value":
+                  //                 "{{item.projectBeneficiary.0.clientReferenceId}}"
+                  //           },
+                  //           {
+                  //             "key": "HouseholdClientReferenceId",
+                  //             "value":
+                  //                 "{{item.member.0.householdClientReferenceId}}"
+                  //           },
+                  //           {
+                  //             "key": "cycleIndex",
+                  //             "value": "{{contextData.0.currentRunningCycle}}"
+                  //           },
+                  //           {"key": "doseIndex", "value": "1"},
+                  //           {
+                  //             "key": "selectedIndividualAgeInMonths",
+                  //             "value":
+                  //                 "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                  //           },
+                  //           {
+                  //             "key": "householdLatLng",
+                  //             "value":
+                  //                 "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                  //           }
+                  //         ],
+                  //         "name": "REDOSE",
+                  //         "type": "FORM",
+                  //         "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                  //         "eligibilityParams": [
+                  //           {
+                  //             "type": "int",
+                  //             "navKey": "selectedIndividualAgeInMonths",
+                  //             "conditionVar": "age"
+                  //           }
+                  //         ]
+                  //       }
+                  //     }
+                  //   ],
+                  //   "fieldName": "redoseButton",
+                  //   "mandatory": true,
+                  //   "properties": {
+                  //     "size": "medium",
+                  //     "type": "secondary",
+                  //     "mainAxisSize": "max",
+                  //     "mainAxisAlignment": "center"
+                  //   }
+                  // },
+                  // {
+                  //   "type": "template",
+                  //   "label":
+                  //       "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
+                  //   "format": "button",
+                  //   "visible":
+                  //       "{{fn:wasAbsentOrRefusedForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                  //   "onAction": [
+                  //     {
+                  //       "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                  //       "properties": {
+                  //         "data": [
+                  //           {
+                  //             "key": "ProjectBeneficiaryClientReferenceId",
+                  //             "value":
+                  //                 "{{item.projectBeneficiary.0.clientReferenceId}}"
+                  //           },
+                  //           {
+                  //             "key": "HouseholdClientReferenceId",
+                  //             "value":
+                  //                 "{{item.member.0.householdClientReferenceId}}"
+                  //           },
+                  //           {
+                  //             "key": "cycleIndex",
+                  //             "value": "{{contextData.0.currentRunningCycle}}"
+                  //           },
+                  //           {"key": "doseIndex", "value": "1"},
+                  //           {
+                  //             "key": "selectedIndividualAgeInMonths",
+                  //             "value":
+                  //                 "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                  //           },
+                  //           {"key": "isRevisit", "value": "true"},
+                  //           {
+                  //             "key": "householdLatLng",
+                  //             "value":
+                  //                 "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                  //           }
+                  //         ],
+                  //         "name": "VACCINATED_ELSEWHERE",
+                  //         "type": "FORM",
+                  //         "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                  //         "eligibilityParams": [
+                  //           {
+                  //             "type": "int",
+                  //             "navKey": "selectedIndividualAgeInMonths",
+                  //             "conditionVar": "age"
+                  //           }
+                  //         ]
+                  //       }
+                  //     }
+                  //   ],
+                  //   "fieldName": "revisitVaccinatedElsewhereButton",
+                  //   "mandatory": true,
+                  //   "properties": {
+                  //     "size": "medium",
+                  //     "type": "secondary",
+                  //     "topGap": 16,
+                  //     "mainAxisSize": "max",
+                  //     "mainAxisAlignment": "center"
+                  //   }
+                  // },
                   {
                     "icon": "add",
                     "type": "template",
@@ -1242,14 +1428,13 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "format": "actionPopup",
               "visible":
                   "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-              "disabled":
-                  "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
               "fieldName": "beneficiaryIdMinCheck",
               "properties": {
                 "icon": "FileDownload",
                 "size": "medium",
                 "type": "tertiary",
-                "prefixIcon": "Download",
+                // "prefixIcon": "Download",
+                "prefixIcon": "FileDownload",
                 "popupConfig": {
                   "body": [],
                   "type": "alert",
@@ -1387,16 +1572,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "actionType": "NAVIGATION",
               "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
             }
-          ],
-          "popupConfig": {
-            "title": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
-            "condition":
-                "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==false",
-            "titleIcon": "Warning",
-            "cancelLabel": "HCM_COMMON_CANCEL_LABEL",
-            "description": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
-            "confirmLabel": "HCM_COMMON_CONTINUE_LABEL"
-          }
+          ]
         }
       ],
       "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
@@ -1638,6 +1814,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 "popupConfig": {
                   "body": [
                     {
+                      "key": 1,
                       "type": "template",
                       "format": "card",
                       "children": [
@@ -1669,7 +1846,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                               }
                             }
                           ],
-                          "fieldName": "proximitySearch",
+                          "fieldName": "proximitySearchRegistration",
                           "mandatory": true,
                           "schemaCode": null,
                           "validations": [
@@ -1681,9 +1858,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           ]
                         }
                       ],
+                      "fieldName": "card",
                       "properties": {"type": "secondary"}
                     },
                     {
+                      "key": 2,
                       "type": "template",
                       "format": "card",
                       "children": [
@@ -1707,6 +1886,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                           "validations": []
                         }
                       ],
+                      "fieldName": "card",
                       "properties": {"type": "secondary"}
                     },
                     {
@@ -2219,7 +2399,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
           "isGS1": false,
           "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
           "format": "qrScanner",
-          "hidden": false,
+          "hidden": true,
           "onAction": [
             {
               "actionType": "OPEN_SCANNER",
@@ -2467,6 +2647,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                   {
                     "key": "deliveryStrategy",
                     "value": "{{navigation.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "householdLatLng",
+                    "value": "{{navigation.householdLatLng}}"
                   }
                 ],
                 "onError": [
@@ -2512,6 +2696,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                       {
                         "key": "futureDoses",
                         "value": "{{navigation.futureDoses}}"
+                      },
+                      {
+                        "key": "householdLatLng",
+                        "value": "{{navigation.householdLatLng}}"
                       }
                     ],
                     "onError": [
@@ -2696,37 +2884,38 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "isMultiSelect": false,
               "includeInSummary": true
             },
-            {
-              "type": "string",
-              "label": "HCM_DELIVERY_LAT_LONG_LABEL",
-              "order": 5,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "latLng",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
-              "errorMessage": "REGISTRATION_DELIVERY_latLng_ERROR",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
+            // Household location is used instead (householdLatLng nav param).
+            // {
+            //   "type": "string",
+            //   "label": "HCM_DELIVERY_LAT_LONG_LABEL",
+            //   "order": 5,
+            //   "value": "",
+            //   "format": "latLng",
+            //   "hidden": false,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "required": true,
+            //   "fieldName": "latLng",
+            //   "mandatory": true,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [
+            //     {
+            //       "type": "required",
+            //       "value": true,
+            //       "message": "HCM_VALIDATION_REQUIRED_FIELD"
+            //     }
+            //   ],
+            //   "errorMessage": "REGISTRATION_DELIVERY_latLng_ERROR",
+            //   "includeInForm": true,
+            //   "isMultiSelect": false,
+            //   "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            // },
             {
               "type": "string",
               "enums": [
@@ -2735,30 +2924,23 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_VACCINATION",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText":
                   "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE_VACCINATION",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -2773,29 +2955,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_VACCINATION",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -2828,6 +3003,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               {
                 "key": "deliveryStrategy",
                 "value": "{{navigation.deliveryStrategy}}"
+              },
+              {
+                "key": "householdLatLng",
+                "value": "{{navigation.householdLatLng}}"
               }
             ],
             "onError": [
@@ -2867,7 +3046,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                     "key": "deliveryStrategy",
                     "value": "{{navigation.deliveryStrategy}}"
                   },
-                  {"key": "futureDoses", "value": "{{navigation.futureDoses}}"}
+                  {"key": "futureDoses", "value": "{{navigation.futureDoses}}"},
+                  {
+                    "key": "householdLatLng",
+                    "value": "{{navigation.householdLatLng}}"
+                  }
                 ],
                 "onError": [
                   {
@@ -3250,7 +3433,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "fieldName": "dobPicker",
               "mandatory": true,
               "deleteFlag": false,
-              "innerLabel": "",
+              // "innerLabel": "",
+              "innerLabel": "HCM_REGISTRATION_DOB_LABEL_INNER",
               "schemaCode": null,
               "systemDate": false,
               "validations": [
@@ -3325,32 +3509,24 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 7,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
               "includeInSummary": true,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
               "visibilityCondition": {
                 "expression": [
                   {
@@ -3371,32 +3547,24 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 8,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
               "additionalFields": true,
               "includeInSummary": true,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
               "visibilityCondition": {
                 "expression": [
                   {
@@ -3411,10 +3579,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
               // "order": 8,
               // Synced with MDMS HOUSEHOLDSTRATEGY: after zeroDoseDTP and prevRoundDose.
-              "order": 10,
+              "order": 9,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4028,7 +4196,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "fieldName": "dobPicker",
               "mandatory": true,
               "deleteFlag": false,
-              "innerLabel": "",
+              // "innerLabel": "",
+              "innerLabel": "HCM_REGISTRATION_DOB_LABEL_INNER",
               "schemaCode": null,
               "systemDate": false,
               "validations": [
@@ -4137,7 +4306,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "order": 8,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
@@ -4691,38 +4860,8 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             },
             {
               "type": "string",
-              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "latLng",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
-              "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
-              "isMultiSelect": false,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
-            {
-              "type": "string",
               "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
-              "order": 4,
+              "order": 3,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -4761,7 +4900,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -4800,7 +4939,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "string",
               "label": "HCM_REGISTRATION_LANDMARK_LABEL",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -4839,7 +4978,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             {
               "type": "integer",
               "label": "HCM_REGISTRATION_PINCODE_LABEL",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": true,
@@ -4910,6 +5049,36 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHER", "name": "HCM_COMMON_OTHER"}
               ],
               "includeInSummary": false
+            },
+            {
+              "type": "string",
+              "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                }
+              ],
+              "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
+              "isMultiSelect": false,
+              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
             }
           ],
           "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
@@ -5225,32 +5394,33 @@ final dynamic samplePolioHouseholdStrategyFlows = {
           "version": 1,
           "navigateTo": {"name": "household-overview", "type": "template"},
           "properties": [
-            {
-              "type": "string",
-              "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "latLng",
-              "mandatory": false,
-              "showLabel": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "additionalFields": true,
-              "includeInSummary": true
-            },
+            // Household location is used instead (householdLatLng nav param).
+            // {
+            //   "type": "string",
+            //   "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
+            //   "order": 1,
+            //   "value": "",
+            //   "format": "latLng",
+            //   "hidden": false,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "latLng",
+            //   "mandatory": false,
+            //   "showLabel": true,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [],
+            //   "errorMessage": "",
+            //   "includeInForm": true,
+            //   "isMultiSelect": false,
+            //   "additionalFields": true,
+            //   "includeInSummary": true
+            // },
             {
               "type": "string",
               "enums": [
@@ -5258,7 +5428,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "ABSENCE", "name": "UNABLETODELIVER_ABSENCE"}
               ],
               "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
-              "order": 2,
+              "order": 1,
               "value": "",
               "format": "radio",
               "hidden": false,
@@ -5326,7 +5496,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHERS", "name": "UNABLETODELIVER_ENUM_OTHERS"}
               ],
               "label": "UNABLETODELIVER_REFUSAL_REASON_LABEL",
-              "order": 3,
+              "order": 2,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -5354,17 +5524,14 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.reason=='REFUSED'"
-                  }
+                  {"condition": "unableToDeliver.reason=='REFUSED'"}
                 ]
               }
             },
             {
               "type": "string",
               "label": "UNABLETODELIVER_OTHER_REFUSAL_REASON_LABEL",
-              "order": 4,
+              "order": 3,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5392,10 +5559,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.refusalReason=='OTHERS'"
-                  }
+                  {"condition": "unableToDeliver.refusalReason=='OTHERS'"}
                 ]
               }
             },
@@ -5413,7 +5577,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "OTHER", "name": "UNABLETODELIVER_ENUM_OTHER"}
               ],
               "label": "UNABLETODELIVER_ABSENCE_REASON_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "dropdown",
               "hidden": false,
@@ -5441,17 +5605,14 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.reason=='ABSENCE'"
-                  }
+                  {"condition": "unableToDeliver.reason=='ABSENCE'"}
                 ]
               }
             },
             {
               "type": "string",
               "label": "UNABLETODELIVER_OTHER_ABSENCE_REASON_LABEL",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5479,10 +5640,7 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "additionalFields": true,
               "visibilityCondition": {
                 "expression": [
-                  {
-                    "type": "custom",
-                    "condition": "unableToDeliver.absenceReason=='OTHER'"
-                  }
+                  {"condition": "unableToDeliver.absenceReason=='OTHER'"}
                 ]
               }
             }
@@ -5522,7 +5680,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
               {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {
+                "key": "householdLatLng",
+                "value": "{{navigation.householdLatLng}}"
+              }
             ],
             "onError": [
               {
@@ -5670,113 +5832,79 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             },
             {
               "type": "string",
-              "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
+              "label": "UNABLETODELIVER_SITE_NAME_LABEL",
               "order": 1,
               "value": "",
-              "format": "latLng",
-              "hidden": false,
+              "format": "text",
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "latLng",
+              "fieldName": "siteName",
               "mandatory": false,
-              "showLabel": true,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage":
+                  "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
               "isMultiSelect": false,
-              "additionalFields": true,
-              "includeInSummary": true
+              "additionalFields": true
             },
-            // {
-            //   "type": "string",
-            //   "label": "UNABLETODELIVER_SITE_NAME_LABEL",
-            //   "order": 2,
-            //   "value": "",
-            //   "format": "text",
-            //   "hidden": true,
-            //   "isMdms": false,
-            //   "tooltip": "",
-            //   "helpText": "",
-            //   "infoText": "",
-            //   "readOnly": false,
-            //   "fieldName": "siteName",
-            //   "mandatory": false,
-            //   "deleteFlag": false,
-            //   "innerLabel": "",
-            //   "schemaCode": null,
-            //   "systemDate": false,
-            //   "validations": [
-            //     {
-            //       "type": "pattern",
-            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-            //     }
-            //   ],
-            //   "errorMessage":
-            //       "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
-            //   "isMultiSelect": false,
-            //   "additionalFields": true
-            // },
-            // {
-            //   "type": "string",
-            //   "label": "UNABLETODELIVER_REGION_LABEL",
-            //   "order": 3,
-            //   "value": "",
-            //   "format": "text",
-            //   "hidden": true,
-            //   "isMdms": false,
-            //   "tooltip": "",
-            //   "helpText": "",
-            //   "infoText": "",
-            //   "readOnly": false,
-            //   "fieldName": "region",
-            //   "mandatory": false,
-            //   "deleteFlag": false,
-            //   "innerLabel": "",
-            //   "schemaCode": null,
-            //   "systemDate": false,
-            //   "validations": [
-            //     {
-            //       "type": "pattern",
-            //       "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
-            //       "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-            //     }
-            //   ],
-            //   "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
-            //   "isMultiSelect": false,
-            //   "additionalFields": true
-            // },
             {
               "type": "string",
+              "label": "UNABLETODELIVER_REGION_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "region",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+\$",
+                  "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
+                }
+              ],
+              "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
+              "isMultiSelect": false,
+              "additionalFields": true
+            },
+            {
+              "type": "string",
+              // "enums": [],
+              // Location type; the matching master is picked in the next
+              // field (transitPostLocation or outsideHHPlaceLocation).
               "enums": [
-                {"code": "SCHOOL", "name": "VACCINATED_ELSEWHERE_ENUM_SCHOOL"},
-                {
-                  "code": "MARKETPLACE",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_MARKETPLACE"
-                },
-                {
-                  "code": "HEALTH_FACILITY",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_HEALTH_FACILITY"
-                },
-                {
-                  "code": "TRANSIT_POST",
-                  "name": "VACCINATED_ELSEWHERE_ENUM_TRANSIT_POST"
-                },
-                {"code": "OTHER", "name": "VACCINATED_ELSEWHERE_ENUM_OTHER"}
+                {"code": "TRANSIT_POST", "name": "GV_ENUM_TRANSIT_POST"},
+                {"code": "OUTSIDE_HH_PLACE", "name": "GV_ENUM_OUTSIDE_HH_PLACE"}
               ],
               "label": "VACCINATED_ELSEWHERE_LOCATION_LABEL",
-              "order": 2,
+              "order": 3,
               "value": "",
               "format": "dropdown",
               "hidden": false,
-              "isMdms": true,
+              // "isMdms": true,
+              "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -5791,8 +5919,9 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               // "schemaCode": "common-masters.GroupVaccinationLocations",
               // Options from both masters, merged in this order; a code
               // repeated in the second master is dropped (mdms_enum_utils.dart).
-              "schemaCode":
-                  "common-masters.GroupVaccinationLocations,common-masters.GroupVaccinationLocationsCLF",
+              // "schemaCode":
+              //     "common-masters.GroupVaccinationLocations,common-masters.GroupVaccinationLocationsCLF",
+              "schemaCode": null,
               "systemDate": false,
               "validations": [
                 {
@@ -5810,8 +5939,75 @@ final dynamic samplePolioHouseholdStrategyFlows = {
             },
             {
               "type": "string",
+              "label": "VACCINATED_ELSEWHERE_TRANSIT_POST_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "transitPostLocation",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "common-masters.GroupVaccinationLocations",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "vaccinatedElsewhere.vaccinationLocation==TRANSIT_POST"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "VACCINATED_ELSEWHERE_OUTSIDE_HH_PLACE_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "outsideHHPlaceLocation",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "common-masters.GroupVaccinationLocationsCLF",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "additionalFields": true,
+              "includeInSummary": true,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "vaccinatedElsewhere.vaccinationLocation==OUTSIDE_HH_PLACE"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
               "label": "VACCINATED_ELSEWHERE_LOCATION_OTHER_LABEL",
-              "order": 3,
+              // "order": 2,
+              "order": 6,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -5835,14 +6031,45 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "includeInSummary": true,
               "visibilityCondition": {
                 "expression": [
+                  // {
+                  //   "type": "custom",
+                  //   "condition":
+                  //       "vaccinatedElsewhere.vaccinationLocation=='OTHER'"
+                  // }
                   {
-                    "type": "custom",
                     "condition":
-                        "vaccinatedElsewhere.vaccinationLocation=='OTHER'"
+                        "vaccinatedElsewhere.transitPostLocation==OTHER || vaccinatedElsewhere.outsideHHPlaceLocation==OTHER"
                   }
                 ]
               }
-            }
+            },
+            // Household location is used instead (householdLatLng nav param).
+            // {
+            //   "type": "string",
+            //   "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
+            //   "order": 3,
+            //   "value": "",
+            //   "format": "latLng",
+            //   "hidden": false,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "fieldName": "latLng",
+            //   "mandatory": false,
+            //   "showLabel": true,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [],
+            //   "errorMessage": "",
+            //   "includeInForm": true,
+            //   "isMultiSelect": false,
+            //   "additionalFields": true,
+            //   "includeInSummary": true
+            // },
           ],
           "actionLabel": "VACCINATED_ELSEWHERE_FLOW_ACTION_LABEL",
           "description": "VACCINATED_ELSEWHERE_FLOW_DESCRIPTION",
@@ -5867,7 +6094,11 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               },
               {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
               {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
-              {"key": "isRevisit", "value": "{{navigation.isRevisit}}"}
+              {"key": "isRevisit", "value": "{{navigation.isRevisit}}"},
+              {
+                "key": "householdLatLng",
+                "value": "{{navigation.householdLatLng}}"
+              }
             ],
             "onError": [
               {
@@ -6095,37 +6326,38 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               "isMultiSelect": false,
               "includeInSummary": true
             },
-            {
-              "type": "string",
-              "label": "HCM_REDOSE_LAT_LONG_LABEL",
-              "order": 5,
-              "value": "",
-              "format": "latLng",
-              "hidden": false,
-              "isMdms": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "required": true,
-              "fieldName": "latLng",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": null,
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
-              "errorMessage": "REGISTRATION_REDOSE_latLng_ERROR",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-            },
+            // Household location is used instead (householdLatLng nav param).
+            // {
+            //   "type": "string",
+            //   "label": "HCM_REDOSE_LAT_LONG_LABEL",
+            //   "order": 5,
+            //   "value": "",
+            //   "format": "latLng",
+            //   "hidden": false,
+            //   "isMdms": false,
+            //   "tooltip": "",
+            //   "helpText": "",
+            //   "infoText": "",
+            //   "readOnly": false,
+            //   "required": true,
+            //   "fieldName": "latLng",
+            //   "mandatory": true,
+            //   "deleteFlag": false,
+            //   "innerLabel": "",
+            //   "schemaCode": null,
+            //   "systemDate": false,
+            //   "validations": [
+            //     {
+            //       "type": "required",
+            //       "value": true,
+            //       "message": "HCM_VALIDATION_REQUIRED_FIELD"
+            //     }
+            //   ],
+            //   "errorMessage": "REGISTRATION_REDOSE_latLng_ERROR",
+            //   "includeInForm": true,
+            //   "isMultiSelect": false,
+            //   "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
+            // },
             {
               "type": "string",
               "enums": [
@@ -6134,29 +6366,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_DOSE",
-              "order": 6,
+              "order": 5,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "zeroDoseDTP",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -6171,29 +6396,22 @@ final dynamic samplePolioHouseholdStrategyFlows = {
                 {"code": "NOT_SURE", "name": "HCM_COMMON_NOT_SURE"}
               ],
               "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_DOSE",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "radio",
-              "hidden": false,
+              "hidden": true,
               "isMdms": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "required": true,
               "fieldName": "prevRoundDose",
-              "mandatory": true,
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                }
-              ],
+              "validations": [],
               "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
               "includeInForm": true,
               "isMultiSelect": false,
@@ -6226,6 +6444,10 @@ final dynamic samplePolioHouseholdStrategyFlows = {
               {
                 "key": "deliveryStrategy",
                 "value": "{{navigation.deliveryStrategy}}"
+              },
+              {
+                "key": "householdLatLng",
+                "value": "{{navigation.householdLatLng}}"
               }
             ],
             "onError": [

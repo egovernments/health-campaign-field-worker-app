@@ -45,7 +45,16 @@ class MenuCardWidget extends ResolvedFlowWidget {
       alignment: styling['alignment'] as String?,
       iconPosition: styling['iconPosition'] as String?,
       descriptionAlignment: styling['descriptionAlignment'] as String?,
+      iconSize: _parseIconSize(styling['iconSize']),
     );
+  }
+
+  /// Reads `styling.iconSize` as a number or numeric string (MDMS may send
+  /// either). Missing, invalid or non-positive values return null, so the
+  /// card keeps its default size.
+  double? _parseIconSize(dynamic value) {
+    final size = value is num ? value.toDouble() : double.tryParse('$value');
+    return (size != null && size.isFinite && size > 0) ? size : null;
   }
 
   void _runOnTap(
@@ -109,6 +118,7 @@ class _StyledMenuCard extends StatefulWidget {
   final String? alignment;
   final String? iconPosition;
   final String? descriptionAlignment;
+  final double? iconSize;
 
   const _StyledMenuCard({
     required this.heading,
@@ -118,6 +128,7 @@ class _StyledMenuCard extends StatefulWidget {
     required this.alignment,
     required this.iconPosition,
     required this.descriptionAlignment,
+    this.iconSize,
   });
 
   @override
@@ -178,7 +189,8 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
     final isMobile = AppView.isMobileView(MediaQuery.of(context).size);
     final isTab = AppView.isTabletView(MediaQuery.of(context).size);
 
-    final iconSize = isMobile ? 24.0 : (isTab ? 32.0 : 32.0);
+    final iconSize =
+        widget.iconSize ?? (isMobile ? 24.0 : (isTab ? 32.0 : 32.0));
     final iconWidget = widget.icon == null
         ? null
         : Icon(
@@ -216,7 +228,8 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
         ],
       );
     } else {
-      final useExpandedHeading = headingAlign == null || headingAlign == 'start';
+      final useExpandedHeading =
+          headingAlign == null || headingAlign == 'start';
       iconAndHeading = Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: _mainAxis(headingAlign),
@@ -267,6 +280,7 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
               )
             : null,
         child: DigitCard(
+          padding: const EdgeInsets.all(18),
           spacing: 12,
           children: [
             iconAndHeading,

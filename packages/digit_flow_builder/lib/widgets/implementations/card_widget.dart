@@ -65,6 +65,29 @@ class CardWidget extends ResolvedFlowWidget {
     }
   }
 
+  /// Reads `properties.padding`. Returns null when it is not set, so the card
+  /// keeps DigitCard's default (16 mobile / 20 tablet / 24 desktop).
+  /// Accepts:
+  ///   - a number or spacer token for all sides: `8`, `"8"`, `"spacer2"`
+  ///   - a map: `{"vertical": 8, "horizontal": 16}`, or per side with
+  ///     `top`/`bottom`/`left`/`right` (per side wins over vertical/horizontal;
+  ///     sides not given are 0).
+  EdgeInsets? _parsePadding(dynamic value) {
+    if (value == null) return null;
+    double size(dynamic v) => WidgetParsers.parseSize(v?.toString());
+    if (value is Map) {
+      final v = size(value['vertical']);
+      final h = size(value['horizontal']);
+      return EdgeInsets.only(
+        top: value['top'] != null ? size(value['top']) : v,
+        bottom: value['bottom'] != null ? size(value['bottom']) : v,
+        left: value['left'] != null ? size(value['left']) : h,
+        right: value['right'] != null ? size(value['right']) : h,
+      );
+    }
+    return EdgeInsets.all(size(value));
+  }
+
   @override
   Widget buildResolved(
     Map<String, dynamic> json,
@@ -93,6 +116,7 @@ class CardWidget extends ResolvedFlowWidget {
     return DigitCard(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.zero,
+      padding: _parsePadding(json['properties']?['padding']),
       spacing: spacing,
       borderRadius: borderRadius,
       cardType: WidgetParsers.parseCardType(cardTypeStr),
