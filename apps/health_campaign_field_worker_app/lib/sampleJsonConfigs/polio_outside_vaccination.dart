@@ -11,6 +11,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           {
             "type": "template",
             "format": "row",
+            "properties": {"gap": 16},
             "children": [
               {
                 "type": "template",
@@ -173,6 +174,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "type": "template",
             "label": "GV_CLF_NEARBY_COUNT",
             "format": "textTemplate",
+            "visible": "{{fn:countLocatedSites(contextData)}} > 0",
             "fieldName": "nearbySiteCount",
             "labelPlaceHolders": [
               {"key": "COUNT", "value": "{{fn:countLocatedSites(contextData)}}"}
@@ -1426,6 +1428,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
           {
             "type": "template",
             "format": "row",
+            "properties": {"gap": 16},
             "children": [
               {
                 "type": "template",
@@ -1591,6 +1594,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "type": "template",
             "label": "GV_TRANSIT_NEARBY_COUNT",
             "format": "textTemplate",
+            "visible": "{{fn:countLocatedSites(contextData)}} > 0",
             "fieldName": "nearbySiteCount",
             "labelPlaceHolders": [
               {"key": "COUNT", "value": "{{fn:countLocatedSites(contextData)}}"}
