@@ -46,6 +46,7 @@ class MenuCardWidget extends ResolvedFlowWidget {
       iconPosition: styling['iconPosition'] as String?,
       descriptionAlignment: styling['descriptionAlignment'] as String?,
       iconSize: _parseIconSize(styling['iconSize']),
+      elevated: styling['elevated'] == true,
     );
   }
 
@@ -120,6 +121,10 @@ class _StyledMenuCard extends StatefulWidget {
   final String? descriptionAlignment;
   final double? iconSize;
 
+  /// Adds a drop shadow so the card reads as tappable. DigitCard's own
+  /// shadow (1px blur 2) is too faint to see on the grey background.
+  final bool elevated;
+
   const _StyledMenuCard({
     required this.heading,
     required this.description,
@@ -129,6 +134,7 @@ class _StyledMenuCard extends StatefulWidget {
     required this.iconPosition,
     required this.descriptionAlignment,
     this.iconSize,
+    this.elevated = false,
   });
 
   @override
@@ -270,13 +276,25 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
       onHover: (hover) => setState(() => _isHovered = hover),
       onTap: widget.onTap,
       child: Container(
-        decoration: widget.onTap != null && _isHovered
+        decoration: (widget.onTap != null && _isHovered) || widget.elevated
             ? BoxDecoration(
-                borderRadius: BorderRadius.circular(spacer1),
-                border: Border.all(
-                  width: 1,
-                  color: theme.colorTheme.primary.primary1,
-                ),
+                borderRadius:
+                    BorderRadius.circular(widget.elevated ? radius4 : spacer1),
+                border: widget.onTap != null && _isHovered
+                    ? Border.all(
+                        width: 1,
+                        color: theme.colorTheme.primary.primary1,
+                      )
+                    : null,
+                boxShadow: widget.elevated
+                    ? [
+                        BoxShadow(
+                          color: theme.colorTheme.text.primary.withOpacity(.16),
+                          offset: const Offset(0, spacer1 / 2),
+                          blurRadius: spacer2,
+                        ),
+                      ]
+                    : null,
               )
             : null,
         child: DigitCard(

@@ -1342,7 +1342,13 @@ class _BoundarySelectionPageState
                                                       levelName),
                                               style: Theme.of(context)
                                                   .digitTextTheme(context)
-                                                  .bodyS,
+                                                  .headingS
+                                                  .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorTheme
+                                                        .primary
+                                                        .primary2,
+                                                  ),
                                             ),
                                             const SizedBox(height: spacer2),
                                             DigitButton(

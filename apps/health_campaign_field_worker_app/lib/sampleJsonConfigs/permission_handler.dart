@@ -258,7 +258,7 @@ final dynamic permission_handler_config = {
                         "mainAxisSize": "min"
                       },
                       "children": [
-                        {"format": "icon", "value": "Share"},
+                        {"format": "icon", "value": "Send"},
                         {
                           "format": "column",
                           "expanded": true,
