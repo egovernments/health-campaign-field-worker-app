@@ -766,13 +766,23 @@ class _LatLngBuilderStatefulWrapperState
     final loc = FormLocalization.of(context);
     final theme = Theme.of(context);
 
-    // Only react to actual reading changes; loading/permission flag toggles
-    // re-emit the previous (possibly stale) coordinates.
+    // React to reading changes, and to the end of a location load. Other
+    // flag toggles re-emit the previous (possibly stale) coordinates, but a
+    // load that finishes has just fetched a fresh fix: when it equals the
+    // stored one (a phone standing still, or the bloc already holding this
+    // reading from another screen) nothing "changes", and without this the
+    // dialog would wait forever on "Searching...".
     return BlocListener<LocationBloc, LocationState>(
       listenWhen: (prev, curr) =>
           prev.latitude != curr.latitude ||
           prev.longitude != curr.longitude ||
-          prev.accuracy != curr.accuracy,
+          prev.accuracy != curr.accuracy ||
+          // A load that ended without permission or with location off
+          // fetched nothing, so only a successful one counts.
+          (prev.loading &&
+              !curr.loading &&
+              curr.hasPermissions == true &&
+              curr.serviceEnabled),
       listener: (context, state) => _onReading(state),
       child: Builder(builder: (context) {
         String displayText = '';
