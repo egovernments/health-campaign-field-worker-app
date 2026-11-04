@@ -35,6 +35,8 @@ import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart' show SyncLock;
 import 'package:sync_service/utils/utils.dart' as sync_utils;
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
@@ -705,10 +707,25 @@ void attemptSyncUp(BuildContext context) async {
   }
 
   if (context.mounted) {
+    // New settlements and location tracking are queued as userLocation
+    // entries. Their remote repository exists only when the service registry
+    // has userLocation, so add the pair together: a local without its remote
+    // would make sync-up throw.
+    final userLocationRemote = (() {
+      try {
+        return context
+            .read<RemoteRepository<UserActionModel, UserActionSearchModel>>();
+      } catch (_) {
+        return null;
+      }
+    })();
+
     context.read<SyncBloc>().add(
           SyncSyncUpEvent(
             userId: context.loggedInUserUuid,
             localRepositories: [
+              if (userLocationRemote != null)
+                context.read<LocationTrackerLocalBaseRepository>(),
               // INFO : Need to add local repo of package Here
               context.read<
                   LocalRepository<IndividualModel, IndividualSearchModel>>(),
@@ -749,6 +766,7 @@ void attemptSyncUp(BuildContext context) async {
                       ProjectFacilitySearchModel>>(),
             ],
             remoteRepositories: [
+              if (userLocationRemote != null) userLocationRemote,
               // INFO : Need to add repo repo of package Here
               context.read<
                   RemoteRepository<IndividualModel, IndividualSearchModel>>(),
