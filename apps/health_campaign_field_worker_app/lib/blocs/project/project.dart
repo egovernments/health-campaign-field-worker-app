@@ -663,8 +663,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .where((b) => b.code != null && b.boundaryNum == level)
         .map((b) => b.code!)
         .toSet();
+    // With includeDescendants the server returns every site at or below the
+    // searched boundary, so one search from the project's assigned boundary
+    // covers the whole area. Without an assigned code, search the level
+    // above the lowest (each of those also brings back its children).
     final aboveLowest = codesAt(lowest - 1);
-    final codes = aboveLowest.isNotEmpty ? aboveLowest : codesAt(lowest);
+    final codes = (assignedCode != null && assignedCode.isNotEmpty)
+        ? {assignedCode}
+        : (aboveLowest.isNotEmpty ? aboveLowest : codesAt(lowest));
     if (codes.isEmpty) return;
 
     final sites = <FacilityModel>[];
@@ -676,6 +682,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               tenantId: envConfig.variables.tenantId,
               usage: usage,
               boundaryCode: code,
+              includeDescendants: true,
             ),
           ));
         } catch (e) {
@@ -1297,6 +1304,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
         boundaries = _withAncestorPrefix(boundaries, ancestorPrefix);
+        // A refetch (first login after a logout, or a new egov-location
+        // version) replaces the stored tree. Adding to it would keep the
+        // previous user's or the old assignment's boundaries, which then
+        // show up on the boundary page. Only clear once the download has
+        // something to replace them with.
+        if (boundaries.isNotEmpty) {
+          await boundaryLocalRepository.delete(
+            BoundaryModel(),
+            createOpLog: false,
+          );
+        }
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);

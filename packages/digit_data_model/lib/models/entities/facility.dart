@@ -15,8 +15,12 @@ class FacilitySearchModel extends EntitySearchModel
   final int? storageCapacity;
   final String? tenantId;
   final String? name;
+
+  /// Also match facilities in boundaries below [boundaryCode].
+  final bool? includeDescendants;
   FacilitySearchModel({
     this.name,
+    this.includeDescendants,
     this.id,
     this.clientReferenceId,
     this.isPermanent,
@@ -30,6 +34,7 @@ class FacilitySearchModel extends EntitySearchModel
   @MappableConstructor()
   FacilitySearchModel.ignoreDeleted({
     this.name,
+    this.includeDescendants,
     this.id,
     this.clientReferenceId,
     this.isPermanent,

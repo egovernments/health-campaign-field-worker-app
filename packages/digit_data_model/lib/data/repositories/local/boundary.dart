@@ -73,7 +73,7 @@ class BoundaryLocalRepository
             .map((e) => _toModel(e.readTable(sql.boundary)))
             .toList();
 
-        return _singleChain(rows);
+        return _singleChain(rows, anchorCode: query.codes);
       } else {
         (selectQuery
           ..where(buildAnd([
@@ -110,21 +110,46 @@ class BoundaryLocalRepository
   /// From rows sorted by boundaryNum, picks one row per level, preferring a
   /// row that sits under the row picked for the level above, so the result
   /// is a root-to-leaf chain whatever order the rows were stored in.
-  List<BoundaryModel> _singleChain(List<BoundaryModel> sorted) {
+  ///
+  /// With [anchorCode] (the project's boundary), the chain runs through that
+  /// boundary: its ancestors and itself come from its materializedPath, and
+  /// only the levels below it are picked freely. Without this the chain
+  /// started from whichever root row came first, which could belong to
+  /// another project or a previous user's boundaries left in the table.
+  List<BoundaryModel> _singleChain(
+    List<BoundaryModel> sorted, {
+    String? anchorCode,
+  }) {
     final byLevel = <int, List<BoundaryModel>>{};
     for (final row in sorted) {
       byLevel.putIfAbsent(row.boundaryNum!, () => []).add(row);
     }
 
+    final anchor = anchorCode == null || anchorCode.isEmpty
+        ? null
+        : sorted.where((b) => b.code == anchorCode).firstOrNull;
+    final anchorPath = anchor?.materializedPath?.split('.') ?? const [];
+
     final chain = <BoundaryModel>[];
-    for (final rows in byLevel.values) {
+    for (final entry in byLevel.entries) {
+      final rows = entry.value;
       final parentPath = chain.lastOrNull?.materializedPath;
-      chain.add(parentPath == null
-          ? rows.first
-          : rows.firstWhere(
-              (b) => b.materializedPath?.startsWith('$parentPath.') ?? false,
-              orElse: () => rows.first,
-            ));
+      final underParent = parentPath == null
+          ? rows
+          : rows
+              .where((b) =>
+                  b.materializedPath?.startsWith('$parentPath.') ?? false)
+              .toList();
+      if (anchor != null && entry.key <= anchor.boundaryNum!) {
+        // At or above the anchor: only the anchor's own ancestor qualifies.
+        final onPath =
+            underParent.where((b) => anchorPath.contains(b.code)).firstOrNull;
+        if (onPath != null) {
+          chain.add(onPath);
+          continue;
+        }
+      }
+      chain.add(underParent.firstOrNull ?? rows.first);
     }
 
     return chain;
@@ -133,8 +158,10 @@ class BoundaryLocalRepository
   @override
   FutureOr<void> delete(BoundaryModel entity, {bool createOpLog = true}) async {
     super.delete(entity, createOpLog: createOpLog);
+    // Awaited so a caller that clears the table and then writes fresh rows
+    // can't have the delete land after the write.
     return retryLocalCallOperation(() async {
-      sql
+      await sql
           .delete(
             sql.boundary,
           )
