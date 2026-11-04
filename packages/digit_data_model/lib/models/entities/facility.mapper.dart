@@ -24,10 +24,6 @@ class FacilitySearchModelMapper
   static String? _$name(FacilitySearchModel v) => v.name;
   static const Field<FacilitySearchModel, String> _f$name =
       Field('name', _$name, opt: true);
-  static bool? _$includeDescendants(FacilitySearchModel v) =>
-      v.includeDescendants;
-  static const Field<FacilitySearchModel, bool> _f$includeDescendants =
-      Field('includeDescendants', _$includeDescendants, opt: true);
   static List<String>? _$id(FacilitySearchModel v) => v.id;
   static const Field<FacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
@@ -62,7 +58,6 @@ class FacilitySearchModelMapper
   @override
   final MappableFields<FacilitySearchModel> fields = const {
     #name: _f$name,
-    #includeDescendants: _f$includeDescendants,
     #id: _f$id,
     #clientReferenceId: _f$clientReferenceId,
     #isPermanent: _f$isPermanent,
@@ -87,7 +82,6 @@ class FacilitySearchModelMapper
   static FacilitySearchModel _instantiate(DecodingData data) {
     return FacilitySearchModel.ignoreDeleted(
         name: data.dec(_f$name),
-        includeDescendants: data.dec(_f$includeDescendants),
         id: data.dec(_f$id),
         clientReferenceId: data.dec(_f$clientReferenceId),
         isPermanent: data.dec(_f$isPermanent),
@@ -158,7 +152,6 @@ abstract class FacilitySearchModelCopyWith<$R, $In extends FacilitySearchModel,
   @override
   $R call(
       {String? name,
-      bool? includeDescendants,
       List<String>? id,
       List<String>? clientReferenceId,
       bool? isPermanent,
@@ -195,7 +188,6 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? name = $none,
-          Object? includeDescendants = $none,
           Object? id = $none,
           Object? clientReferenceId = $none,
           Object? isPermanent = $none,
@@ -205,8 +197,6 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (name != $none) #name: name,
-        if (includeDescendants != $none)
-          #includeDescendants: includeDescendants,
         if (id != $none) #id: id,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (isPermanent != $none) #isPermanent: isPermanent,
@@ -219,8 +209,6 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   FacilitySearchModel $make(CopyWithData data) =>
       FacilitySearchModel.ignoreDeleted(
           name: data.get(#name, or: $value.name),
-          includeDescendants:
-              data.get(#includeDescendants, or: $value.includeDescendants),
           id: data.get(#id, or: $value.id),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),

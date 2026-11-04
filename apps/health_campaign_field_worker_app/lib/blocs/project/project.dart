@@ -428,94 +428,113 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .toList();
   }
 
+  /// Boundary types around the project's assigned boundary, in the order the
+  /// project-facility search expects: parent, current, child. Null when the
+  /// project has no assigned boundary.
+  Future<({String? parent, String current, String? child})?>
+      _projectBoundaryLevels(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
+    final assignedBoundaryType = project.address?.boundaryType;
+    final assignedBoundaryCode = project.address?.boundary;
+    if (assignedBoundaryType == null || assignedBoundaryCode == null) {
+      return null;
+    }
+    // Derive parent → current → child boundary types from the boundary
+    // search API response for the CURRENT hierarchy (multi-hierarchy
+    // safe). We fetch the full hierarchy tree with no `codes` filter (or
+    // reuse one already fetched by the caller); the remote client's
+    // `_flattenBoundaryMap` computes `materializedPath` and
+    // `boundaryNum` root-to-leaf, so once flattened we can locate the
+    // assigned code by materializedPath (which is unique) and take
+    // parent (boundaryNum-1) and child (boundaryNum+1) types.
+    try {
+      // `??` only fires on null, so an empty list from a caller whose
+      // own fetch failed would be accepted and leave the parent/child
+      // type lookup with nothing to match. Treat empty as not prefetched.
+      final treeRows = (prefetchedTree != null && prefetchedTree.isNotEmpty)
+          ? prefetchedTree
+          : await boundaryRemoteRepository.search(
+              BoundarySearchModel(),
+            );
+
+      // Locate the assigned row anywhere in the tree by exact code
+      // match.
+      final assigned = treeRows.firstWhere(
+        (b) => b.code == assignedBoundaryCode,
+        orElse: () => BoundaryModel(code: assignedBoundaryCode),
+      );
+
+      final assignedPath = assigned.materializedPath;
+      final assignedNum = assigned.boundaryNum;
+
+      String? parentType;
+      String? childType;
+
+      if (assignedNum != null && assignedPath != null) {
+        // Parent's materializedPath is assigned's minus the last
+        // (dot-separated) segment. This is authoritative — no
+        // reliance on boundary-code underscore structure.
+        if (assignedNum > 1) {
+          final segs = assignedPath.split('.');
+          if (segs.length >= 2) {
+            final parentPath = segs.sublist(0, segs.length - 1).join('.');
+            final parent = treeRows.firstWhere(
+              (b) =>
+                  b.materializedPath == parentPath &&
+                  b.label != null &&
+                  b.label!.isNotEmpty,
+              orElse: () => BoundaryModel(),
+            );
+            parentType = parent.label;
+          }
+        }
+
+        // Child = any row whose materializedPath starts with
+        // assigned's + '.' and whose boundaryNum is exactly one deeper.
+        final childPrefix = '$assignedPath.';
+        final child = treeRows.firstWhere(
+          (b) =>
+              b.boundaryNum == assignedNum + 1 &&
+              b.label != null &&
+              b.label!.isNotEmpty &&
+              (b.materializedPath?.startsWith(childPrefix) ?? false),
+          orElse: () => BoundaryModel(),
+        );
+        childType = child.label;
+      }
+
+      return (
+        parent: (parentType?.isNotEmpty ?? false) ? parentType : null,
+        current: assignedBoundaryType,
+        child: (childType?.isNotEmpty ?? false) ? childType : null,
+      );
+    } catch (e) {
+      // Any failure falls through to the current-type-only default
+      // below, same as the old MDMS path when it couldn't find a match.
+      debugPrint('boundary-derivation from search response failed: $e');
+    }
+
+    return (parent: null, current: assignedBoundaryType, child: null);
+  }
+
   FutureOr<void> _loadProjectFacilities(
     ProjectModel project, {
     List<BoundaryModel>? prefetchedTree,
   }) async {
     final userObject = await localSecureStore.userRequestModel;
-    final assignedBoundaryType = project.address?.boundaryType;
-    final assignedBoundaryCode = project.address?.boundary;
-    List<String>? boundaryTypes;
-
-    if (assignedBoundaryType != null && assignedBoundaryCode != null) {
-      // Derive parent → current → child boundary types from the boundary
-      // search API response for the CURRENT hierarchy (multi-hierarchy
-      // safe). We fetch the full hierarchy tree with no `codes` filter (or
-      // reuse one already fetched by the caller); the remote client's
-      // `_flattenBoundaryMap` computes `materializedPath` and
-      // `boundaryNum` root-to-leaf, so once flattened we can locate the
-      // assigned code by materializedPath (which is unique) and take
-      // parent (boundaryNum-1) and child (boundaryNum+1) types.
-      try {
-        // `??` only fires on null, so an empty list from a caller whose
-        // own fetch failed would be accepted and leave the parent/child
-        // type lookup with nothing to match. Treat empty as not prefetched.
-        final treeRows = (prefetchedTree != null && prefetchedTree.isNotEmpty)
-            ? prefetchedTree
-            : await boundaryRemoteRepository.search(
-                BoundarySearchModel(),
-              );
-
-        // Locate the assigned row anywhere in the tree by exact code
-        // match.
-        final assigned = treeRows.firstWhere(
-          (b) => b.code == assignedBoundaryCode,
-          orElse: () => BoundaryModel(code: assignedBoundaryCode),
-        );
-
-        final assignedPath = assigned.materializedPath;
-        final assignedNum = assigned.boundaryNum;
-
-        String? parentType;
-        String? childType;
-
-        if (assignedNum != null && assignedPath != null) {
-          // Parent's materializedPath is assigned's minus the last
-          // (dot-separated) segment. This is authoritative — no
-          // reliance on boundary-code underscore structure.
-          if (assignedNum > 1) {
-            final segs = assignedPath.split('.');
-            if (segs.length >= 2) {
-              final parentPath = segs.sublist(0, segs.length - 1).join('.');
-              final parent = treeRows.firstWhere(
-                (b) =>
-                    b.materializedPath == parentPath &&
-                    b.label != null &&
-                    b.label!.isNotEmpty,
-                orElse: () => BoundaryModel(),
-              );
-              parentType = parent.label;
-            }
-          }
-
-          // Child = any row whose materializedPath starts with
-          // assigned's + '.' and whose boundaryNum is exactly one deeper.
-          final childPrefix = '$assignedPath.';
-          final child = treeRows.firstWhere(
-            (b) =>
-                b.boundaryNum == assignedNum + 1 &&
-                b.label != null &&
-                b.label!.isNotEmpty &&
-                (b.materializedPath?.startsWith(childPrefix) ?? false),
-            orElse: () => BoundaryModel(),
-          );
-          childType = child.label;
-        }
-
-        boundaryTypes = [
-          if (parentType != null && parentType.isNotEmpty) parentType,
-          assignedBoundaryType,
-          if (childType != null && childType.isNotEmpty) childType,
-        ];
-      } catch (e) {
-        // Any failure falls through to the single-type default below —
-        // same behaviour the old MDMS path had when it couldn't find a
-        // match.
-        debugPrint('boundary-derivation from search response failed: $e');
-      }
-
-      boundaryTypes ??= [assignedBoundaryType];
-    }
+    final levels = await _projectBoundaryLevels(
+      project,
+      prefetchedTree: prefetchedTree,
+    );
+    final boundaryTypes = levels == null
+        ? null
+        : [
+            if (levels.parent != null) levels.parent!,
+            levels.current,
+            if (levels.child != null) levels.child!,
+          ];
 
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
@@ -607,131 +626,87 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .any((d) => d.deliveryMethod == 'OUTSIDEHOUSEHOLD'));
   }
 
-  /// Downloads the active outside-household sites of the worker's area (the
-  /// ones linked to this project) and their links.
+  /// Downloads the outside-household sites linked to this project.
   ///
-  /// The facility search only returns sites when `usage` is given. A
-  /// `boundaryCode` covers the boundaries below it, so the codes one level
-  /// above the lowest are enough to reach every lowest-level boundary: one
-  /// call per site type per such code. A tree with a single level is
-  /// searched by its own codes. The project-facility search by project id
-  /// alone leaves site links out on purpose; they are fetched by facility
-  /// id. Links are tagged `facilityLevel = site` so stock and referral
-  /// facility pickers, which keep `current` links only, never show a site.
+  /// The project-facility search with `onlyOutsideHouseholdSites=true`
+  /// returns the project's site links; the sites are then fetched by those
+  /// facility ids. Links are tagged `facilityLevel = site` so stock and
+  /// referral facility pickers, which keep `current` links only, never show
+  /// a site.
   FutureOr<void> _loadOutsideHouseholdSites(
     ProjectModel project, {
     List<BoundaryModel>? prefetchedTree,
   }) async {
     if (!_hasOutsideHouseholdDelivery(project)) return;
 
-    final tree = (prefetchedTree != null && prefetchedTree.isNotEmpty)
-        ? prefetchedTree
-        : await boundaryLocalRepository.search(BoundarySearchModel());
+    // Same boundary-typed search as _loadProjectFacilities, but without the
+    // parent level: sites belong to this boundary or the ones below it.
+    final boundaryLevels = await _projectBoundaryLevels(
+      project,
+      prefetchedTree: prefetchedTree,
+    );
+    final siteBoundaryTypes = boundaryLevels == null
+        ? null
+        : [
+            boundaryLevels.current,
+            if (boundaryLevels.child != null) boundaryLevels.child!,
+          ];
 
-    final flat = <BoundaryModel>[];
-    void walk(List<BoundaryModel> nodes) {
-      for (final node in nodes) {
-        flat.add(node);
-        if (node.children.isNotEmpty) walk(node.children);
-      }
-    }
+    // onlyOutsideHouseholdSites is a project-facility search option, not
+    // part of the generic RemoteRepository search.
+    final linkRepo = projectFacilityRemoteRepository;
+    final linkQuery = ProjectFacilitySearchModel(
+      projectId: [project.id],
+      boundaryTypes: siteBoundaryTypes,
+    );
+    final links = await (linkRepo is ProjectFacilityRemoteRepository
+        ? linkRepo.search(linkQuery, onlyOutsideHouseholdSites: true)
+        : linkRepo.search(linkQuery));
 
-    walk(tree);
-
-    // The prefetched tree is the whole tenant's hierarchy; keep only the
-    // project's assigned boundary and the ones below it.
-    final assignedCode = project.address?.boundary;
-    final assignedPath = flat
-        .firstWhere((b) => b.code == assignedCode,
-            orElse: () => BoundaryModel())
-        .materializedPath;
-    if (assignedPath != null && assignedPath.isNotEmpty) {
-      flat.retainWhere((b) =>
-          b.materializedPath == assignedPath ||
-          (b.materializedPath?.startsWith('$assignedPath.') ?? false));
-    } else if (identical(tree, prefetchedTree)) {
-      // Can't scope the tenant tree: use the stored rows, which already hold
-      // only the project's boundaries.
-      flat.clear();
-      walk(await boundaryLocalRepository.search(BoundarySearchModel()));
-    }
-
-    final levels = flat.map((b) => b.boundaryNum).whereType<int>().toList();
-    if (levels.isEmpty) return;
-    final lowest = levels.reduce((a, b) => a > b ? a : b);
-    Set<String> codesAt(int level) => flat
-        .where((b) => b.code != null && b.boundaryNum == level)
-        .map((b) => b.code!)
-        .toSet();
-    // With includeDescendants the server returns every site at or below the
-    // searched boundary, so one search from the project's assigned boundary
-    // covers the whole area. Without an assigned code, search the level
-    // above the lowest (each of those also brings back its children).
-    final aboveLowest = codesAt(lowest - 1);
-    final codes = (assignedCode != null && assignedCode.isNotEmpty)
-        ? {assignedCode}
-        : (aboveLowest.isNotEmpty ? aboveLowest : codesAt(lowest));
-    if (codes.isEmpty) return;
+    // A site set Inactive loses its link. Links of the project's other
+    // facilities (FacilityMap) are dropped below by the site-type check.
+    final activeLinks = links.where((l) => l.isDeleted != true).toList();
+    final siteIds = activeLinks.map((l) => l.facilityId).toSet().toList();
+    if (siteIds.isEmpty) return;
 
     final sites = <FacilityModel>[];
-    for (final code in codes) {
-      for (final usage in outsideHouseholdSiteTypes) {
-        try {
-          sites.addAll(await facilityRemoteRepository.search(
-            FacilitySearchModel(
-              tenantId: envConfig.variables.tenantId,
-              usage: usage,
-              boundaryCode: code,
-              includeDescendants: true,
-            ),
-          ));
-        } catch (e) {
-          debugPrint('site fetch failed for $usage in $code: $e');
-        }
-      }
-    }
-    if (sites.isEmpty) return;
-
-    // The app keys a site by its clientReferenceId (children vaccinated
-    // there carry it as resourceTag), so give planner-added sites that lack
-    // one the server id as a stable stand-in.
-    final normalised = sites
-        .map((f) => f.clientReferenceId == null
-            ? f.copyWith(clientReferenceId: f.id)
-            : f)
-        .toList();
-
-    // Only sites linked to this project are kept: a site set Inactive loses
-    // its link, and sites of other campaigns in the area never had one. A
-    // chunk whose link fetch fails saves none of its sites.
-    final siteIds = normalised.map((f) => f.id).toSet().toList();
-    final links = <ProjectFacilityModel>[];
     const chunkSize = 100;
     for (var i = 0; i < siteIds.length; i += chunkSize) {
       final end =
           (i + chunkSize < siteIds.length) ? i + chunkSize : siteIds.length;
       try {
-        links.addAll(await projectFacilityRemoteRepository.search(
-          ProjectFacilitySearchModel(
-            projectId: [project.id],
-            facilityId: siteIds.sublist(i, end),
+        sites.addAll(await facilityRemoteRepository.search(
+          FacilitySearchModel(
+            tenantId: envConfig.variables.tenantId,
+            id: siteIds.sublist(i, end),
           ),
         ));
       } catch (e) {
-        debugPrint('site link fetch failed for chunk starting at $i: $e');
+        debugPrint('site fetch failed for chunk starting at $i: $e');
       }
     }
 
-    final activeLinks = links.where((l) => l.isDeleted != true).toList();
-    final linkedIds = activeLinks.map((l) => l.facilityId).toSet();
-    final activeSites = normalised
-        .where((f) => f.isDeleted != true && linkedIds.contains(f.id))
+    // Keep site types only, so an ordinary facility link is never re-tagged
+    // `site`. The app keys a site by its clientReferenceId (children
+    // vaccinated there carry it as resourceTag), so planner-added sites that
+    // lack one get the server id as a stable stand-in.
+    final activeSites = sites
+        .where((f) =>
+            f.isDeleted != true &&
+            outsideHouseholdSiteTypes.contains(f.usage))
+        .map((f) => f.clientReferenceId == null
+            ? f.copyWith(clientReferenceId: f.id)
+            : f)
         .toList();
     if (activeSites.isEmpty) return;
 
+    final savedIds = activeSites.map((f) => f.id).toSet();
     await facilityLocalRepository.bulkCreate(activeSites);
     await projectFacilityLocalRepository.bulkCreate(
-      activeLinks.map(_tagAsSiteLink).toList(),
+      activeLinks
+          .where((l) => savedIds.contains(l.facilityId))
+          .map(_tagAsSiteLink)
+          .toList(),
     );
   }
 
@@ -1404,8 +1379,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       reportSyncProgress('projectFacility');
       await _loadProjectFacilities(event.model,
           prefetchedTree: fullBoundaryTree);
-      // Outside-household sites never come back from the project-id search
-      // above, so they get their own download. A failure here must not
+      // Outside-household site links only come back when asked for
+      // (onlyOutsideHouseholdSites), so sites get their own download. A failure here must not
       // block project selection.
       try {
         await _loadOutsideHouseholdSites(event.model,

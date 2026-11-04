@@ -22,6 +22,9 @@ class ProjectFacilityRemoteRepository
     int? limit,
     int? lastSyncedTime,
     bool? includeOnlyUpdatedByOthers,
+    // Return only the project's outside-household site links. Sent in the
+    // query string.
+    bool? onlyOutsideHouseholdSites,
   }) async {
     int defaultBatchSize = limit ?? 100;
     int currentOffset = offSet ?? 0;
@@ -45,6 +48,8 @@ class ProjectFacilityRemoteRepository
                 'limit': defaultBatchSize,
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+                if (onlyOutsideHouseholdSites != null)
+                  'onlyOutsideHouseholdSites': onlyOutsideHouseholdSites,
               },
               data: entityName == 'User'
                   ? query.toMap()
