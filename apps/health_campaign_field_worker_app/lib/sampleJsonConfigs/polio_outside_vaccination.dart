@@ -1591,6 +1591,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                           "root": "facility",
                           "value": "field.value",
                           "operation": "matches"
+                        },
+                        {
+                          "key": "projectId",
+                          "root": "projectFacility",
+                          "value": "{{singleton.selectedProject.id}}",
+                          "operation": "equals"
                         }
                       ],
                       "name": "sessionName",
@@ -1632,6 +1638,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                                   "root": "facility",
                                   "value": 5,
                                   "operation": "withinOrUnlocated"
+                                },
+                                {
+                                  "key": "projectId",
+                                  "root": "projectFacility",
+                                  "value": "{{singleton.selectedProject.id}}",
+                                  "operation": "equals"
                                 }
                               ],
                               "name": "siteProximity",
@@ -1719,6 +1731,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                                   "value":
                                       "{{singleton.boundaryAndParentCodes}}",
                                   "operation": "in"
+                                },
+                                {
+                                  "key": "projectId",
+                                  "root": "projectFacility",
+                                  "value": "{{singleton.selectedProject.id}}",
+                                  "operation": "equals"
                                 }
                               ],
                               "name": "sessions",
@@ -1980,6 +1998,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "root": "address",
                   "value": "{{singleton.boundaryAndParentCodes}}",
                   "operation": "in"
+                },
+                {
+                  "key": "projectId",
+                  "root": "projectFacility",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
                 }
               ],
               "name": "sessions",
@@ -2078,6 +2102,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                           "root": "facility",
                           "value": "field.value",
                           "operation": "matches"
+                        },
+                        {
+                          "key": "projectId",
+                          "root": "projectFacility",
+                          "value": "{{singleton.selectedProject.id}}",
+                          "operation": "equals"
                         }
                       ],
                       "name": "sessionName",
@@ -2119,6 +2149,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                                   "root": "facility",
                                   "value": 5,
                                   "operation": "withinOrUnlocated"
+                                },
+                                {
+                                  "key": "projectId",
+                                  "root": "projectFacility",
+                                  "value": "{{singleton.selectedProject.id}}",
+                                  "operation": "equals"
                                 }
                               ],
                               "name": "siteProximity",
@@ -2206,6 +2242,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                                   "value":
                                       "{{singleton.boundaryAndParentCodes}}",
                                   "operation": "in"
+                                },
+                                {
+                                  "key": "projectId",
+                                  "root": "projectFacility",
+                                  "value": "{{singleton.selectedProject.id}}",
+                                  "operation": "equals"
                                 }
                               ],
                               "name": "sessions",
@@ -2467,6 +2509,12 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "root": "address",
                   "value": "{{singleton.boundaryAndParentCodes}}",
                   "operation": "in"
+                },
+                {
+                  "key": "projectId",
+                  "root": "projectFacility",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
                 }
               ],
               "name": "sessions",
