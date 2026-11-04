@@ -272,9 +272,12 @@ class QueryBuilder {
     const earthRadius = 6371.0;
     const degToRad = math.pi / 180.0;
 
-    final deltaLat = radiusInKm / earthRadius;
+    // radius / earthRadius is an angle in radians; the stored coordinates
+    // are degrees, so convert. Without it a 5 km box was ~87 m across.
+    final deltaLat = (radiusInKm / earthRadius) / degToRad;
     final deltaLon =
-        radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+        (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+            degToRad;
 
     final minLat = centerLat - deltaLat;
     final maxLat = centerLat + deltaLat;
@@ -800,9 +803,11 @@ class QueryBuilder {
         const earthRadius = 6371.0;
         const degToRad = math.pi / 180.0;
 
-        final deltaLat = radiusInKm / earthRadius;
+        // Radians to degrees, as in the bounding box above.
+        final deltaLat = (radiusInKm / earthRadius) / degToRad;
         final deltaLon =
-            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+            (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+                degToRad;
 
         final minLat = centerLat - deltaLat;
         final maxLat = centerLat + deltaLat;
