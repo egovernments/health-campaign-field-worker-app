@@ -5,19 +5,18 @@ const schema = '''
   "pages": {
     "dummy": {
       "type": "object",
-      "required": ["name", "gender", "dateOfBirth"],
       "properties": {
         "name": {
           "type": "string",
-          "minLength": 2,
-          "maxLength": 20,
           "hint": "Enter name of user",
           "label": "Name",
+          "format": "text",
           "value": "Dennis"
         }, 
         "gender": {
           "type": "string",
-          "enums": ["Male", "Female", "Others", "Not specified"],
+           "format": "selection",
+          "enums": [{"code":"male", "name":"male"}, {"code":"female", "name":"female"}],
           "label": "Gender"
         },
         "dateOfBirth": {

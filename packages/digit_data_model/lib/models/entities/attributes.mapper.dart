@@ -277,8 +277,8 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static String? _$regex(AttributesModel v) => v.regex;
   static const Field<AttributesModel, String> _f$regex =
       Field('regex', _$regex, opt: true);
-  static int? _$order(AttributesModel v) => v.order;
-  static const Field<AttributesModel, int> _f$order =
+  static String? _$order(AttributesModel v) => v.order;
+  static const Field<AttributesModel, String> _f$order =
       Field('order', _$order, opt: true);
   static bool? _$nonRecoverableError(AttributesModel v) =>
       v.nonRecoverableError;
@@ -428,7 +428,7 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       bool? isActive,
       bool? required,
       String? regex,
-      int? order,
+      String? order,
       bool? nonRecoverableError,
       int? rowVersion,
       AuditDetails? auditDetails,

@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 
 import '../utils/environment_config.dart';
 
@@ -83,9 +85,35 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
+      case "HFReferrals":
+        final entity = entityList
+            .map((e) => HFReferralModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
       case "Services":
         final entity = entityList
             .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "UserActions":
+        final entity = entityList
+            .map((e) => UserActionModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "FaceAuthEvents":
+        final entity = entityList
+            .map((e) => FaceAuthEventModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      // Outside-household sites and their project links.
+      case "Facilities":
+        final entity = entityList
+            .map((e) => FacilityModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "ProjectFacilities":
+        final entity = entityList
+            .map((e) => ProjectFacilityModelMapper.fromJson(jsonEncode(e)))
             .toList();
         await local.bulkCreate(entity);
       default:
@@ -113,6 +141,10 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.hFReferral:
           case DataModelType.attendance:
           case DataModelType.service:
+          case DataModelType.faceAuthEvent:
+          case DataModelType.facility:
+          case DataModelType.projectFacility:
+            // case DataModelType.userAction:
             return true;
           default:
             return false;
@@ -134,6 +166,9 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.attendance:
           case DataModelType.userLocation:
           case DataModelType.userAction:
+          case DataModelType.faceAuthEvent:
+          case DataModelType.facility:
+          case DataModelType.projectFacility:
             return true;
           default:
             return false;
@@ -161,6 +196,12 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
     const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
     const serviceAttributesIdKey = 'serviceAttributesId';
+
+    // Report progress: searching for this entity type
+    sync_utils.SyncServiceSingleton().reportProgress(sync_utils.SyncProgress(
+      entityType: '${typeGroupedEntity.key.name} (${entities.length})',
+      operation: 'syncDown',
+    ));
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:
@@ -292,6 +333,131 @@ class SyncServiceMapper extends SyncEntityMapperListener {
                 entity.copyWith(
                   nonRecoverableError: true,
                 ),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      // Outside-household sites: a facility created on the phone is pushed
+      // in bulk when no single-create endpoint is configured, in which case
+      // the server id has to be looked up by clientReferenceId here. The
+      // link that refers to it is uploaded on the next pass, once
+      // `applyServerGeneratedId` has pointed it at the server id.
+      case DataModelType.facility:
+        responseEntities = await remote.search(FacilitySearchModel(
+          clientReferenceId: entities
+              .whereType<FacilityModel>()
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+          isDeleted: true,
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as FacilityModel;
+          final clientReferenceId = entity.clientReferenceId;
+          if (clientReferenceId == null) continue;
+          final responseEntity =
+              responseEntities.whereType<FacilityModel>().firstWhereOrNull(
+                    (e) => e.clientReferenceId == clientReferenceId,
+                  );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+                nonRecoverableError: element.nonRecoverableError,
+              ),
+            );
+            if (local is FacilityLocalRepository) {
+              await local.applyServerGeneratedId(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                rowVersion: rowVersion,
+              );
+            }
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(clientReferenceId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      case DataModelType.projectFacility:
+        // The oplog copy of a link still holds the facility placeholder, so
+        // read the current rows to get the resolved facilityId.
+        final queued = entities.whereType<ProjectFacilityModel>().toList();
+        final clientReferenceIds =
+            queued.map((e) => e.clientReferenceId).whereNotNull().toList();
+        if (clientReferenceIds.isEmpty) break;
+        final current = await local.search(ProjectFacilitySearchModel(
+          clientReferenceId: clientReferenceIds,
+        ));
+        final currentLinks = current.whereType<ProjectFacilityModel>().toList();
+        if (currentLinks.isEmpty) break;
+
+        responseEntities = await remote.search(ProjectFacilitySearchModel(
+          projectId: currentLinks.map((e) => e.projectId).toSet().toList(),
+          facilityId: currentLinks.map((e) => e.facilityId).toSet().toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as ProjectFacilityModel;
+          final clientReferenceId = entity.clientReferenceId;
+          if (clientReferenceId == null) continue;
+          final link = currentLinks
+              .firstWhereOrNull((e) => e.clientReferenceId == clientReferenceId);
+          if (link == null) continue;
+          final responseEntity = responseEntities
+              .whereType<ProjectFacilityModel>()
+              .firstWhereOrNull((e) =>
+                  e.projectId == link.projectId &&
+                  e.facilityId == link.facilityId);
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+                nonRecoverableError: element.nonRecoverableError,
+              ),
+            );
+            if (local is ProjectFacilityLocalRepository) {
+              await local.applyServerGeneratedId(
+                clientReferenceId: clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                rowVersion: rowVersion,
+              );
+            }
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(clientReferenceId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
                 createOpLog: false,
               );
             }
@@ -887,6 +1053,92 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       //     }
       //   }
       //   break;
+
+      case DataModelType.userAction:
+        var projectId = FlowBuilderSingleton().projectId;
+        if (projectId == null) return [];
+        responseEntities = await remote.search(UserActionSearchModel(
+          clientReferenceId: entities
+              .whereType<UserActionModel>()
+              .map((e) => e.clientReferenceId)
+              .toList(),
+          projectId: projectId,
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as UserActionModel;
+          final responseEntity =
+              responseEntities.whereType<UserActionModel>().firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
+
+      case DataModelType.faceAuthEvent:
+        responseEntities = await remote.search(FaceAuthEventSearchModel(
+          clientReferenceId: entities
+              .whereType<FaceAuthEventModel>()
+              .map((e) => e.clientReferenceId)
+              .toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as FaceAuthEventModel;
+          final responseEntity = responseEntities
+              .whereType<FaceAuthEventModel>()
+              .firstWhereOrNull(
+                (e) => e.clientReferenceId == entity.clientReferenceId,
+              );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(nonRecoverableError: true),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
 
       default:
         break;

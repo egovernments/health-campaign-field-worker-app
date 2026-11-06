@@ -20,6 +20,8 @@ class BoundaryRemoteRepository
     BoundarySearchModel query, {
     int? offSet,
     int? limit,
+    int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 

@@ -704,6 +704,9 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
       v.deliveryStrategy;
   static const Field<ProjectCycleDelivery, String> _f$deliveryStrategy =
       Field('deliveryStrategy', _$deliveryStrategy);
+  static String? _$deliveryMethod(ProjectCycleDelivery v) => v.deliveryMethod;
+  static const Field<ProjectCycleDelivery, String> _f$deliveryMethod =
+      Field('deliveryMethod', _$deliveryMethod, opt: true);
   static List<DeliveryDoseCriteria>? _$doseCriteria(ProjectCycleDelivery v) =>
       v.doseCriteria;
   static const Field<ProjectCycleDelivery, List<DeliveryDoseCriteria>>
@@ -720,6 +723,7 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
   final MappableFields<ProjectCycleDelivery> fields = const {
     #id: _f$id,
     #deliveryStrategy: _f$deliveryStrategy,
+    #deliveryMethod: _f$deliveryMethod,
     #doseCriteria: _f$doseCriteria,
     #mandatoryWaitSinceLastDeliveryInDays:
         _f$mandatoryWaitSinceLastDeliveryInDays,
@@ -731,6 +735,7 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
     return ProjectCycleDelivery(
         id: data.dec(_f$id),
         deliveryStrategy: data.dec(_f$deliveryStrategy),
+        deliveryMethod: data.dec(_f$deliveryMethod),
         doseCriteria: data.dec(_f$doseCriteria),
         mandatoryWaitSinceLastDeliveryInDays:
             data.dec(_f$mandatoryWaitSinceLastDeliveryInDays));
@@ -801,6 +806,7 @@ abstract class ProjectCycleDeliveryCopyWith<
   $R call(
       {int? id,
       String? deliveryStrategy,
+      String? deliveryMethod,
       List<DeliveryDoseCriteria>? doseCriteria,
       int? mandatoryWaitSinceLastDeliveryInDays});
   ProjectCycleDeliveryCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -829,11 +835,13 @@ class _ProjectCycleDeliveryCopyWithImpl<$R, $Out>
   $R call(
           {int? id,
           String? deliveryStrategy,
+          Object? deliveryMethod = $none,
           Object? doseCriteria = $none,
           Object? mandatoryWaitSinceLastDeliveryInDays = $none}) =>
       $apply(FieldCopyWithData({
         if (id != null) #id: id,
         if (deliveryStrategy != null) #deliveryStrategy: deliveryStrategy,
+        if (deliveryMethod != $none) #deliveryMethod: deliveryMethod,
         if (doseCriteria != $none) #doseCriteria: doseCriteria,
         if (mandatoryWaitSinceLastDeliveryInDays != $none)
           #mandatoryWaitSinceLastDeliveryInDays:
@@ -844,6 +852,7 @@ class _ProjectCycleDeliveryCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       deliveryStrategy:
           data.get(#deliveryStrategy, or: $value.deliveryStrategy),
+      deliveryMethod: data.get(#deliveryMethod, or: $value.deliveryMethod),
       doseCriteria: data.get(#doseCriteria, or: $value.doseCriteria),
       mandatoryWaitSinceLastDeliveryInDays: data.get(
           #mandatoryWaitSinceLastDeliveryInDays,
@@ -1040,11 +1049,15 @@ class DeliveryProductVariantMapper
       v.productVariantId;
   static const Field<DeliveryProductVariant, String> _f$productVariantId =
       Field('productVariantId', _$productVariantId);
+  static String _$name(DeliveryProductVariant v) => v.name;
+  static const Field<DeliveryProductVariant, String> _f$name =
+      Field('name', _$name);
 
   @override
   final MappableFields<DeliveryProductVariant> fields = const {
     #quantity: _f$quantity,
     #productVariantId: _f$productVariantId,
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -1052,7 +1065,8 @@ class DeliveryProductVariantMapper
   static DeliveryProductVariant _instantiate(DecodingData data) {
     return DeliveryProductVariant(
         quantity: data.dec(_f$quantity),
-        productVariantId: data.dec(_f$productVariantId));
+        productVariantId: data.dec(_f$productVariantId),
+        name: data.dec(_f$name));
   }
 
   @override
@@ -1112,7 +1126,7 @@ abstract class DeliveryProductVariantCopyWith<
     $R,
     $In extends DeliveryProductVariant,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? quantity, String? productVariantId});
+  $R call({int? quantity, String? productVariantId, String? name});
   DeliveryProductVariantCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1127,16 +1141,18 @@ class _DeliveryProductVariantCopyWithImpl<$R, $Out>
   late final ClassMapperBase<DeliveryProductVariant> $mapper =
       DeliveryProductVariantMapper.ensureInitialized();
   @override
-  $R call({Object? quantity = $none, String? productVariantId}) =>
+  $R call({Object? quantity = $none, String? productVariantId, String? name}) =>
       $apply(FieldCopyWithData({
         if (quantity != $none) #quantity: quantity,
-        if (productVariantId != null) #productVariantId: productVariantId
+        if (productVariantId != null) #productVariantId: productVariantId,
+        if (name != null) #name: name
       }));
   @override
   DeliveryProductVariant $make(CopyWithData data) => DeliveryProductVariant(
       quantity: data.get(#quantity, or: $value.quantity),
       productVariantId:
-          data.get(#productVariantId, or: $value.productVariantId));
+          data.get(#productVariantId, or: $value.productVariantId),
+      name: data.get(#name, or: $value.name));
 
   @override
   DeliveryProductVariantCopyWith<$R2, DeliveryProductVariant, $Out2>

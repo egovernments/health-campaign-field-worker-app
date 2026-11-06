@@ -20,6 +20,11 @@ class ProjectFacilityRemoteRepository
     ProjectFacilitySearchModel query, {
     int? offSet,
     int? limit,
+    int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
+    // Return only the project's outside-household site links. Sent in the
+    // query string.
+    bool? onlyOutsideHouseholdSites,
   }) async {
     int defaultBatchSize = limit ?? 100;
     int currentOffset = offSet ?? 0;
@@ -27,6 +32,8 @@ class ProjectFacilityRemoteRepository
     List<ProjectFacilityModel> allResults = [];
     bool hasMoreData = true;
     List<Map<String, dynamic>>? lastResponse;
+
+    final projectId = query.projectId?.firstOrNull ?? '';
 
     while (hasMoreData) {
       Response response;
@@ -41,6 +48,8 @@ class ProjectFacilityRemoteRepository
                 'limit': defaultBatchSize,
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+                if (onlyOutsideHouseholdSites != null)
+                  'onlyOutsideHouseholdSites': onlyOutsideHouseholdSites,
               },
               data: entityName == 'User'
                   ? query.toMap()
@@ -98,28 +107,100 @@ class ProjectFacilityRemoteRepository
 
       if (lastResponse != null &&
           lastResponse.toString() == entityList.toString()) {
-        // If the last response is equal to the current response, stop fetching more data
         break;
       }
 
       List<ProjectFacilityModel> currentBatch;
 
       try {
-        currentBatch = entityList
-            .map(
-                (e) => MapperContainer.globals.fromMap<ProjectFacilityModel>(e))
-            .toList();
+        currentBatch = entityList.map((e) {
+          final model =
+              MapperContainer.globals.fromMap<ProjectFacilityModel>(e);
+          // Tag ProjectFacilities entries as 'current' level
+          return ProjectFacilityModel(
+            id: model.id,
+            facilityId: model.facilityId,
+            projectId: model.projectId,
+            nonRecoverableError: model.nonRecoverableError,
+            tenantId: model.tenantId,
+            rowVersion: model.rowVersion,
+            auditDetails: model.auditDetails,
+            clientAuditDetails: model.clientAuditDetails,
+            isDeleted: model.isDeleted,
+            additionalFields: ProjectFacilityAdditionalFields(
+              version: 1,
+              fields: [
+                ...?model.additionalFields?.fields,
+                AdditionalField('facilityLevel', 'current'),
+              ],
+            ),
+          );
+        }).toList();
       } catch (e) {
         rethrow;
       }
 
+      // Parse FacilityMap from response
+      // boundaryTypes order: [parent, current, child]
+      final queryBoundaryTypes = query.boundaryTypes;
+      final facilityMap = responseMap['FacilityMap'];
+      if (facilityMap is Map<String, dynamic>) {
+        for (final entry in facilityMap.entries) {
+          final boundaryType = entry.key;
+          final facilityIds = entry.value;
+
+          // Determine facility level based on position in boundaryTypes
+          String facilityLevel = 'current';
+          if (queryBoundaryTypes != null && queryBoundaryTypes.isNotEmpty) {
+            if (boundaryType == queryBoundaryTypes.first &&
+                queryBoundaryTypes.length > 1) {
+              facilityLevel = 'parent';
+            } else if (boundaryType == queryBoundaryTypes.last &&
+                queryBoundaryTypes.length > 1) {
+              facilityLevel = 'child';
+            }
+          }
+
+          if (facilityIds is List) {
+            for (final facilityId in facilityIds) {
+              if (facilityId is String) {
+                final alreadyExists =
+                    allResults.any((e) => e.facilityId == facilityId) ||
+                        currentBatch.any((e) => e.facilityId == facilityId);
+                if (!alreadyExists) {
+                  final now = DateTime.now().millisecondsSinceEpoch;
+                  currentBatch.add(ProjectFacilityModel(
+                    id: facilityId,
+                    facilityId: facilityId,
+                    projectId: projectId,
+                    auditDetails: AuditDetails(
+                      createdBy: '',
+                      createdTime: now,
+                    ),
+                    clientAuditDetails: ClientAuditDetails(
+                      createdBy: '',
+                      createdTime: now,
+                    ),
+                    additionalFields: ProjectFacilityAdditionalFields(
+                      version: 1,
+                      fields: [
+                        AdditionalField('facilityLevel', facilityLevel),
+                      ],
+                    ),
+                  ));
+                }
+              }
+            }
+          }
+        }
+      }
+
       if (currentBatch.isEmpty) {
-        hasMoreData = false; // if no more data stop fetching
+        hasMoreData = false;
       } else {
         allResults.addAll(currentBatch);
         currentOffset += defaultBatchSize;
-        lastResponse =
-            entityList; // Update lastResponse to the current response
+        lastResponse = entityList;
       }
     }
 

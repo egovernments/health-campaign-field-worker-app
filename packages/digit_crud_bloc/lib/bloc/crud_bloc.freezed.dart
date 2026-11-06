@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$RegistrationEvent {
+mixin _$CrudEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
@@ -46,45 +46,44 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $RegistrationEventCopyWith<$Res> {
-  factory $RegistrationEventCopyWith(
-          RegistrationEvent value, $Res Function(RegistrationEvent) then) =
-      _$RegistrationEventCopyWithImpl<$Res, RegistrationEvent>;
+abstract class $CrudEventCopyWith<$Res> {
+  factory $CrudEventCopyWith(CrudEvent value, $Res Function(CrudEvent) then) =
+      _$CrudEventCopyWithImpl<$Res, CrudEvent>;
 }
 
 /// @nodoc
-class _$RegistrationEventCopyWithImpl<$Res, $Val extends RegistrationEvent>
-    implements $RegistrationEventCopyWith<$Res> {
-  _$RegistrationEventCopyWithImpl(this._value, this._then);
+class _$CrudEventCopyWithImpl<$Res, $Val extends CrudEvent>
+    implements $CrudEventCopyWith<$Res> {
+  _$CrudEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -93,39 +92,36 @@ class _$RegistrationEventCopyWithImpl<$Res, $Val extends RegistrationEvent>
 }
 
 /// @nodoc
-abstract class _$$RegistrationEventInitializeImplCopyWith<$Res> {
-  factory _$$RegistrationEventInitializeImplCopyWith(
-          _$RegistrationEventInitializeImpl value,
-          $Res Function(_$RegistrationEventInitializeImpl) then) =
-      __$$RegistrationEventInitializeImplCopyWithImpl<$Res>;
+abstract class _$$CrudEventInitializeImplCopyWith<$Res> {
+  factory _$$CrudEventInitializeImplCopyWith(_$CrudEventInitializeImpl value,
+          $Res Function(_$CrudEventInitializeImpl) then) =
+      __$$CrudEventInitializeImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$RegistrationEventInitializeImplCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res,
-        _$RegistrationEventInitializeImpl>
-    implements _$$RegistrationEventInitializeImplCopyWith<$Res> {
-  __$$RegistrationEventInitializeImplCopyWithImpl(
-      _$RegistrationEventInitializeImpl _value,
-      $Res Function(_$RegistrationEventInitializeImpl) _then)
+class __$$CrudEventInitializeImplCopyWithImpl<$Res>
+    extends _$CrudEventCopyWithImpl<$Res, _$CrudEventInitializeImpl>
+    implements _$$CrudEventInitializeImplCopyWith<$Res> {
+  __$$CrudEventInitializeImplCopyWithImpl(_$CrudEventInitializeImpl _value,
+      $Res Function(_$CrudEventInitializeImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
-  const _$RegistrationEventInitializeImpl();
+class _$CrudEventInitializeImpl implements CrudEventInitialize {
+  const _$CrudEventInitializeImpl();
 
   @override
   String toString() {
-    return 'RegistrationEvent.initialize()';
+    return 'CrudEvent.initialize()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationEventInitializeImpl);
+            other is _$CrudEventInitializeImpl);
   }
 
   @override
@@ -174,11 +170,11 @@ class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) {
     return initialize(this);
   }
@@ -186,11 +182,11 @@ class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) {
     return initialize?.call(this);
   }
@@ -198,11 +194,11 @@ class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -212,17 +208,15 @@ class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
   }
 }
 
-abstract class RegistrationEventInitialize implements RegistrationEvent {
-  const factory RegistrationEventInitialize() =
-      _$RegistrationEventInitializeImpl;
+abstract class CrudEventInitialize implements CrudEvent {
+  const factory CrudEventInitialize() = _$CrudEventInitializeImpl;
 }
 
 /// @nodoc
-abstract class _$$RegistrationEventSearchImplCopyWith<$Res> {
-  factory _$$RegistrationEventSearchImplCopyWith(
-          _$RegistrationEventSearchImpl value,
-          $Res Function(_$RegistrationEventSearchImpl) then) =
-      __$$RegistrationEventSearchImplCopyWithImpl<$Res>;
+abstract class _$$CrudEventSearchImplCopyWith<$Res> {
+  factory _$$CrudEventSearchImplCopyWith(_$CrudEventSearchImpl value,
+          $Res Function(_$CrudEventSearchImpl) then) =
+      __$$CrudEventSearchImplCopyWithImpl<$Res>;
   @useResult
   $Res call({GlobalSearchParameters searchParams});
 
@@ -230,12 +224,11 @@ abstract class _$$RegistrationEventSearchImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$RegistrationEventSearchImplCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res, _$RegistrationEventSearchImpl>
-    implements _$$RegistrationEventSearchImplCopyWith<$Res> {
-  __$$RegistrationEventSearchImplCopyWithImpl(
-      _$RegistrationEventSearchImpl _value,
-      $Res Function(_$RegistrationEventSearchImpl) _then)
+class __$$CrudEventSearchImplCopyWithImpl<$Res>
+    extends _$CrudEventCopyWithImpl<$Res, _$CrudEventSearchImpl>
+    implements _$$CrudEventSearchImplCopyWith<$Res> {
+  __$$CrudEventSearchImplCopyWithImpl(
+      _$CrudEventSearchImpl _value, $Res Function(_$CrudEventSearchImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -243,7 +236,7 @@ class __$$RegistrationEventSearchImplCopyWithImpl<$Res>
   $Res call({
     Object? searchParams = null,
   }) {
-    return _then(_$RegistrationEventSearchImpl(
+    return _then(_$CrudEventSearchImpl(
       null == searchParams
           ? _value.searchParams
           : searchParams // ignore: cast_nullable_to_non_nullable
@@ -262,22 +255,22 @@ class __$$RegistrationEventSearchImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
-  const _$RegistrationEventSearchImpl(this.searchParams);
+class _$CrudEventSearchImpl implements CrudEventSearch {
+  const _$CrudEventSearchImpl(this.searchParams);
 
   @override
   final GlobalSearchParameters searchParams;
 
   @override
   String toString() {
-    return 'RegistrationEvent.search(searchParams: $searchParams)';
+    return 'CrudEvent.search(searchParams: $searchParams)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationEventSearchImpl &&
+            other is _$CrudEventSearchImpl &&
             (identical(other.searchParams, searchParams) ||
                 other.searchParams == searchParams));
   }
@@ -288,9 +281,9 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationEventSearchImplCopyWith<_$RegistrationEventSearchImpl>
-      get copyWith => __$$RegistrationEventSearchImplCopyWithImpl<
-          _$RegistrationEventSearchImpl>(this, _$identity);
+  _$$CrudEventSearchImplCopyWith<_$CrudEventSearchImpl> get copyWith =>
+      __$$CrudEventSearchImplCopyWithImpl<_$CrudEventSearchImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -335,11 +328,11 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) {
     return search(this);
   }
@@ -347,11 +340,11 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) {
     return search?.call(this);
   }
@@ -359,11 +352,11 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) {
     if (search != null) {
@@ -373,34 +366,31 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   }
 }
 
-abstract class RegistrationEventSearch implements RegistrationEvent {
-  const factory RegistrationEventSearch(
-          final GlobalSearchParameters searchParams) =
-      _$RegistrationEventSearchImpl;
+abstract class CrudEventSearch implements CrudEvent {
+  const factory CrudEventSearch(final GlobalSearchParameters searchParams) =
+      _$CrudEventSearchImpl;
 
   GlobalSearchParameters get searchParams;
   @JsonKey(ignore: true)
-  _$$RegistrationEventSearchImplCopyWith<_$RegistrationEventSearchImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudEventSearchImplCopyWith<_$CrudEventSearchImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegistrationEventCreateImplCopyWith<$Res> {
-  factory _$$RegistrationEventCreateImplCopyWith(
-          _$RegistrationEventCreateImpl value,
-          $Res Function(_$RegistrationEventCreateImpl) then) =
-      __$$RegistrationEventCreateImplCopyWithImpl<$Res>;
+abstract class _$$CrudEventCreateImplCopyWith<$Res> {
+  factory _$$CrudEventCreateImplCopyWith(_$CrudEventCreateImpl value,
+          $Res Function(_$CrudEventCreateImpl) then) =
+      __$$CrudEventCreateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<EntityModel> entities});
 }
 
 /// @nodoc
-class __$$RegistrationEventCreateImplCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res, _$RegistrationEventCreateImpl>
-    implements _$$RegistrationEventCreateImplCopyWith<$Res> {
-  __$$RegistrationEventCreateImplCopyWithImpl(
-      _$RegistrationEventCreateImpl _value,
-      $Res Function(_$RegistrationEventCreateImpl) _then)
+class __$$CrudEventCreateImplCopyWithImpl<$Res>
+    extends _$CrudEventCopyWithImpl<$Res, _$CrudEventCreateImpl>
+    implements _$$CrudEventCreateImplCopyWith<$Res> {
+  __$$CrudEventCreateImplCopyWithImpl(
+      _$CrudEventCreateImpl _value, $Res Function(_$CrudEventCreateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -408,7 +398,7 @@ class __$$RegistrationEventCreateImplCopyWithImpl<$Res>
   $Res call({
     Object? entities = null,
   }) {
-    return _then(_$RegistrationEventCreateImpl(
+    return _then(_$CrudEventCreateImpl(
       entities: null == entities
           ? _value._entities
           : entities // ignore: cast_nullable_to_non_nullable
@@ -419,9 +409,8 @@ class __$$RegistrationEventCreateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
-  const _$RegistrationEventCreateImpl(
-      {required final List<EntityModel> entities})
+class _$CrudEventCreateImpl implements CrudEventCreate {
+  const _$CrudEventCreateImpl({required final List<EntityModel> entities})
       : _entities = entities;
 
   final List<EntityModel> _entities;
@@ -434,14 +423,14 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
 
   @override
   String toString() {
-    return 'RegistrationEvent.create(entities: $entities)';
+    return 'CrudEvent.create(entities: $entities)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationEventCreateImpl &&
+            other is _$CrudEventCreateImpl &&
             const DeepCollectionEquality().equals(other._entities, _entities));
   }
 
@@ -452,9 +441,9 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationEventCreateImplCopyWith<_$RegistrationEventCreateImpl>
-      get copyWith => __$$RegistrationEventCreateImplCopyWithImpl<
-          _$RegistrationEventCreateImpl>(this, _$identity);
+  _$$CrudEventCreateImplCopyWith<_$CrudEventCreateImpl> get copyWith =>
+      __$$CrudEventCreateImplCopyWithImpl<_$CrudEventCreateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -499,11 +488,11 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) {
     return create(this);
   }
@@ -511,11 +500,11 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) {
     return create?.call(this);
   }
@@ -523,11 +512,11 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -537,34 +526,31 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   }
 }
 
-abstract class RegistrationEventCreate implements RegistrationEvent {
-  const factory RegistrationEventCreate(
-          {required final List<EntityModel> entities}) =
-      _$RegistrationEventCreateImpl;
+abstract class CrudEventCreate implements CrudEvent {
+  const factory CrudEventCreate({required final List<EntityModel> entities}) =
+      _$CrudEventCreateImpl;
 
   List<EntityModel> get entities;
   @JsonKey(ignore: true)
-  _$$RegistrationEventCreateImplCopyWith<_$RegistrationEventCreateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudEventCreateImplCopyWith<_$CrudEventCreateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegistrationEventUpdateImplCopyWith<$Res> {
-  factory _$$RegistrationEventUpdateImplCopyWith(
-          _$RegistrationEventUpdateImpl value,
-          $Res Function(_$RegistrationEventUpdateImpl) then) =
-      __$$RegistrationEventUpdateImplCopyWithImpl<$Res>;
+abstract class _$$CrudEventUpdateImplCopyWith<$Res> {
+  factory _$$CrudEventUpdateImplCopyWith(_$CrudEventUpdateImpl value,
+          $Res Function(_$CrudEventUpdateImpl) then) =
+      __$$CrudEventUpdateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<EntityModel> entities});
 }
 
 /// @nodoc
-class __$$RegistrationEventUpdateImplCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res, _$RegistrationEventUpdateImpl>
-    implements _$$RegistrationEventUpdateImplCopyWith<$Res> {
-  __$$RegistrationEventUpdateImplCopyWithImpl(
-      _$RegistrationEventUpdateImpl _value,
-      $Res Function(_$RegistrationEventUpdateImpl) _then)
+class __$$CrudEventUpdateImplCopyWithImpl<$Res>
+    extends _$CrudEventCopyWithImpl<$Res, _$CrudEventUpdateImpl>
+    implements _$$CrudEventUpdateImplCopyWith<$Res> {
+  __$$CrudEventUpdateImplCopyWithImpl(
+      _$CrudEventUpdateImpl _value, $Res Function(_$CrudEventUpdateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -572,7 +558,7 @@ class __$$RegistrationEventUpdateImplCopyWithImpl<$Res>
   $Res call({
     Object? entities = null,
   }) {
-    return _then(_$RegistrationEventUpdateImpl(
+    return _then(_$CrudEventUpdateImpl(
       entities: null == entities
           ? _value._entities
           : entities // ignore: cast_nullable_to_non_nullable
@@ -583,9 +569,8 @@ class __$$RegistrationEventUpdateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
-  const _$RegistrationEventUpdateImpl(
-      {required final List<EntityModel> entities})
+class _$CrudEventUpdateImpl implements CrudEventUpdate {
+  const _$CrudEventUpdateImpl({required final List<EntityModel> entities})
       : _entities = entities;
 
   final List<EntityModel> _entities;
@@ -598,14 +583,14 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
 
   @override
   String toString() {
-    return 'RegistrationEvent.update(entities: $entities)';
+    return 'CrudEvent.update(entities: $entities)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationEventUpdateImpl &&
+            other is _$CrudEventUpdateImpl &&
             const DeepCollectionEquality().equals(other._entities, _entities));
   }
 
@@ -616,9 +601,9 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationEventUpdateImplCopyWith<_$RegistrationEventUpdateImpl>
-      get copyWith => __$$RegistrationEventUpdateImplCopyWithImpl<
-          _$RegistrationEventUpdateImpl>(this, _$identity);
+  _$$CrudEventUpdateImplCopyWith<_$CrudEventUpdateImpl> get copyWith =>
+      __$$CrudEventUpdateImplCopyWithImpl<_$CrudEventUpdateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -663,11 +648,11 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) {
     return update(this);
   }
@@ -675,11 +660,11 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) {
     return update?.call(this);
   }
@@ -687,11 +672,11 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -701,34 +686,31 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   }
 }
 
-abstract class RegistrationEventUpdate implements RegistrationEvent {
-  const factory RegistrationEventUpdate(
-          {required final List<EntityModel> entities}) =
-      _$RegistrationEventUpdateImpl;
+abstract class CrudEventUpdate implements CrudEvent {
+  const factory CrudEventUpdate({required final List<EntityModel> entities}) =
+      _$CrudEventUpdateImpl;
 
   List<EntityModel> get entities;
   @JsonKey(ignore: true)
-  _$$RegistrationEventUpdateImplCopyWith<_$RegistrationEventUpdateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudEventUpdateImplCopyWith<_$CrudEventUpdateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegistrationEventDeleteImplCopyWith<$Res> {
-  factory _$$RegistrationEventDeleteImplCopyWith(
-          _$RegistrationEventDeleteImpl value,
-          $Res Function(_$RegistrationEventDeleteImpl) then) =
-      __$$RegistrationEventDeleteImplCopyWithImpl<$Res>;
+abstract class _$$CrudEventDeleteImplCopyWith<$Res> {
+  factory _$$CrudEventDeleteImplCopyWith(_$CrudEventDeleteImpl value,
+          $Res Function(_$CrudEventDeleteImpl) then) =
+      __$$CrudEventDeleteImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<EntityModel> entities});
 }
 
 /// @nodoc
-class __$$RegistrationEventDeleteImplCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res, _$RegistrationEventDeleteImpl>
-    implements _$$RegistrationEventDeleteImplCopyWith<$Res> {
-  __$$RegistrationEventDeleteImplCopyWithImpl(
-      _$RegistrationEventDeleteImpl _value,
-      $Res Function(_$RegistrationEventDeleteImpl) _then)
+class __$$CrudEventDeleteImplCopyWithImpl<$Res>
+    extends _$CrudEventCopyWithImpl<$Res, _$CrudEventDeleteImpl>
+    implements _$$CrudEventDeleteImplCopyWith<$Res> {
+  __$$CrudEventDeleteImplCopyWithImpl(
+      _$CrudEventDeleteImpl _value, $Res Function(_$CrudEventDeleteImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -736,7 +718,7 @@ class __$$RegistrationEventDeleteImplCopyWithImpl<$Res>
   $Res call({
     Object? entities = null,
   }) {
-    return _then(_$RegistrationEventDeleteImpl(
+    return _then(_$CrudEventDeleteImpl(
       entities: null == entities
           ? _value._entities
           : entities // ignore: cast_nullable_to_non_nullable
@@ -747,9 +729,8 @@ class __$$RegistrationEventDeleteImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
-  const _$RegistrationEventDeleteImpl(
-      {required final List<EntityModel> entities})
+class _$CrudEventDeleteImpl implements CrudEventDelete {
+  const _$CrudEventDeleteImpl({required final List<EntityModel> entities})
       : _entities = entities;
 
   final List<EntityModel> _entities;
@@ -762,14 +743,14 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
 
   @override
   String toString() {
-    return 'RegistrationEvent.delete(entities: $entities)';
+    return 'CrudEvent.delete(entities: $entities)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationEventDeleteImpl &&
+            other is _$CrudEventDeleteImpl &&
             const DeepCollectionEquality().equals(other._entities, _entities));
   }
 
@@ -780,9 +761,9 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationEventDeleteImplCopyWith<_$RegistrationEventDeleteImpl>
-      get copyWith => __$$RegistrationEventDeleteImplCopyWithImpl<
-          _$RegistrationEventDeleteImpl>(this, _$identity);
+  _$$CrudEventDeleteImplCopyWith<_$CrudEventDeleteImpl> get copyWith =>
+      __$$CrudEventDeleteImplCopyWithImpl<_$CrudEventDeleteImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -827,11 +808,11 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationEventInitialize value) initialize,
-    required TResult Function(RegistrationEventSearch value) search,
-    required TResult Function(RegistrationEventCreate value) create,
-    required TResult Function(RegistrationEventUpdate value) update,
-    required TResult Function(RegistrationEventDelete value) delete,
+    required TResult Function(CrudEventInitialize value) initialize,
+    required TResult Function(CrudEventSearch value) search,
+    required TResult Function(CrudEventCreate value) create,
+    required TResult Function(CrudEventUpdate value) update,
+    required TResult Function(CrudEventDelete value) delete,
   }) {
     return delete(this);
   }
@@ -839,11 +820,11 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationEventInitialize value)? initialize,
-    TResult? Function(RegistrationEventSearch value)? search,
-    TResult? Function(RegistrationEventCreate value)? create,
-    TResult? Function(RegistrationEventUpdate value)? update,
-    TResult? Function(RegistrationEventDelete value)? delete,
+    TResult? Function(CrudEventInitialize value)? initialize,
+    TResult? Function(CrudEventSearch value)? search,
+    TResult? Function(CrudEventCreate value)? create,
+    TResult? Function(CrudEventUpdate value)? update,
+    TResult? Function(CrudEventDelete value)? delete,
   }) {
     return delete?.call(this);
   }
@@ -851,11 +832,11 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationEventInitialize value)? initialize,
-    TResult Function(RegistrationEventSearch value)? search,
-    TResult Function(RegistrationEventCreate value)? create,
-    TResult Function(RegistrationEventUpdate value)? update,
-    TResult Function(RegistrationEventDelete value)? delete,
+    TResult Function(CrudEventInitialize value)? initialize,
+    TResult Function(CrudEventSearch value)? search,
+    TResult Function(CrudEventCreate value)? create,
+    TResult Function(CrudEventUpdate value)? update,
+    TResult Function(CrudEventDelete value)? delete,
     required TResult orElse(),
   }) {
     if (delete != null) {
@@ -865,19 +846,18 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   }
 }
 
-abstract class RegistrationEventDelete implements RegistrationEvent {
-  const factory RegistrationEventDelete(
-          {required final List<EntityModel> entities}) =
-      _$RegistrationEventDeleteImpl;
+abstract class CrudEventDelete implements CrudEvent {
+  const factory CrudEventDelete({required final List<EntityModel> entities}) =
+      _$CrudEventDeleteImpl;
 
   List<EntityModel> get entities;
   @JsonKey(ignore: true)
-  _$$RegistrationEventDeleteImplCopyWith<_$RegistrationEventDeleteImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudEventDeleteImplCopyWith<_$CrudEventDeleteImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-mixin _$RegistrationState {
+mixin _$CrudState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
@@ -912,45 +892,44 @@ mixin _$RegistrationState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $RegistrationStateCopyWith<$Res> {
-  factory $RegistrationStateCopyWith(
-          RegistrationState value, $Res Function(RegistrationState) then) =
-      _$RegistrationStateCopyWithImpl<$Res, RegistrationState>;
+abstract class $CrudStateCopyWith<$Res> {
+  factory $CrudStateCopyWith(CrudState value, $Res Function(CrudState) then) =
+      _$CrudStateCopyWithImpl<$Res, CrudState>;
 }
 
 /// @nodoc
-class _$RegistrationStateCopyWithImpl<$Res, $Val extends RegistrationState>
-    implements $RegistrationStateCopyWith<$Res> {
-  _$RegistrationStateCopyWithImpl(this._value, this._then);
+class _$CrudStateCopyWithImpl<$Res, $Val extends CrudState>
+    implements $CrudStateCopyWith<$Res> {
+  _$CrudStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -959,39 +938,35 @@ class _$RegistrationStateCopyWithImpl<$Res, $Val extends RegistrationState>
 }
 
 /// @nodoc
-abstract class _$$RegistrationStateInitialImplCopyWith<$Res> {
-  factory _$$RegistrationStateInitialImplCopyWith(
-          _$RegistrationStateInitialImpl value,
-          $Res Function(_$RegistrationStateInitialImpl) then) =
-      __$$RegistrationStateInitialImplCopyWithImpl<$Res>;
+abstract class _$$CrudStateInitialImplCopyWith<$Res> {
+  factory _$$CrudStateInitialImplCopyWith(_$CrudStateInitialImpl value,
+          $Res Function(_$CrudStateInitialImpl) then) =
+      __$$CrudStateInitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$RegistrationStateInitialImplCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res,
-        _$RegistrationStateInitialImpl>
-    implements _$$RegistrationStateInitialImplCopyWith<$Res> {
-  __$$RegistrationStateInitialImplCopyWithImpl(
-      _$RegistrationStateInitialImpl _value,
-      $Res Function(_$RegistrationStateInitialImpl) _then)
+class __$$CrudStateInitialImplCopyWithImpl<$Res>
+    extends _$CrudStateCopyWithImpl<$Res, _$CrudStateInitialImpl>
+    implements _$$CrudStateInitialImplCopyWith<$Res> {
+  __$$CrudStateInitialImplCopyWithImpl(_$CrudStateInitialImpl _value,
+      $Res Function(_$CrudStateInitialImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
-  const _$RegistrationStateInitialImpl();
+class _$CrudStateInitialImpl implements CrudStateInitial {
+  const _$CrudStateInitialImpl();
 
   @override
   String toString() {
-    return 'RegistrationState.initial()';
+    return 'CrudState.initial()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RegistrationStateInitialImpl);
+        (other.runtimeType == runtimeType && other is _$CrudStateInitialImpl);
   }
 
   @override
@@ -1044,11 +1019,11 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) {
     return initial(this);
   }
@@ -1056,11 +1031,11 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) {
     return initial?.call(this);
   }
@@ -1068,11 +1043,11 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -1082,44 +1057,40 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   }
 }
 
-abstract class RegistrationStateInitial implements RegistrationState {
-  const factory RegistrationStateInitial() = _$RegistrationStateInitialImpl;
+abstract class CrudStateInitial implements CrudState {
+  const factory CrudStateInitial() = _$CrudStateInitialImpl;
 }
 
 /// @nodoc
-abstract class _$$RegistrationStateLoadingImplCopyWith<$Res> {
-  factory _$$RegistrationStateLoadingImplCopyWith(
-          _$RegistrationStateLoadingImpl value,
-          $Res Function(_$RegistrationStateLoadingImpl) then) =
-      __$$RegistrationStateLoadingImplCopyWithImpl<$Res>;
+abstract class _$$CrudStateLoadingImplCopyWith<$Res> {
+  factory _$$CrudStateLoadingImplCopyWith(_$CrudStateLoadingImpl value,
+          $Res Function(_$CrudStateLoadingImpl) then) =
+      __$$CrudStateLoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$RegistrationStateLoadingImplCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res,
-        _$RegistrationStateLoadingImpl>
-    implements _$$RegistrationStateLoadingImplCopyWith<$Res> {
-  __$$RegistrationStateLoadingImplCopyWithImpl(
-      _$RegistrationStateLoadingImpl _value,
-      $Res Function(_$RegistrationStateLoadingImpl) _then)
+class __$$CrudStateLoadingImplCopyWithImpl<$Res>
+    extends _$CrudStateCopyWithImpl<$Res, _$CrudStateLoadingImpl>
+    implements _$$CrudStateLoadingImplCopyWith<$Res> {
+  __$$CrudStateLoadingImplCopyWithImpl(_$CrudStateLoadingImpl _value,
+      $Res Function(_$CrudStateLoadingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
-  const _$RegistrationStateLoadingImpl();
+class _$CrudStateLoadingImpl implements CrudStateLoading {
+  const _$CrudStateLoadingImpl();
 
   @override
   String toString() {
-    return 'RegistrationState.loading()';
+    return 'CrudState.loading()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RegistrationStateLoadingImpl);
+        (other.runtimeType == runtimeType && other is _$CrudStateLoadingImpl);
   }
 
   @override
@@ -1172,11 +1143,11 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) {
     return loading(this);
   }
@@ -1184,11 +1155,11 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) {
     return loading?.call(this);
   }
@@ -1196,11 +1167,11 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -1210,27 +1181,25 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   }
 }
 
-abstract class RegistrationStateLoading implements RegistrationState {
-  const factory RegistrationStateLoading() = _$RegistrationStateLoadingImpl;
+abstract class CrudStateLoading implements CrudState {
+  const factory CrudStateLoading() = _$CrudStateLoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$RegistrationStateLoadedImplCopyWith<$Res> {
-  factory _$$RegistrationStateLoadedImplCopyWith(
-          _$RegistrationStateLoadedImpl value,
-          $Res Function(_$RegistrationStateLoadedImpl) then) =
-      __$$RegistrationStateLoadedImplCopyWithImpl<$Res>;
+abstract class _$$CrudStateLoadedImplCopyWith<$Res> {
+  factory _$$CrudStateLoadedImplCopyWith(_$CrudStateLoadedImpl value,
+          $Res Function(_$CrudStateLoadedImpl) then) =
+      __$$CrudStateLoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Map<String, List<EntityModel>> results, int? totalCount});
 }
 
 /// @nodoc
-class __$$RegistrationStateLoadedImplCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res, _$RegistrationStateLoadedImpl>
-    implements _$$RegistrationStateLoadedImplCopyWith<$Res> {
-  __$$RegistrationStateLoadedImplCopyWithImpl(
-      _$RegistrationStateLoadedImpl _value,
-      $Res Function(_$RegistrationStateLoadedImpl) _then)
+class __$$CrudStateLoadedImplCopyWithImpl<$Res>
+    extends _$CrudStateCopyWithImpl<$Res, _$CrudStateLoadedImpl>
+    implements _$$CrudStateLoadedImplCopyWith<$Res> {
+  __$$CrudStateLoadedImplCopyWithImpl(
+      _$CrudStateLoadedImpl _value, $Res Function(_$CrudStateLoadedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1239,7 +1208,7 @@ class __$$RegistrationStateLoadedImplCopyWithImpl<$Res>
     Object? results = null,
     Object? totalCount = freezed,
   }) {
-    return _then(_$RegistrationStateLoadedImpl(
+    return _then(_$CrudStateLoadedImpl(
       results: null == results
           ? _value._results
           : results // ignore: cast_nullable_to_non_nullable
@@ -1254,8 +1223,8 @@ class __$$RegistrationStateLoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
-  const _$RegistrationStateLoadedImpl(
+class _$CrudStateLoadedImpl implements CrudStateLoaded {
+  const _$CrudStateLoadedImpl(
       {required final Map<String, List<EntityModel>> results, this.totalCount})
       : _results = results;
 
@@ -1272,14 +1241,14 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
 
   @override
   String toString() {
-    return 'RegistrationState.loaded(results: $results, totalCount: $totalCount)';
+    return 'CrudState.loaded(results: $results, totalCount: $totalCount)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationStateLoadedImpl &&
+            other is _$CrudStateLoadedImpl &&
             const DeepCollectionEquality().equals(other._results, _results) &&
             (identical(other.totalCount, totalCount) ||
                 other.totalCount == totalCount));
@@ -1292,9 +1261,9 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationStateLoadedImplCopyWith<_$RegistrationStateLoadedImpl>
-      get copyWith => __$$RegistrationStateLoadedImplCopyWithImpl<
-          _$RegistrationStateLoadedImpl>(this, _$identity);
+  _$$CrudStateLoadedImplCopyWith<_$CrudStateLoadedImpl> get copyWith =>
+      __$$CrudStateLoadedImplCopyWithImpl<_$CrudStateLoadedImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1343,11 +1312,11 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) {
     return loaded(this);
   }
@@ -1355,11 +1324,11 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) {
     return loaded?.call(this);
   }
@@ -1367,11 +1336,11 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -1381,36 +1350,33 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   }
 }
 
-abstract class RegistrationStateLoaded implements RegistrationState {
-  const factory RegistrationStateLoaded(
+abstract class CrudStateLoaded implements CrudState {
+  const factory CrudStateLoaded(
       {required final Map<String, List<EntityModel>> results,
-      final int? totalCount}) = _$RegistrationStateLoadedImpl;
+      final int? totalCount}) = _$CrudStateLoadedImpl;
 
   Map<String, List<EntityModel>> get results;
   int? get totalCount;
   @JsonKey(ignore: true)
-  _$$RegistrationStateLoadedImplCopyWith<_$RegistrationStateLoadedImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudStateLoadedImplCopyWith<_$CrudStateLoadedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegistrationStatePersistedImplCopyWith<$Res> {
-  factory _$$RegistrationStatePersistedImplCopyWith(
-          _$RegistrationStatePersistedImpl value,
-          $Res Function(_$RegistrationStatePersistedImpl) then) =
-      __$$RegistrationStatePersistedImplCopyWithImpl<$Res>;
+abstract class _$$CrudStatePersistedImplCopyWith<$Res> {
+  factory _$$CrudStatePersistedImplCopyWith(_$CrudStatePersistedImpl value,
+          $Res Function(_$CrudStatePersistedImpl) then) =
+      __$$CrudStatePersistedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<EntityModel> entities});
 }
 
 /// @nodoc
-class __$$RegistrationStatePersistedImplCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res,
-        _$RegistrationStatePersistedImpl>
-    implements _$$RegistrationStatePersistedImplCopyWith<$Res> {
-  __$$RegistrationStatePersistedImplCopyWithImpl(
-      _$RegistrationStatePersistedImpl _value,
-      $Res Function(_$RegistrationStatePersistedImpl) _then)
+class __$$CrudStatePersistedImplCopyWithImpl<$Res>
+    extends _$CrudStateCopyWithImpl<$Res, _$CrudStatePersistedImpl>
+    implements _$$CrudStatePersistedImplCopyWith<$Res> {
+  __$$CrudStatePersistedImplCopyWithImpl(_$CrudStatePersistedImpl _value,
+      $Res Function(_$CrudStatePersistedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1418,7 +1384,7 @@ class __$$RegistrationStatePersistedImplCopyWithImpl<$Res>
   $Res call({
     Object? entities = null,
   }) {
-    return _then(_$RegistrationStatePersistedImpl(
+    return _then(_$CrudStatePersistedImpl(
       null == entities
           ? _value._entities
           : entities // ignore: cast_nullable_to_non_nullable
@@ -1429,8 +1395,8 @@ class __$$RegistrationStatePersistedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
-  const _$RegistrationStatePersistedImpl(final List<EntityModel> entities)
+class _$CrudStatePersistedImpl implements CrudStatePersisted {
+  const _$CrudStatePersistedImpl(final List<EntityModel> entities)
       : _entities = entities;
 
   final List<EntityModel> _entities;
@@ -1443,14 +1409,14 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
 
   @override
   String toString() {
-    return 'RegistrationState.persisted(entities: $entities)';
+    return 'CrudState.persisted(entities: $entities)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationStatePersistedImpl &&
+            other is _$CrudStatePersistedImpl &&
             const DeepCollectionEquality().equals(other._entities, _entities));
   }
 
@@ -1461,9 +1427,9 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationStatePersistedImplCopyWith<_$RegistrationStatePersistedImpl>
-      get copyWith => __$$RegistrationStatePersistedImplCopyWithImpl<
-          _$RegistrationStatePersistedImpl>(this, _$identity);
+  _$$CrudStatePersistedImplCopyWith<_$CrudStatePersistedImpl> get copyWith =>
+      __$$CrudStatePersistedImplCopyWithImpl<_$CrudStatePersistedImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1512,11 +1478,11 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) {
     return persisted(this);
   }
@@ -1524,11 +1490,11 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) {
     return persisted?.call(this);
   }
@@ -1536,11 +1502,11 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) {
     if (persisted != null) {
@@ -1550,33 +1516,31 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   }
 }
 
-abstract class RegistrationStatePersisted implements RegistrationState {
-  const factory RegistrationStatePersisted(final List<EntityModel> entities) =
-      _$RegistrationStatePersistedImpl;
+abstract class CrudStatePersisted implements CrudState {
+  const factory CrudStatePersisted(final List<EntityModel> entities) =
+      _$CrudStatePersistedImpl;
 
   List<EntityModel> get entities;
   @JsonKey(ignore: true)
-  _$$RegistrationStatePersistedImplCopyWith<_$RegistrationStatePersistedImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudStatePersistedImplCopyWith<_$CrudStatePersistedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegistrationStateErrorImplCopyWith<$Res> {
-  factory _$$RegistrationStateErrorImplCopyWith(
-          _$RegistrationStateErrorImpl value,
-          $Res Function(_$RegistrationStateErrorImpl) then) =
-      __$$RegistrationStateErrorImplCopyWithImpl<$Res>;
+abstract class _$$CrudStateErrorImplCopyWith<$Res> {
+  factory _$$CrudStateErrorImplCopyWith(_$CrudStateErrorImpl value,
+          $Res Function(_$CrudStateErrorImpl) then) =
+      __$$CrudStateErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$RegistrationStateErrorImplCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res, _$RegistrationStateErrorImpl>
-    implements _$$RegistrationStateErrorImplCopyWith<$Res> {
-  __$$RegistrationStateErrorImplCopyWithImpl(
-      _$RegistrationStateErrorImpl _value,
-      $Res Function(_$RegistrationStateErrorImpl) _then)
+class __$$CrudStateErrorImplCopyWithImpl<$Res>
+    extends _$CrudStateCopyWithImpl<$Res, _$CrudStateErrorImpl>
+    implements _$$CrudStateErrorImplCopyWith<$Res> {
+  __$$CrudStateErrorImplCopyWithImpl(
+      _$CrudStateErrorImpl _value, $Res Function(_$CrudStateErrorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1584,7 +1548,7 @@ class __$$RegistrationStateErrorImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$RegistrationStateErrorImpl(
+    return _then(_$CrudStateErrorImpl(
       null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -1595,22 +1559,22 @@ class __$$RegistrationStateErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegistrationStateErrorImpl implements RegistrationStateError {
-  const _$RegistrationStateErrorImpl(this.message);
+class _$CrudStateErrorImpl implements CrudStateError {
+  const _$CrudStateErrorImpl(this.message);
 
   @override
   final String message;
 
   @override
   String toString() {
-    return 'RegistrationState.error(message: $message)';
+    return 'CrudState.error(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegistrationStateErrorImpl &&
+            other is _$CrudStateErrorImpl &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -1620,9 +1584,9 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegistrationStateErrorImplCopyWith<_$RegistrationStateErrorImpl>
-      get copyWith => __$$RegistrationStateErrorImplCopyWithImpl<
-          _$RegistrationStateErrorImpl>(this, _$identity);
+  _$$CrudStateErrorImplCopyWith<_$CrudStateErrorImpl> get copyWith =>
+      __$$CrudStateErrorImplCopyWithImpl<_$CrudStateErrorImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1671,11 +1635,11 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RegistrationStateInitial value) initial,
-    required TResult Function(RegistrationStateLoading value) loading,
-    required TResult Function(RegistrationStateLoaded value) loaded,
-    required TResult Function(RegistrationStatePersisted value) persisted,
-    required TResult Function(RegistrationStateError value) error,
+    required TResult Function(CrudStateInitial value) initial,
+    required TResult Function(CrudStateLoading value) loading,
+    required TResult Function(CrudStateLoaded value) loaded,
+    required TResult Function(CrudStatePersisted value) persisted,
+    required TResult Function(CrudStateError value) error,
   }) {
     return error(this);
   }
@@ -1683,11 +1647,11 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RegistrationStateInitial value)? initial,
-    TResult? Function(RegistrationStateLoading value)? loading,
-    TResult? Function(RegistrationStateLoaded value)? loaded,
-    TResult? Function(RegistrationStatePersisted value)? persisted,
-    TResult? Function(RegistrationStateError value)? error,
+    TResult? Function(CrudStateInitial value)? initial,
+    TResult? Function(CrudStateLoading value)? loading,
+    TResult? Function(CrudStateLoaded value)? loaded,
+    TResult? Function(CrudStatePersisted value)? persisted,
+    TResult? Function(CrudStateError value)? error,
   }) {
     return error?.call(this);
   }
@@ -1695,11 +1659,11 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RegistrationStateInitial value)? initial,
-    TResult Function(RegistrationStateLoading value)? loading,
-    TResult Function(RegistrationStateLoaded value)? loaded,
-    TResult Function(RegistrationStatePersisted value)? persisted,
-    TResult Function(RegistrationStateError value)? error,
+    TResult Function(CrudStateInitial value)? initial,
+    TResult Function(CrudStateLoading value)? loading,
+    TResult Function(CrudStateLoaded value)? loaded,
+    TResult Function(CrudStatePersisted value)? persisted,
+    TResult Function(CrudStateError value)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1709,12 +1673,11 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   }
 }
 
-abstract class RegistrationStateError implements RegistrationState {
-  const factory RegistrationStateError(final String message) =
-      _$RegistrationStateErrorImpl;
+abstract class CrudStateError implements CrudState {
+  const factory CrudStateError(final String message) = _$CrudStateErrorImpl;
 
   String get message;
   @JsonKey(ignore: true)
-  _$$RegistrationStateErrorImplCopyWith<_$RegistrationStateErrorImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CrudStateErrorImplCopyWith<_$CrudStateErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -65,19 +65,34 @@ class DigitDataModelSingleton {
   EntityMapperListener? _entityListener;
 
   /// Sets the environment configuration variables.
+  ///
+  /// `hierarchyType` is intentionally not part of this init call. Hierarchy is
+  /// per-project runtime state; it is populated by [setHierarchyType] when a
+  /// project is selected (with env fallback inside that flow if the project
+  /// payload omits it). No pre-project-selection code should read it.
   void setData({
     required int syncDownRetryCount,
     required int retryTimeInterval,
     required String tenantId,
     required EntityMapperListener entityMapper,
     required String errorDumpApiPath,
-    required String hierarchyType,
   }) {
     _syncDownRetryCount = syncDownRetryCount;
     _retryTimeInterval = retryTimeInterval;
     _entityListener = entityMapper;
     _tenantId = tenantId;
     _errorDumpApiPath = errorDumpApiPath;
+  }
+
+  /// Sets the active project's hierarchy type. Call from `ProjectBloc` after a
+  /// project is selected (or after restoring a previously selected project on
+  /// cold restart). Pass `null` on logout.
+  ///
+  /// Stored verbatim — the hierarchy type from `additionalDetails` is the
+  /// canonical value the boundary service expects (e.g. `TEST_7500`,
+  /// `CONSOLEHCM`). Any `_<COUNTRY>` suffix lives on boundary *codes*
+  /// (`TEST_7500_IN`), not on the hierarchy type itself.
+  void setHierarchyType(String? hierarchyType) {
     _hierarchyType = hierarchyType;
   }
 
@@ -90,7 +105,7 @@ class DigitDataModelSingleton {
 
   get errorDumpApiPath => _errorDumpApiPath;
 
-  get hierarchyType => _hierarchyType;
+  String? get hierarchyType => _hierarchyType;
 
   EntityMapperListener? get entityMapper => _entityListener;
 }

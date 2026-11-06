@@ -33,211 +33,220 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      body: ScrollableContent(
-        header: const Column(children: [
-          BackNavigationHelpHeaderWidget(),
-        ]),
-        enableFixedDigitButton: true,
-        footer: BlocBuilder<ServiceBloc, ServiceState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
-                return value2 != null
-                    ? DigitCard(
-                        cardType: CardType.primary,
-                        margin: const EdgeInsets.only(top: spacer2),
-                        children: [
-                            DigitButton(
-                              mainAxisSize: MainAxisSize.max,
-                              label: localizations
-                                  .translate(i18.common.corecommonclose),
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large,
-                              onPressed: () {
-                                context.read<ServiceBloc>().add(
-                                      ServiceResetEvent(serviceList: value1),
-                                    );
-                              },
-                            ),
-                          ])
-                    : const Offstage();
-              },
-            );
-          },
-        ),
-        children: [
-          BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
-            return state.maybeWhen(
-              orElse: () => const Offstage(),
-              serviceSearch: (serviceList, selectedService, loading) {
-                return selectedService == null
-                    ? serviceList.isNotEmpty
-                        ? Column(
-                            children: [
-                              ...serviceList
-                                  .map((e) => e.serviceDefId != null
-                                      ? Padding(
-                                          padding:
-                                              const EdgeInsets.all(spacer2),
-                                          child: DigitCard(
-                                              cardType: CardType.primary,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    DateFormat(Constants
-                                                            .SurveyFormPreviewDateFormat)
-                                                        .format(
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: ScrollableContent(
+          header: const Column(children: [
+            BackNavigationHelpHeaderWidget(),
+          ]),
+          enableFixedDigitButton: true,
+          footer: BlocBuilder<ServiceBloc, ServiceState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const Offstage(),
+                serviceSearch: (value1, value2, value3) {
+                  return value2 != null
+                      ? DigitCard(
+                          cardType: CardType.primary,
+                          margin: const EdgeInsets.only(top: spacer2),
+                          children: [
+                              DigitButton(
+                                mainAxisSize: MainAxisSize.max,
+                                label: localizations
+                                    .translate(i18.common.corecommonclose),
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large,
+                                onPressed: () {
+                                  context.read<ServiceBloc>().add(
+                                        ServiceResetEvent(serviceList: value1),
+                                      );
+                                },
+                              ),
+                            ])
+                      : const Offstage();
+                },
+              );
+            },
+          ),
+          children: [
+            BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const Offstage(),
+                serviceSearch: (serviceList, selectedService, loading) {
+                  return selectedService == null
+                      ? serviceList.isNotEmpty
+                          ? Column(
+                              children: [
+                                ...serviceList
+                                    .map((e) => e.serviceDefId != null
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.all(spacer2),
+                                            child: DigitCard(
+                                                cardType: CardType.primary,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
                                                       DateFormat(Constants
-                                                              .defaultDateFormat)
-                                                          .parse(
-                                                        e.createdAt.toString(),
-                                                      ),
-                                                    ),
-                                                    style: textTheme.headingXl,
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    SizedBox(
-                                                      child: Text(
-                                                        localizations.translate(
-                                                          '${e.tenantId}',
+                                                              .SurveyFormPreviewDateFormat)
+                                                          .format(
+                                                        DateFormat(Constants
+                                                                .defaultDateFormat)
+                                                            .parse(
+                                                          e.createdAt
+                                                              .toString(),
                                                         ),
                                                       ),
+                                                      style:
+                                                          textTheme.headingXl,
                                                     ),
-                                                    DigitButton(
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.searchBeneficiary
-                                                            .iconLabel,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        child: Text(
+                                                          localizations
+                                                              .translate(
+                                                            '${e.tenantId}',
+                                                          ),
+                                                        ),
                                                       ),
-                                                      type: DigitButtonType
-                                                          .secondary,
-                                                      size: DigitButtonSize
-                                                          .medium,
-                                                      onPressed: () {
-                                                        context
-                                                            .read<ServiceBloc>()
-                                                            .add(
-                                                              ServiceSelectionEvent(
-                                                                service: e,
-                                                              ),
-                                                            );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ]),
-                                        )
-                                      : const Offstage())
-                                  .toList(),
-                            ],
-                          )
-                        : Expanded(
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: NoResultCard(
-                                  align: Alignment.center,
-                                  label: localizations.translate(
-                                      i18.surveyForm.noSurveyFormFound),
+                                                      DigitButton(
+                                                        label: localizations
+                                                            .translate(
+                                                          i18.searchBeneficiary
+                                                              .iconLabel,
+                                                        ),
+                                                        type: DigitButtonType
+                                                            .secondary,
+                                                        size: DigitButtonSize
+                                                            .medium,
+                                                        onPressed: () {
+                                                          context
+                                                              .read<
+                                                                  ServiceBloc>()
+                                                              .add(
+                                                                ServiceSelectionEvent(
+                                                                  service: e,
+                                                                ),
+                                                              );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ]),
+                                          )
+                                        : const Offstage())
+                                    .toList(),
+                              ],
+                            )
+                          : Expanded(
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: NoResultCard(
+                                    align: Alignment.center,
+                                    label: localizations.translate(
+                                        i18.surveyForm.noSurveyFormFound),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                    : BlocBuilder<ServiceDefinitionBloc,
-                        ServiceDefinitionState>(builder: (context, state) {
-                        return state.maybeWhen(
-                          serviceDefinitionFetch: (
-                            item1,
-                            item2,
-                          ) {
-                            return DigitCard(
-                                cardType: CardType.primary,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.all(spacer2),
-                                          child: Text(
-                                            localizations.translate(
-                                              item2?.code ?? '',
+                            )
+                      : BlocBuilder<ServiceDefinitionBloc,
+                          ServiceDefinitionState>(builder: (context, state) {
+                          return state.maybeWhen(
+                            serviceDefinitionFetch: (
+                              item1,
+                              item2,
+                            ) {
+                              return DigitCard(
+                                  cardType: CardType.primary,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(spacer2),
+                                            child: Text(
+                                              localizations.translate(
+                                                item2?.code ?? '',
+                                              ),
+                                              style: textTheme.headingXl,
                                             ),
-                                            style: textTheme.headingXl,
                                           ),
                                         ),
-                                      ),
-                                      ...(selectedService.attributes ?? [])
-                                          .where((a) =>
-                                              a.value !=
-                                                  i18.surveyForm
-                                                      .notSelectedKey &&
-                                              a.value != '')
-                                          .map(
-                                            (e) => Padding(
-                                              padding:
-                                                  const EdgeInsets.all(spacer2),
-                                              child: Align(
-                                                alignment: AlignmentDirectional
-                                                    .topStart,
-                                                child:
-                                                    LabelValueSummary(items: [
-                                                  LabelValueItem(
-                                                    label:
-                                                        localizations.translate(
-                                                      "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                    ),
-                                                    value: e.dataType ==
-                                                            'SingleValueList'
-                                                        ? localizations
-                                                            .translate(
-                                                            '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
-                                                          )
-                                                        : e.value ?? "",
-                                                    isInline: false,
-                                                  ),
-                                                  if (e.additionalDetails !=
-                                                          '' &&
-                                                      e.additionalDetails !=
-                                                          null) ...[
+                                        ...(selectedService.attributes ?? [])
+                                            .where((a) =>
+                                                a.value !=
+                                                    i18.surveyForm
+                                                        .notSelectedKey &&
+                                                a.value != '')
+                                            .map(
+                                              (e) => Padding(
+                                                padding: const EdgeInsets.all(
+                                                    spacer2),
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional
+                                                          .topStart,
+                                                  child:
+                                                      LabelValueSummary(items: [
                                                     LabelValueItem(
                                                       label: localizations
                                                           .translate(
-                                                        "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                        "${item2?.code ?? ''}.${e.attributeCode!}",
                                                       ),
-                                                      value: localizations
-                                                          .translate(
-                                                        e.additionalDetails,
-                                                      ),
+                                                      value: e.dataType ==
+                                                              'SingleValueList'
+                                                          ? localizations
+                                                              .translate(
+                                                              '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
+                                                            )
+                                                          : e.value ?? "",
                                                       isInline: false,
-                                                      labelTextStyle:
-                                                          textTheme.bodyL,
-                                                    )
-                                                  ]
-                                                ]),
+                                                    ),
+                                                    if (e.additionalDetails !=
+                                                            '' &&
+                                                        e.additionalDetails !=
+                                                            null) ...[
+                                                      LabelValueItem(
+                                                        label: localizations
+                                                            .translate(
+                                                          "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                        ),
+                                                        value: localizations
+                                                            .translate(
+                                                          e.additionalDetails,
+                                                        ),
+                                                        isInline: false,
+                                                        labelTextStyle:
+                                                            textTheme.bodyL,
+                                                      )
+                                                    ]
+                                                  ]),
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                    ].toList(),
-                                  ),
-                                ]);
-                          },
-                          orElse: () => const Offstage(),
-                        );
-                      });
-              },
-            );
-          }),
-        ],
+                                            )
+                                      ].toList(),
+                                    ),
+                                  ]);
+                            },
+                            orElse: () => const Offstage(),
+                          );
+                        });
+                },
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

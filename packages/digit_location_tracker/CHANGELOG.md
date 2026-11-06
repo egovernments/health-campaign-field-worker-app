@@ -1,3 +1,7 @@
+## 1.0.0+1
+
+* Aligned with Nigeria product changes and flow-builder revamp integrations
+
 ## 1.0.0
 
 * Updated to latest package versions

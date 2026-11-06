@@ -7,7 +7,7 @@ void main() {
   test('SurveyFormLocalization translation test', () async {
     // Define mock localized strings for testing.
     final mockLocalizedStrings = [
-      Localization(locale: 'en_MZ', code: 'CORE_COMMON_NAME', message: 'Name'),
+      Localization(locale: 'en_DEMO', code: 'CORE_COMMON_NAME', message: 'Name'),
       Localization(locale: 'fr_FR', code: 'CORE_COMMON_NAME', message: 'Nom'),
     ];
 
@@ -15,7 +15,7 @@ void main() {
     final mockLanguages = [
       SurveyFormLanguages()
         ..label = 'English'
-        ..value = 'en_MZ',
+        ..value = 'en_DEMO',
       SurveyFormLanguages()
         ..label = 'French'
         ..value = 'fr_FR',

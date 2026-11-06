@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../blocs/app_localization.dart';
 
-
 abstract class LocalizedStatefulWidget extends StatefulWidget {
   final AttendanceLocalization? appLocalizations;
 
@@ -29,7 +28,8 @@ abstract class LocalizedState<T extends LocalizedStatefulWidget>
   @override
   @mustCallSuper
   void didChangeDependencies() {
-    _localizations = widget.appLocalizations ?? AttendanceLocalization.of(context);
+    _localizations =
+        widget.appLocalizations ?? AttendanceLocalization.of(context);
     super.didChangeDependencies();
   }
 }

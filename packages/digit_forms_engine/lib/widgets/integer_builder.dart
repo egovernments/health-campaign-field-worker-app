@@ -32,14 +32,15 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
         label: label,
+        capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(
           helpText: helpText,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           readOnly: readOnly,
           errorMessage: field.errorText,
-          minValue: 0,
-          maxValue: 10000,
+          minValue: minValue ?? 0,
+          maxValue: maxValue ?? 1000,
           maxLength: 5,
           step: 1,
           initialValue: (form.control(formControlName).value ?? 0).toString(),

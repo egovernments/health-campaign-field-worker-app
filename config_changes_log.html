@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Config Changes Log — HCM Field Worker App</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --fg: #222;
+      --muted: #666;
+      --border: #ddd;
+      --header-bg: #f0f0f0;
+      --smc: #b45309;
+      --polio: #1d4ed8;
+      --shared: #047857;
+      --general: #6d28d9;
+      --code-bg: #f7f7f9;
+      --diff-add-bg: #eaf7ea;
+      --diff-add-fg: #256029;
+      --diff-del-bg: #fbeaea;
+      --diff-del-fg: #a11212;
+      --diff-hunk: #6a737d;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 32px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1 { margin-top: 0; }
+    h2 { margin-top: 32px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    p.muted { color: var(--muted); font-size: 14px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: var(--header-bg);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    tr:hover td { background: #fbfbfb; }
+    code {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #f4f4f4;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre.config {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      margin: 10px 0 4px;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+    pre.config .add { background: var(--diff-add-bg); color: var(--diff-add-fg); display: block; }
+    pre.config .del { background: var(--diff-del-bg); color: var(--diff-del-fg); display: block; }
+    pre.config .hunk { color: var(--diff-hunk); display: block; }
+    details { margin-top: 8px; }
+    details > summary {
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--muted);
+      user-select: none;
+    }
+    details[open] > summary { color: var(--fg); }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 10px;
+      color: white;
+      letter-spacing: 0.02em;
+    }
+    .tag-smc { background: var(--smc); }
+    .tag-polio { background: var(--polio); }
+    .tag-shared { background: var(--shared); }
+    .tag-general { background: var(--general); }
+    .commit { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+    .pending { color: var(--muted); font-style: italic; }
+    .legend { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .legend span { font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Config Changes Log — HCM Field Worker App</h1>
+  <p class="muted">
+    Tracks configuration-only changes (JSON flow configs) applied to this repo.
+    Each entry shows the commit hash and the actual config block that changed.
+    Dart code changes are out of scope for this log. Update this file whenever
+    a new config change is committed.
+  </p>
+
+  <div class="legend">
+    <span><span class="tag tag-smc">SMC</span> Campaign-specific — SMC only</span>
+    <span><span class="tag tag-polio">POLIO</span> Campaign-specific — Polio only</span>
+    <span><span class="tag tag-shared">SMC + POLIO</span> Both campaigns</span>
+    <span><span class="tag tag-general">GENERAL</span> Not campaign-specific (attendance, common flows, etc.)</span>
+  </div>
+
+  <h2>Change Log</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 100px;">Date</th>
+        <th style="width: 110px;">Commit</th>
+        <th style="width: 110px;">Campaign</th>
+        <th style="width: 220px;">File · Location</th>
+        <th>What changed &amp; the config</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2026-07-03</td>
+        <td class="commit">92ff8674a</td>
+        <td><span class="tag tag-smc">SMC</span></td>
+        <td>
+          <code>registration_smc_flows.dart</code><br>
+          member card (line 1052–1060) &middot;<br>
+          searchBeneficiary member table (line 2320–2325)
+        </td>
+        <td>
+          <strong>Restore <code>UNIQUE_BENEFICIARY_ID</code> tag and column in SMC.</strong>
+          Info-typed tag on the household member card, plus a new
+          <code>UNIQUE_BENEFICIARY_ID</code> column on the searchBeneficiary
+          member table. Originally added in <code class="commit">84a9d2df5</code>,
+          wiped by <code class="commit">8032b2131</code>, restored here.
+<pre class="config"><span class="hunk">// Member card tag — inserted after the genderAge textTemplate</span>
+<span class="add">+ {
++   "type": "template",
++   "label":
++       "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}}",
++   "format": "tag",
++   "visible":
++       "{{fn:getUniqueBeneficiaryId(item.individual.0.identifiers.0)}} != ''",
++   "fieldName": "uniqueBeneficiaryIdTag",
++   "properties": {"tagType": "info", "bottomGap": 16}
++ },</span>
+
+<span class="hunk">// searchBeneficiary table column — appended after the GENDER column</span>
+<span class="add">+ {
++   "header": "UNIQUE_BENEFICIARY_ID",
++   "hidden": false,
++   "isActive": true,
++   "cellValue":
++       "{{fn:getUniqueBeneficiaryId(item.identifiers.0)}}"
++ }</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-03</td>
+        <td class="commit">0fe063fee</td>
+        <td><span class="tag tag-smc">SMC</span></td>
+        <td>
+          <code>registration_smc_flows.dart</code><br>
+          saveFilter branch for <code>selectedStatus == NOT_ADMINISTERED</code><br>
+          (line 2088–2119)
+        </td>
+        <td>
+          <strong>Fix NOT_ADMINISTERED filter to match beneficiaries with no task.</strong>
+          Three edits to the filter block: <code>projectId</code> operator flipped
+          from <code>notEqual</code> to <code>equals</code>; task filter switched
+          from a status-equals check to <code>notExists</code> with an empty
+          inner values list (so the outer NOT IN excludes any beneficiary that
+          has any task); <code>filterLogic: "or"</code> removed so the three
+          conditions AND together (default). Follow-up
+          <code class="commit">a58cb1cae</code> also added <code>name: "task"</code>
+          to this SEARCH_EVENT and the sibling BENEFICIARY_REFERRED branch so
+          filters bucket under the same searchName as ADMINISTRATION_SUCCESS
+          and Clear Filter can actually clear them.
+<pre class="config"><span class="hunk">// Before</span>
+<span class="del">-   {
+-     "key": "projectId",
+-     "root": "projectBeneficiary",
+-     "value": "{{singleton.selectedProject.id}}",
+-     "operation": "notEqual"
+-   },
+-   {
+-     "key": "status",
+-     "root": "task",
+-     "value": "NOT_ADMINISTERED",
+-     "operation": "equals"
+-   },
+-   {
+-     "key": "localityBoundaryCode",
+-     "root": "address",
+-     "value": "{{singleton.boundary.code}}",
+-     "operation": "equals"
+-   }
+- ],
+- "filterLogic": "or"</span>
+
+<span class="hunk">// After</span>
+<span class="add">+   {
++     "key": "projectId",
++     "root": "projectBeneficiary",
++     "value": "{{singleton.selectedProject.id}}",
++     "operation": "equals"
++   },
++   {
++     "key": "status",
++     "root": "task",
++     "value": {"values": []},
++     "operation": "notExists"
++   },
++   {
++     "key": "localityBoundaryCode",
++     "root": "address",
++     "value": "{{singleton.boundary.code}}",
++     "operation": "equals"
++   }
++ ]</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-03</td>
+        <td class="commit">121864404</td>
+        <td><span class="tag tag-general">GENERAL</span></td>
+        <td>
+          <code>attendance_flows.dart</code><br>
+          register card <code>STAFF_COUNT_LABEL</code> (line 159)
+        </td>
+        <td>
+          <strong>Show active-attendee count on manageAttendance card.</strong>
+          One-line fn swap so the count on the register card matches what the
+          register-marking list actually renders (drops de-enrolled attendees).
+<pre class="config"><span class="del">- "value": "{{fn:length(item.attendees)}}"</span>
+<span class="add">+ "value": "{{fn:activeAttendeesCount(item.attendees)}}"</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-03</td>
+        <td class="commit">8032b2131</td>
+        <td><span class="tag tag-smc">SMC</span></td>
+        <td>
+          <code>registration_smc_flows.dart</code><br>
+          Delivery-details transformer <code>additionalFields</code> mapping
+        </td>
+        <td>
+          <strong>Type-cast height and weight to int before dose criteria evaluation.</strong>
+          Values coming out of <code>additionalFields</code> arrive as strings, so
+          numeric comparisons like <code>60&lt;=height&lt;=180</code> in the dose
+          criteria evaluator silently failed. Adding explicit <code>int</code>
+          transformations on the <code>height</code> / <code>weight</code> sources
+          converts them before FormulaParser sees them, paired with the Dart-side
+          <code>sanitizeCondition</code> that expands chained comparisons.
+<pre class="config"><span class="hunk">// additionalFields transformations block</span>
+<span class="add">+ "height": {
++   "type": "int",
++   "source": "height"
++ },
++ "weight": {
++   "type": "int",
++   "source": "weight"
++ }</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-03</td>
+        <td class="commit">6d05e9727</td>
+        <td><span class="tag tag-polio">POLIO</span></td>
+        <td>
+          <code>polio_lqa_data_collection.dart</code> &middot; <code>surveyDate</code><br>
+          <code>polio_inside_household_monitoring.dart</code> &middot; <code>monitoringDate</code>
+        </td>
+        <td>
+          <strong>Set format to <code>date</code> so systemDate auto-fill triggers.</strong>
+          <code>form_builder_helper.dart</code> only applies <code>DateTime.now()</code>
+          when the field format is <code>"date"</code>. Both survey date fields were
+          declared as <code>"text"</code>, so the pre-filled today's date never
+          appeared and surveyors had to type it by hand.
+<pre class="config"><span class="hunk">// Both LQA surveyDate and IHM monitoringDate</span>
+<span class="del">- "format": "text",</span>
+<span class="add">+ "format": "date",</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-02</td>
+        <td class="commit">a6a3be5ee</td>
+        <td><span class="tag tag-smc">SMC</span></td>
+        <td>
+          <code>registration_smc_flows.dart</code><br>
+          REDOSE + DELIVERY flow-level <code>onAction</code>
+        </td>
+        <td>
+          <strong>Wire <code>UPDATE_STOCK_BALANCE</code> into REDOSE and DELIVERY flows.</strong>
+          Both flows created a task but never debited the running vial balance
+          because the screen-builder only reads the flow-level
+          <code>onAction</code> chain, while <code>UPDATE_STOCK_BALANCE</code> was
+          sitting on a dead page-level chain. Inserted between
+          <code>CREATE_EVENT</code> and <code>NAVIGATION</code> on both flows —
+          REDOSE here, DELIVERY dose-1 added later as part of the release-prep
+          commit <code class="commit">321d98116</code>. The REDOSE hunk was
+          later wiped by the <code class="commit">8032b2131</code> SMC-config
+          rewrite and re-restored in <code class="commit">c5c2bf76f</code>
+          (2026-07-03).
+<pre class="config"><span class="add">+ {
++   "actionType": "UPDATE_STOCK_BALANCE",
++   "properties": {
++     "entity": "TaskModel",
++     "onError": [
++       {
++         "actionType": "SHOW_TOAST",
++         "properties": {"message": "Failed to update stock balance."}
++       }
++     ]
++   }
++ },</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-07-02</td>
+        <td class="commit">d05a7cc51</td>
+        <td><span class="tag tag-general">GENERAL</span></td>
+        <td>
+          <code>attendance_flows.dart</code><br>
+          attendee / attendance SEARCH_EVENTs (around line 41 &amp; 63)
+        </td>
+        <td>
+          <strong>Root <code>referenceId</code> filter on <code>attendanceRegister</code>.</strong>
+          The attendee and attendance tables have no <code>referenceId</code>
+          column — the register does. Without an explicit <code>root</code> the
+          multi-table filter resolver hit "Column referenceId not found" and
+          crashed manageAttendance. Rooting on <code>attendanceRegister</code>
+          walks the <code>registerId</code> FK subquery instead.
+<pre class="config"><span class="hunk">// attendee &amp; attendance SEARCH_EVENTs</span>
+  {
+    "key": "referenceId",
+<span class="add">+   "root": "attendanceRegister",</span>
+    "value": "{{singleton.selectedProject.id}}",
+    "operation": "equals"
+  }</pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-06-30</td>
+        <td class="commit">a54ff63c6</td>
+        <td><span class="tag tag-polio">POLIO</span></td>
+        <td>
+          <code>registration_flows.dart</code><br>
+          VACCINATION_FAILED filter branch &middot; ADMINISTERED_SUCCESS / NOT_VISITED tags &middot; ACTION_BUTTON
+        </td>
+        <td>
+          <strong>Fix VACCINATION_FAILED filter and switch Polio to <code>checkPolioEligibility</code>.</strong>
+          The stale filter branch matched by <code>selectedStatus == ADMINISTRATION_FAILED</code>
+          was collapsed into a proper <code>notExists</code> subquery — the row must
+          have an ADMINISTRATION_FAILED task with no later VISITED /
+          ADMINISTRATION_SUCCESS task. Polio-specific tag/button visibilities
+          were swapped from the SMC-shaped <code>checkEligibilityForAgeAndSideEffect</code>
+          to <code>checkPolioEligibility</code>, which doesn't require dose criteria
+          context Polio doesn't supply.
+<pre class="config"><span class="hunk">// Polio ADMINISTERED_SUCCESS / NOT_VISITED / ACTION_BUTTON visibility</span>
+<span class="del">- "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true …"</span>
+<span class="add">+ "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true …"</span>
+
+<span class="hunk">// VACCINATION_FAILED filter — was matched by the shared branch that also caught CLOSED_HOUSEHOLD / INELIGIBLE / VISITED</span>
+<span class="del">- "expression": "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE || selectedStatus == VISITED"</span>
+<span class="add">+ "expression": "selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == INELIGIBLE || selectedStatus == VISITED"
++ // Dedicated branch elsewhere: status IN [ADMINISTRATION_FAILED] AND
++ // no subsequent VISITED / ADMINISTRATION_SUCCESS task (notExists).</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-06-29</td>
+        <td class="commit">72886dbdf</td>
+        <td><span class="tag tag-shared">SMC + POLIO</span></td>
+        <td>
+          <code>registrtaion_smc_flows.dart</code> &middot; searchBeneficiary select list (line 2615)<br>
+          <code>registration_flows.dart</code> &middot; Polio unableToDeliver configName (line 5580)
+        </td>
+        <td>
+          <strong>Add <code>hFReferral</code> to SMC search select list; split unableToDeliver transformer for Polio.</strong>
+          SMC's <code>BENEFICIARY_REFERRED</code> filter queries the
+          <code>hFReferral</code> table, but that table wasn't in the search select
+          list so the query resolver had nothing to match against. Polio's
+          unable-to-deliver flow was pointing at the shared
+          <code>unableToDeliverConfig</code> (status <code>unableToDeliver.reason</code>);
+          it needs its own <code>polioUnableToDeliverConfig</code> with status
+          <code>ADMINISTRATION_FAILED</code>.
+<pre class="config"><span class="hunk">// SMC search select list</span>
+  "individual",
+  "householdMember",
+  "projectBeneficiary",
+<span class="del">- "task"</span>
+<span class="add">+ "task",
++ "hFReferral"</span>
+
+<span class="hunk">// Polio flow — unable-to-deliver transformer</span>
+<span class="del">- "configName": "unableToDeliverConfig"</span>
+<span class="add">+ "configName": "polioUnableToDeliverConfig"</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-06-27</td>
+        <td class="commit">8285e5512</td>
+        <td><span class="tag tag-general">GENERAL</span></td>
+        <td>
+          <code>manage_stock.dart</code> &middot; two <code>additionalFields</code> filters<br>
+          <code>complaints.dart</code> &middot; complaint list filter (later in <code class="commit">321d98116</code>)
+        </td>
+        <td>
+          <strong>Switch <code>contains</code> to <code>matches</code> where filter targets JSON.</strong>
+          The <code>contains</code> operator was doing raw substring matching on
+          the whole <code>additionalFields</code> JSON blob, occasionally hitting
+          unrelated rows. <code>matches</code> uses the canonical key/value pair
+          extraction the additionalFields lookup expects. Same pattern was
+          then applied to the complaints list filter in the release-prep
+          commit.
+<pre class="config"><span class="del">- "operation": "contains"</span>
+<span class="add">+ "operation": "matches"</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-06-26</td>
+        <td class="commit">4b8d6a2f0</td>
+        <td><span class="tag tag-general">GENERAL</span></td>
+        <td>
+          <code>inventory_reports.dart</code> &middot; stock SEARCH_EVENTs<br>
+          <code>manage_stock.dart</code> &middot; viewTransaction (<code class="commit">c9c0e4bbf</code>)
+        </td>
+        <td>
+          <strong>Scope stock views to rows the logged-in user created.</strong>
+          Inventory reports were pulling every dispatched / received row in
+          the local DB — added a <code>clientCreatedBy = loggedInUserUuid</code>
+          filter on both reports. Follow-up <code class="commit">c9c0e4bbf</code>
+          narrowed the viewTransaction filter key from the composite
+          <code>clientCreatedBy,clientModifiedBy</code> to just
+          <code>clientCreatedBy</code> so rows another user patches don't fall
+          out of the created-by-me list.
+<pre class="config"><span class="add">+ {
++   "key": "clientCreatedBy",
++   "value": "{{singleton.loggedInUserUuid}}",
++   "operation": "equalsAny"
++ }</span></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>2026-06-24</td>
+        <td class="commit">dc3ec6b36</td>
+        <td><span class="tag tag-smc">SMC</span></td>
+        <td>
+          <code>registrtaion_smc_flows.dart</code><br>
+          NOT_ELIGIBLE tag &amp; DELIVERY actionPopup visibility
+        </td>
+        <td>
+          <strong>Guard NOT_ELIGIBLE and DELIVERY on <code>hasReferralForCurrentCycle</code>.</strong>
+          Both the NOT_ELIGIBLE tag and the DELIVERY action popup were rendering
+          even when the beneficiary had a current-cycle referral, so referred
+          households showed a stale eligibility tag or an unexpected delivery
+          button. Also dropped the redundant
+          <code>isRegisteredBeforeCurrentCycle</code> check (already implied by
+          the cycle-scoped criteria) from the DELIVERY visibility.
+<pre class="config"><span class="hunk">// NOT_ELIGIBLE tag visibility</span>
+<span class="del">- "{{fn:checkEligibilityForAgeAndSideEffect(...)}}==false"</span>
+<span class="add">+ "{{fn:checkEligibilityForAgeAndSideEffect(...)}}==false &amp;&amp; {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false"</span>
+
+<span class="hunk">// DELIVERY actionPopup visibility</span>
+<span class="del">- "… &amp;&amp; {{fn:length(item.referral)}} &lt;= 0 &amp;&amp; {{fn:isRegisteredBeforeCurrentCycle(item.individual.0.clientCreatedTime)}} == true"</span>
+<span class="add">+ "… &amp;&amp; {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false"</span></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>How to update this log</h2>
+  <p class="muted">
+    Whenever you commit a config-only JSON change under
+    <code>apps/health_campaign_field_worker_app/lib/sampleJsonConfigs/</code>
+    (or an equivalent flow-config file), add a new row at the top of the
+    table with:
+  </p>
+  <ol>
+    <li><strong>Date</strong> — ISO date of the commit.</li>
+    <li><strong>Commit</strong> — short SHA once committed, or <span class="pending">unstaged</span> while pending.</li>
+    <li><strong>Campaign</strong> — SMC, POLIO, SMC + POLIO, or GENERAL.</li>
+    <li><strong>File &middot; Location</strong> — file name and the block / line range.</li>
+    <li><strong>What changed &amp; the config</strong> — one-line summary plus a
+      <code>&lt;pre class="config"&gt;</code> block showing the actual JSON.
+      Use <code>&lt;span class="add"&gt;</code>/<code>&lt;span class="del"&gt;</code>
+      for diff-style coloring and <code>&lt;span class="hunk"&gt;</code> for
+      section headers. Link back to any origin commit if the change is a
+      restore.</li>
+  </ol>
+</body>
+</html>

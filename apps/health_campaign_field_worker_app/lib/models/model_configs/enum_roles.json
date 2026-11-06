@@ -32,6 +32,14 @@
     {
       "name": "Team Supervisor",
       "value": "TEAM_SUPERVISOR"
+    },
+    {
+      "name": "Health Facility Supervisor",
+      "value": "HEALTH_FACILITY_SUPERVISOR"
+    },
+    {
+      "name": "Community Distributor",
+      "value": "COMMUNITY_DISTRIBUTOR"
     }
   ],
   "isEnum": true

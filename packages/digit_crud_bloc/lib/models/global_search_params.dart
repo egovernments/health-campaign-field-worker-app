@@ -1,8 +1,40 @@
+/// Models for global search parameters, filters, pagination, and relationship/nested mappings.
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'global_search_params.freezed.dart';
 part 'global_search_params.g.dart';
 
+/// Sentinel [SearchOrderBy.field] that sorts by distance from the centre of
+/// a `within` filter rather than by a column — nearest first with
+/// `order: "ASC"`.
+///
+/// It is not a column name, so it only works on a table that also carries a
+/// `within` filter in the same search: that filter is what supplies the
+/// centre point. Without one the ordering is skipped.
+const String distanceOrderField = '__distance';
+
+/// A `within` that also keeps rows with no recorded location (null
+/// coordinates, or 0/0). Located rows still have to be inside the radius;
+/// unlocated ones can't be placed, so they pass and, under a
+/// [distanceOrderField] sort, come after every located row.
+///
+/// For lists where a missing GPS fix must not hide a record, such as
+/// outside-household sites added by planners without coordinates.
+const String withinOrUnlocatedOperator = 'withinOrUnlocated';
+
+/// Defines how filters across multiple tables are combined.
+enum MultiTableFilterLogic {
+  /// All filters must match (intersection). Default behavior.
+  /// Example: Households that have BOTH individuals named 'John' AND tasks completed.
+  @JsonValue('and')
+  and,
+
+  /// Any filter can match (union).
+  /// Example: Households that have EITHER individuals named 'John' OR tasks completed.
+  @JsonValue('or')
+  or,
+}
 
 @freezed
 class GlobalSearchParameters with _$GlobalSearchParameters {
@@ -12,8 +44,21 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
     PaginationParams? pagination,
     @Default([]) List<RelationshipMapping> relationshipMappings,
     @Default([]) List<NestedModelMapping> nestedMappings,
-    /// Optional: If set, pagination and count are applied only for this model.
+
+    /// If set, pagination and count are applied only for this model.
     String? primaryModel,
+
+    /// The primary key field name for the primary model.
+    /// Used for multi-table filter resolution.
+    /// Example: 'clientReferenceId' for most entities.
+    String? primaryKeyField,
+
+    /// Defines how filters across multiple tables are combined.
+    /// Defaults to [MultiTableFilterLogic.and] (intersection).
+    @Default(MultiTableFilterLogic.and) MultiTableFilterLogic filterLogic,
+
+    /// Ordering configuration for the search results
+    SearchOrderBy? orderBy,
   }) = _GlobalSearchParameters;
 
   factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) =>
@@ -41,8 +86,7 @@ class LatLng with _$LatLng {
     required double longitude,
   }) = _LatLng;
 
-  factory LatLng.fromJson(Map<String, dynamic> json) =>
-      _$LatLngFromJson(json);
+  factory LatLng.fromJson(Map<String, dynamic> json) => _$LatLngFromJson(json);
 }
 
 @freezed
@@ -70,14 +114,16 @@ class RelationshipMapping with _$RelationshipMapping {
 }
 
 enum NestedMappingType {
-  @JsonValue('one') one,
-  @JsonValue('many') many,
+  @JsonValue('one')
+  one,
+  @JsonValue('many')
+  many,
 }
 
 @freezed
 class NestedFieldMapping with _$NestedFieldMapping {
   const factory NestedFieldMapping({
-    required String table, // actual SQL table name
+    required String table,
     required String localKey,
     required String foreignKey,
     required NestedMappingType type,
@@ -90,11 +136,21 @@ class NestedFieldMapping with _$NestedFieldMapping {
 @freezed
 class NestedModelMapping with _$NestedModelMapping {
   const factory NestedModelMapping({
-    required String rootModel, // e.g., 'Individual'
-    required Map<String, NestedFieldMapping> fields, // e.g., 'name' → mapping
+    required String rootModel,
+    required Map<String, NestedFieldMapping> fields,
   }) = _NestedModelMapping;
 
   factory NestedModelMapping.fromJson(Map<String, dynamic> json) =>
       _$NestedModelMappingFromJson(json);
 }
 
+@freezed
+class SearchOrderBy with _$SearchOrderBy {
+  const factory SearchOrderBy({
+    required String field,
+    @Default('DESC') String order, // 'ASC' or 'DESC'
+  }) = _SearchOrderBy;
+
+  factory SearchOrderBy.fromJson(Map<String, dynamic> json) =>
+      _$SearchOrderByFromJson(json);
+}

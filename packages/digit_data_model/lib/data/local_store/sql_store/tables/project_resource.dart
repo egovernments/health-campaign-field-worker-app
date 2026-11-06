@@ -3,6 +3,7 @@
 import 'package:digit_data_model/data/local_store/sql_store/tables/project_product_variant.dart';
 import 'package:drift/drift.dart';
 
+@TableIndex(name: 'project_resource_projectid', columns: {#projectId})
 class ProjectResource extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();

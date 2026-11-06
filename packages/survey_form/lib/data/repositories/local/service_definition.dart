@@ -99,7 +99,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
                 isActive: result.isActive,
                 required: result.required,
                 regex: result.regex,
-                order: result.order,
+                order: result.order.toString(),
                 isDeleted: result.isDeleted,
                 rowVersion: result.rowVersion,
                 additionalFields: result.additionalFields != null

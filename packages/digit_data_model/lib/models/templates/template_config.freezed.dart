@@ -27,6 +27,7 @@ mixin _$TemplateConfig {
   Map<String, TemplateProperty>? get properties =>
       throw _privateConstructorUsedError;
   Map<String, bool>? get features => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,6 +49,7 @@ abstract class $TemplateConfigCopyWith<$Res> {
       int order,
       Map<String, TemplateProperty>? properties,
       Map<String, bool>? features,
+      @JsonKey(fromJson: _navigateToConfigOrNull)
       NavigateToConfig? navigateTo});
 
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -134,6 +136,7 @@ abstract class _$$TemplateConfigImplCopyWith<$Res>
       int order,
       Map<String, TemplateProperty>? properties,
       Map<String, bool>? features,
+      @JsonKey(fromJson: _navigateToConfigOrNull)
       NavigateToConfig? navigateTo});
 
   @override
@@ -202,7 +205,7 @@ class _$TemplateConfigImpl implements _TemplateConfig {
       required this.order,
       final Map<String, TemplateProperty>? properties,
       final Map<String, bool>? features,
-      this.navigateTo})
+      @JsonKey(fromJson: _navigateToConfigOrNull) this.navigateTo})
       : _properties = properties,
         _features = features;
 
@@ -238,6 +241,7 @@ class _$TemplateConfigImpl implements _TemplateConfig {
   }
 
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   final NavigateToConfig? navigateTo;
 
   @override
@@ -297,6 +301,7 @@ abstract class _TemplateConfig implements TemplateConfig {
       required final int order,
       final Map<String, TemplateProperty>? properties,
       final Map<String, bool>? features,
+      @JsonKey(fromJson: _navigateToConfigOrNull)
       final NavigateToConfig? navigateTo}) = _$TemplateConfigImpl;
 
   factory _TemplateConfig.fromJson(Map<String, dynamic> json) =
@@ -315,6 +320,7 @@ abstract class _TemplateConfig implements TemplateConfig {
   @override
   Map<String, bool>? get features;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo;
   @override
   @JsonKey(ignore: true)

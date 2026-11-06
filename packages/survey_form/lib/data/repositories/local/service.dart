@@ -291,7 +291,7 @@ class ServiceLocalRepository
       // Update each attributes individually with correct where clause
       if (transformedAttributesForLocal != null &&
           transformedAttributesForLocal.isNotEmpty) {
-        for (final a in transformedAttributesForLocal ?? []) {
+        for (final a in transformedAttributesForLocal) {
           final selectNestedQuery = sql.select(sql.serviceAttributes).join([]);
 
           final query = await (selectNestedQuery

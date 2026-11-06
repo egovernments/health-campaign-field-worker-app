@@ -139,15 +139,19 @@ class Scanner {
 
   String get enterManualCode => 'ENTER_MANUAL_CODE';
 
-  String get resourcesScanned => 'RESOURCE_SCANNED';
+  String get resourceScanned => 'RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
 
   String get resourcesScanFailed => 'RESOURCE_SCAN_FAILED';
 
   String get resourceAlreadyScanned => 'RESOURCES_ALREADY_SCANNED';
 
+  String get duplicateCheckFailed => 'DUPLICATE_CHECK_FAILED';
+
   String get invalidBarcode => 'INVALID_BARCODE';
 
-  String get manualCodeDescription => 'MANUAL_CODE_DESC';
+  String get manualCodeDescription => 'SCANNER_MANUAL_CODE_DESCRIPTION';
 
   String get resourceCode => 'RESOURCE_CODE';
 
@@ -171,7 +175,17 @@ class Scanner {
 
   String get barCodeExpiry => 'BARCODE_EXPIRY_DATE';
 
+  String get barCodeGtin => 'BARCODE_GTIN';
+  String get gtinRequired => 'BARCODE_GTIN_REQUIRED';
+
+  String get gtinPatternError => 'BARCODE_GTIN_MUST_BE_14_DIGITS';
   String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
   String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
   String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
+
+  String get cameraPermissionDenied => 'CAMERA_PERMISSION_DENIED';
+  String get cameraPermissionDeniedDesc => 'CAMERA_PERMISSION_DENIED_DESC';
+  String get openSettings => 'OPEN_SETTINGS';
+  String get cameraPermissionRequired => 'CAMERA_PERMISSION_REQUIRED';
+  String get unableToScan => 'UNABLE_TO_SCAN';
 }

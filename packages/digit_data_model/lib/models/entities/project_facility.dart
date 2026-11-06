@@ -12,12 +12,17 @@ class ProjectFacilitySearchModel extends EntitySearchModel
   final List<String>? facilityId;
   final List<String>? projectId;
   final String? tenantId;
+  final List<String>? boundaryTypes;
+
+  final List<String>? clientReferenceId;
 
   ProjectFacilitySearchModel({
     this.id,
+    this.clientReferenceId,
     this.facilityId,
     this.projectId,
     this.tenantId,
+    this.boundaryTypes,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -25,9 +30,11 @@ class ProjectFacilitySearchModel extends EntitySearchModel
   @MappableConstructor()
   ProjectFacilitySearchModel.ignoreDeleted({
     this.id,
+    this.clientReferenceId,
     this.facilityId,
     this.projectId,
     this.tenantId,
+    this.boundaryTypes,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -38,6 +45,10 @@ class ProjectFacilityModel extends EntityModel
   static const schemaName = 'ProjectFacility';
 
   final String id;
+
+  /// App-local id of a link created on the phone (never sent to the
+  /// server). While unsynced the app stores the same value in [id].
+  final String? clientReferenceId;
   final String facilityId;
   final String projectId;
   final bool? nonRecoverableError;
@@ -48,6 +59,7 @@ class ProjectFacilityModel extends EntityModel
   ProjectFacilityModel({
     this.additionalFields,
     required this.id,
+    this.clientReferenceId,
     required this.facilityId,
     required this.projectId,
     this.nonRecoverableError = false,
@@ -71,6 +83,7 @@ class ProjectFacilityModel extends EntityModel
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      clientReferenceId: Value(clientReferenceId),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
       nonRecoverableError: Value(nonRecoverableError),
@@ -85,7 +98,9 @@ class ProjectFacilityAdditionalFields extends AdditionalFields
     with ProjectFacilityAdditionalFieldsMappable {
   ProjectFacilityAdditionalFields({
     super.schema = 'ProjectFacility',
-    required super.version,
+    // Sites added by the planner come down with schema/version null in
+    // additionalFields, so the version defaults instead of failing decode.
+    super.version = 1,
     super.fields,
   });
 }

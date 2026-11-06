@@ -1,0 +1,147 @@
+import 'dart:convert';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_crud_bloc/digit_crud_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_flow_builder/data/digit_crud_service.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/repositories/local/new_settlement.dart';
+import 'new_settlement_utils.dart';
+
+/// Configuration for a module's flow navigation
+class FlowModuleConfig {
+  /// The key used to retrieve schema from app_config_schemas (e.g., 'COMPLAINTS', 'CLOSEHOUSEHOLD')
+  final String schemaKey;
+
+  /// Sample flows to use as fallback when schema is not available
+  final dynamic sampleFlows;
+
+  /// Relationship mappings for the CRUD service
+  final List<RelationshipMapping> relationshipMappings;
+
+  /// Nested model mappings for the CRUD service
+  final List<NestedModelMapping> nestedModelMappings;
+
+  const FlowModuleConfig({
+    required this.schemaKey,
+    required this.sampleFlows,
+    this.relationshipMappings = const [],
+    this.nestedModelMappings = const [],
+  });
+}
+
+/// Utility class for handling flow-based module navigation
+class FlowNavigationUtils {
+  /// Navigates to a flow-based module with the given configuration
+  ///
+  /// This handles:
+  /// - Setting up CrudBlocSingleton with DigitCrudService
+  /// - Initializing WidgetRegistry
+  /// - Loading schema from SharedPreferences or using sample flows as fallback
+  /// - Navigating to the FlowBuilderHomeRoute
+  ///
+  /// [navigationParams] are passed to the first page. With [awaitPop] the
+  /// returned future completes only when that page is popped.
+  static Future<void> navigateToFlowModule({
+    required BuildContext context,
+    required FlowModuleConfig config,
+    Map<String, dynamic>? navigationParams,
+    bool awaitPop = false,
+  }) async {
+    try {
+      // Scope any downstream delivery-method filtering (registry helpers,
+      // wrapper `where` clauses via `singleton.activeDeliveryMethod`) to the
+      // module the user is entering. Non-delivery modules still set this, but
+      // the value simply won't match any delivery.deliveryMethod.
+      FlowBuilderSingleton().setActiveDeliveryMethod(config.schemaKey);
+
+      // Set up CRUD service
+      CrudBlocSingleton().setData(
+        crudService: DigitCrudService(
+          context: context,
+          relationshipMap: config.relationshipMappings,
+          nestedModelMappings: config.nestedModelMappings,
+          searchEntityRepository: context.read<SearchEntityRepository>(),
+          repositoryOverride: (entity) => _repositoryOverride(context, entity),
+        ),
+        dynamicEntityModelListener: EntityModelMapMapper(),
+      );
+
+      // Initialize widget registry
+      WidgetRegistry.initialize();
+
+      // Get schema from shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+      if (schemaJsonRaw != null) {
+        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+        final moduleSchema = allSchemas[config.schemaKey];
+
+        if (moduleSchema != null) {
+          final moduleData = moduleSchema['data'];
+          final flowsData = (moduleData['flows'] as List<dynamic>?)
+                  ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  .toList() ??
+              [];
+
+          FlowRegistry.setConfig(flowsData);
+          NavigationRegistry.setupNavigation(context);
+
+          final route = context.router.push(
+            FlowBuilderHomeRoute(
+              pageName: moduleData["initialPage"],
+              navigationParams: navigationParams,
+            ),
+          );
+          if (awaitPop) await route;
+          return;
+        }
+      }
+
+      // Sample-flow fallback. Accept both the legacy top-level shape
+      // (`{flows, initialPage}`) and the MDMS-shaped shape
+      // (`{data: {flows, initialPage, ...}, ...}`) so samples that are
+      // authored to mirror what the server would return still load.
+      final sampleRoot = config.sampleFlows["data"] is Map
+          ? config.sampleFlows["data"] as Map
+          : config.sampleFlows;
+      final rawFlows = sampleRoot["flows"] as List?;
+      FlowRegistry.setConfig(
+        rawFlows?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ??
+            <Map<String, dynamic>>[],
+      );
+      NavigationRegistry.setupNavigation(context);
+
+      final route = context.router.push(
+        FlowBuilderHomeRoute(
+          pageName: sampleRoot["initialPage"],
+          navigationParams: navigationParams,
+        ),
+      );
+      if (awaitPop) await route;
+    } catch (e) {
+      debugPrint('FlowNavigationUtils error: $e');
+    }
+  }
+
+  /// NEW_SETTLEMENT user actions sync through the userLocation endpoint, so
+  /// they are saved with [NewSettlementLocalRepository].
+  static DataRepository<EntityModel, EntitySearchModel>? _repositoryOverride(
+    BuildContext context,
+    EntityModel entity,
+  ) {
+    if (entity is UserActionModel && entity.action == newSettlementAction) {
+      return context.read<NewSettlementLocalRepository>()
+          as DataRepository<EntityModel, EntitySearchModel>;
+    }
+
+    return null;
+  }
+}

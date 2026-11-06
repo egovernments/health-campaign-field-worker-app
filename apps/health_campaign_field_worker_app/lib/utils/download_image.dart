@@ -1,0 +1,39 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'dart:typed_data';
+
+import 'environment_config.dart';
+
+class DownloadImage {
+  static Future<Uint8List> getImageBytesFromUrl(String imageUrl) async {
+    try {
+      // Fetch the image data from the network
+      final http.Response response = await http.get(Uri.parse(imageUrl));
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Return the bodyBytes as Uint8List
+        return response.bodyBytes;
+      } else {
+        // Handle non-200 status codes (e.g., 404 Not Found)
+        throw Exception(
+            'Failed to load image: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network errors
+      throw Exception('Error fetching image bytes: $e');
+    }
+  }
+
+  static Future<String> downloadSignature(String signatureFileStoreId) async {
+    final baseUrl = envConfig.variables.baseUrl;
+    final tenantId = envConfig.variables.tenantId;
+    String downloadUrl =
+        "${baseUrl}filestore/v1/files/id?tenantId=$tenantId&fileStoreId=$signatureFileStoreId";
+    Uint8List signatureBytes =
+        await DownloadImage.getImageBytesFromUrl(downloadUrl);
+    String signatureBase64 = base64Encode(signatureBytes);
+    return signatureBase64;
+  }
+}

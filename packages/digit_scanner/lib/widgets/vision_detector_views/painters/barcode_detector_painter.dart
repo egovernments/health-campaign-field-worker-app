@@ -85,9 +85,11 @@ class BarcodeDetectorPainter extends CustomPainter {
         cornerPoints.add(Offset(x, y));
       }
 
-      // Add the first point to close the polygon
-      cornerPoints.add(cornerPoints.first);
-      canvas.drawPoints(PointMode.polygon, cornerPoints, paint);
+      // Add the first point to close the polygon (only if we have points)
+      if (cornerPoints.isNotEmpty) {
+        cornerPoints.add(cornerPoints.first);
+        canvas.drawPoints(PointMode.polygon, cornerPoints, paint);
+      }
 
       canvas.drawParagraph(
         builder.build()

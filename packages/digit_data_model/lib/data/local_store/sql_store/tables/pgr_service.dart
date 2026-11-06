@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '/models/entities/pgr_application_status.dart';
 
 
+@TableIndex(name: 'pgr_service_tenantid', columns: {#tenantId})
 class PgrService extends Table {
   BoolColumn get active => boolean()();
   TextColumn get clientReferenceId => text()();

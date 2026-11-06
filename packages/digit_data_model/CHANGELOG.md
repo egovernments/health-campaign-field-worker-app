@@ -1,3 +1,63 @@
+## 1.5.1
+
+* `StockModel`: accept the server's `wayBillNumber` (capital B) response key without changing what the mobile client sends. A class-level `MappingHook` on `StockModel` copies `wayBillNumber` → `waybillNumber` in the JSON map before decoding; `toJson` and every Dart caller, DB column, and `{{item.waybillNumber}}` template are unchanged. `stock.mapper.dart` regenerated.
+
+## 1.5.0
+
+* Add `hierarchyType` field to `PgrServiceModel` so the mobile PGR create request can include the project's hierarchy at the top level of the `service` object (matches the web client's payload)
+
+## 1.4.0
+
+* Multi-hierarchy support
+    * Moved `hierarchyType` from build-time env to per-project runtime (added `hierarchyType` field to `Project` and its mapper)
+    * Centralized country-suffix stripping in `setHierarchyType`
+    * Stopped splitting `hierarchyType` on first underscore
+* Search improvements
+    * Added `within`, `equalsAny`, `containsAll`, and `matches` operators in SQL store
+    * Added indexes for `name`, `individual`, `household`, `address`, and `identifier` tables
+    * Backfilled the same indexes in the schemaVersion 11 migration so upgrades get the perf benefit
+    * Cross-table search support with fresh-install seeding and on-open backfill of hot-path indexes; post-migration `ANALYZE`
+* Hardened SQLCipher `PRAGMA key` / `ATTACH DATABASE KEY` callsites via `_sqlCipherKeyPragma`/`_assertHexKey` helpers and hex-blob literal form
+* Added pre-logout encryption backup for the SQLCipher key
+* Added attendance entities, repositories, and typedefs for attendance log and register
+* Moved registration-delivery entities into the data model package
+* Extended stock/referral APIs
+    * Migration script for stock table
+    * `hf_referral` fields + mapper, stock model fields + mapper
+    * `in-transit` handling and stock/referral downsync fixes
+    * `listen` support and update-operation handling on UserAction oplog
+    * `beneficiaryTag`/`resourceTag` on `user_action` model
+* Added notification unregister flow (oplog entry field)
+* Data repository `search` gained `lastChangedSince` propagation across attendance, hf_referral, pgr_service, stock, attendance_register remote repositories
+* Hardened Dio exception capture to preserve response payloads and endpoint context
+
+## 1.3.0
+
+* Implemented database encryption using SQLCipher
+    * Replaced `sqlite3_flutter_libs` with `sqlcipher_flutter_libs` and `sqlite3`
+    * Added `DatabaseMigrationResult` enum for migration status tracking
+    * Added encryption key support in `LocalSqlDataStore` constructor
+* Moved registration delivery, inventory_management, referral_management, closed_household entities
+  to data_model
+* Moved local and remote package repositories for all moved entities
+* Added `lastChangedSince` parameter to `RemoteRepository.search` for incremental sync
+* Added `lastChangedSince` to `ProductVariantRemoteRepository` and `ProjectResourceRemoteRepository`
+  search methods
+* Added `name` field to `DeliveryProductVariant` in project_type model
+* Changed `order` field type from `int` to `String` in `AttributesModel`
+* Fixed oplog update operations with null `serverGeneratedId` by copying from create record
+* Updated `TemplateConfig.navigateTo` to handle empty map `{}` as null using custom deserializer
+* Added SQL ordering and improved inventory stock grouping
+* Updated `waybillNumber` in stock model
+
+## 1.2.0-dev.2-console
+
+* Modified DioException to throw captured error
+
+## 1.1.4
+
+* Updated user_action entity and table with beneficiaryTag and resourceTag fields
+
 ## 1.2.0-dev.1-console
 
 * Renamed referenceId to referenceID in project model

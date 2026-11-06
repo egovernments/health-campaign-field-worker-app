@@ -1,623 +1,475 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:math' as math;
 
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:drift/drift.dart' hide OrderBy;
+import 'package:flutter/foundation.dart';
 
 import '../../utils/utils.dart';
+import '../helpers/hydration_helper.dart';
+import '../helpers/multi_table_filter_resolver.dart';
+import '../helpers/query_builder.dart';
+import '../helpers/relationship_graph_helper.dart';
 
+/// SearchEntityRepository provides advanced querying and hydration for dynamic entities.
+///
+/// Supports:
+/// - Multi-table filtering with AND/OR logic
+/// - Relationship traversal between entities
+/// - Nested model hydration
+/// - Geospatial queries (within radius)
+/// - Pagination and ordering
 class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
 
+  /// Session-scoped guard for the lazy stats refresh in
+  /// [_ensureStatsFreshOncePerSession]. Static so it survives across
+  /// short-lived repository instances (Drift lets callers spin one up
+  /// per query on some paths). Reset on hot restart, which is what we
+  /// want — after a fresh install the first ever process needs the
+  /// refresh; every subsequent app-launch already gets its `beforeOpen`
+  /// ANALYZE from the DB layer.
+  static bool _statsRefreshedThisSession = false;
+  static Future<void>? _statsRefreshInFlight;
+
+  /// SQLite's planner uses `sqlite_stat1` to decide SCAN vs INDEX. On a
+  /// fresh install our `onCreate` runs ANALYZE while every table is
+  /// still empty, so stat1 records "0 rows everywhere" and the planner
+  /// keeps picking SCAN for lookups like
+  /// `SELECT * FROM project_facility WHERE project_id = ?` even after
+  /// downsync populates the table (measured: SCAN + SQLCipher decrypt
+  /// per page turns a 2-row hit into a 2.5s query).
+  ///
+  /// Re-running ANALYZE on the first search of the session catches this
+  /// case at ~100-200 ms one-time cost, and every subsequent query in
+  /// the session sees real row counts and picks the right index. Guard
+  /// via a Future so concurrent first-searches share a single ANALYZE.
+  Future<void> _ensureStatsFreshOncePerSession() async {
+    if (_statsRefreshedThisSession) return;
+    if (_statsRefreshInFlight != null) {
+      await _statsRefreshInFlight;
+      return;
+    }
+    _statsRefreshInFlight = () async {
+      try {
+        await sql.customStatement('PRAGMA analysis_limit = 400');
+        await sql.customStatement('ANALYZE');
+      } catch (e) {
+        // Best-effort: a failure here just means we skip the perf lift,
+        // not correctness — swallow so we don't break the search.
+        if (kDebugMode) {
+          debugPrint('[SearchEntityRepository] session ANALYZE failed: $e');
+        }
+      } finally {
+        _statsRefreshedThisSession = true;
+      }
+    }();
+    await _statsRefreshInFlight;
+    _statsRefreshInFlight = null;
+  }
+
   @override
   FutureOr<List<EntityModel>> search(EntitySearchModel query) {
-    throw UnimplementedError();
+    throw UnimplementedError(
+      'Use searchEntities() for advanced multi-table queries.',
+    );
   }
 
   @override
   DataModelType get type => throw UnimplementedError();
 
+  /// Searches entities with support for multi-table filtering.
+  ///
+  /// [filters] - Search filters that can span multiple tables.
+  /// [relationshipGraph] - Bidirectional graph of entity relationships.
+  /// [nestedModelMapping] - Mappings for hydrating nested fields.
+  /// [select] - List of model names to include in results.
+  /// [primaryTable] - The primary table for pagination and result focus.
+  /// [primaryKeyField] - Primary key field name (required for multi-table filters).
+  /// [filterLogic] - How to combine filters across tables (AND/OR).
+  /// [pagination] - Pagination parameters.
+  /// [orderBy] - Ordering configuration.
+  ///
+  /// Returns a tuple of (grouped results by model name, total count).
   Future<(Map<String, List<EntityModel>>, int)> searchEntities({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
     String? primaryTable,
+    String? primaryKeyField,
+    MultiTableFilterLogic filterLogic = MultiTableFilterLogic.and,
     PaginationParams? pagination,
+    SearchOrderBy? orderBy,
   }) async {
-    return _buildAndExecuteSearchQuery(
+    // Validate inputs
+    _validateInputs(
       filters: filters,
-      relationshipGraph: relationshipGraph,
       select: select,
       primaryTable: primaryTable,
-      pagination: pagination,
-      nestedModelMapping: nestedModelMapping,
     );
+
+    try {
+      return await _executeMultiTableSearch(
+        filters: filters,
+        relationshipGraph: relationshipGraph,
+        nestedModelMapping: nestedModelMapping,
+        select: select,
+        primaryTable: primaryTable!,
+        primaryKeyField: primaryKeyField ?? _inferPrimaryKeyField(primaryTable),
+        filterLogic: filterLogic,
+        pagination: pagination,
+        orderBy: orderBy,
+      );
+    } catch (e, stackTrace) {
+      _logError('Search failed', e, stackTrace);
+      rethrow;
+    }
   }
 
-  Future<(Map<String, List<EntityModel>>, int)> _buildAndExecuteSearchQuery({
+  /// Validates input parameters before executing search.
+  void _validateInputs({
+    required List<SearchFilter> filters,
+    required List<String> select,
+    required String? primaryTable,
+  }) {
+    if (filters.isEmpty) {
+      throw ArgumentError('At least one filter is required for search.');
+    }
+
+    if (select.isEmpty) {
+      throw ArgumentError('At least one model must be selected.');
+    }
+
+    if (primaryTable == null || primaryTable.isEmpty) {
+      throw ArgumentError(
+        'primaryTable is required for multi-table search. '
+        'Specify the main table from which results should be returned.',
+      );
+    }
+  }
+
+  /// Infers the primary key field name based on the actual table schema.
+  /// Falls back to 'id' for tables that don't have a clientReferenceId column.
+  String _inferPrimaryKeyField(String tableName) {
+    try {
+      final table = sql.allTables.firstWhere(
+        (t) => t.actualTableName == QueryBuilder.camelToSnake(tableName),
+      );
+      final hasClientRef =
+          table.$columns.any((c) => c.$name == 'client_reference_id');
+      return hasClientRef ? 'clientReferenceId' : 'id';
+    } catch (_) {
+      return 'clientReferenceId';
+    }
+  }
+
+  /// Executes the multi-table search with filter resolution.
+  Future<(Map<String, List<EntityModel>>, int)> _executeMultiTableSearch({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
-    String? primaryTable,
+    required String primaryTable,
+    required String primaryKeyField,
+    required MultiTableFilterLogic filterLogic,
     required PaginationParams? pagination,
+    required SearchOrderBy? orderBy,
   }) async {
-    final rootTable = filters.first.root;
-    final queriedModels = <String>{rootTable};
-    final allResults = <Map<String, dynamic>>[];
-    var totalCount = 0;
-    final modelToResults = <String, List<Map<String, dynamic>>>{};
+    // Refresh planner stats once per session before we build the query.
+    // See _ensureStatsFreshOncePerSession for why — without this, the
+    // very first search after a fresh install falls to SCAN because
+    // sqlite_stat1 was populated on empty tables at onCreate time.
+    await _ensureStatsFreshOncePerSession();
 
-    final rootResults = await _queryRawTable(
-      table: rootTable,
-      filters: filters,
-      select: select,
-      pagination: pagination,
-      isPrimaryTable: primaryTable == rootTable,
-      onCountFetched: (count) {
-        totalCount = count;
-      },
+    final queriedModels = <String>{};
+    final modelToResults = <String, List<Map<String, dynamic>>>{};
+    var totalCount = 0;
+
+    // Step 1: Build SQL-level subquery constraints for cross-table filters.
+    final filterResolver = MultiTableFilterResolver(
+      sql: sql,
+      relationshipGraph: relationshipGraph,
     );
 
-    final hydratedRoot =
-        await _hydrateRawRows(rootResults, nestedModelMapping, rootTable);
-    modelToResults[rootTable] = hydratedRoot;
-    allResults.addAll(hydratedRoot);
+    final constraints =
+        await filterResolver.buildCrossTableConstraintExpressions(
+      filters: filters,
+      primaryTable: primaryTable,
+      primaryKeyField: primaryKeyField,
+      filterLogic: filterLogic,
+    );
 
+    final primaryFilters = constraints.primaryTableFilters;
+    var crossTableConstraints = constraints.crossTableConstraints;
+
+    if (filterLogic == MultiTableFilterLogic.or &&
+        crossTableConstraints.length > 1) {
+      crossTableConstraints = [
+        crossTableConstraints.reduce((a, b) => a | b)
+      ];
+    }
+
+    if (primaryFilters.isEmpty && crossTableConstraints.isEmpty) {
+      throw ArgumentError('No applicable filters for primary table query.');
+    }
+
+    // Step 2: Primary table query (data + count)
+    final primaryResults = await QueryBuilder.queryRawTable(
+      sql: sql,
+      table: primaryTable,
+      filters: primaryFilters,
+      select: select,
+      pagination: pagination,
+      isPrimaryTable: true,
+      // Only fire a SELECT COUNT(*) when the caller actually needs the total
+      // for pagination. Without pagination we already fetch every matching
+      // row, so `results.length` is the correct total — and the extra COUNT
+      // was blocking the whole search behind write-lock contention with the
+      // background sync isolate (measured at ~1.1s per warm search entry).
+      onCountFetched: pagination != null
+          ? (count) {
+              totalCount = count;
+            }
+          : null,
+      orderBy: orderBy,
+      extraConstraints: crossTableConstraints,
+    );
+    if (pagination == null) {
+      totalCount = primaryResults.length;
+    }
+
+    // Step 3: Hydrate primary table results with nested data
+    final hydratedPrimary = await HydrationHelper.hydrateRawRows(
+      sql,
+      this,
+      primaryResults,
+      nestedModelMapping,
+      primaryTable,
+    );
+
+    modelToResults[primaryTable] = hydratedPrimary;
+    queriedModels.add(primaryTable);
+
+    // Step 4: Expand to other selected models via relationships
+    await _expandToRelatedModels(
+      select: select,
+      primaryTable: primaryTable,
+      queriedModels: queriedModels,
+      modelToResults: modelToResults,
+      relationshipGraph: relationshipGraph,
+      nestedModelMapping: nestedModelMapping,
+    );
+
+    // Step 5: Convert results to EntityModel instances
+    final groupedResults = _convertToEntityModels(
+      modelToResults: modelToResults,
+      select: select,
+    );
+
+    return (groupedResults, totalCount);
+  }
+
+  /// Builds the combined filter list for the primary table query.
+  // ignore: unused_element
+  List<SearchFilter> _buildPrimaryTableFilters({
+    required List<SearchFilter> primaryTableFilters,
+    required Set<dynamic> resolvedConstraints,
+    required String primaryTable,
+    required String primaryKeyField,
+  }) {
+    final combinedFilters = <SearchFilter>[...primaryTableFilters];
+
+    // Add resolved constraints from related tables if any
+    if (resolvedConstraints.isNotEmpty) {
+      combinedFilters.add(
+        SearchFilter(
+          root: primaryTable,
+          field: primaryKeyField,
+          operator: 'in',
+          value: resolvedConstraints.toList(),
+        ),
+      );
+    }
+
+    // Ensure at least one filter exists (required by QueryBuilder)
+    if (combinedFilters.isEmpty) {
+      throw StateError(
+        'No filters available for primary table query. '
+        'This should not happen - check filter resolution logic.',
+      );
+    }
+
+    return combinedFilters;
+  }
+
+  /// Expands query results to include other selected models via relationships.
+  Future<void> _expandToRelatedModels({
+    required List<String> select,
+    required String primaryTable,
+    required Set<String> queriedModels,
+    required Map<String, List<Map<String, dynamic>>> modelToResults,
+    required Map<String, List<RelationshipMapping>> relationshipGraph,
+    required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
+  }) async {
     for (final model in select) {
       if (queriedModels.contains(model)) continue;
 
-      final path = await _findShortestPath(
+      final path = await RelationshipGraphHelper.findShortestPath(
         fromModels: queriedModels,
         toModel: model,
         graph: relationshipGraph,
       );
 
       if (path.isEmpty) {
-        debugPrint("No path found to model $model");
+        _log('No relationship path found to model: $model. Skipping.');
         continue;
       }
 
-      final origin = path.first.from;
-      var currentRows = modelToResults[origin] ?? [];
+      final expandedRows = await _traverseRelationshipPath(
+        path: path,
+        modelToResults: modelToResults,
+      );
 
-      for (final rel in path) {
-        final fromKey = camelToSnake(rel.localKey);
-        final toTable = camelToSnake(rel.to);
-        final toKey = camelToSnake(rel.foreignKey);
-
-        final joinValues =
-            currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
-        if (joinValues.isEmpty) break;
-
-        final filter = SearchFilter(
-          root: toTable,
-          field: toKey,
-          operator: 'in',
-          value: joinValues,
-        );
-
-        currentRows = await _queryRawTable(
-          table: toTable,
-          filters: [filter],
-          select: select,
-          isPrimaryTable: primaryTable == toTable,
-          pagination: pagination,
-          onCountFetched: (count) {
-            totalCount = count;
-          },
-        );
+      if (expandedRows.isEmpty) {
+        _log('No rows found for model: $model after relationship traversal.');
+        continue;
       }
 
-      final enriched =
-          await _hydrateRawRows(currentRows, nestedModelMapping, model);
-      modelToResults[model] = enriched;
-      allResults.addAll(enriched);
+      final hydratedRows = await HydrationHelper.hydrateRawRows(
+        sql,
+        this,
+        expandedRows,
+        nestedModelMapping,
+        model,
+      );
+
+      modelToResults[model] = hydratedRows;
       queriedModels.add(model);
+
+      _log('Expanded to model: $model with ${hydratedRows.length} rows.');
     }
-
-    // Group results by model name
-    final Map<String, List<EntityModel>> groupedResults = {};
-
-    for (final row in allResults) {
-      final modelName = row['modelName'] as String;
-      if (!select.contains(modelName)) continue;
-
-      final entity = CRUDBlocSingleton()
-          .dynamicEntityModelListener
-          ?.dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
-      groupedResults.putIfAbsent(modelName, () => []).add(entity!);
-    }
-
-    return (groupedResults, totalCount);
   }
 
-  Future<List<Map<String, dynamic>>> _hydrateRawRows(
-    List<Map<String, dynamic>> rawRows,
-    Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
-    String currentModelName,
-  ) async {
-    final enrichedRows = <Map<String, dynamic>>[];
+  /// Traverses a relationship path to fetch related rows.
+  Future<List<Map<String, dynamic>>> _traverseRelationshipPath({
+    required List<RelationshipMapping> path,
+    required Map<String, List<Map<String, dynamic>>> modelToResults,
+  }) async {
+    if (path.isEmpty) return [];
 
-    final modelNestedMapping = nestedModelMapping[currentModelName];
-    if (modelNestedMapping == null) return rawRows;
+    final origin = path.first.from;
+    var currentRows = modelToResults[origin] ?? [];
 
-    // Deep copy raw rows
-    enrichedRows.addAll(rawRows.map((e) => Map<String, dynamic>.from(e)));
+    for (var i = 0; i < path.length; i++) {
+      final rel = path[i];
+      final isLastStep = i == path.length - 1;
+      final fromKeySnake = QueryBuilder.camelToSnake(rel.localKey);
+      final toTable = rel.to;
 
-    for (final entry in modelNestedMapping.entries) {
-      final targetTable = entry.value.table;
-      final field = entry.value;
-
-      final localKeySnake = camelToSnake(field.localKey);
-
-      // Collect all non-null local key values from enriched rows
-      final localValues = enrichedRows
-          .map((row) => row[localKeySnake])
+      // Extract join values from current rows
+      final joinValues = currentRows
+          .map((row) => row[fromKeySnake])
           .where((v) => v != null)
-          .toSet();
+          .toSet()
+          .toList();
 
-      if (localValues.isEmpty) continue;
+      if (joinValues.isEmpty) {
+        _log('No join values for relationship: ${rel.from} -> ${rel.to}');
+        return [];
+      }
 
-      // Query related table
-      final targetResults = await _queryRawTable(
-        table: targetTable,
+      // For intermediate hops only project the column we'll need to keep
+      // joining on. The final hop needs the full row so hydration + entity
+      // conversion can use it.
+      final List<String>? hopProjection = isLastStep
+          ? null
+          : [path[i + 1].localKey];
+
+      // Query the related table
+      currentRows = await QueryBuilder.queryRawTable(
+        sql: sql,
+        table: toTable,
         filters: [
           SearchFilter(
-            root: targetTable,
-            field: camelToSnake(field.foreignKey),
+            root: toTable,
+            field: rel.foreignKey,
             operator: 'in',
-            value: localValues.toList(),
+            value: joinValues,
           ),
         ],
         select: ['*'],
+        isPrimaryTable: false,
+        selectColumns: hopProjection,
       );
-
-      // Attach hydrated data to each enriched row
-      for (final row in enrichedRows) {
-        final localValue = row[localKeySnake];
-        if (localValue == null) continue;
-
-        // Match related rows based on foreign key
-        final relatedRows = targetResults.where((targetRow) {
-          return targetRow[camelToSnake(field.foreignKey)] == localValue;
-        }).toList();
-
-        row[entry.key] = field.type == NestedMappingType.one
-            ? (relatedRows.isNotEmpty ? relatedRows.first : null)
-            : relatedRows;
-      }
     }
 
-    return enrichedRows;
+    return currentRows;
   }
 
-  Future<List<Map<String, dynamic>>> _queryRawTable({
-    required String table,
-    required List<SearchFilter> filters,
+  /// Converts raw result rows to typed EntityModel instances.
+  Map<String, List<EntityModel>> _convertToEntityModels({
+    required Map<String, List<Map<String, dynamic>>> modelToResults,
     required List<String> select,
-    PaginationParams? pagination,
-    bool isPrimaryTable = false,
-    void Function(int count)? onCountFetched,
-  }) async {
-    final dynamicTable = sql.allTables.firstWhere(
-      (t) => t.actualTableName == table,
-      orElse: () => throw Exception('Table $table not found'),
-    );
-
-    final List<Expression<bool>> whereClauses = [];
-
-    double? centerLat, centerLon, radiusInKm;
-
-    for (final filter in filters.where((f) => f.root == table)) {
-      // Handle 'within' filter separately
-      if (filter.operator == 'within') {
-        if (filter.coordinates == null || filter.value == null) {
-          throw Exception(
-              "Missing coordinates or radius for 'within' operator");
-        }
-
-        // TODO: Avoid hardcoded column names 'latitude' and 'longitude' in future
-        final latField = dynamicTable.$columns.firstWhere(
-          (c) => c.$name == 'latitude',
-          orElse: () => throw Exception('Latitude column not found in $table'),
-        );
-        final lonField = dynamicTable.$columns.firstWhere(
-          (c) => c.$name == 'longitude',
-          orElse: () => throw Exception('Longitude column not found in $table'),
-        );
-
-        centerLat = filter.coordinates!.latitude;
-        centerLon = filter.coordinates!.longitude;
-        radiusInKm = (filter.value as num).toDouble();
-
-        const earthRadius = 6371.0;
-        const degToRad = math.pi / 180.0;
-
-        final deltaLat = radiusInKm / earthRadius;
-        final deltaLon =
-            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
-
-        final minLat = centerLat - deltaLat;
-        final maxLat = centerLat + deltaLat;
-        final minLon = centerLon - deltaLon;
-        final maxLon = centerLon + deltaLon;
-
-        final latExpr = latField as Expression<double>;
-        final lonExpr = lonField as Expression<double>;
-
-        final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
-            lonExpr.isBetweenValues(minLon, maxLon);
-
-        whereClauses.add(boundingBox);
-        continue;
-      }
-
-      final columnName = camelToSnake(filter.field);
-      final col = dynamicTable.$columns.firstWhere(
-        (c) => c.$name == columnName,
-        orElse: () => throw Exception('Column $columnName not found in $table'),
-      );
-
-      switch (filter.operator) {
-        case 'equals':
-          whereClauses.add(col.equals(filter.value));
-          break;
-        case 'contains':
-          whereClauses
-              .add((col as Expression<String>).like('%${filter.value}%'));
-          break;
-        case 'isNotNull':
-          whereClauses.add(col.isNotNull());
-          break;
-        case 'isNull':
-          whereClauses.add(col.isNull());
-          break;
-        case 'in':
-          final list = (filter.value as List);
-          if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isIn(list.cast<int>()));
-          } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isIn(list.cast<String>()));
-          }
-          break;
-        case 'notIn':
-          final list = (filter.value as List);
-          if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isNotIn(list.cast<int>()));
-          } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isNotIn(list.cast<String>()));
-          }
-          break;
-        default:
-          throw Exception('Unsupported operator: ${filter.operator}');
-      }
-    }
-
-    // Primary count query
-    if (isPrimaryTable && onCountFetched != null) {
-      // Run same query without pagination, only filters
-      final whereClause =
-          _buildWhereClauseRaw(filters.where((f) => f.root == table).toList());
-      final whereArgs =
-          _buildWhereArgs(filters.where((f) => f.root == table).toList());
-
-      int finalCount;
-
-      if (centerLat != null && centerLon != null && radiusInKm != null) {
-        // Need lat/lon values for Haversine filtering
-        final countQuery = sql.customSelect(
-          'SELECT latitude, longitude FROM $table WHERE $whereClause',
-          variables: whereArgs,
-        );
-
-        final rawResults = await countQuery.get();
-
-        const earthRadius = 6371.0;
-        const degToRad = math.pi / 180.0;
-
-        double haversine(double lat1, double lon1, double lat2, double lon2) {
-          final dLat = (lat2 - lat1) * degToRad;
-          final dLon = (lon2 - lon1) * degToRad;
-          final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-              math.cos(lat1 * degToRad) *
-                  math.cos(lat2 * degToRad) *
-                  math.sin(dLon / 2) *
-                  math.sin(dLon / 2);
-          final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-          return earthRadius * c;
-        }
-
-        finalCount = rawResults.where((row) {
-          double? lat;
-          double? lon;
-
-          try {
-            final latVal = row.read<double>('latitude');
-            lat = (latVal is int) ? latVal.toDouble() : latVal as double?;
-          } catch (e) {
-            debugPrint('Failed to read latitude: $e');
-            lat = null;
-          }
-
-          try {
-            final lonVal = row.read<double>('longitude');
-            lon = (lonVal is int) ? lonVal.toDouble() : lonVal as double?;
-          } catch (e) {
-            debugPrint('Failed to read longitude: $e');
-            lon = null;
-          }
-
-          if (lat == null || lon == null) {
-            debugPrint('Skipping row due to null lat/lon');
-            return false;
-          }
-
-          final distance = haversine(centerLat!, centerLon!, lat, lon);
-          debugPrint('Lat: $lat, Lon: $lon → Distance: $distance km');
-          return distance <= radiusInKm!;
-        }).length;
-      } else {
-        // Original optimized COUNT query
-        final countQuery = sql.customSelect(
-          'SELECT COUNT(*) AS total FROM $table WHERE $whereClause',
-          variables: whereArgs,
-        );
-
-        final rawResults = await countQuery.get();
-        finalCount = rawResults.first.read<int>('total');
-      }
-
-      onCountFetched(finalCount);
-    }
-
-    // Data fetch query
-    final dataQuery = buildSelectQuery(
-      isPrimaryTable: isPrimaryTable,
-      table: table,
-      filters: filters,
-      pagination: pagination,
-      whereClauses: whereClauses,
-    );
-
-    final results = await dataQuery.get();
-
-    // Map result rows
-    List<Map<String, dynamic>> rows = results.map((row) {
-      final rowMap = {
-        for (final column in dynamicTable.$columns)
-          column.$name: column is GeneratedColumnWithTypeConverter
-              ? row.readWithConverter(column)
-              : row.read(column),
-      };
-
-      rowMap['modelName'] = _snakeToCamel(table);
-
-      if (rowMap.containsKey('additional_fields')) {
-        final raw = rowMap['additional_fields'];
-        if (raw is String && raw.trim().isNotEmpty) {
-          try {
-            final decoded = jsonDecode(raw);
-            if (decoded is Map<String, dynamic>) {
-              rowMap['additional_fields'] = decoded;
-            }
-          } catch (e) {
-            debugPrint('Failed to decode additional_fields JSON: $e');
-          }
-        }
-      }
-
-      return rowMap;
-    }).toList();
-
-    // Final filtering using actual haversine distance
-    if (centerLat != null && centerLon != null && radiusInKm != null) {
-      const earthRadius = 6371.0;
-      const degToRad = math.pi / 180.0;
-
-      double haversine(double lat1, double lon1, double lat2, double lon2) {
-        final dLat = (lat2 - lat1) * degToRad;
-        final dLon = (lon2 - lon1) * degToRad;
-        final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-            math.cos(lat1 * degToRad) *
-                math.cos(lat2 * degToRad) *
-                math.sin(dLon / 2) *
-                math.sin(dLon / 2);
-        final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-        return earthRadius * c;
-      }
-
-      rows = rows.where((row) {
-        final lat = row['latitude'] as double?;
-        final lon = row['longitude'] as double?;
-        if (lat == null || lon == null) return false;
-        return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
-      }).toList();
-    }
-
-    return rows;
-  }
-
-  Selectable<TypedResult> buildSelectQuery({
-    required bool isPrimaryTable,
-    required String table,
-    required List<SearchFilter> filters,
-    PaginationParams? pagination,
-    required List<Expression<bool>> whereClauses,
   }) {
-    final dynamicTable = sql.allTables.firstWhere(
-      (t) => t.actualTableName == table,
-      orElse: () => throw Exception('Table $table not found'),
-    );
+    final groupedResults = <String, List<EntityModel>>{};
 
-    final query = sql.selectOnly(dynamicTable, distinct: true);
+    for (final entry in modelToResults.entries) {
+      final modelName = entry.key;
+      final rows = entry.value;
 
-    if (whereClauses.isNotEmpty) {
-      query.where(buildAnd(whereClauses));
-    }
+      // Skip models not in the select list
+      if (!select.contains(modelName)) continue;
 
-    query.addColumns(dynamicTable.$columns);
+      final entities = <EntityModel>[];
 
-    if (pagination != null && isPrimaryTable) {
-      query.limit(pagination.limit, offset: pagination.offset);
-    }
+      for (final row in rows) {
+        // Get model name from row or use the key
+        final rowModelName = row['modelName'] as String? ?? modelName;
 
-    return query;
-  }
+        if (!select.contains(rowModelName)) continue;
 
-  String _buildWhereClauseRaw(List<SearchFilter> filters) {
-    return filters.map((filter) {
-      final column = camelToSnake(filter.field);
-      switch (filter.operator) {
-        case 'equals':
-          return '$column = ?';
-        case 'contains':
-          return '$column LIKE ?';
-        case 'isNotNull':
-          return '$column IS NOT NULL';
-        case 'isNull':
-          return '$column IS NULL';
-        case 'in':
-          final values = filter.value as List;
-          return '$column IN (${List.filled(values.length, '?').join(', ')})';
-        case 'notIn':
-          final values = filter.value as List;
-          return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
-        case 'within':
-          // We'll handle bounding box manually; skip for raw SQL
-          return '1 = 1'; // dummy true condition
-        default:
-          throw Exception('Unsupported operator: ${filter.operator}');
+        try {
+          final camelCaseRow = QueryBuilder.snakeToCamelDeep(row);
+          final entity = CrudBlocSingleton.instance.dynamicEntityModelListener
+              .dynamicEntityModelFromMap(rowModelName, camelCaseRow);
+
+          if (entity != null) {
+            entities.add(entity);
+          } else {
+            _log(
+              'Warning: Failed to convert row to entity for model: $rowModelName. '
+              'Ensure DynamicEntityModelListener handles this model type.',
+            );
+          }
+        } catch (e) {
+          _logError('Failed to convert row to $rowModelName entity', e,
+              StackTrace.current);
+          // Continue processing other rows instead of failing entirely
+        }
       }
-    }).join(' AND ');
-  }
 
-  List<Variable> _buildWhereArgs(List<SearchFilter> filters) {
-    final args = <Variable>[];
-
-    for (final filter in filters) {
-      switch (filter.operator) {
-        case 'equals':
-          args.add(Variable.withString(filter.value.toString()));
-          break;
-        case 'contains':
-          args.add(Variable.withString('%${filter.value}%'));
-          break;
-        case 'in':
-        case 'notIn':
-          final list = filter.value as List;
-          args.addAll(list.map((v) => Variable.withString(v.toString())));
-          break;
-        case 'isNotNull':
-        case 'isNull':
-        case 'within':
-          // No variable needed
-          break;
-        default:
-          throw Exception('Unsupported operator: ${filter.operator}');
+      if (entities.isNotEmpty) {
+        groupedResults[modelName] = entities;
       }
     }
 
-    return args;
+    return groupedResults;
   }
-}
 
-String camelToSnake(String input) {
-  return input.replaceAllMapped(
-    RegExp(r'[A-Z]'),
-    (match) => '_${match.group(0)!.toLowerCase()}',
-  );
-}
-
-Map<String, dynamic> snakeToCamelDeep(Map<String, dynamic> input) {
-  return input.map((key, value) {
-    final newKey = _snakeToCamel(key);
-    final newValue = _transformValue(value);
-    return MapEntry(newKey, newValue);
-  });
-}
-
-dynamic _transformValue(dynamic value) {
-  if (value is Map<String, dynamic>) {
-    return snakeToCamelDeep(value);
-  } else if (value is List) {
-    return value.map((item) {
-      if (item is Map<String, dynamic>) {
-        return snakeToCamelDeep(item);
-      }
-      return item;
-    }).toList();
-  }
-  return value;
-}
-
-String _snakeToCamel(String input) {
-  final parts = input.split('_');
-  return parts.first +
-      parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
-}
-
-Expression<bool> buildDynamicExpression({
-  required Expression col,
-  required String operator,
-  required dynamic value,
-}) {
-  final symbol = Symbol(operator);
-
-  try {
-    // For null-based methods like isNull(), isNotNull()
-    if (operator == 'isNull' || operator == 'isNotNull') {
-      return Function.apply(col.noSuchMethod, [Invocation.method(symbol, [])])
-          as Expression<bool>;
-    }
-
-    // For list-based methods like isIn(), isNotIn()
-    if ((operator == 'isIn' || operator == 'isNotIn') && value is! List) {
-      throw Exception("Operator '$operator' expects a List value");
-    }
-
-    // Normal method with one argument
-    return Function.apply(col.noSuchMethod, [
-      Invocation.method(symbol, [value])
-    ]) as Expression<bool>;
-  } catch (e) {
-    throw Exception("Failed to apply operator '$operator' on column: $e");
-  }
-}
-
-Future<List<RelationshipMapping>> _findShortestPath({
-  required Set<String> fromModels,
-  required String toModel,
-  required Map<String, List<RelationshipMapping>> graph,
-}) async {
-  final queue = Queue<List<RelationshipMapping>>();
-  final visited = <String>{};
-
-  for (final model in fromModels) {
-    visited.add(model);
-    for (final next in graph[model] ?? []) {
-      queue.add([next]);
+  /// Logs debug information in debug mode only.
+  void _log(String message) {
+    if (kDebugMode) {
+      debugPrint('[SearchEntityRepository] $message');
     }
   }
 
-  while (queue.isNotEmpty) {
-    final path = queue.removeFirst();
-    final current = path.last.to;
-
-    if (current == toModel) return path;
-
-    for (final next in graph[current] ?? []) {
-      if (!visited.contains(next.to)) {
-        visited.add(next.to);
-        queue.add([...path, next]);
-      }
+  /// Logs error information.
+  void _logError(String message, Object error, StackTrace stackTrace) {
+    if (kDebugMode) {
+      debugPrint('[SearchEntityRepository] ERROR: $message');
+      debugPrint('Error: $error');
+      debugPrint('StackTrace: $stackTrace');
     }
   }
-
-  return [];
 }

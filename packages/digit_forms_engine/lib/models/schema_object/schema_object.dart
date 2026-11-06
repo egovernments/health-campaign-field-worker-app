@@ -13,12 +13,26 @@ class SchemaObject with _$SchemaObject {
     required String name,
     required int version,
     @Default(false) bool summary,
+    SummaryItem? summaryDetails,
     @Default({}) Map<String, PropertySchema> pages,
+    @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
     List<ActionSchema>? actionSchema,
   }) = _SchemaObject;
 
   factory SchemaObject.fromJson(Map<String, dynamic> json) =>
       _$SchemaObjectFromJson(json);
+}
+
+@freezed
+class SummaryItem with _$SummaryItem {
+  const factory SummaryItem({
+    required String heading,
+    String? description,
+    @Default(false) bool show,
+  }) = _SummaryItem;
+
+  factory SummaryItem.fromJson(Map<String, dynamic> json) =>
+      _$SummaryItemFromJson(json);
 }
 
 @freezed
@@ -57,6 +71,13 @@ class UrlSchema with _$UrlSchema {
 
   factory UrlSchema.fromJson(Map<String, dynamic> json) =>
       _$UrlSchemaFromJson(json);
+}
+
+ShowAlertPopUp? _showAlertOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
 }
 
 @freezed

@@ -30,6 +30,13 @@ class SurveyFormBoundaryViewPageState
     final localizations = SurveyFormLocalization.of(context);
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+    final boundary = SurveyFormSingleton().boundary!;
+    // A worker-added settlement (boundaryType NEW_SETTLEMENT) carries its
+    // parent's code; show its own name instead.
+    final boundaryLabel = boundary.boundaryType == 'NEW_SETTLEMENT' &&
+            (boundary.name?.isNotEmpty ?? false)
+        ? boundary.name!
+        : localizations.translate(boundary.code.toString());
 
     return Scaffold(
       body: ScrollableContent(
@@ -79,12 +86,8 @@ class SurveyFormBoundaryViewPageState
               ),
               child: DigitTextFormInput(
                 readOnly: true,
-                initialValue: localizations
-                    .translate(SurveyFormSingleton().boundary!.code.toString()),
-                controller: TextEditingController(
-                  text: localizations.translate(
-                      SurveyFormSingleton().boundary!.code.toString()),
-                ),
+                initialValue: boundaryLabel,
+                controller: TextEditingController(text: boundaryLabel),
               ),
             ),
           ]),

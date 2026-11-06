@@ -1,5 +1,6 @@
-import 'math_functions.dart';
 import 'package:petitparser/petitparser.dart';
+
+import 'math_functions.dart';
 import 'parser_core.dart';
 
 /// A class that parses and evaluates mathematical expressions.
@@ -21,7 +22,32 @@ class FormulaParser {
         _isReservedWordsUsed = true;
         _reservedWordsUsed.add(key);
       } else {
-        tempExp = tempExp.replaceAll(key, value!.toString());
+        // ⭐ FIX: Handle different value types appropriately
+        String safeValue;
+
+        if (value == null || value.toString().isEmpty) {
+          safeValue = '""';
+        } else if (value is num || value == "null") {
+          safeValue = value.toString(); // keep raw numbers
+        } else if (value is bool) {
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
+        } else if (value.toString().toLowerCase() == 'true' ||
+            value.toString().toLowerCase() == 'false') {
+          // ⭐ Convert string boolean to actual boolean
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
+        } else {
+          final clean = value.toString().replaceAll('"', '');
+          safeValue = '"$clean"'; // wrap strings in quotes
+        }
+
+        // Use case-insensitive matching to handle case mismatches between
+        // schema fieldNames and expression variable names
+        tempExp = tempExp.replaceAll(
+          RegExp(r'\b' + RegExp.escape(key) + r'\b', caseSensitive: false),
+          safeValue,
+        );
       }
     });
 

@@ -109,19 +109,71 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
+
+    // The map's last entry is the deepest single-select level (e.g. the
+    // locality). The village a worker then picks on "Select Your Village"
+    // (or a new settlement) is set through [setBoundary] and isn't in the
+    // map. Keep it while it still sits inside the map's selection: re-reading
+    // this getter (home setup, the drawer QR) would otherwise reset every
+    // package back to the locality mid-flow.
+    final active = FlowBuilderSingleton().boundary;
+    if (active != null && _isWithin(active, selectedBoundary)) {
+      return active;
+    }
+
     // INFO: Set Boundary for packages
-    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
-    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
-    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
-    InventorySingleton().setBoundary(boundary: selectedBoundary);
-    ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
-    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     TransitPostSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+    FlowBuilderSingleton()
+        .setParentBoundary(boundary: _parentOf(selectedBoundary));
     return selectedBoundary;
+  }
+
+  /// Whether [boundary] is [scope] itself or lies below it, by
+  /// materializedPath. A new settlement carries its parent's path, so it
+  /// counts as within its parent.
+  bool _isWithin(BoundaryModel boundary, BoundaryModel scope) {
+    final path = boundary.materializedPath;
+    final scopePath = scope.materializedPath;
+    if (path == null || path.isEmpty || scopePath == null || scopePath.isEmpty) {
+      return boundary.code != null && boundary.code == scope.code;
+    }
+    return path == scopePath || path.startsWith('$scopePath.');
+  }
+
+  void setBoundary(BoundaryModel selectedBoundary) {
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
+    FlowBuilderSingleton()
+        .setParentBoundary(boundary: _parentOf(selectedBoundary));
+  }
+
+  /// The loaded boundary whose code is [boundary]'s parent code, searched
+  /// through the boundary bloc's tree; null when it isn't loaded.
+  BoundaryModel? _parentOf(BoundaryModel boundary) {
+    final parentCode = parentBoundaryCodeOf(boundary);
+    if (parentCode == null) return null;
+
+    BoundaryModel? find(Iterable<BoundaryModel> nodes) {
+      for (final node in nodes) {
+        if (node.code == parentCode && !node.isNewSettlement) return node;
+        final hit = find(node.children);
+        if (hit != null) return hit;
+      }
+      return null;
+    }
+
+    final state = _get<BoundaryBloc>().state;
+    return find(state.selectedBoundaryMap.values.whereType<BoundaryModel>()) ??
+        find(state.boundaryList);
   }
 
   BoundaryModel? get boundaryOrNull {
@@ -162,6 +214,45 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return individualUUID;
+  }
+
+  /// Nullable alias for [loggedInIndividualId], used by the face-auth flow.
+  String? get loggedInIndividualIdOrNull => loggedInIndividualId;
+
+  /// True when the logged-in user holds the team-supervisor role (face-auth
+  /// re-verification of non-mobile co-workers).
+  bool get isTeamSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.teamSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// True when the logged-in user holds the district-supervisor role.
+  bool get isDistrictSupervisorRole {
+    try {
+      return loggedInUserRoles
+          .any((r) => r.code == RolesType.districtSupervisor.toValue());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  String? get currentRegisteredToken {
+    final authBloc = _get<PushNotificationBloc>();
+    final fcmToken = authBloc.state.whenOrNull(
+      initialized: (fcmToken) {
+        return fcmToken;
+      },
+    );
+
+    if (fcmToken == null) {
+      return null;
+    }
+
+    return fcmToken;
   }
 
   UserModel? get loggedInUserModel {

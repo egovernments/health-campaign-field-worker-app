@@ -25,6 +25,11 @@ class ProjectFacilitySearchModelMapper
   static List<String>? _$id(ProjectFacilitySearchModel v) => v.id;
   static const Field<ProjectFacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
+  static List<String>? _$clientReferenceId(ProjectFacilitySearchModel v) =>
+      v.clientReferenceId;
+  static const Field<ProjectFacilitySearchModel, List<String>>
+      _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static List<String>? _$facilityId(ProjectFacilitySearchModel v) =>
       v.facilityId;
   static const Field<ProjectFacilitySearchModel, List<String>> _f$facilityId =
@@ -35,6 +40,10 @@ class ProjectFacilitySearchModelMapper
   static String? _$tenantId(ProjectFacilitySearchModel v) => v.tenantId;
   static const Field<ProjectFacilitySearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static List<String>? _$boundaryTypes(ProjectFacilitySearchModel v) =>
+      v.boundaryTypes;
+  static const Field<ProjectFacilitySearchModel, List<String>>
+      _f$boundaryTypes = Field('boundaryTypes', _$boundaryTypes, opt: true);
   static String? _$boundaryCode(ProjectFacilitySearchModel v) => v.boundaryCode;
   static const Field<ProjectFacilitySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -51,9 +60,11 @@ class ProjectFacilitySearchModelMapper
   @override
   final MappableFields<ProjectFacilitySearchModel> fields = const {
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #facilityId: _f$facilityId,
     #projectId: _f$projectId,
     #tenantId: _f$tenantId,
+    #boundaryTypes: _f$boundaryTypes,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -72,9 +83,11 @@ class ProjectFacilitySearchModelMapper
   static ProjectFacilitySearchModel _instantiate(DecodingData data) {
     return ProjectFacilitySearchModel.ignoreDeleted(
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         tenantId: data.dec(_f$tenantId),
+        boundaryTypes: data.dec(_f$boundaryTypes),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -138,14 +151,20 @@ abstract class ProjectFacilitySearchModelCopyWith<
     $In extends ProjectFacilitySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get facilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get boundaryTypes;
   @override
   $R call(
       {List<String>? id,
+      List<String>? clientReferenceId,
       List<String>? facilityId,
       List<String>? projectId,
       String? tenantId,
+      List<String>? boundaryTypes,
       String? boundaryCode});
   ProjectFacilitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -169,6 +188,14 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId => $value.clientReferenceId != null
+          ? ListCopyWith(
+              $value.clientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get facilityId => $value.facilityId != null
           ? ListCopyWith(
               $value.facilityId!,
@@ -184,26 +211,41 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
               (v) => call(projectId: v))
           : null;
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get boundaryTypes => $value.boundaryTypes != null
+          ? ListCopyWith(
+              $value.boundaryTypes!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(boundaryTypes: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
+          Object? clientReferenceId = $none,
           Object? facilityId = $none,
           Object? projectId = $none,
           Object? tenantId = $none,
+          Object? boundaryTypes = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (facilityId != $none) #facilityId: facilityId,
         if (projectId != $none) #projectId: projectId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (boundaryTypes != $none) #boundaryTypes: boundaryTypes,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   ProjectFacilitySearchModel $make(CopyWithData data) =>
       ProjectFacilitySearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
           facilityId: data.get(#facilityId, or: $value.facilityId),
           projectId: data.get(#projectId, or: $value.projectId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          boundaryTypes: data.get(#boundaryTypes, or: $value.boundaryTypes),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -235,6 +277,10 @@ class ProjectFacilityModelMapper
       Field('additionalFields', _$additionalFields, opt: true);
   static String _$id(ProjectFacilityModel v) => v.id;
   static const Field<ProjectFacilityModel, String> _f$id = Field('id', _$id);
+  static String? _$clientReferenceId(ProjectFacilityModel v) =>
+      v.clientReferenceId;
+  static const Field<ProjectFacilityModel, String> _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static String _$facilityId(ProjectFacilityModel v) => v.facilityId;
   static const Field<ProjectFacilityModel, String> _f$facilityId =
       Field('facilityId', _$facilityId);
@@ -268,6 +314,7 @@ class ProjectFacilityModelMapper
   final MappableFields<ProjectFacilityModel> fields = const {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
+    #clientReferenceId: _f$clientReferenceId,
     #facilityId: _f$facilityId,
     #projectId: _f$projectId,
     #nonRecoverableError: _f$nonRecoverableError,
@@ -292,6 +339,7 @@ class ProjectFacilityModelMapper
     return ProjectFacilityModel(
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
@@ -370,6 +418,7 @@ abstract class ProjectFacilityModelCopyWith<
   $R call(
       {ProjectFacilityAdditionalFields? additionalFields,
       String? id,
+      String? clientReferenceId,
       String? facilityId,
       String? projectId,
       bool? nonRecoverableError,
@@ -406,6 +455,7 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? additionalFields = $none,
           String? id,
+          Object? clientReferenceId = $none,
           String? facilityId,
           String? projectId,
           Object? nonRecoverableError = $none,
@@ -417,6 +467,7 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != null) #id: id,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (facilityId != null) #facilityId: facilityId,
         if (projectId != null) #projectId: projectId,
         if (nonRecoverableError != $none)
@@ -433,6 +484,8 @@ class _ProjectFacilityModelCopyWithImpl<$R, $Out>
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
+      clientReferenceId:
+          data.get(#clientReferenceId, or: $value.clientReferenceId),
       facilityId: data.get(#facilityId, or: $value.facilityId),
       projectId: data.get(#projectId, or: $value.projectId),
       nonRecoverableError:
@@ -471,7 +524,7 @@ class ProjectFacilityAdditionalFieldsMapper
       Field('schema', _$schema, opt: true, def: 'ProjectFacility');
   static int _$version(ProjectFacilityAdditionalFields v) => v.version;
   static const Field<ProjectFacilityAdditionalFields, int> _f$version =
-      Field('version', _$version);
+      Field('version', _$version, opt: true, def: 1);
   static List<AdditionalField> _$fields(ProjectFacilityAdditionalFields v) =>
       v.fields;
   static const Field<ProjectFacilityAdditionalFields, List<AdditionalField>>

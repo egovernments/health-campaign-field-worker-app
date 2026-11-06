@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
+import 'package:digit_data_model/models/entities/attendee.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -58,7 +61,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     final registers = await fetchNonMobileUsers(
         offSet: 0, limit: 10, fetchOnlyMobileUser: event.fetchOnlyMobileUser);
     add(AttendanceEvents.loadAttendanceRegisters(
-        registers: registers!, limit: 10, offset: 0));
+        registers: registers, limit: 10, offset: 0));
   }
 
   // Event handler for LoadAttendanceRegisterData event
@@ -129,11 +132,12 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
   // Method to fetch attendance registers
   fetchRegisters({required int offSet, required int limit}) async {
+    var staffId = AttendanceSingleton().loggedInIndividualId;
     final registers = await attendanceDataRepository?.search(
       AttendanceRegisterSearchModel(
         limit: limit,
         offSet: offSet,
-        staffId: AttendanceSingleton().loggedInIndividualId,
+        staffId: staffId,
         referenceId: AttendanceSingleton().project!.id,
       ),
     );
@@ -200,7 +204,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     return register.copyWith(
       individualList: individualList,
       attendees: attendeeList,
-      attendanceLog: list,
       completedDays: completedDaysCount,
     );
   }
@@ -260,6 +263,25 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         .any((element) => element.time == logTime && element.type == type);
   }
 
+  /// HCM user role that identifies non-mobile co-workers. Individuals whose
+  /// user account lacks this role are excluded from the non-mobile user list.
+  static const String nonMobileUserRole = 'FIELD_SUPPORT';
+
+  /// True when the individual's user account carries [nonMobileUserRole]
+  /// (role codes are stamped into additionalFields.userRoles at project
+  /// selection by the host app).
+  bool _hasNonMobileUserRole(IndividualModel ind) {
+    final rolesValue = ind.additionalFields?.fields
+        .where((f) => f.key == 'userRoles')
+        .map((f) => f.value?.toString())
+        .firstWhere((v) => v != null, orElse: () => null);
+    if (rolesValue == null) return false;
+    return rolesValue
+        .split(',')
+        .map((r) => r.trim().toUpperCase())
+        .contains(nonMobileUserRole);
+  }
+
   Future<List<AttendanceRegisterModel>> fetchNonMobileUsers({
     required int offSet,
     required int limit,
@@ -309,16 +331,23 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
                 .toList() ??
             [];
       } else {
-        // Exclude logged-in individual
+        // Exclude logged-in individual; keep only individuals whose HCM user
+        // carries the non-mobile-user role (userRoles is stamped into
+        // additionalFields at project selection).
         filteredIndividuals = individualList
             .where(
                 (ind) => ind.id != AttendanceSingleton().loggedInIndividualId)
+            .where(_hasNonMobileUserRole)
             .toList();
+
+        final allowedIds =
+            filteredIndividuals.map((ind) => ind.id).whereType<String>().toSet();
 
         filteredAttendees = allEligibleAttendees
                 ?.where((att) =>
                     att.individualId !=
-                    AttendanceSingleton().loggedInIndividualId)
+                        AttendanceSingleton().loggedInIndividualId &&
+                    allowedIds.contains(att.individualId))
                 .toList() ??
             [];
       }

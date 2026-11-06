@@ -45,7 +45,9 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           isEdit: args.isEdit,
           customComponents: args.customComponents,
           defaultValues: args.defaultValues,
+          navigationParams: args.navigationParams,
           isSummary: args.isSummary,
+          onSecondaryAction: args.onSecondaryAction,
         ),
       );
     }
@@ -63,7 +65,9 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     bool isEdit = false,
     List<Map<String, _i3.Widget>>? customComponents,
     Map<String, dynamic>? defaultValues,
+    Map<String, dynamic>? navigationParams,
     bool isSummary = false,
+    void Function({Map<String, dynamic>? popupData})? onSecondaryAction,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FormsRenderRoute.name,
@@ -75,7 +79,9 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
             isEdit: isEdit,
             customComponents: customComponents,
             defaultValues: defaultValues,
+            navigationParams: navigationParams,
             isSummary: isSummary,
+            onSecondaryAction: onSecondaryAction,
           ),
           rawPathParams: {'pageName': pageName},
           rawQueryParams: {
@@ -101,7 +107,9 @@ class FormsRenderRouteArgs {
     this.isEdit = false,
     this.customComponents,
     this.defaultValues,
+    this.navigationParams,
     this.isSummary = false,
+    this.onSecondaryAction,
   });
 
   final _i3.Key? key;
@@ -118,10 +126,14 @@ class FormsRenderRouteArgs {
 
   final Map<String, dynamic>? defaultValues;
 
+  final Map<String, dynamic>? navigationParams;
+
   final bool isSummary;
+
+  final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, isSummary: $isSummary}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, navigationParams: $navigationParams, isSummary: $isSummary, onSecondaryAction: $onSecondaryAction}';
   }
 }

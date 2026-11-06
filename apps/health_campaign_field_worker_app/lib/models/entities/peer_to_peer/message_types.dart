@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'message_types.mapper.dart';
 
-@MappableEnum(caseStyle: CaseStyle.upperCase)
+@MappableEnum(caseStyle: CaseStyle.lowerCase)
 enum MessageTypes {
   @MappableValue("confirmation")
   confirmation,
@@ -12,7 +12,7 @@ enum MessageTypes {
   handShake
 }
 
-@MappableEnum(caseStyle: CaseStyle.upperCase)
+@MappableEnum(caseStyle: CaseStyle.camelCase)
 enum ConfirmationTypes {
   @MappableValue("finalTransfer")
   finalTransfer,
@@ -26,7 +26,7 @@ enum ConfirmationTypes {
   handShake
 }
 
-@MappableEnum(caseStyle: CaseStyle.upperCase)
+@MappableEnum(caseStyle: CaseStyle.lowerCase)
 enum MessageStatus {
   @MappableValue("success")
   success,

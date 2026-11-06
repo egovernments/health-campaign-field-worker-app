@@ -73,6 +73,8 @@ abstract class RemoteRepository<D extends EntityModel,
     R query, {
     int? offSet,
     int? limit,
+    int? lastSyncedTime,
+    bool? includeOnlyUpdatedByOthers,
   }) async {
     Response response;
 
@@ -84,6 +86,8 @@ abstract class RemoteRepository<D extends EntityModel,
                 'offset': offSet ?? 0,
                 'limit': limit ?? 100,
                 'tenantId': DigitDataModelSingleton().tenantId,
+                if (includeOnlyUpdatedByOthers != null) 'includeOnlyUpdatedByOthers': includeOnlyUpdatedByOthers,
+                if (lastSyncedTime != null) 'lastSyncedTime': lastSyncedTime,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },
               data: entityName == 'User'
@@ -134,7 +138,8 @@ abstract class RemoteRepository<D extends EntityModel,
     if (!responseMap.containsKey(
       (isSearchResponsePlural ||
               entityName == 'ServiceDefinition' ||
-              entityName == 'Service')
+              entityName == 'Service' ||
+              entityName == 'UserAction')
           ? entityNamePlural
           : entityName,
     )) {
@@ -147,7 +152,8 @@ abstract class RemoteRepository<D extends EntityModel,
 
     final entityResponse = await responseMap[(isSearchResponsePlural ||
             entityName == 'ServiceDefinition' ||
-            entityName == 'Service')
+            entityName == 'Service' ||
+            entityName == 'UserAction')
         ? entityNamePlural
         : entityName];
 
@@ -407,15 +413,13 @@ abstract class RemoteRepository<D extends EntityModel,
     } on DioException catch (error) {
       const encoder = JsonEncoder.withIndent('  ');
 
-      String? errorResponse;
-      String? requestBody;
+      String errorResponse;
+      String requestBody;
 
       try {
-        errorResponse = encoder.convert(
-          error.response?.data,
-        );
+        errorResponse = encoder.convert(error.response?.data);
       } catch (_) {
-        errorResponse = 'Could not parse error';
+        errorResponse = 'Could not parse error response';
       }
 
       try {
@@ -423,7 +427,20 @@ abstract class RemoteRepository<D extends EntityModel,
       } catch (_) {
         requestBody = 'Could not parse request body';
       }
-      rethrow;
+
+      final endpoint = error.requestOptions.uri.toString();
+      final method = error.requestOptions.method;
+
+      throw DioException(
+        requestOptions: error.requestOptions,
+        response: error.response,
+        type: error.type,
+        error: '${error.error}\n'
+            'Endpoint: $method $endpoint\n'
+            'Status: ${error.response?.statusCode}\n'
+            'Request: $requestBody\n'
+            'Response: $errorResponse',
+      );
     } catch (error) {
       rethrow;
     }

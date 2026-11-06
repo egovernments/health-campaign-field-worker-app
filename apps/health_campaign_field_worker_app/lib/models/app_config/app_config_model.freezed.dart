@@ -178,8 +178,10 @@ MdmsCriteriaModel _$MdmsCriteriaModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MdmsCriteriaModel {
   String get tenantId => throw _privateConstructorUsedError;
-  List<MdmsModuleDetailModel> get moduleDetails =>
-      throw _privateConstructorUsedError;
+  String get schemaCode => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get filters => throw _privateConstructorUsedError;
+  int? get limit => throw _privateConstructorUsedError;
+  bool? get isActive => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -193,7 +195,12 @@ abstract class $MdmsCriteriaModelCopyWith<$Res> {
           MdmsCriteriaModel value, $Res Function(MdmsCriteriaModel) then) =
       _$MdmsCriteriaModelCopyWithImpl<$Res, MdmsCriteriaModel>;
   @useResult
-  $Res call({String tenantId, List<MdmsModuleDetailModel> moduleDetails});
+  $Res call(
+      {String tenantId,
+      String schemaCode,
+      Map<String, dynamic>? filters,
+      int? limit,
+      bool? isActive});
 }
 
 /// @nodoc
@@ -210,17 +217,32 @@ class _$MdmsCriteriaModelCopyWithImpl<$Res, $Val extends MdmsCriteriaModel>
   @override
   $Res call({
     Object? tenantId = null,
-    Object? moduleDetails = null,
+    Object? schemaCode = null,
+    Object? filters = freezed,
+    Object? limit = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_value.copyWith(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      moduleDetails: null == moduleDetails
-          ? _value.moduleDetails
-          : moduleDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsModuleDetailModel>,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: freezed == filters
+          ? _value.filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -233,7 +255,12 @@ abstract class _$$MdmsCriteriaModelImplCopyWith<$Res>
       __$$MdmsCriteriaModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String tenantId, List<MdmsModuleDetailModel> moduleDetails});
+  $Res call(
+      {String tenantId,
+      String schemaCode,
+      Map<String, dynamic>? filters,
+      int? limit,
+      bool? isActive});
 }
 
 /// @nodoc
@@ -248,17 +275,32 @@ class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tenantId = null,
-    Object? moduleDetails = null,
+    Object? schemaCode = null,
+    Object? filters = freezed,
+    Object? limit = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_$MdmsCriteriaModelImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      moduleDetails: null == moduleDetails
-          ? _value._moduleDetails
-          : moduleDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsModuleDetailModel>,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: freezed == filters
+          ? _value._filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -268,25 +310,37 @@ class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
 class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
   const _$MdmsCriteriaModelImpl(
       {required this.tenantId,
-      required final List<MdmsModuleDetailModel> moduleDetails})
-      : _moduleDetails = moduleDetails;
+      required this.schemaCode,
+      final Map<String, dynamic>? filters,
+      this.limit,
+      this.isActive})
+      : _filters = filters;
 
   factory _$MdmsCriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MdmsCriteriaModelImplFromJson(json);
 
   @override
   final String tenantId;
-  final List<MdmsModuleDetailModel> _moduleDetails;
   @override
-  List<MdmsModuleDetailModel> get moduleDetails {
-    if (_moduleDetails is EqualUnmodifiableListView) return _moduleDetails;
+  final String schemaCode;
+  final Map<String, dynamic>? _filters;
+  @override
+  Map<String, dynamic>? get filters {
+    final value = _filters;
+    if (value == null) return null;
+    if (_filters is EqualUnmodifiableMapView) return _filters;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_moduleDetails);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
+  final int? limit;
+  @override
+  final bool? isActive;
+
+  @override
   String toString() {
-    return 'MdmsCriteriaModel(tenantId: $tenantId, moduleDetails: $moduleDetails)';
+    return 'MdmsCriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode, filters: $filters, limit: $limit, isActive: $isActive)';
   }
 
   @override
@@ -296,14 +350,18 @@ class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
             other is _$MdmsCriteriaModelImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
-            const DeepCollectionEquality()
-                .equals(other._moduleDetails, _moduleDetails));
+            (identical(other.schemaCode, schemaCode) ||
+                other.schemaCode == schemaCode) &&
+            const DeepCollectionEquality().equals(other._filters, _filters) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, tenantId,
-      const DeepCollectionEquality().hash(_moduleDetails));
+  int get hashCode => Object.hash(runtimeType, tenantId, schemaCode,
+      const DeepCollectionEquality().hash(_filters), limit, isActive);
 
   @JsonKey(ignore: true)
   @override
@@ -322,9 +380,11 @@ class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
 
 abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   const factory _MdmsCriteriaModel(
-          {required final String tenantId,
-          required final List<MdmsModuleDetailModel> moduleDetails}) =
-      _$MdmsCriteriaModelImpl;
+      {required final String tenantId,
+      required final String schemaCode,
+      final Map<String, dynamic>? filters,
+      final int? limit,
+      final bool? isActive}) = _$MdmsCriteriaModelImpl;
 
   factory _MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =
       _$MdmsCriteriaModelImpl.fromJson;
@@ -332,341 +392,17 @@ abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   @override
   String get tenantId;
   @override
-  List<MdmsModuleDetailModel> get moduleDetails;
+  String get schemaCode;
+  @override
+  Map<String, dynamic>? get filters;
+  @override
+  int? get limit;
+  @override
+  bool? get isActive;
   @override
   @JsonKey(ignore: true)
   _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-MdmsModuleDetailModel _$MdmsModuleDetailModelFromJson(
-    Map<String, dynamic> json) {
-  return _MdmsModuleDetailModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MdmsModuleDetailModel {
-  String get moduleName => throw _privateConstructorUsedError;
-  List<MdmsMasterDetailModel> get masterDetails =>
-      throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsModuleDetailModelCopyWith<MdmsModuleDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MdmsModuleDetailModelCopyWith<$Res> {
-  factory $MdmsModuleDetailModelCopyWith(MdmsModuleDetailModel value,
-          $Res Function(MdmsModuleDetailModel) then) =
-      _$MdmsModuleDetailModelCopyWithImpl<$Res, MdmsModuleDetailModel>;
-  @useResult
-  $Res call({String moduleName, List<MdmsMasterDetailModel> masterDetails});
-}
-
-/// @nodoc
-class _$MdmsModuleDetailModelCopyWithImpl<$Res,
-        $Val extends MdmsModuleDetailModel>
-    implements $MdmsModuleDetailModelCopyWith<$Res> {
-  _$MdmsModuleDetailModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? moduleName = null,
-    Object? masterDetails = null,
-  }) {
-    return _then(_value.copyWith(
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      masterDetails: null == masterDetails
-          ? _value.masterDetails
-          : masterDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsMasterDetailModel>,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MdmsModuleDetailModelImplCopyWith<$Res>
-    implements $MdmsModuleDetailModelCopyWith<$Res> {
-  factory _$$MdmsModuleDetailModelImplCopyWith(
-          _$MdmsModuleDetailModelImpl value,
-          $Res Function(_$MdmsModuleDetailModelImpl) then) =
-      __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String moduleName, List<MdmsMasterDetailModel> masterDetails});
-}
-
-/// @nodoc
-class __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>
-    extends _$MdmsModuleDetailModelCopyWithImpl<$Res,
-        _$MdmsModuleDetailModelImpl>
-    implements _$$MdmsModuleDetailModelImplCopyWith<$Res> {
-  __$$MdmsModuleDetailModelImplCopyWithImpl(_$MdmsModuleDetailModelImpl _value,
-      $Res Function(_$MdmsModuleDetailModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? moduleName = null,
-    Object? masterDetails = null,
-  }) {
-    return _then(_$MdmsModuleDetailModelImpl(
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      masterDetails: null == masterDetails
-          ? _value._masterDetails
-          : masterDetails // ignore: cast_nullable_to_non_nullable
-              as List<MdmsMasterDetailModel>,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MdmsModuleDetailModelImpl implements _MdmsModuleDetailModel {
-  const _$MdmsModuleDetailModelImpl(
-      {required this.moduleName,
-      required final List<MdmsMasterDetailModel> masterDetails})
-      : _masterDetails = masterDetails;
-
-  factory _$MdmsModuleDetailModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsModuleDetailModelImplFromJson(json);
-
-  @override
-  final String moduleName;
-  final List<MdmsMasterDetailModel> _masterDetails;
-  @override
-  List<MdmsMasterDetailModel> get masterDetails {
-    if (_masterDetails is EqualUnmodifiableListView) return _masterDetails;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_masterDetails);
-  }
-
-  @override
-  String toString() {
-    return 'MdmsModuleDetailModel(moduleName: $moduleName, masterDetails: $masterDetails)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsModuleDetailModelImpl &&
-            (identical(other.moduleName, moduleName) ||
-                other.moduleName == moduleName) &&
-            const DeepCollectionEquality()
-                .equals(other._masterDetails, _masterDetails));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, moduleName,
-      const DeepCollectionEquality().hash(_masterDetails));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
-      get copyWith => __$$MdmsModuleDetailModelImplCopyWithImpl<
-          _$MdmsModuleDetailModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsModuleDetailModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _MdmsModuleDetailModel implements MdmsModuleDetailModel {
-  const factory _MdmsModuleDetailModel(
-          {required final String moduleName,
-          required final List<MdmsMasterDetailModel> masterDetails}) =
-      _$MdmsModuleDetailModelImpl;
-
-  factory _MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsModuleDetailModelImpl.fromJson;
-
-  @override
-  String get moduleName;
-  @override
-  List<MdmsMasterDetailModel> get masterDetails;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-MdmsMasterDetailModel _$MdmsMasterDetailModelFromJson(
-    Map<String, dynamic> json) {
-  return _MdmsMasterDetailModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MdmsMasterDetailModel {
-  String get name => throw _privateConstructorUsedError;
-  String? get filter => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $MdmsMasterDetailModelCopyWith<MdmsMasterDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MdmsMasterDetailModelCopyWith<$Res> {
-  factory $MdmsMasterDetailModelCopyWith(MdmsMasterDetailModel value,
-          $Res Function(MdmsMasterDetailModel) then) =
-      _$MdmsMasterDetailModelCopyWithImpl<$Res, MdmsMasterDetailModel>;
-  @useResult
-  $Res call({String name, String? filter});
-}
-
-/// @nodoc
-class _$MdmsMasterDetailModelCopyWithImpl<$Res,
-        $Val extends MdmsMasterDetailModel>
-    implements $MdmsMasterDetailModelCopyWith<$Res> {
-  _$MdmsMasterDetailModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? filter = freezed,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MdmsMasterDetailModelImplCopyWith<$Res>
-    implements $MdmsMasterDetailModelCopyWith<$Res> {
-  factory _$$MdmsMasterDetailModelImplCopyWith(
-          _$MdmsMasterDetailModelImpl value,
-          $Res Function(_$MdmsMasterDetailModelImpl) then) =
-      __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String? filter});
-}
-
-/// @nodoc
-class __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>
-    extends _$MdmsMasterDetailModelCopyWithImpl<$Res,
-        _$MdmsMasterDetailModelImpl>
-    implements _$$MdmsMasterDetailModelImplCopyWith<$Res> {
-  __$$MdmsMasterDetailModelImplCopyWithImpl(_$MdmsMasterDetailModelImpl _value,
-      $Res Function(_$MdmsMasterDetailModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? filter = freezed,
-  }) {
-    return _then(_$MdmsMasterDetailModelImpl(
-      null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
-  const _$MdmsMasterDetailModelImpl(this.name, {this.filter});
-
-  factory _$MdmsMasterDetailModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MdmsMasterDetailModelImplFromJson(json);
-
-  @override
-  final String name;
-  @override
-  final String? filter;
-
-  @override
-  String toString() {
-    return 'MdmsMasterDetailModel(name: $name, filter: $filter)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MdmsMasterDetailModelImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.filter, filter) || other.filter == filter));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, filter);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
-      get copyWith => __$$MdmsMasterDetailModelImplCopyWithImpl<
-          _$MdmsMasterDetailModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MdmsMasterDetailModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _MdmsMasterDetailModel implements MdmsMasterDetailModel {
-  const factory _MdmsMasterDetailModel(final String name,
-      {final String? filter}) = _$MdmsMasterDetailModelImpl;
-
-  factory _MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =
-      _$MdmsMasterDetailModelImpl.fromJson;
-
-  @override
-  String get name;
-  @override
-  String? get filter;
-  @override
-  @JsonKey(ignore: true)
-  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
 }
 
 AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
@@ -955,6 +691,12 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
   @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1026,6 +768,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1074,6 +819,8 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1124,6 +871,14 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value.deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value.singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value.idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1211,6 +966,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
       List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN') List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1257,6 +1015,8 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
+    Object? deviceChangeReasons = null,
+    Object? singleUserLogin = null,
     Object? idTypeOptions = null,
     Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
@@ -1307,6 +1067,14 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
               as List<CheckListTypes>,
+      deviceChangeReasons: null == deviceChangeReasons
+          ? _value._deviceChangeReasons
+          : deviceChangeReasons // ignore: cast_nullable_to_non_nullable
+              as List<DeviceChangeReasons>,
+      singleUserLogin: null == singleUserLogin
+          ? _value._singleUserLogin
+          : singleUserLogin // ignore: cast_nullable_to_non_nullable
+              as List<SingleUserLogin>,
       idTypeOptions: null == idTypeOptions
           ? _value._idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
@@ -1391,6 +1159,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1430,6 +1202,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             householdMemberDeletionReasonOptions,
         _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
+        _deviceChangeReasons = deviceChangeReasons,
+        _singleUserLogin = singleUserLogin,
         _idTypeOptions = idTypeOptions,
         _relationShipTypeOptions = relationShipTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
@@ -1527,6 +1301,25 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_checklistTypes);
+  }
+
+  final List<DeviceChangeReasons> _deviceChangeReasons;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons {
+    if (_deviceChangeReasons is EqualUnmodifiableListView)
+      return _deviceChangeReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deviceChangeReasons);
+  }
+
+  final List<SingleUserLogin> _singleUserLogin;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin {
+    if (_singleUserLogin is EqualUnmodifiableListView) return _singleUserLogin;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_singleUserLogin);
   }
 
   final List<IdTypeOptions> _idTypeOptions;
@@ -1696,7 +1489,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, deviceChangeReasons: $deviceChangeReasons, singleUserLogin: $singleUserLogin, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
   }
 
   @override
@@ -1723,6 +1516,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._backgroundServiceConfig, _backgroundServiceConfig) &&
             const DeepCollectionEquality()
                 .equals(other._checklistTypes, _checklistTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._deviceChangeReasons, _deviceChangeReasons) &&
+            const DeepCollectionEquality()
+                .equals(other._singleUserLogin, _singleUserLogin) &&
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
@@ -1769,6 +1566,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             .hash(_householdMemberDeletionReasonOptions),
         const DeepCollectionEquality().hash(_backgroundServiceConfig),
         const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_deviceChangeReasons),
+        const DeepCollectionEquality().hash(_singleUserLogin),
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_relationShipTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
@@ -1819,6 +1618,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+      required final List<DeviceChangeReasons> deviceChangeReasons,
+      @JsonKey(name: 'SINGLE_USER_LOGIN')
+      required final List<SingleUserLogin> singleUserLogin,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
@@ -1877,6 +1680,12 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes;
+  @override
+  @JsonKey(name: 'DEVICE_CHANGE_REASONS')
+  List<DeviceChangeReasons> get deviceChangeReasons;
+  @override
+  @JsonKey(name: 'SINGLE_USER_LOGIN')
+  List<SingleUserLogin> get singleUserLogin;
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions;
@@ -2530,6 +2339,8 @@ mixin _$StateInfoModel {
   @JsonKey(name: 'localizationModules')
   List<Languages>? get localizationModules =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'logoUrl')
+  String? get logoUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2547,7 +2358,8 @@ abstract class $StateInfoModelCopyWith<$Res> {
       {@JsonKey(name: 'code') String code,
       @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
+      List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') String? logoUrl});
 }
 
 /// @nodoc
@@ -2566,6 +2378,7 @@ class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
     Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
+    Object? logoUrl = freezed,
   }) {
     return _then(_value.copyWith(
       code: null == code
@@ -2580,6 +2393,10 @@ class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
           ? _value.localizationModules
           : localizationModules // ignore: cast_nullable_to_non_nullable
               as List<Languages>?,
+      logoUrl: freezed == logoUrl
+          ? _value.logoUrl
+          : logoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -2596,7 +2413,8 @@ abstract class _$$StateInfoModelImplCopyWith<$Res>
       {@JsonKey(name: 'code') String code,
       @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      List<Languages>? localizationModules});
+      List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') String? logoUrl});
 }
 
 /// @nodoc
@@ -2613,6 +2431,7 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
     Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
+    Object? logoUrl = freezed,
   }) {
     return _then(_$StateInfoModelImpl(
       code: null == code
@@ -2627,6 +2446,10 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
           ? _value._localizationModules
           : localizationModules // ignore: cast_nullable_to_non_nullable
               as List<Languages>?,
+      logoUrl: freezed == logoUrl
+          ? _value.logoUrl
+          : logoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -2638,7 +2461,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
       {@JsonKey(name: 'code') required this.code,
       @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules})
+      final List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') this.logoUrl})
       : _languages = languages,
         _localizationModules = localizationModules;
 
@@ -2670,8 +2494,12 @@ class _$StateInfoModelImpl implements _StateInfoModel {
   }
 
   @override
+  @JsonKey(name: 'logoUrl')
+  final String? logoUrl;
+
+  @override
   String toString() {
-    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
+    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules, logoUrl: $logoUrl)';
   }
 
   @override
@@ -2683,7 +2511,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
             const DeepCollectionEquality()
                 .equals(other._languages, _languages) &&
             const DeepCollectionEquality()
-                .equals(other._localizationModules, _localizationModules));
+                .equals(other._localizationModules, _localizationModules) &&
+            (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl));
   }
 
   @JsonKey(ignore: true)
@@ -2692,7 +2521,8 @@ class _$StateInfoModelImpl implements _StateInfoModel {
       runtimeType,
       code,
       const DeepCollectionEquality().hash(_languages),
-      const DeepCollectionEquality().hash(_localizationModules));
+      const DeepCollectionEquality().hash(_localizationModules),
+      logoUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -2714,7 +2544,8 @@ abstract class _StateInfoModel implements StateInfoModel {
       {@JsonKey(name: 'code') required final String code,
       @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
-      final List<Languages>? localizationModules}) = _$StateInfoModelImpl;
+      final List<Languages>? localizationModules,
+      @JsonKey(name: 'logoUrl') final String? logoUrl}) = _$StateInfoModelImpl;
 
   factory _StateInfoModel.fromJson(Map<String, dynamic> json) =
       _$StateInfoModelImpl.fromJson;
@@ -2728,6 +2559,9 @@ abstract class _StateInfoModel implements StateInfoModel {
   @override
   @JsonKey(name: 'localizationModules')
   List<Languages>? get localizationModules;
+  @override
+  @JsonKey(name: 'logoUrl')
+  String? get logoUrl;
   @override
   @JsonKey(ignore: true)
   _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
@@ -2912,6 +2746,8 @@ mixin _$AppConfig {
   String? get tenantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius => throw _privateConstructorUsedError;
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2930,7 +2766,9 @@ abstract class $AppConfigCopyWith<$Res> {
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -2952,6 +2790,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_value.copyWith(
       networkDetection: null == networkDetection
@@ -2978,6 +2817,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -2996,7 +2839,9 @@ abstract class _$$AppConfigImplCopyWith<$Res>
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -3016,6 +2861,7 @@ class __$$AppConfigImplCopyWithImpl<$Res>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
@@ -3042,6 +2888,10 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -3055,7 +2905,9 @@ class _$AppConfigImpl implements _AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
       @JsonKey(name: 'TENANT_ID') this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      this.boundaryLastLevelMaxSelection});
 
   factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppConfigImplFromJson(json);
@@ -3078,10 +2930,13 @@ class _$AppConfigImpl implements _AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   final double? maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  final int? boundaryLastLevelMaxSelection;
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
   }
 
   @override
@@ -3100,13 +2955,24 @@ class _$AppConfigImpl implements _AppConfig {
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.boundaryLastLevelMaxSelection,
+                    boundaryLastLevelMaxSelection) ||
+                other.boundaryLastLevelMaxSelection ==
+                    boundaryLastLevelMaxSelection));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, networkDetection,
-      persistenceMode, syncMethod, syncTrigger, tenantId, maxRadius);
+  int get hashCode => Object.hash(
+      runtimeType,
+      networkDetection,
+      persistenceMode,
+      syncMethod,
+      syncTrigger,
+      tenantId,
+      maxRadius,
+      boundaryLastLevelMaxSelection);
 
   @JsonKey(ignore: true)
   @override
@@ -3130,8 +2996,9 @@ abstract class _AppConfig implements AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
       @JsonKey(name: 'TENANT_ID') final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-      final double? maxRadius}) = _$AppConfigImpl;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      final int? boundaryLastLevelMaxSelection}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
       _$AppConfigImpl.fromJson;
@@ -3154,6 +3021,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
@@ -6150,6 +6020,316 @@ abstract class _TransitPostType implements TransitPostType {
   @override
   @JsonKey(ignore: true)
   _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+DeviceChangeReasons _$DeviceChangeReasonsFromJson(Map<String, dynamic> json) {
+  return _DeviceChangeReasons.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DeviceChangeReasons {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DeviceChangeReasonsCopyWith<DeviceChangeReasons> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DeviceChangeReasonsCopyWith<$Res> {
+  factory $DeviceChangeReasonsCopyWith(
+          DeviceChangeReasons value, $Res Function(DeviceChangeReasons) then) =
+      _$DeviceChangeReasonsCopyWithImpl<$Res, DeviceChangeReasons>;
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class _$DeviceChangeReasonsCopyWithImpl<$Res, $Val extends DeviceChangeReasons>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  _$DeviceChangeReasonsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$DeviceChangeReasonsImplCopyWith<$Res>
+    implements $DeviceChangeReasonsCopyWith<$Res> {
+  factory _$$DeviceChangeReasonsImplCopyWith(_$DeviceChangeReasonsImpl value,
+          $Res Function(_$DeviceChangeReasonsImpl) then) =
+      __$$DeviceChangeReasonsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class __$$DeviceChangeReasonsImplCopyWithImpl<$Res>
+    extends _$DeviceChangeReasonsCopyWithImpl<$Res, _$DeviceChangeReasonsImpl>
+    implements _$$DeviceChangeReasonsImplCopyWith<$Res> {
+  __$$DeviceChangeReasonsImplCopyWithImpl(_$DeviceChangeReasonsImpl _value,
+      $Res Function(_$DeviceChangeReasonsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_$DeviceChangeReasonsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$DeviceChangeReasonsImpl implements _DeviceChangeReasons {
+  _$DeviceChangeReasonsImpl({required this.name, required this.code});
+
+  factory _$DeviceChangeReasonsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeviceChangeReasonsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+
+  @override
+  String toString() {
+    return 'DeviceChangeReasons(name: $name, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeviceChangeReasonsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      __$$DeviceChangeReasonsImplCopyWithImpl<_$DeviceChangeReasonsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DeviceChangeReasonsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _DeviceChangeReasons implements DeviceChangeReasons {
+  factory _DeviceChangeReasons(
+      {required final String name,
+      required final String code}) = _$DeviceChangeReasonsImpl;
+
+  factory _DeviceChangeReasons.fromJson(Map<String, dynamic> json) =
+      _$DeviceChangeReasonsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  @JsonKey(ignore: true)
+  _$$DeviceChangeReasonsImplCopyWith<_$DeviceChangeReasonsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SingleUserLogin _$SingleUserLoginFromJson(Map<String, dynamic> json) {
+  return _SingleUserLogin.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SingleUserLogin {
+  bool get enabled => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SingleUserLoginCopyWith<SingleUserLogin> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SingleUserLoginCopyWith<$Res> {
+  factory $SingleUserLoginCopyWith(
+          SingleUserLogin value, $Res Function(SingleUserLogin) then) =
+      _$SingleUserLoginCopyWithImpl<$Res, SingleUserLogin>;
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class _$SingleUserLoginCopyWithImpl<$Res, $Val extends SingleUserLogin>
+    implements $SingleUserLoginCopyWith<$Res> {
+  _$SingleUserLoginCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_value.copyWith(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SingleUserLoginImplCopyWith<$Res>
+    implements $SingleUserLoginCopyWith<$Res> {
+  factory _$$SingleUserLoginImplCopyWith(_$SingleUserLoginImpl value,
+          $Res Function(_$SingleUserLoginImpl) then) =
+      __$$SingleUserLoginImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool enabled, int id});
+}
+
+/// @nodoc
+class __$$SingleUserLoginImplCopyWithImpl<$Res>
+    extends _$SingleUserLoginCopyWithImpl<$Res, _$SingleUserLoginImpl>
+    implements _$$SingleUserLoginImplCopyWith<$Res> {
+  __$$SingleUserLoginImplCopyWithImpl(
+      _$SingleUserLoginImpl _value, $Res Function(_$SingleUserLoginImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = null,
+    Object? id = null,
+  }) {
+    return _then(_$SingleUserLoginImpl(
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SingleUserLoginImpl implements _SingleUserLogin {
+  _$SingleUserLoginImpl({required this.enabled, required this.id});
+
+  factory _$SingleUserLoginImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SingleUserLoginImplFromJson(json);
+
+  @override
+  final bool enabled;
+  @override
+  final int id;
+
+  @override
+  String toString() {
+    return 'SingleUserLogin(enabled: $enabled, id: $id)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SingleUserLoginImpl &&
+            (identical(other.enabled, enabled) || other.enabled == enabled) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, enabled, id);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
+      __$$SingleUserLoginImplCopyWithImpl<_$SingleUserLoginImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SingleUserLoginImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SingleUserLogin implements SingleUserLogin {
+  factory _SingleUserLogin(
+      {required final bool enabled,
+      required final int id}) = _$SingleUserLoginImpl;
+
+  factory _SingleUserLogin.fromJson(Map<String, dynamic> json) =
+      _$SingleUserLoginImpl.fromJson;
+
+  @override
+  bool get enabled;
+  @override
+  int get id;
+  @override
+  @JsonKey(ignore: true)
+  _$$SingleUserLoginImplCopyWith<_$SingleUserLoginImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

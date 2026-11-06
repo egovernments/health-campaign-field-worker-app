@@ -337,9 +337,6 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     }
 
     if (widget.container == null) {
-      final theme = Theme.of(context);
-      
-
       return Positioned(
         top: contentY,
         left: _getLeft(),

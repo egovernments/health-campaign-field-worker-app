@@ -23,46 +23,20 @@ _$MdmsCriteriaModelImpl _$$MdmsCriteriaModelImplFromJson(
         Map<String, dynamic> json) =>
     _$MdmsCriteriaModelImpl(
       tenantId: json['tenantId'] as String,
-      moduleDetails: (json['moduleDetails'] as List<dynamic>)
-          .map((e) => MdmsModuleDetailModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      schemaCode: json['schemaCode'] as String,
+      filters: json['filters'] as Map<String, dynamic>?,
+      limit: (json['limit'] as num?)?.toInt(),
+      isActive: json['isActive'] as bool?,
     );
 
 Map<String, dynamic> _$$MdmsCriteriaModelImplToJson(
         _$MdmsCriteriaModelImpl instance) =>
     <String, dynamic>{
       'tenantId': instance.tenantId,
-      'moduleDetails': instance.moduleDetails,
-    };
-
-_$MdmsModuleDetailModelImpl _$$MdmsModuleDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MdmsModuleDetailModelImpl(
-      moduleName: json['moduleName'] as String,
-      masterDetails: (json['masterDetails'] as List<dynamic>)
-          .map((e) => MdmsMasterDetailModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$MdmsModuleDetailModelImplToJson(
-        _$MdmsModuleDetailModelImpl instance) =>
-    <String, dynamic>{
-      'moduleName': instance.moduleName,
-      'masterDetails': instance.masterDetails,
-    };
-
-_$MdmsMasterDetailModelImpl _$$MdmsMasterDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MdmsMasterDetailModelImpl(
-      json['name'] as String,
-      filter: json['filter'] as String?,
-    );
-
-Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
-        _$MdmsMasterDetailModelImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'filter': instance.filter,
+      'schemaCode': instance.schemaCode,
+      'filters': instance.filters,
+      'limit': instance.limit,
+      'isActive': instance.isActive,
     };
 
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
@@ -120,6 +94,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
               .toList(),
       checklistTypes: (json['CHECKLIST_TYPES'] as List<dynamic>)
           .map((e) => CheckListTypes.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deviceChangeReasons: (json['DEVICE_CHANGE_REASONS'] as List<dynamic>)
+          .map((e) => DeviceChangeReasons.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      singleUserLogin: (json['SINGLE_USER_LOGIN'] as List<dynamic>)
+          .map((e) => SingleUserLogin.fromJson(e as Map<String, dynamic>))
           .toList(),
       idTypeOptions: (json['ID_TYPE_OPTIONS_POPULATOR'] as List<dynamic>)
           .map((e) => IdTypeOptions.fromJson(e as Map<String, dynamic>))
@@ -189,6 +169,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
           instance.householdMemberDeletionReasonOptions,
       'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'CHECKLIST_TYPES': instance.checklistTypes,
+      'DEVICE_CHANGE_REASONS': instance.deviceChangeReasons,
+      'SINGLE_USER_LOGIN': instance.singleUserLogin,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': instance.relationShipTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
@@ -267,6 +249,7 @@ _$StateInfoModelImpl _$$StateInfoModelImplFromJson(Map<String, dynamic> json) =>
       localizationModules: (json['localizationModules'] as List<dynamic>?)
           ?.map((e) => Languages.fromJson(e as Map<String, dynamic>))
           .toList(),
+      logoUrl: json['logoUrl'] as String?,
     );
 
 Map<String, dynamic> _$$StateInfoModelImplToJson(
@@ -275,6 +258,7 @@ Map<String, dynamic> _$$StateInfoModelImplToJson(
       'code': instance.code,
       'languages': instance.languages,
       'localizationModules': instance.localizationModules,
+      'logoUrl': instance.logoUrl,
     };
 
 _$RowVersionWrapperModelImpl _$$RowVersionWrapperModelImplFromJson(
@@ -299,6 +283,8 @@ _$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
       syncTrigger: json['SYNC_TRIGGER'] as String,
       tenantId: json['TENANT_ID'] as String?,
       maxRadius: (json['PROXIMITY_SEARCH_RANGE'] as num?)?.toDouble(),
+      boundaryLastLevelMaxSelection:
+          (json['BOUNDARY_LAST_LEVEL_MAX_SELECTION'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
@@ -309,6 +295,8 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'SYNC_TRIGGER': instance.syncTrigger,
       'TENANT_ID': instance.tenantId,
       'PROXIMITY_SEARCH_RANGE': instance.maxRadius,
+      'BOUNDARY_LAST_LEVEL_MAX_SELECTION':
+          instance.boundaryLastLevelMaxSelection,
     };
 
 _$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>
@@ -563,6 +551,34 @@ Map<String, dynamic> _$$TransitPostTypeImplToJson(
       'name': instance.name,
       'code': instance.code,
       'active': instance.active,
+    };
+
+_$DeviceChangeReasonsImpl _$$DeviceChangeReasonsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DeviceChangeReasonsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+    );
+
+Map<String, dynamic> _$$DeviceChangeReasonsImplToJson(
+        _$DeviceChangeReasonsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+    };
+
+_$SingleUserLoginImpl _$$SingleUserLoginImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SingleUserLoginImpl(
+      enabled: json['enabled'] as bool,
+      id: (json['id'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$SingleUserLoginImplToJson(
+        _$SingleUserLoginImpl instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'id': instance.id,
     };
 
 _$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>
