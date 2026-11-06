@@ -6,7 +6,6 @@ import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_head
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/checkbox_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
