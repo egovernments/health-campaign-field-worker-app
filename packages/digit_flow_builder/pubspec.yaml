@@ -1,6 +1,6 @@
 name: digit_flow_builder
 description: A JSON-driven dynamic UI rendering framework for Flutter. Registers flows and pages from configuration, dispatches actions, and composes forms and templates without app-side code changes.
-version: 0.2.2
+version: 0.2.3
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_flow_builder
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues

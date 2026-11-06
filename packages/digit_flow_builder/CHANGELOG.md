@@ -1,3 +1,8 @@
+## 0.2.3
+
+- `action_popup`: footer buttons whose `visible` rule is false are dropped instead of cast to `DigitButton`, so hiding a popup button (e.g. Skip when the beneficiary ID pool is empty) no longer crashes the popup
+- `transformer_executor`: `FETCH_TRANSFORMER_CONFIG` now replaces only the form data of the screen's state and keeps its search results and widget data (search bar, beneficiary ID pool count, next ID). Replacing the whole state made Register fall back to the low-ID popup and a device UUID identifier
+
 ## 0.2.2
 
 - New `appliedFilterChips` widget: shows a list's applied filters as removable chips; `onRemove` runs on delete

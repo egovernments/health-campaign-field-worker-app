@@ -575,7 +575,7 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.2.2"
+    version: "0.2.3"
   digit_forms_engine:
     dependency: "direct main"
     description:
