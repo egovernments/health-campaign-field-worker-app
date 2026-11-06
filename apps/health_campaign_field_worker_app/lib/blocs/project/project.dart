@@ -637,6 +637,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectModel project, {
     List<BoundaryModel>? prefetchedTree,
   }) async {
+    // The outside-household flow runs for Polio-style campaigns only for now.
+    if (!isPolioStyleCampaign(project.projectType)) return;
     if (!_hasOutsideHouseholdDelivery(project)) return;
 
     // Same boundary-typed search as _loadProjectFacilities, but without the

@@ -144,6 +144,19 @@ performBackgroundService({
   }
 }
 
+/// Campaign types (projectType, upper-cased) that run as Polio-style
+/// campaigns: household-strategy registration, missed children, LQA, inside
+/// monitoring and the Polio stock flow on the home screen, and no silent
+/// stock downsync on project selection. Add a new campaign type here to give
+/// it the same behaviour.
+const polioStyleProjectTypes = {'POLIO', 'IMMUNISATION'};
+
+bool isPolioStyleCampaign(String? projectType) {
+  final type = projectType?.toUpperCase();
+  if (type == null) return false;
+  return polioStyleProjectTypes.any(type.contains);
+}
+
 String maskString(String input) {
   // Define the character to use for masking (e.g., "*")
   const maskingChar = '*';

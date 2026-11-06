@@ -1695,9 +1695,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return Container();
     }
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
     final roles = state.userModel.roles.map((e) {
       return e.code;
     });
@@ -2250,9 +2248,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       return null;
     }
 
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
@@ -3091,79 +3087,80 @@ class _HomePageState extends LocalizedState<HomePage> {
       // `sampleOutSideHouseholdVaccinationFlows` module and differed only in
       // the delivery method they scoped to. The flow's own
       // `selectVaccinationLocation` page is the transit-post / CLF chooser, so
-      // one card is enough.
-      i18.home.outsideHouseholdVaccinationLabel:
-          homeShowcaseData.transitPost.buildWith(
-        child: HomeItemCard(
-          icon: Icons.signpost,
-          label: i18.home.outsideHouseholdVaccinationLabel,
-          onPressed: () async {
-            await context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                    'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+      // one card is enough. Polio-style campaigns only for now.
+      if (isPolio)
+        i18.home.outsideHouseholdVaccinationLabel:
+            homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+            icon: Icons.signpost,
+            label: i18.home.outsideHouseholdVaccinationLabel,
+            onPressed: () async {
+              await context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
 
-                // Site lists show each site's parent boundary code. Its
-                // translation is in SQL from project selection but not yet
-                // in the flow-builder cache, so reload that before the list
-                // renders instead of showing the raw code first.
-                final locale = AppSharedPreferences().getSelectedLocale;
-                if (locale != null && locale.isNotEmpty) {
-                  await ctx
-                      .read<LocalizationBloc>()
-                      .refreshFlowBuilderLocalization(locale);
-                }
-                if (!ctx.mounted) return;
+                  // Site lists show each site's parent boundary code. Its
+                  // translation is in SQL from project selection but not yet
+                  // in the flow-builder cache, so reload that before the list
+                  // renders instead of showing the raw code first.
+                  final locale = AppSharedPreferences().getSelectedLocale;
+                  if (locale != null && locale.isNotEmpty) {
+                    await ctx
+                        .read<LocalizationBloc>()
+                        .refreshFlowBuilderLocalization(locale);
+                  }
+                  if (!ctx.mounted) return;
 
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'OUTSIDEHOUSEHOLD',
-                    sampleFlows: sampleOutSideHouseholdVaccinationFlows,
-                    // Sites are facilities. The list/overview screens search
-                    // the facility table, filter by boundary through the
-                    // address row, and pull the children vaccinated at a
-                    // site (UserActions tagged with the site's
-                    // clientReferenceId) and the site's campaign link.
-                    relationshipMappings: const [
-                      RelationshipMapping(
-                          from: 'address',
-                          to: 'facility',
-                          localKey: 'relatedClientReferenceId',
-                          foreignKey: 'clientReferenceId'),
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'userAction',
-                          localKey: 'clientReferenceId',
-                          foreignKey: 'resourceTag'),
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'projectFacility',
-                          localKey: 'id',
-                          foreignKey: 'facilityId'),
-                    ],
-                    nestedModelMappings: const [
-                      NestedModelMapping(
-                        rootModel: 'facility',
-                        fields: {
-                          'address': NestedFieldMapping(
-                            table: 'address',
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'OUTSIDEHOUSEHOLD',
+                      sampleFlows: sampleOutSideHouseholdVaccinationFlows,
+                      // Sites are facilities. The list/overview screens search
+                      // the facility table, filter by boundary through the
+                      // address row, and pull the children vaccinated at a
+                      // site (UserActions tagged with the site's
+                      // clientReferenceId) and the site's campaign link.
+                      relationshipMappings: const [
+                        RelationshipMapping(
+                            from: 'address',
+                            to: 'facility',
+                            localKey: 'relatedClientReferenceId',
+                            foreignKey: 'clientReferenceId'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'userAction',
                             localKey: 'clientReferenceId',
-                            foreignKey: 'relatedClientReferenceId',
-                            type: NestedMappingType.one,
-                          ),
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ));
-          },
+                            foreignKey: 'resourceTag'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'projectFacility',
+                            localKey: 'id',
+                            foreignKey: 'facilityId'),
+                      ],
+                      nestedModelMappings: const [
+                        NestedModelMapping(
+                          rootModel: 'facility',
+                          fields: {
+                            'address': NestedFieldMapping(
+                              table: 'address',
+                              localKey: 'clientReferenceId',
+                              foreignKey: 'relatedClientReferenceId',
+                              type: NestedMappingType.one,
+                            ),
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ));
+            },
+          ),
         ),
-      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
