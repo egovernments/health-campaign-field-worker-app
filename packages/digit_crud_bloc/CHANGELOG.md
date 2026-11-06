@@ -1,3 +1,11 @@
+## 0.1.2
+
+- `within`: fix the radius-to-bounding-box conversion. The deltas were in radians but compared against degree columns, so the box was far too small; they are now converted to degrees
+- Added the `withinOrUnlocated` operator (`withinOrUnlocatedOperator`): like `within`, but also keeps rows with no recorded location (null or 0/0 coordinates), e.g. outside-household sites added by planners without GPS
+- Added the `__distance` order field (`distanceOrderField`): sorts by distance from the centre of the search's `within` filter, nearest first with `ASC`, unlocated rows last. Ignored when the search has no `within` filter
+- Geo filters and the distance sort cast coordinates stored as text to numbers
+- Geo-filtered paginated searches fetch a little extra and trim to the page size, so the exact-distance post-filter no longer returns short pages
+
 ## 0.1.1
 
 - `SearchEntityRepository`: add hot-path indexes and run `ANALYZE` after migrations to prime the SQLite query planner; skip redundant `COUNT` queries on the read path

@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Boundary view shows a worker-added settlement's (`NEW_SETTLEMENT`) own name instead of its parent's translated code
+
 ## 1.0.5
 
 * Bottom-fixed cards: right/left padding set to zero

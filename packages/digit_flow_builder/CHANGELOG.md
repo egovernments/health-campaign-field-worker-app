@@ -1,3 +1,37 @@
+## 0.2.2
+
+- New `appliedFilterChips` widget: shows a list's applied filters as removable chips; `onRemove` runs on delete
+- New `WidgetReadinessRegistry` and screen-level `waitForWidget` (name or `{name, timeoutMs}`, default 3000 ms): `initActions` can wait for a sibling widget's init signal so the first search carries both sets of filters
+- `ScreenBuilder`: pages with `initActions` start in `isLoading`, so the empty-state card no longer flashes before the first search
+- `searchBar`: headless `proximity` block (`radius`, `searchName`, `filterKey`, `root`) takes one GPS fix, sends one `within` search and signals the readiness registry
+- `proximitySearch`: an explicit `false` sticks while an unset value uses `defaultValue`; a default-on switch applies once GPS resolves. Adds `hideSwitch`, passes `root` through and supports `operation: withinOrUnlocated`
+- `listView`: opt-in `showLoader` (spinner while loading with no items) and configurable `emptyChild`. `layout_renderer` shows its load-more and refresh loaders only when content is already on screen
+- `menu_card`: optional `styling` block (`alignment`, `iconPosition: top`, `descriptionAlignment`, `iconSize`, `elevated`)
+- `button`: optional `shadow: true`. `card`: `properties.padding` accepts a number, spacer token or per-side map
+- `text`: renders the translated `label` when there is no `value`; adds `textStyle` (`color`, `fontSize`, `fontWeight`, `fontFamily`, `lineHeight`) and `textAlign`; `maxLines: 0` is unbounded
+- `icon`: `properties.size` and theme `color`, plus fallback icons for keys `DigitIconMapping` lacks. `no_result_card`: `image` overrides the default illustration
+- `action_popup`: `onCloseAction` runs on cross-tap; the dialog only skips its own pop when that list closes the popup itself
+- Bare numeric values (counts, ids) are no longer localized, so a stale catalog row keyed on a digit can't blank a cell
+- `interpolateWithCrudStates`: list path segments support `.length`, `.first`, `.last` and numeric indexes
+- Entity type names are obfuscation-safe (`getEntityTypeName` instead of `runtimeType.toString()`), fixing `rootEntity` lookups in release builds
+- Wrapper `entity_filter`: adds `contains` (case-insensitive, optional `minChars`), `notEquals`, `notIn`, and `{{key}}` `equals` values from widget data
+- `computed_evaluator`: bare `from`/`field` paths are treated as templates and `EntityModel` items are converted to maps for reduce
+- `search_executor`: a searchName's filter bucket is replaced instead of merged, so unrelated searches (e.g. name then QR scan) no longer AND together. `clear_state_executor` re-runs the search with the bucket's remaining filters, keeping `initActions` filters such as `tenantId`
+- `crud_executor`: `awaitCreate: true` writes through `CrudService` and waits, for flows that leave the page and read the record back
+- `toast_executor`: falls back to static localization and the pre-captured navigator when the context is gone, or skips the toast instead of breaking the action chain
+- `DigitCrudService`: optional `repositoryOverride`; `FacilityModel` is routed to the facility repository
+- `FlowBuilderSingleton`: `setActiveDeliveryMethod` narrows cycle deliveries to the active delivery method (raw copies kept); adds `hasDeliveryMethod`, `setParentBoundary`/`parentBoundary` and `setProjectId`. `activeDeliveryMethod` and `boundaryAndParentCodes` are exposed to the state context
+- New `parentBoundaryCodeOf` helper; header and `administrativeArea` use `BoundaryModel.displayName`, so a new settlement shows its own name
+- Transformer context adds `parentBoundaryCode`, `parentBoundaryName`, `selectedBoundaryName` and `selectedBoundaryHierarchyCode`
+- Function registry: dose and eligibility helpers count only deliveries of the active delivery method; a `VACCINATED_ELSEWHERE` task in the current cycle means nothing left to deliver. Adds `countLocatedSites`, `siteNamesByType`, `getBoundaryAndParentOptions`, `wasAbsentOrRefusedForCurrentCycle` and `hasVaccinatedElsewhereForCurrentCycle`. Locality dropdown labels use the last segment of `address.locality.code`
+- `transformJson` passes through `labelPlaceHolders` and `descriptionPlaceHolders`
+- `transformer_config.dart`:
+    - New `transitSite` / `clfSite` (a `FacilityModel` with usage `TRANSIT_POST` / `OUTSIDE_HOUSEHOLD_PLACES` plus a `ProjectFacilityModel`), `newSettlement` (`NEW_SETTLEMENT` user action) and `groupVacChild` / `groupVacReferral` (`action: OTHER`, tagged to the session via `resourceTag`)
+    - `memberCount` uses `__default:2:householdDetails.memberCount`; task and address lat/lng come from `__context:householdLatLng`; ineligible and unable-to-deliver read location from their own pages (also fixes the `locationAccuracy` mapping)
+    - Vaccinated elsewhere: task status `VACCINATED_ELSEWHERE`, adds `revisit`, `vaccinationLocation` / `vaccinationLocationOther`, drops `siteName` / `region`; redose tasks get `revisit: true`
+    - PGR `locality.code` and `boundaryCode` use `selectedBoundaryHierarchyCode`
+    - Polio vials configs gain `totalMixingSyringes`, `totalDiluentsIssued`, `unusedDiluentsReturned`, `spoiledDiluentsReturned`; explicit `fallbackModel` on 9 existing configs
+
 ## 0.2.1
 
 - Popup action chains survive an ancestor rebuild between build and tap: `ButtonWidget` snapshots `Navigator`, `CrudBloc`, and `DigitScannerBloc` in `buildResolved` and threads them through `resolved.executeActions` into `contextData['_preCaptured']`; `close_popup_executor`, `crud_executor`, and `navigation_executor` prefer the captured handles over the button's possibly-deactivated `BuildContext`, falling back to `context.read` / `Navigator.of` when absent so non-button action triggers behave unchanged
