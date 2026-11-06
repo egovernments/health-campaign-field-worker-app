@@ -1,0 +1,883 @@
+// AEFI (Adverse Event Following Immunization) reporting — story #2299.
+//
+// Home "Report AEFI" card → aefiOverview (this user's case counts)
+//   → AEFI_CREATE form: aefiLocation → childDetails → aefiCaseDetails
+//   → summary → aefiAcknowledgement.
+//
+// Cases are saved as HFReferral records with additionalFields.formType=AEFI
+// (transformer `aefiCreation`). Used as the local sample until the AEFI
+// FormConfig is published to MDMS.
+final dynamic sampleAefiFlows = {
+  "name": "AEFI",
+  "initialPage": "aefiOverview",
+  "project": "CMP-2026-10-27-011213",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "name": "aefiOverview",
+      "order": 1,
+      "screenType": "TEMPLATE",
+      "heading": "AEFI_OVERVIEW_HEADING",
+      "description": "AEFI_OVERVIEW_DESCRIPTION",
+      "header": [
+        {
+          "type": "template",
+          "label": "AEFI_BACK_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"name": "HOME", "type": "HOME"}
+            }
+          ],
+          "fieldName": "backLink"
+        }
+      ],
+      "body": [
+        {
+          "type": "template",
+          "format": "card",
+          "children": [
+            {
+              "type": "template",
+              "value": "{{fn:length(contextData)}}",
+              "format": "textTemplate",
+              "fieldName": "totalCount",
+              "properties": {
+                "style": "headingXl",
+                "bottomGap": 0,
+                "textStyle": {
+                  "color": "#0B4B66",
+                  "fontSize": "24px",
+                  "fontFamily": "Roboto Condensed, sans-serif",
+                  "fontWeight": 700,
+                  "lineHeight": 1.14
+                },
+                "isFieldValue": false
+              }
+            },
+            {
+              "type": "template",
+              "value": "AEFI_OVERVIEW_TOTAL_LABEL",
+              "format": "textTemplate",
+              "fieldName": "totalLabel",
+              "properties": {
+                "style": "bodyS",
+                "bottomGap": 4,
+                "textStyle": {
+                  "color": "#1D1B20",
+                  "fontSize": "14px",
+                  "fontFamily": "Roboto, sans-serif",
+                  "fontWeight": 400,
+                  "lineHeight": 1.37
+                },
+                "isFieldValue": false
+              }
+            },
+            {
+              "type": "template",
+              "format": "row",
+              "children": [
+                {
+                  "flex": 1,
+                  "type": "template",
+                  "format": "card",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "row",
+                      "children": [
+                        {
+                          "type": "template",
+                          "value":
+                              "{{fn:countWhere(contextData, 'aefiType', 'SERIOUS')}}",
+                          "format": "textTemplate",
+                          "fieldName": "seriousCount",
+                          "properties": {
+                            "color": "primary",
+                            "style": "headingM",
+                            "textStyle": {
+                              "color": "#0B4B66",
+                              "fontSize": "13px",
+                              "fontFamily": "Roboto, sans-serif",
+                              "fontWeight": 700,
+                              "lineHeight": 1.14
+                            },
+                            "isFieldValue": false
+                          }
+                        },
+                        {
+                          "type": "template",
+                          "value": "AEFI_OVERVIEW_SERIOUS_LABEL",
+                          "format": "textTemplate",
+                          "fieldName": "seriousLabel",
+                          "properties": {
+                            "color": "primary",
+                            "style": "bodyS",
+                            "textStyle": {
+                              "color": "#0B4B66",
+                              "fontSize": "13px",
+                              "fontFamily": "Roboto, sans-serif",
+                              "fontWeight": 400,
+                              "lineHeight": 1.37
+                            },
+                            "isFieldValue": false
+                          }
+                        }
+                      ],
+                      "fieldName": "seriousPillRow",
+                      "properties": {
+                        "gap": 4,
+                        "mainAxisSize": "max",
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "center"
+                      }
+                    }
+                  ],
+                  "fieldName": "seriousPill",
+                  "properties": {
+                    "type": "secondary",
+                    "radius": "radius1",
+                    "padding": {"vertical": 6, "horizontal": 8},
+                    "cardType": "secondary"
+                  }
+                },
+                {
+                  "flex": 1,
+                  "type": "template",
+                  "format": "card",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "row",
+                      "children": [
+                        {
+                          "type": "template",
+                          "value":
+                              "{{fn:countWhere(contextData, 'aefiType', 'MINOR')}}",
+                          "format": "textTemplate",
+                          "fieldName": "minorCount",
+                          "properties": {
+                            "color": "primary",
+                            "style": "headingM",
+                            "textStyle": {
+                              "color": "#0B4B66",
+                              "fontSize": "13px",
+                              "fontFamily": "Roboto, sans-serif",
+                              "fontWeight": 700,
+                              "lineHeight": 1.14
+                            },
+                            "isFieldValue": false
+                          }
+                        },
+                        {
+                          "type": "template",
+                          "value": "AEFI_OVERVIEW_MINOR_LABEL",
+                          "format": "textTemplate",
+                          "fieldName": "minorLabel",
+                          "properties": {
+                            "color": "primary",
+                            "style": "bodyS",
+                            "textStyle": {
+                              "color": "#0B4B66",
+                              "fontSize": "13px",
+                              "fontFamily": "Roboto, sans-serif",
+                              "fontWeight": 400,
+                              "lineHeight": 1.37
+                            },
+                            "isFieldValue": false
+                          }
+                        }
+                      ],
+                      "fieldName": "minorPillRow",
+                      "properties": {
+                        "gap": 4,
+                        "mainAxisSize": "max",
+                        "mainAxisAlignment": "start",
+                        "crossAxisAlignment": "center"
+                      }
+                    }
+                  ],
+                  "fieldName": "minorPill",
+                  "properties": {
+                    "type": "secondary",
+                    "radius": "radius1",
+                    "padding": {"vertical": 6, "horizontal": 8},
+                    "cardType": "secondary"
+                  }
+                }
+              ],
+              "fieldName": "typeSplit",
+              "properties": {"gap": 8}
+            }
+          ],
+          "fieldName": "casesTile",
+          "properties": {"type": "primary", "spacing": 12}
+        }
+      ],
+      "footer": [
+        {
+          "type": "template",
+          "label": "AEFI_REPORT_CASE_BUTTON",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "minAgeMonths",
+                    "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                  },
+                  {
+                    "key": "maxAgeMonths",
+                    "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                  }
+                ],
+                "name": "AEFI_CREATE",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "reportCase",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        }
+      ],
+      // This user's AEFI cases only (product decision, 2026-11-04).
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientCreatedBy",
+                "value": "{{singleton.loggedInUserUuid}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "hFReferral",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [
+          {"field": "additionalFields.fields.formType", "equals": "AEFI"}
+        ],
+        "relations": [],
+        "rootEntity": "HFReferralModel",
+        "groupByType": false,
+        "wrapperName": "aefiCases",
+        "searchConfig": {
+          "select": ["hFReferral"],
+          "primary": "hFReferral"
+        }
+      },
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "name": "AEFI_CREATE",
+      "order": 2,
+      "screenType": "FORM",
+      "project": "CMP-2026-10-27-011213",
+      "summary": true,
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "pages": [
+        {
+          "body": null,
+          "flow": "AEFI_CREATE",
+          "page": "aefiLocation",
+          "type": "object",
+          "label": "AEFI_LOCATION_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "AEFI_NEXT",
+              "format": "button",
+              "onAction": [],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "AEFI",
+          "heading": "AEFI_LOCATION_HEADING",
+          "summary": false,
+          "version": 1,
+          "properties": [
+            {
+              "type": "string",
+              "label": "AEFI_LOCATION_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "readOnly": true,
+              "required": false,
+              "fieldName": "dateOfReport",
+              "mandatory": false,
+              "systemDate": true,
+              "validations": [],
+              "includeInForm": true,
+              "includeInSummary": false
+            },
+            {
+              "type": "string",
+              // Fallback options; replaced from MDMS on a published config.
+              "enums": [
+                {"code": "TRANSIT_POST", "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"},
+                {
+                  "code": "OUTSIDE_HOUSEHOLD_PLACES",
+                  "name": "AEFI_LOCATION_TYPE_OUTSIDE_HOUSEHOLD_PLACES"
+                }
+              ],
+              "label": "AEFI_LOCATION_TYPE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "isMdms": true,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "locationType",
+              "mandatory": true,
+              "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_TYPE_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_TYPE_REQUIRED_ERROR",
+              "isMultiSelect": false,
+              "includeInSummary": false
+            },
+            {
+              "type": "dynamic",
+              "enums": [],
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "aefiLocationName",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_NAME_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_NAME_REQUIRED_ERROR",
+              "isMultiSelect": false,
+              "includeInSummary": false,
+              // Same sites as the Outside Household site lists: facilities
+              // of the picked type in the selected boundary or its parent.
+              "conditions": {
+                "localDataSource": {
+                  "select": ["facility", "address"],
+                  "primary": "facility",
+                  "resultModel": "facility",
+                  "filters": [
+                    {
+                      "root": "facility",
+                      "key": "usage",
+                      "operation": "equals",
+                      "value": "{{form.locationType}}"
+                    },
+                    {
+                      "root": "address",
+                      "key": "localityBoundaryCode",
+                      "operation": "in",
+                      "value": "{{singleton.boundaryAndParentCodes}}"
+                    }
+                  ],
+                  "displayKey": ["name"],
+                  "valueKey": "clientReferenceId",
+                  "labelControl": "locationNameLabel"
+                }
+              }
+            },
+            {
+              "type": "string",
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "readOnly": true,
+              "fieldName": "locationNameLabel",
+              "mandatory": false,
+              "validations": [],
+              "includeInForm": true,
+              "includeInSummary": false
+            },
+            {
+              "type": "string",
+              "label": "AEFI_REFERRED_BY_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "referredBy",
+              "mandatory": false,
+              "validations": [],
+              "isMultiSelect": false,
+              "includeInSummary": false
+            }
+          ],
+          "actionLabel": "AEFI_NEXT",
+          "description": "AEFI_LOCATION_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        },
+        {
+          "body": null,
+          "flow": "AEFI_CREATE",
+          "page": "childDetails",
+          "type": "object",
+          "label": "AEFI_CHILD_DETAILS_HEADING",
+          "order": 2,
+          "footer": [
+            {
+              "label": "AEFI_CONTINUE",
+              "format": "button",
+              "onAction": [],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "AEFI",
+          "heading": "AEFI_CHILD_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "properties": [
+            {
+              "type": "string",
+              "label": "AEFI_CHILD_NAME_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "childName",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_CHILD_NAME_REQUIRED_ERROR"
+                },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message": "AEFI_VALIDATION_MAX_200"
+                }
+              ],
+              "errorMessage": "AEFI_CHILD_NAME_REQUIRED_ERROR",
+              "isMultiSelect": false,
+              "textCapitalization": "words"
+            },
+            {
+              // Age range follows the campaign's delivery conditions, the
+              // same way the transit post child form does.
+              "type": "string",
+              "label": "AEFI_CHILD_DOB_OR_AGE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "dob",
+              "hidden": false,
+              "ageRange": {
+                "maxAge": "{{maxAgeMonths}}",
+                "minAge": "{{minAgeMonths}}",
+                "errorMessage": "AEFI_VALIDATION_INVALID_AGE"
+              },
+              "readOnly": false,
+              "required": true,
+              "fieldName": "childDob",
+              "mandatory": true,
+              "innerLabel": "AEFI_CHILD_DOB_LABEL",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_CHILD_DOB_OR_AGE_REQUIRED_ERROR"
+                },
+                {
+                  "type": "minAge",
+                  "value": "{{minAgeMonths}}",
+                  "message": "AEFI_VALIDATION_INVALID_AGE"
+                },
+                {
+                  "type": "maxAge",
+                  "value": "{{maxAgeMonths}}",
+                  "message": "AEFI_VALIDATION_INVALID_AGE"
+                }
+              ],
+              "errorMessage": "AEFI_CHILD_DOB_OR_AGE_REQUIRED_ERROR",
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "MALE", "name": "AEFI_ENUM_MALE"},
+                {"code": "FEMALE", "name": "AEFI_ENUM_FEMALE"}
+              ],
+              "label": "AEFI_CHILD_GENDER_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "select",
+              "hidden": false,
+              "isMdms": true,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "gender",
+              "mandatory": true,
+              "schemaCode": "common-masters.GenderType",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_CHILD_GENDER_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_CHILD_GENDER_REQUIRED_ERROR",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel": "AEFI_CONTINUE",
+          "description": "AEFI_CHILD_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        },
+        {
+          "body": null,
+          "flow": "AEFI_CREATE",
+          "page": "aefiCaseDetails",
+          "type": "object",
+          "label": "AEFI_CASE_DETAILS_HEADING",
+          "order": 3,
+          "footer": [
+            {
+              "label": "AEFI_CONTINUE",
+              "format": "button",
+              "onAction": [],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "AEFI",
+          "heading": "AEFI_CASE_DETAILS_HEADING",
+          "summary": false,
+          "version": 1,
+          "properties": [
+            {
+              "type": "dynamic",
+              "enums": [],
+              "label": "AEFI_VACCINE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "aefiVaccine",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_VACCINE_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_VACCINE_REQUIRED_ERROR",
+              "isMultiSelect": false,
+              "includeInSummary": false,
+              // The campaign's vaccines: product variants of this project's
+              // resources (same join as the stock screens).
+              "conditions": {
+                "localDataSource": {
+                  "select": ["projectResource", "productVariant"],
+                  "primary": "projectResource",
+                  "resultModel": "productVariant",
+                  "filters": [
+                    {
+                      "root": "projectResource",
+                      "key": "projectId",
+                      "operation": "equals",
+                      "value": "{{singleton.projectId}}"
+                    }
+                  ],
+                  // Same as the stock product picker: sku, falling back to
+                  // the variant id (the dropdown's value).
+                  "displayKey": ["sku"],
+                  "valueKey": "id",
+                  "labelControl": "vaccineAdministeredName"
+                }
+              }
+            },
+            {
+              // Vaccine name written by the dropdown; shown on the summary.
+              "type": "string",
+              "label": "AEFI_VACCINE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "readOnly": true,
+              "fieldName": "vaccineAdministeredName",
+              "mandatory": false,
+              "validations": [],
+              "includeInForm": true,
+              "includeInSummary": true
+            },
+            {
+              "type": "string",
+              "label": "AEFI_DATE_OF_VACCINATION_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "dateOfVaccination",
+              "mandatory": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_DATE_OF_VACCINATION_REQUIRED_ERROR"
+                },
+                // Not in the future.
+                {"type": "endDate", "value": "{{today}}"}
+              ],
+              "errorMessage": "AEFI_DATE_OF_VACCINATION_REQUIRED_ERROR"
+            },
+            {
+              "type": "string",
+              "label": "AEFI_DATE_OF_ONSET_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "dateOfOnset",
+              "mandatory": true,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_DATE_OF_ONSET_REQUIRED_ERROR"
+                },
+                // Not before the vaccination date, not in the future.
+                {"type": "startDate", "value": "{{dateOfVaccination}}"},
+                {"type": "endDate", "value": "{{today}}"}
+              ],
+              "errorMessage": "AEFI_DATE_OF_ONSET_REQUIRED_ERROR"
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "SERIOUS", "name": "AEFI_TYPE_SERIOUS"},
+                {"code": "MINOR", "name": "AEFI_TYPE_MINOR"}
+              ],
+              "label": "AEFI_TYPE_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "select",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "aefiType",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_TYPE_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_TYPE_REQUIRED_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "AEFI_DESCRIPTION_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "readOnly": false,
+              "required": true,
+              "fieldName": "description",
+              "mandatory": true,
+              "innerLabel": "AEFI_DESCRIPTION_PLACEHOLDER",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_DESCRIPTION_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_DESCRIPTION_REQUIRED_ERROR",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel": "AEFI_CONTINUE",
+          "description": "AEFI_CASE_DETAILS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false
+        }
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "AEFI_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "aefiCreation"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "HFREFERRAL",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "AEFI_ERROR_RECORD_DATA"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "data": [],
+            "name": "aefiAcknowledgement",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "AEFI_ERROR_NAVIGATION"}
+              }
+            ]
+          }
+        }
+      ],
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "aefiAcknowledgement",
+      "order": 3,
+      "screenType": "TEMPLATE",
+      "body": [
+        {
+          "type": "template",
+          "label": "AEFI_SUCCESS_HEADING",
+          "format": "panelCard",
+          "properties": {"type": "success"},
+          "description": "AEFI_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "AEFI_SUCCESS_REPORT_ANOTHER",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "minAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                    },
+                    {
+                      "key": "maxAgeMonths",
+                      "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    }
+                  ],
+                  "name": "AEFI_CREATE",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "reportAnother",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "AEFI_SUCCESS_BACK_TO_OVERVIEW",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "aefiOverview",
+                  "type": "TEMPLATE",
+                  "navigationMode": "popUntilAndReplace",
+                  "popUntilPageName": "aefiOverview"
+                }
+              }
+            ],
+            "fieldName": "backToOverview",
+            "mandatory": true,
+            "properties": {"type": "secondary"}
+          },
+          "primaryActionLabel": "AEFI_SUCCESS_REPORT_ANOTHER",
+          "secondaryActionLabel": "AEFI_SUCCESS_BACK_TO_OVERVIEW"
+        }
+      ],
+      "footer": [],
+      "header": [],
+      "navigateTo": null,
+      "initActions": [],
+      "submitCondition": null,
+      "preventScreenCapture": false,
+      "isSuccessorErrorScreen": true
+    }
+  ]
+};

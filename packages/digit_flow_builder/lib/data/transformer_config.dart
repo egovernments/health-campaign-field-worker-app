@@ -2274,5 +2274,43 @@ final jsonConfig = {
         }
       }
     }
+  },
+  // AEFI (Adverse Event Following Immunization) case report. Saved as an
+  // HFReferral marked formType=AEFI, so it syncs through the referral
+  // service; the referral inbox filters these records out.
+  "aefiCreation": {
+    "fallbackModel": "HFReferralModel",
+    "models": {
+      "HFReferralModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "name": "childDetails.childName",
+          "symptom": "__value:AEFI",
+          "localityCode": "__context:selectedBoundaryCode",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "formType": "__value:AEFI",
+            "dateOfReport": "aefiLocation.dateOfReport",
+            "locationType": "aefiLocation.locationType",
+            "locationClientReferenceId": "aefiLocation.aefiLocationName",
+            "locationName": "aefiLocation.locationNameLabel",
+            "referredBy": "aefiLocation.referredBy",
+            "gender": "childDetails.gender",
+            "dateOfBirth": "childDetails.childDob",
+            "vaccineAdministered": "aefiCaseDetails.aefiVaccine",
+            "vaccineAdministeredName":
+                "aefiCaseDetails.vaccineAdministeredName",
+            "dateOfVaccination": "aefiCaseDetails.dateOfVaccination",
+            "dateOfOnset": "aefiCaseDetails.dateOfOnset",
+            "aefiType": "aefiCaseDetails.aefiType",
+            "description": "aefiCaseDetails.description",
+            "boundaryCode": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
   }
 };

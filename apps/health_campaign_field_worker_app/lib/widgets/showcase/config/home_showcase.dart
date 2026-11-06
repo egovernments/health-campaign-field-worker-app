@@ -94,6 +94,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
   );
 
+  final reportAefi = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.reportAefi,
+  );
+
   final deleteAll = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.deleteAll,
   );

@@ -27,6 +27,49 @@ class FunctionRegistries {
     _registerViewTransactionFunctions();
     _registerDeliveryAgeFunctions();
     _registerLocationFunctions();
+    _registerCountFunctions();
+  }
+
+  /// `{{fn:countWhere(contextData, 'aefiType', 'SERIOUS')}}` counts the
+  /// items in a list whose entity has an `additionalFields` entry with the
+  /// given key and value. Used by the AEFI overview for its serious and
+  /// minor counts; `fn:length` gives the total.
+  ///
+  /// Each item can be an EntityModel, a map, or a wrapper item
+  /// (`{'HFReferralModel': entity, ...}`); every entity in a wrapper item is
+  /// checked. Returns 0 for anything that isn't a list.
+  void _registerCountFunctions() {
+    FunctionRegistry.register('countWhere', (args, stateData) {
+      final items = args.isNotEmpty ? args[0] : null;
+      if (items is! List) return 0;
+      final key = args.length > 1 ? args[1]?.toString() : null;
+      final expected = args.length > 2 ? args[2]?.toString() : null;
+      if (key == null || key.isEmpty) return 0;
+
+      bool matches(dynamic entity) {
+        Map<String, dynamic>? map;
+        if (entity is EntityModel) {
+          map = entity.toMap();
+        } else if (entity is Map) {
+          map = Map<String, dynamic>.from(entity);
+        }
+        final fields = (map?['additionalFields'] as Map?)?['fields'];
+        if (fields is! List) return false;
+        return fields.any((f) =>
+            f is Map &&
+            f['key']?.toString() == key &&
+            f['value']?.toString() == expected);
+      }
+
+      return items.where((item) {
+        if (item is EntityModel) return matches(item);
+        if (item is Map) {
+          if (item.containsKey('additionalFields')) return matches(item);
+          return item.values.whereType<EntityModel>().any(matches);
+        }
+        return false;
+      }).length;
+    });
   }
 
   /// `{{fn:joinLatLng(lat, lng, accuracy)}}` builds the "lat,lng,accuracy"
@@ -97,8 +140,7 @@ class FunctionRegistries {
         final raw = (dc.condition ?? '') as String;
         if (raw.isEmpty) continue;
         final normalized = raw.replaceAll(RegExp(r'\s+'), '');
-        final parts =
-            normalized.split(RegExp(r'&&|and', caseSensitive: false));
+        final parts = normalized.split(RegExp(r'&&|and', caseSensitive: false));
 
         for (final part in parts) {
           final rMin = ageRightMin.firstMatch(part);
@@ -710,7 +752,8 @@ class FunctionRegistries {
       return names.join(', ');
     });
 
-    FunctionRegistry.register('getInsufficientStockRequired', (args, stateData) {
+    FunctionRegistry.register('getInsufficientStockRequired',
+        (args, stateData) {
       final products = insufficientStockProducts();
       if (products.isEmpty) return '';
       return formatQty(sumField('required'));
@@ -775,8 +818,7 @@ class FunctionRegistries {
         return null;
       }
 
-      String? blankToNull(String? v) =>
-          (v == null || v.isEmpty) ? null : v;
+      String? blankToNull(String? v) => (v == null || v.isEmpty) ? null : v;
 
       final payload = <String, dynamic>{
         // Identity fields stay as required strings — these are always set on
@@ -835,8 +877,7 @@ class FunctionRegistries {
       if (mappedCodes.isEmpty) return false;
 
       final withinScope = mappedCodes.any((code) =>
-          scannedBoundary == code ||
-          scannedBoundary.startsWith('${code}_'));
+          scannedBoundary == code || scannedBoundary.startsWith('${code}_'));
       return !withinScope;
     });
   }

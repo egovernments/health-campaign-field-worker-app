@@ -484,6 +484,10 @@ class HomeShowcase {
     return 'HF_HOME_SHOWCASE_BENEFICIARY_LABEL';
   }
 
+  String get reportAefi {
+    return 'HOME_SHOWCASE_REPORT_AEFI';
+  }
+
   String get manageAttendance {
     return 'HF_HOME_SHOWCASE_MANAGE_ATTENDANCE';
   }
@@ -935,6 +939,8 @@ class Home {
   String get beneficiaryIdLabel => 'HOME_BENEFICIARY_ID_LABEL';
 
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
+
+  String get reportAefiLabel => 'HOME_REPORT_AEFI_LABEL';
 
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 

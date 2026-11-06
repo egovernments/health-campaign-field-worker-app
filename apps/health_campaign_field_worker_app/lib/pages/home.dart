@@ -51,6 +51,7 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../sampleJsonConfigs/attendance_flows.dart';
+import '../sampleJsonConfigs/aefi_flows.dart';
 import '../sampleJsonConfigs/closed_household.dart';
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
@@ -89,6 +90,7 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
+import '../widgets/local_data_dropdown/local_data_dropdown.dart';
 import '../widgets/localized.dart';
 import '../widgets/polio_group_vaccination/age_band_dropdown.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
@@ -341,6 +343,20 @@ class _HomePageState extends LocalizedState<HomePage> {
             schemaName: "REFER_BENEFICIARY", formControlName: "healthFacility");
       },
     );
+
+    // AEFI form dropdowns whose options come from the local database; the
+    // data source is configured on each field (conditions.localDataSource).
+    for (final fieldName in const ['aefiLocationName', 'aefiVaccine']) {
+      CustomComponentRegistry().registerBuilder(
+        fieldName,
+        (context, stateAccessor) {
+          return LocalDataDropdown(
+            schemaName: 'AEFI_CREATE',
+            formControlName: fieldName,
+          );
+        },
+      );
+    }
 
     CustomComponentRegistry().registerBuilder(
       'referralCycle',
@@ -2849,6 +2865,46 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      // AEFI case reporting (story #2299). Boundary first: the location
+      // dropdown lists the Outside Household sites of that boundary.
+      i18.home.reportAefiLabel: homeShowcaseData.reportAefi.buildWith(
+        child: HomeItemCard(
+          icon: Icons.report,
+          label: i18.home.reportAefiLabel,
+          onPressed: () async {
+            await context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) => _openModule(() async {
+                final moduleName =
+                    'hcm-aefi-${ctx.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'AEFI',
+                    sampleFlows: sampleAefiFlows,
+                    relationshipMappings: const [
+                      // Location name: sites and their address (boundary).
+                      RelationshipMapping(
+                          from: 'address',
+                          to: 'facility',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      // Vaccine: the project's resources and their variants.
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                    ],
+                  ),
+                );
+              }),
+            ));
+          },
+        ),
+      ),
       if (!isPolio)
         i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
           child: HomeItemCard(
@@ -3182,6 +3238,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      i18.home.reportAefiLabel: homeShowcaseData.reportAefi.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3219,6 +3276,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
       i18.home.beneficiaryReferralLabel,
+      i18.home.reportAefiLabel,
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
@@ -3235,6 +3293,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     final Map<String, String> labelToDeliveryMethod = {
       i18.home.beneficiaryLabel: isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION',
       i18.home.outsideHouseholdVaccinationLabel: 'OUTSIDEHOUSEHOLD',
+      // AEFI is reported in campaigns that run Outside Household delivery.
+      i18.home.reportAefiLabel: 'OUTSIDEHOUSEHOLD',
     };
 
     final List<String> filteredLabels = homeItemsLabel
@@ -3243,7 +3303,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            // TEMP: revert before PR — shows the AEFI card before the
+            // HOME_REPORT_AEFI_LABEL role-action exists in MDMS.
+            element == i18.home.reportAefiLabel)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .where((element) {

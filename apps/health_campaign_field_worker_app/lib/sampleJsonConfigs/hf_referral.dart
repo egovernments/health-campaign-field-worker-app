@@ -442,7 +442,11 @@ final dynamic sampleReferralFlows = {
       "description": "REFERRAL_INBOX_DESCRIPTION",
       "initActions": [],
       "wrapperConfig": {
-        "filters": [],
+        // AEFI cases are saved as HFReferral records (formType=AEFI); keep
+        // them out of the referral inbox.
+        "filters": [
+          {"field": "additionalFields.fields.formType", "notEquals": "AEFI"}
+        ],
         "relations": [],
         "rootEntity": "HFReferralModel",
         "groupByType": true,

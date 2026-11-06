@@ -398,6 +398,46 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return v;
   }
 
+  static final _dateBoundRef = RegExp(r'^\{\{\s*([A-Za-z0-9_]+)\s*\}\}$');
+
+  /// Earliest/latest date of a date field, from its `startDate`/`endDate`
+  /// validation. Besides a fixed epoch-ms number (unchanged behaviour), the
+  /// value can be `{{today}}` or `{{otherField}}` — another date field on
+  /// the same page, e.g. onset can't be before the vaccination date.
+  DateTime? _dateBound(String type, FormGroup form) {
+    final fixed = _safeTimestamp(type);
+    if (fixed != null) return DateTime.fromMillisecondsSinceEpoch(fixed);
+
+    final ref = _dateBoundField(type);
+    if (ref == null) return null;
+    if (ref == 'today') return DateTime.now();
+    if (!form.contains(ref)) return null;
+    return parseDateValue(form.control(ref).value);
+  }
+
+  /// The `{{name}}` in a date field's startDate/endDate validation, or null.
+  String? _dateBoundField(String type) {
+    final v = widget.schema.validations
+        ?.firstWhereOrNull((item) => item.type == type)
+        ?.value;
+    if (v is! String) return null;
+    return _dateBoundRef.firstMatch(v.trim())?.group(1);
+  }
+
+  /// Rebuilds [build] when a field that a date bound refers to changes, so
+  /// the picker's range follows it.
+  Widget _withDateBoundListener(FormGroup form, Widget Function() build) {
+    final refs = [_dateBoundField('startDate'), _dateBoundField('endDate')]
+        .whereType<String>()
+        .where((r) => r != 'today' && form.contains(r))
+        .toList();
+    if (refs.isEmpty) return build();
+    return ReactiveValueListenableBuilder<dynamic>(
+      formControlName: refs.first,
+      builder: (context, control, child) => build(),
+    );
+  }
+
   /// Handle `string` type formats
   Widget _buildStringType(FormGroup form) {
     final format = widget.schema.format;
@@ -505,24 +545,31 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         );
 
       case PropertySchemaFormat.date:
-        return JsonSchemaDatePickerBuilder(
-          isRequired: hasRequiredValidation(widget.schema.validations),
-          readOnly: _isReadOnly,
-          innerLabel:
-              translateIfPresent(widget.schema.innerLabel, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          label: _resolveLabel(widget.schema.label),
-          form: form,
-          formControlName: widget.formControlName,
-          start: _safeTimestamp("startDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(
-                  _safeTimestamp("startDate")!)
-              : null,
-          end: _safeTimestamp("endDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
-              : null,
-          validations: widget.schema.validations,
-          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        return _withDateBoundListener(
+          form,
+          () => JsonSchemaDatePickerBuilder(
+            isRequired: hasRequiredValidation(widget.schema.validations),
+            readOnly: _isReadOnly,
+            innerLabel:
+                translateIfPresent(widget.schema.innerLabel, localizations),
+            tooltipText:
+                translateIfPresent(widget.schema.tooltip, localizations),
+            label: _resolveLabel(widget.schema.label),
+            form: form,
+            formControlName: widget.formControlName,
+            // start: _safeTimestamp("startDate") != null
+            //     ? DateTime.fromMillisecondsSinceEpoch(
+            //         _safeTimestamp("startDate")!)
+            //     : null,
+            // end: _safeTimestamp("endDate") != null
+            //     ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
+            //     : null,
+            start: _dateBound("startDate", form),
+            end: _dateBound("endDate", form),
+            validations: widget.schema.validations,
+            helpText:
+                translateIfPresent(widget.schema.helpText, localizations),
+          ),
         );
 
       case PropertySchemaFormat.locality:
@@ -672,22 +719,29 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         );
 
       case PropertySchemaFormat.date:
-        return JsonSchemaDatePickerBuilder(
-          readOnly: _isReadOnly,
-          isRequired: hasRequiredValidation(widget.schema.validations),
-          label: _resolveLabel(widget.schema.label),
-          form: form,
-          formControlName: widget.formControlName,
-          start: _safeTimestamp("startDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(
-                  _safeTimestamp("startDate")!)
-              : null,
-          end: _safeTimestamp("endDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
-              : null,
-          validations: widget.schema.validations,
-          helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+        return _withDateBoundListener(
+          form,
+          () => JsonSchemaDatePickerBuilder(
+            readOnly: _isReadOnly,
+            isRequired: hasRequiredValidation(widget.schema.validations),
+            label: _resolveLabel(widget.schema.label),
+            form: form,
+            formControlName: widget.formControlName,
+            // start: _safeTimestamp("startDate") != null
+            //     ? DateTime.fromMillisecondsSinceEpoch(
+            //         _safeTimestamp("startDate")!)
+            //     : null,
+            // end: _safeTimestamp("endDate") != null
+            //     ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
+            //     : null,
+            start: _dateBound("startDate", form),
+            end: _dateBound("endDate", form),
+            validations: widget.schema.validations,
+            helpText:
+                translateIfPresent(widget.schema.helpText, localizations),
+            tooltipText:
+                translateIfPresent(widget.schema.tooltip, localizations),
+          ),
         );
 
       case PropertySchemaFormat.numeric:

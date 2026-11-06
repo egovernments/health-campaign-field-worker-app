@@ -293,7 +293,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     const moduleKey = 'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,'
         'CLOSEHOUSEHOLD,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,'
         'CHECKLIST,STOCK,LQA,INSIDEMONITORING,CLF,TRANSITPOST,'
-        'OUTSIDEHOUSEHOLD,HOUSEHOLDSTRATEGY,MISSEDCHILDREN';
+        'OUTSIDEHOUSEHOLD,HOUSEHOLDSTRATEGY,MISSEDCHILDREN,AEFI';
     final keys = moduleKey.split(',').map((e) => e.trim()).toList();
     final moduleNames =
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
