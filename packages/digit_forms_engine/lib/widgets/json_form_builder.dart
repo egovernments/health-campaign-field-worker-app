@@ -866,41 +866,104 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     final dividerColor =
         Theme.of(context).colorTheme.generic.divider;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...visibleEntries.asMap().entries.map((entry) {
-        final index = entry.key;
-        final mapEntry = entry.value;
+    // `dependentCards: "stacked"` on the page: dependent cards are compact
+    // and stacked close together under the question they belong to.
+    final bool stacked =
+        widget.schema.conditions?['dependentCards'] == 'stacked';
 
-        final subSchema = mapEntry.value;
-        final subName = mapEntry.key;
+    // `nestIn: <field>` on a field: it is drawn inside that field's card
+    // (the field must have `wrapInCard`), so a follow-up question's own
+    // dependent sits within it. Visible nested fields leave the top level.
+    String? nestParent(PropertySchema schema) {
+      final parent = schema.conditions?['nestIn'];
+      return parent is String && parent.isNotEmpty ? parent : null;
+    }
 
-        final field = JsonFormBuilder(
-          key: ValueKey(subName),
+    final visibleNames = visibleEntries.map((e) => e.key).toSet();
+    final nestedByParent = <String, List<MapEntry<String, PropertySchema>>>{};
+    for (final entry in visibleEntries) {
+      final parent = nestParent(entry.value);
+      if (parent != null && visibleNames.contains(parent)) {
+        (nestedByParent[parent] ??= []).add(entry);
+      }
+    }
+    final topLevelEntries = visibleEntries.where((entry) {
+      final parent = nestParent(entry.value);
+      return parent == null || !visibleNames.contains(parent);
+    }).toList();
+
+    Widget buildField(MapEntry<String, PropertySchema> entry) =>
+        JsonFormBuilder(
+          key: ValueKey(entry.key),
           pageName: widget.pageName,
           currentSchemaKey: widget.currentSchemaKey,
-          formControlName: subName,
-          schema: subSchema,
+          formControlName: entry.key,
+          schema: entry.value,
           components: widget.components,
           navigationParams: widget.navigationParams,
         );
 
-        final bool wrapInCard = subSchema.conditions?['wrapInCard'] == true;
-        final Widget fieldWidget = wrapInCard
-            ? DigitCard(
-                cardType: CardType.secondary,
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(
-                    spacer4 - 2, spacer4, spacer4 - 2, spacer4 - 2),
-                children: [field],
-              )
-            : field;
+    Widget dependentCard(Widget child) => DigitCard(
+          cardType: CardType.secondary,
+          width: double.infinity,
+          padding: stacked
+              ? const EdgeInsets.all(spacer3)
+              : const EdgeInsets.fromLTRB(
+                  spacer4 - 2, spacer4, spacer4 - 2, spacer4 - 2),
+          borderRadius:
+              stacked ? BorderRadius.circular(radius1) : null,
+          children: [child],
+        );
 
-        final isLast = index == visibleEntries.length - 1;
+    bool isCard(MapEntry<String, PropertySchema> entry) =>
+        entry.value.conditions?['wrapInCard'] == true;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...topLevelEntries.asMap().entries.map((entry) {
+        final index = entry.key;
+        final mapEntry = entry.value;
+        final subName = mapEntry.key;
+
+        final field = buildField(mapEntry);
+        final nested = nestedByParent[subName] ?? const [];
+
+        // The field followed by the fields nested in it.
+        final Widget content = nested.isEmpty
+            ? field
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  field,
+                  for (final child in nested) ...[
+                    SizedBox(height: stacked ? spacer3 : spacer4),
+                    isCard(child)
+                        ? dependentCard(buildField(child))
+                        : buildField(child),
+                  ],
+                ],
+              );
+
+        final bool wrapInCard = isCard(mapEntry);
+        final Widget fieldWidget =
+            wrapInCard ? dependentCard(content) : content;
+
+        final isLast = index == topLevelEntries.length - 1;
         final nextIsDependent = !isLast &&
-            visibleEntries[index + 1].value.visibilityCondition != null;
+            topLevelEntries[index + 1].value.visibilityCondition != null;
+
+        // Stacked dependents: 12 from the question to its first card, 8
+        // between the cards.
+        if (stacked && !isLast && isCard(topLevelEntries[index + 1])) {
+          return Padding(
+            padding:
+                EdgeInsets.only(bottom: wrapInCard ? spacer2 : spacer3),
+            child: fieldWidget,
+          );
+        }
 
         if (showDividers && !isLast && !nextIsDependent) {
           return Column(

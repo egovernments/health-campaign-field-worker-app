@@ -357,6 +357,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       );
     }
+    // Site picker of Manage Stock's "Record AEFI Forms and Kits" form.
+    CustomComponentRegistry().registerBuilder(
+      'aefiStockLocationName',
+      (context, stateAccessor) {
+        return const LocalDataDropdown(
+          schemaName: 'aefiFormsAndKits',
+          formControlName: 'aefiStockLocationName',
+        );
+      },
+    );
 
     CustomComponentRegistry().registerBuilder(
       'referralCycle',
@@ -2631,6 +2641,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                     config: FlowModuleConfig(
                       schemaKey: 'STOCK',
                       sampleFlows: samplePolioStockDetailsFlows,
+                      // "Record AEFI Forms and Kits" lists the sites
+                      // (facilities) of the boundary through their address.
+                      relationshipMappings: const [
+                        RelationshipMapping(
+                            from: 'address',
+                            to: 'facility',
+                            localKey: 'relatedClientReferenceId',
+                            foreignKey: 'clientReferenceId'),
+                      ],
                     ),
                   );
                 }),
@@ -3363,7 +3382,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-aefi,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)

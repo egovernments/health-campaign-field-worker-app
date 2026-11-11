@@ -123,6 +123,7 @@ class Constants {
     'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
+    'hcm-aefi',
     'hcm-attendance',
     'hcm-dashboard',
     missedPlaceLocalizationModule
@@ -136,6 +137,7 @@ class Constants {
     'hcm-beneficiary',
     'hcm-peer-to-peer',
     'hcm-transit-post',
+    'hcm-aefi',
     'hcm-attendance',
     'hcm-dashboard'
   ];
@@ -149,6 +151,7 @@ class Constants {
     'hcm-scanner',
     'hcm-peer-to-peer',
     'hcm-transit-post',
+    'hcm-aefi',
     'hcm-attendance',
     'hcm-dashboard',
     missedPlaceLocalizationModule

@@ -2312,5 +2312,49 @@ final jsonConfig = {
         }
       }
     }
+  },
+  // AEFI forms and kits (adrenaline) available and used at a site, from
+  // Manage Stock (story #2299, section F). A UserAction like the polio vial
+  // records, marked form=AEFI_FORMS_KITS and tied to the site by its
+  // clientReferenceId. The form captures no GPS, so the coordinates are 0.
+  // Counts left blank stay blank, so the dashboard can show "not reported".
+  "aefiFormsAndKits": {
+    "fallbackModel": "UserActionModel",
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:LOCATION_CAPTURE",
+          "latitude": "__value:0.0",
+          "longitude": "__value:0.0",
+          "locationAccuracy": "__value:0.0",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "form": "__value:AEFI_FORMS_KITS",
+            "dateOfRecord": "aefiStockLocation.dateOfRecord",
+            "locationType": "aefiStockLocation.locationType",
+            "locationClientReferenceId":
+                "aefiStockLocation.aefiStockLocationName",
+            "locationName": "aefiStockLocation.locationNameLabel",
+            "recordedBy": "aefiStockLocation.recordedBy",
+            "formAvailable": "aefiFormsAndKitsDetails.formAvailable",
+            "formAvailableQty": "aefiFormsAndKitsDetails.formAvailableQty",
+            "formUsed": "aefiFormsAndKitsDetails.formUsed",
+            "formUsedQty": "aefiFormsAndKitsDetails.formUsedQty",
+            "kitAvailable": "aefiFormsAndKitsDetails.kitAvailable",
+            "kitAvailableQty": "aefiFormsAndKitsDetails.kitAvailableQty",
+            "kitUsed": "aefiFormsAndKitsDetails.kitUsed",
+            "kitUsedQty": "aefiFormsAndKitsDetails.kitUsedQty",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
   }
 };

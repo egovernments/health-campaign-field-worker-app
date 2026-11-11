@@ -39,6 +39,24 @@ final dynamic samplePolioStockDetailsFlows = {
           ],
           "fieldName": "returnedMenuCard",
           "description": "POLIO_STOCK_RECORD_RETURNED_VIAL_DESCRIPTION"
+        },
+        {
+          "icon": "MedicalServices",
+          "type": "template",
+          "format": "menu_card",
+          "heading": "AEFI_STOCK_RECORD_FORMS_KITS_HEADING",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [],
+                "name": "aefiFormsAndKits",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "aefiFormsAndKitsMenuCard",
+          "description": "AEFI_STOCK_RECORD_FORMS_KITS_DESCRIPTION"
         }
       ],
       "name": "vialDetailsMenu",
@@ -633,6 +651,462 @@ final dynamic samplePolioStockDetailsFlows = {
       ],
       "name": "returnedVialsSuccess",
       "order": 5,
+      "footer": [],
+      "header": [],
+      "heading": "",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": []
+    },
+    // Record AEFI Forms and Kits (story #2299, section F): pick the site,
+    // then whether AEFI forms and kits (adrenaline) are available and used.
+    // A Yes opens an optional count and, for "available", the matching
+    // "used" question. Saved as a UserAction (form AEFI_FORMS_KITS) like the
+    // vial records above.
+    {
+      "name": "aefiFormsAndKits",
+      "order": 6,
+      "pages": [
+        {
+          "page": "aefiStockLocation",
+          "type": "object",
+          "label": "AEFI_STOCK_LOCATION_HEADING",
+          "order": 1,
+          "description": "AEFI_STOCK_LOCATION_DESCRIPTION",
+          "actionLabel": "AEFI_NEXT",
+          "properties": [
+            {
+              "type": "string",
+              "label": "AEFI_LOCATION_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "readOnly": true,
+              "required": false,
+              "fieldName": "dateOfRecord",
+              "mandatory": false,
+              "systemDate": true,
+              "validations": [],
+              "includeInForm": true
+            },
+            {
+              "type": "string",
+              // Fallback options; replaced from MDMS on a published config.
+              "enums": [
+                {
+                  "code": "TRANSIT_POST",
+                  "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"
+                },
+                {
+                  "code": "OUTSIDE_HOUSEHOLD_PLACES",
+                  "name": "AEFI_LOCATION_TYPE_OUTSIDE_HOUSEHOLD_PLACES"
+                }
+              ],
+              "label": "AEFI_LOCATION_TYPE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "dropdown",
+              "isMdms": true,
+              "required": true,
+              "fieldName": "locationType",
+              "mandatory": true,
+              "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_TYPE_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_TYPE_REQUIRED_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "dynamic",
+              "enums": [],
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "required": true,
+              // Own field name: custom builders are registered by field
+              // name, and this one reads the aefiFormsAndKits schema.
+              "fieldName": "aefiStockLocationName",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_NAME_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_NAME_REQUIRED_ERROR",
+              "isMultiSelect": false,
+              // Same sites as the AEFI case location: facilities of the
+              // picked type in the selected boundary or its parent.
+              "conditions": {
+                "localDataSource": {
+                  "select": ["facility", "address"],
+                  "primary": "facility",
+                  "resultModel": "facility",
+                  "filters": [
+                    {
+                      "root": "facility",
+                      "key": "usage",
+                      "operation": "equals",
+                      "value": "{{form.locationType}}"
+                    },
+                    {
+                      "root": "address",
+                      "key": "localityBoundaryCode",
+                      "operation": "in",
+                      "value": "{{singleton.boundaryAndParentCodes}}"
+                    }
+                  ],
+                  "displayKey": ["name"],
+                  "valueKey": "clientReferenceId",
+                  "labelControl": "locationNameLabel"
+                }
+              }
+            },
+            {
+              // Site name written by the dropdown.
+              "type": "string",
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "readOnly": true,
+              "fieldName": "locationNameLabel",
+              "mandatory": false,
+              "validations": [],
+              "includeInForm": true
+            },
+            {
+              "type": "string",
+              "label": "AEFI_STOCK_RECORDED_BY_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "recordedBy",
+              "mandatory": false,
+              "validations": []
+            }
+          ]
+        },
+        {
+          "page": "aefiFormsAndKitsDetails",
+          "type": "object",
+          "label": "AEFI_STOCK_RECORD_FORMS_KITS_HEADING",
+          "order": 2,
+          "description": "AEFI_STOCK_RECORD_FORMS_KITS_DESCRIPTION",
+          "actionLabel": "AEFI_SUBMIT",
+          // As in the prototype: a line between the forms and kits groups,
+          // and the cards a Yes opens stacked close under their question.
+          "conditions": {"showDividers": true, "dependentCards": "stacked"},
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "AEFI_ENUM_YES"},
+                {"code": "NO", "name": "AEFI_ENUM_NO"}
+              ],
+              "label": "AEFI_STOCK_FORM_AVAILABLE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "formAvailable",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO"
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_FORM_AVAILABLE_QTY_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "formAvailableQty",
+              "conditions": {"wrapInCard": true},
+              "mandatory": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "AEFI_ENUM_YES"},
+                {"code": "NO", "name": "AEFI_ENUM_NO"}
+              ],
+              "label": "AEFI_STOCK_FORM_USED_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "formUsed",
+              "conditions": {"wrapInCard": true},
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_FORM_USED_QTY_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "formUsedQty",
+              // Inside the "used" card, under its Yes / No.
+              "conditions": {"wrapInCard": true, "nestIn": "formUsed"},
+              "mandatory": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formUsed=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "AEFI_ENUM_YES"},
+                {"code": "NO", "name": "AEFI_ENUM_NO"}
+              ],
+              "label": "AEFI_STOCK_KIT_AVAILABLE_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "kitAvailable",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO"
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_KIT_AVAILABLE_QTY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "kitAvailableQty",
+              "conditions": {"wrapInCard": true},
+              "mandatory": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "AEFI_ENUM_YES"},
+                {"code": "NO", "name": "AEFI_ENUM_NO"}
+              ],
+              "label": "AEFI_STOCK_KIT_USED_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "kitUsed",
+              "conditions": {"wrapInCard": true},
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_KIT_USED_QTY_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "kitUsedQty",
+              "conditions": {"wrapInCard": true, "nestIn": "kitUsed"},
+              "mandatory": false,
+              "validations": [
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitUsed=='YES'"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "version": 1,
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "POLIO_STOCK_ERROR_FETCH_CONFIG"}
+              }
+            ],
+            "configName": "aefiFormsAndKits"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "AEFI_STOCK_ERROR_RECORD"}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "name": "aefiFormsAndKitsSuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "POLIO_STOCK_ERROR_NAVIGATION"}
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {}
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "AEFI_STOCK_SUCCESS_HEADING",
+          "format": "panelCard",
+          "fieldName": "successCard",
+          "properties": {"type": "success"},
+          "description": "AEFI_STOCK_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "AEFI_STOCK_RECORD_AGAIN",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "aefiFormsAndKits",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "recordAgainButton"
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_HOME",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {"name": "HOME", "type": "HOME"}
+              }
+            ],
+            "fieldName": "backToHomeButton"
+          }
+        }
+      ],
+      "name": "aefiFormsAndKitsSuccess",
+      "order": 7,
       "footer": [],
       "header": [],
       "heading": "",

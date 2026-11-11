@@ -383,10 +383,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
       // Cache permission handler localizations for the SELECTED locale only,
       // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
-      // which the boundary page opens before any home card loads it.
+      // which the boundary page opens before any home card loads it, and the
+      // AEFI strings (home card, AEFI flow, Manage Stock forms and kits), so
+      // they don't wait for a fetch when those screens first open.
       final permHandlerModule = 'hcm-permissionhandler-$projectReferenceId';
       final missedPlaceModule = missedPlaceProjectModule(projectReferenceId);
-      for (final module in [permHandlerModule, missedPlaceModule]) {
+      for (final module in [
+        permHandlerModule,
+        missedPlaceModule,
+        'hcm-aefi',
+      ]) {
         try {
           final localResults =
               await LocalizationLocalRepository().fetchLocalization(
@@ -503,7 +509,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       locBloc.add(LocalizationEvent.onLoadLocalization(
         module:
             '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
-            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule',
+            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule,'
+            'hcm-aefi',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,
