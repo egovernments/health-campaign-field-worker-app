@@ -407,15 +407,19 @@ class _LatLngBuilderStatefulWrapperState
     return _t(loc, 'LOCATION_ACCURACY_M', '{} m', value);
   }
 
-  /// Save rule with the save threshold in bold: "You can save once accuracy
-  /// is **5 m or less**." or, with a popup timer, "You can save once accuracy
-  /// is **5 m or less**, or when the timer ends."
+  /// Save rule with the save threshold in bold. A reading within the
+  /// threshold is saved automatically, and the popup timer's countdown is
+  /// not shown, so the text doesn't promise a timer: "Your location is saved
+  /// automatically once accuracy is **5 m or less**." With a popup timer it
+  /// adds that it can be saved after a short wait if accuracy doesn't get
+  /// there. The English here is only the fallback; the shown text comes from
+  /// these keys in localisation (`hcm-common`).
   TextSpan _saveRuleSpan(FormLocalization loc, TextStyle boldStyle) {
     final template = widget.saveEnabledAfter != null
         ? _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_TIMER',
-            'You can save once accuracy is {save}, or when the timer ends.')
+            'Your location is saved automatically once accuracy is {save}. If it doesn\'t get there, you can save it after a short wait.')
         : _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_GOOD',
-            'You can save once accuracy is {save}.');
+            'Your location is saved automatically once accuracy is {save}.');
     final save = _t(loc, 'LOCATION_ACCURACY_OR_LESS', '{} or less',
         _formatAccuracy(loc, widget.accuracyThreshold));
     final parts = template.split('{save}');

@@ -7,6 +7,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/checkbox_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -121,6 +122,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final phs = schema.descriptionPlaceHolders;
     if (phs == null || phs.isEmpty) return translated;
     return _applyPlaceHolders(translated, phs);
+  }
+
+  /// Pin tag under the page description naming where the form applies, e.g.
+  /// the boundary a missed place is added under. Set by
+  /// `conditions.headerTag` on the page; `{{navigation.<key>}}` is resolved
+  /// and the value translated, so a boundary code shows its name. Nothing is
+  /// shown when it resolves to empty or stays unresolved.
+  List<Widget> _buildHeaderTag(PropertySchema schema) {
+    final template = schema.conditions?['headerTag'];
+    if (template is! String || template.trim().isEmpty) return const [];
+    final value = _resolvePlaceholderValue(template).trim();
+    if (value.isEmpty || value.contains('{{')) return const [];
+    final colors = Theme.of(context).colorTheme;
+    return [
+      const SizedBox(height: spacer2),
+      Tag(
+        label: localizations.translate(value),
+        type: TagType.monochrome,
+        isIcon: true,
+        isStroke: true,
+        borderColor: colors.primary.primary2,
+        customIcon: Icon(
+          Icons.location_on_outlined,
+          size: spacer4,
+          color: colors.primary.primary2,
+        ),
+        customTextStyle: Theme.of(context)
+            .digitTextTheme(context)
+            .bodyS
+            .copyWith(color: colors.primary.primary2),
+      ),
+    ];
   }
 
   /// Replaces `{KEY}` tokens with resolved placeholder values.
@@ -933,6 +966,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                               .secondary),
                                 ),
                               ],
+                              ..._buildHeaderTag(schema),
                             ],
                           ),
                         ),
@@ -988,6 +1022,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                   .secondary),
                                     ),
                                   ],
+                                  ..._buildHeaderTag(schema),
                                   if (schema.conditions?['infoCardText'] !=
                                       null) ...[
                                     const SizedBox(height: spacer2),
