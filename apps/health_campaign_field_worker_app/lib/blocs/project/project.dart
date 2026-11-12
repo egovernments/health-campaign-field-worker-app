@@ -1419,8 +1419,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
+    // Missed places are downloaded only for the roles in MDMS
+    // HCM.ROLES_FOR_MISSED_PLACES (fetched above), the same roles the
+    // boundary page lets add one.
     final userLocationRemote = userLocationRemoteRepository;
-    if (userLocationRemote != null) {
+    if (userLocationRemote != null && await _handlesMissedPlaces()) {
       try {
         reportSyncProgress('newSettlement');
         await NewSettlementDownsync(
@@ -1470,6 +1473,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
 
     return userObject.roles.any((role) => stockRoleCodes.contains(role.code));
+  }
+
+  /// Whether the logged-in user holds a role listed in MDMS
+  /// `HCM.ROLES_FOR_MISSED_PLACES`, saved by [_handleProjectSelection].
+  ///
+  /// Gates the missed-place download. Returns false when the user can't be
+  /// read or no roles are saved, so the download is skipped rather than run
+  /// for every role.
+  Future<bool> _handlesMissedPlaces() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return false;
+
+    final missedPlaceRoles = AppSharedPreferences().missedPlaceRoles.toSet();
+    return userObject.roles
+        .any((role) => missedPlaceRoles.contains(role.code));
   }
 
   /// Silently downloads dispatched stock from server without UI dialogs.
