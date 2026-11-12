@@ -157,7 +157,7 @@ class Constants {
   /// MISSED_PLACE_* strings: adding a missed place on boundary selection, its
   /// create form, and the download error on project selection.
   static const String missedPlaceLocalizationModule =
-      'hcm-base-missedplace-polio';
+      'hcm-missedplace';
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';

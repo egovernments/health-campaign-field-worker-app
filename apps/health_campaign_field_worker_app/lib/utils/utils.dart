@@ -157,6 +157,15 @@ bool isPolioStyleCampaign(String? projectType) {
   return polioStyleProjectTypes.any(type.contains);
 }
 
+/// Localization module holding the home card labels for a project type,
+/// e.g. `hcm-home-polio`. Null when the project has no type, so callers
+/// skip it instead of asking for `hcm-home-`.
+String? homeProjectTypeModule(String? projectType) {
+  final type = projectType?.trim().toLowerCase();
+  if (type == null || type.isEmpty) return null;
+  return 'hcm-home-$type';
+}
+
 String maskString(String input) {
   // Define the character to use for masking (e.g., "*")
   const maskingChar = '*';
