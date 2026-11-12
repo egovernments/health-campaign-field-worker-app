@@ -16,6 +16,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "styling": {
               "alignment": "center",
               "iconPosition": "top",
+              "iconSize": 32,
               "elevated": true
             },
             "onAction": [
@@ -41,6 +42,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
             "styling": {
               "alignment": "center",
               "iconPosition": "top",
+              "iconSize": 32,
               "elevated": true
             },
             "onAction": [

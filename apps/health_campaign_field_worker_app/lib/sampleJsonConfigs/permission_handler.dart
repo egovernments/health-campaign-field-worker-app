@@ -258,7 +258,7 @@ final dynamic permission_handler_config = {
                         "mainAxisSize": "min"
                       },
                       "children": [
-                        {"format": "icon", "value": "Send"},
+                        {"format": "icon", "value": "share"},
                         {
                           "format": "column",
                           "expanded": true,
@@ -310,7 +310,7 @@ final dynamic permission_handler_config = {
                         "mainAxisSize": "min"
                       },
                       "children": [
-                        {"format": "icon", "value": "PermScanWifi"},
+                        {"format": "icon", "value": "Share"},
                         {
                           "format": "column",
                           "expanded": true,

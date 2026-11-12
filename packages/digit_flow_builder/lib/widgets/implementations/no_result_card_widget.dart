@@ -82,6 +82,11 @@ class NoResultCard extends StatelessWidget {
   final AlignmentGeometry align;
   final double padding;
 
+  /// Height of the original `no_result.svg`. Every illustration is drawn at
+  /// this height, so a larger one (such as `no_result_generic.svg`) shows at
+  /// the same size instead of its own.
+  static const double imageHeight = 128;
+
   const NoResultCard({
     super.key,
     this.align = Alignment.center,
@@ -105,7 +110,7 @@ class NoResultCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset(noResultSvg),
+                SvgPicture.asset(noResultSvg, height: imageHeight),
                 const SizedBox(height: spacer2),
                 Text(
                   label ?? '',
