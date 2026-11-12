@@ -3,6 +3,46 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'date_util_attendance.dart';
 
 class AttendanceUtils {
+  /// Reads `enrollmentDate` or `denrollmentDate` from an attendee, which
+  /// comes either as an AttendeeModel or as a wrapper Map
+  /// `{entity: AttendeeModel, ...}` (the field may also be spread onto the
+  /// Map). Returns null when it's missing or unreadable.
+  static int? _attendeeDate(dynamic item, {required bool enrollment}) {
+    dynamic read(dynamic source) {
+      if (source is Map) {
+        return source[enrollment ? 'enrollmentDate' : 'denrollmentDate'];
+      }
+      try {
+        return enrollment
+            ? (source as dynamic).enrollmentDate
+            : (source as dynamic).denrollmentDate;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    var raw = read(item);
+    if (raw == null && item is Map && item['entity'] != null) {
+      raw = read(item['entity']);
+    }
+    if (raw == null) return null;
+    return raw is int ? raw : int.tryParse(raw.toString());
+  }
+
+  /// Whether an attendee can be marked on [dayMs]: enrolled on or before
+  /// that day, and not de-enrolled yet. A missing date doesn't exclude.
+  static bool isAttendeeActiveOn(dynamic item, int dayMs) {
+    final day = DateTime.fromMillisecondsSinceEpoch(dayMs);
+    final nextDayStart =
+        DateTime(day.year, day.month, day.day + 1).millisecondsSinceEpoch;
+    final enrolled = _attendeeDate(item, enrollment: true);
+    if (enrolled != null && enrolled >= nextDayStart) return false;
+
+    final deEnrolled = _attendeeDate(item, enrollment: false);
+    return deEnrolled == null ||
+        deEnrolled >= DateTime.now().millisecondsSinceEpoch;
+  }
+
   // Helper function matching hasLogWithType logic
   static bool hasLogWithType(attendanceLog, DateTime date, String type) {
     final logTime = type == 'ENTRY'

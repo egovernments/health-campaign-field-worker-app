@@ -704,33 +704,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         return (logTime == entryTime || logTime == exitTime);
       }).toList();
 
-      // Drop de-enrolled attendees. The CRUD wrapper (WrapperBuilder) hands
-      // us Maps shaped like {entity: AttendeeModel, individual: [...],
-      // <mappedFields>: ...} — `denrollmentDate` is not spread onto the top
-      // level, it lives on the underlying AttendeeModel under `entity`. Try
-      // both shapes so the filter still works if this ever changes.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      items = items.where((item) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            return true;
-          }
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Keep only attendees who can be marked on the selected date:
+      // enrolled on or before it (someone enrolled from a later date can't
+      // be marked yet) and not de-enrolled. The CRUD wrapper hands these as
+      // Maps {entity: AttendeeModel, individual: [...], ...};
+      // AttendanceUtils.isAttendeeActiveOn reads both shapes.
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      items = items
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, markDay))
+          .toList();
 
       items = items.map((item) {
         if (item is Map && item['individualId'] != null) {
@@ -816,24 +798,14 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      // Match the render-side drop in todayAttendeesList: de-enrolled
-      // attendees are hidden from the marking list, so counting the raw
-      // `attendees` here would lock Submit forever (collectionLength can
-      // never reach the raw count). Keep only actives.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      final attendees =
-          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
-        dynamic raw;
-        try {
-          raw = (a as dynamic).denrollmentDate;
-        } catch (_) {
-          return true;
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Match the render-side drop in todayAttendeesList: attendees not yet
+      // enrolled on the selected date, or de-enrolled, are hidden from the
+      // marking list, so counting the raw `attendees` here would lock Submit
+      // forever (collectionLength can never reach the raw count).
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
+          .where((a) => AttendanceUtils.isAttendeeActiveOn(a, markDay))
+          .toList();
       final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       // Filter logs for the selected entry and exit times that are not yet uploaded
@@ -1036,32 +1008,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       final list = args.first;
       if (list is! Iterable) return 0;
       final nowMs = DateTime.now().millisecondsSinceEpoch;
-      var count = 0;
-      for (final item in list) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            count++;
-            continue;
-          }
-        }
-        if (raw == null) {
-          count++;
-          continue;
-        }
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null || deDate >= nowMs) count++;
-      }
-      return count;
+      return list
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, nowMs))
+          .length;
     });
 
     FunctionRegistry.register('isLogNotMarked', (args, stateData) {
