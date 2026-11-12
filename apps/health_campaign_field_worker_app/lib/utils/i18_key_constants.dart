@@ -685,7 +685,7 @@ class Login {
 
   String get labelText => 'LOGIN_LABEL_TEXT';
 
-  String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
+  String get userNamePlaceholder => 'USERNAME_PLACEHOLDER';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
   String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';

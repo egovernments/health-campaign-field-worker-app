@@ -149,13 +149,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       validationMessages: {
                         "required": (control) {
                           return localizations.translate(
-                            '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                            '${i18.login.userNamePlaceholder}_IS_REQUIRED',
                           );
                         },
                       },
                       builder: (field) => LabeledField(
                         label: localizations.translate(
-                          i18.login.userIdPlaceholder,
+                          i18.login.userNamePlaceholder,
                         ),
                         capitalizedFirstLetter: false,
                         isRequired: true,
@@ -315,12 +315,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: '',
+          value: 'USR-553176',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: '',
+          value: 'eGov@123',
         ),
         _privacyCheck: FormControl<bool>(
           value: false,
