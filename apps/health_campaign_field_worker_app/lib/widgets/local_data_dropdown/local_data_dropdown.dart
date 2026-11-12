@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 
 /// A form dropdown whose options are read from the local database.
@@ -66,6 +67,11 @@ class LocalDataDropdown extends LocalizedStatefulWidget {
 class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
   static final _formRef = RegExp(r'^\{\{\s*form\.([^}\s]+)\s*\}\}$');
 
+  /// True while a filter value is unresolved (e.g. a `{{form.<field>}}` it
+  /// depends on is still empty), so there is nothing to search yet and the
+  /// dropdown stays disabled.
+  bool _dependencyMissing = true;
+
   /// Filters (resolved) used for the last search, to search again only when
   /// a dependency changes.
   String? _searchedSignature;
@@ -120,7 +126,13 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
               isRequired: isRequired,
               label: label != null ? localizations.translate(label) : '',
               child: Dropdown(
-                readOnly: isReadOnly || _items.isEmpty,
+                // Enabled once its filters are known, even with no results,
+                // so the user can open it and see "No options available".
+                readOnly: isReadOnly ||
+                    _dependencyMissing ||
+                    (_loading && _items.isEmpty),
+                emptyItemText:
+                    localizations.translate(i18.common.noOptionsAvailable),
                 // A new copy on every build: DigitDropdown.didUpdateWidget
                 // clears its text when it gets the same option object as
                 // last build, so a later change elsewhere on the page (e.g.
@@ -173,6 +185,8 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
         value: value,
       ));
     }
+
+    _dependencyMissing = dependencyMissing;
 
     final signature = dependencyMissing
         ? '__missing__'

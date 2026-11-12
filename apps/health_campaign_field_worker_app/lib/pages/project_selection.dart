@@ -6,9 +6,9 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:sync_service/utils/utils.dart' as sync_utils;
@@ -392,6 +392,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         permHandlerModule,
         missedPlaceModule,
         'hcm-aefi',
+        'hcm-stock',
       ]) {
         try {
           final localResults =
@@ -416,7 +417,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 '(${localResults.length} messages for $selectedLocale)');
           }
         } catch (e) {
-          debugPrint('error caching $module localization for $selectedLocale: $e');
+          debugPrint(
+              'error caching $module localization for $selectedLocale: $e');
         }
       }
 
@@ -510,7 +512,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         module:
             '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
             '${Constants.missedPlaceLocalizationModule},$missedPlaceModule,'
-            'hcm-aefi',
+            'hcm-aefi,hcm-stock',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,

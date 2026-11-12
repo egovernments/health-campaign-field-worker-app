@@ -367,6 +367,8 @@ class Common {
 
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
+  String get noOptionsAvailable => 'NO_OPTIONS_AVAILABLE';
+
   String get maxBoundarySelectionReached =>
       'CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED';
 
