@@ -1,3 +1,7 @@
+## Unreleased
+
+- `menu_card`: the `styling.elevated` drop shadow is now visible. The single 16% shadow blurred over 8 px washed out on the grey page background; it is now a tight edge shadow plus a wider, lighter lift shadow, both using `text.primary` and spacer tokens
+
 ## 0.2.3
 
 - `action_popup`: footer buttons whose `visible` rule is false are dropped instead of cast to `DigitButton`, so hiding a popup button (e.g. Skip when the beneficiary ID pool is empty) no longer crashes the popup

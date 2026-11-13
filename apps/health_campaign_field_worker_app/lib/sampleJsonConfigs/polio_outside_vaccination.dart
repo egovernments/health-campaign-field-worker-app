@@ -1899,6 +1899,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "properties": {
                     "size": "medium",
                     "type": "secondary",
+                    "shadow": true,
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
                   }
@@ -2410,6 +2411,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                   "properties": {
                     "size": "medium",
                     "type": "secondary",
+                    "shadow": true,
                     "mainAxisSize": "max",
                     "mainAxisAlignment": "center"
                   }

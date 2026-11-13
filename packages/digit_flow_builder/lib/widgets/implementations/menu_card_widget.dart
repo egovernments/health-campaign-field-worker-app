@@ -286,12 +286,21 @@ class _StyledMenuCardState extends State<_StyledMenuCard> {
                         color: theme.colorTheme.primary.primary1,
                       )
                     : null,
+                // Two layers: a tight shadow that defines the bottom edge
+                // and a wider, lighter one that lifts the card. A single
+                // 16% shadow blurred over 8 px washed out on the grey page
+                // background and was not visible.
                 boxShadow: widget.elevated
                     ? [
                         BoxShadow(
-                          color: theme.colorTheme.text.primary.withOpacity(.16),
+                          color: theme.colorTheme.text.primary.withOpacity(.20),
                           offset: const Offset(0, spacer1 / 2),
-                          blurRadius: spacer2,
+                          blurRadius: spacer1,
+                        ),
+                        BoxShadow(
+                          color: theme.colorTheme.text.primary.withOpacity(.12),
+                          offset: const Offset(0, spacer1),
+                          blurRadius: spacer3,
                         ),
                       ]
                     : null,
