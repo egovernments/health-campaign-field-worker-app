@@ -150,7 +150,12 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
       tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
     } else {
-      tooltipWidth = maxTextWidth + tooltipTextPadding;
+      // The box is drawn at least 210 wide (see `max(tooltipWidth, 210)` in
+      // build), so position it with that same width. Otherwise short
+      // descriptions are placed as a narrow box but drawn wider, and run off
+      // the right edge of the screen on right-side targets.
+      tooltipWidth = min(max(maxTextWidth + tooltipTextPadding, 210),
+          widget.screenSize!.width - tooltipScreenEdgePadding);
     }
   }
 
@@ -450,9 +455,27 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      DigitButton(label: widget.skipTitle ?? 'Skip', onPressed: (){if(widget.onSkip != null){widget.onSkip!();}}, type: DigitButtonType.secondary, size: DigitButtonSize.medium,),
+                                      DigitButton(
+                                        label: widget.skipTitle ?? 'Skip',
+                                        onPressed: () {
+                                          if (widget.onSkip != null) {
+                                            widget.onSkip!();
+                                          }
+                                        },
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.medium,
+                                      ),
                                       const SizedBox(width: spacer2),
-                                      DigitButton(label: widget.nextTitle ?? 'Next', onPressed: (){if(widget.onNext != null){widget.onNext!();}}, type: DigitButtonType.primary, size: DigitButtonSize.medium,)
+                                      DigitButton(
+                                        label: widget.nextTitle ?? 'Next',
+                                        onPressed: () {
+                                          if (widget.onNext != null) {
+                                            widget.onNext!();
+                                          }
+                                        },
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.medium,
+                                      )
                                     ],
                                   ),
                                 ],
