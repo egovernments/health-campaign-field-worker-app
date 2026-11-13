@@ -1647,7 +1647,7 @@
             "styling": {
               "alignment": "center",
               "iconPosition": "top",
-              "iconSize": 34
+              "iconSize": 32
             },
             "onAction": [
               {
@@ -1674,7 +1674,7 @@
             "styling": {
               "alignment": "center",
               "iconPosition": "top",
-              "iconSize": 34
+              "iconSize": 32
             },
             "onAction": [
               {
