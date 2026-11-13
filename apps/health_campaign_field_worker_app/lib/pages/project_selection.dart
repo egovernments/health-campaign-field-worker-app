@@ -383,17 +383,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
       // Cache permission handler localizations for the SELECTED locale only,
       // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
-      // which the boundary page opens before any home card loads it, and the
-      // home card labels for the project type (`hcm-home-<projectType>`).
+      // which the boundary page opens before any home card loads it.
       final permHandlerModule = 'hcm-permissionhandler-$projectReferenceId';
       final missedPlaceModule = missedPlaceProjectModule(projectReferenceId);
-      final homeModule =
-          homeProjectTypeModule(context.selectedProject.projectType);
-      for (final module in [
-        permHandlerModule,
-        missedPlaceModule,
-        if (homeModule != null) homeModule,
-      ]) {
+      for (final module in [permHandlerModule, missedPlaceModule]) {
         try {
           final localResults =
               await LocalizationLocalRepository().fetchLocalization(
@@ -510,8 +503,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       locBloc.add(LocalizationEvent.onLoadLocalization(
         module:
             '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
-            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule'
-            '${homeModule != null ? ',$homeModule' : ''}',
+            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,

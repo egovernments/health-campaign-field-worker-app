@@ -3242,17 +3242,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                     path: Constants.localizationApiPath,
                   ));
             } else {
-              // Home card labels for the project type stay in the filter on
-              // every load, or a card tap would drop them from the home page.
-              final homeModule =
-                  homeProjectTypeModule(context.selectedProject.projectType);
-              final homeSuffix = homeModule != null ? ',$homeModule' : '';
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}$homeSuffix"
-                        : "${localizationModulesList?.interfaces.where((e) => e.type == Modules.localizationModule).map((e) => e.name.toString()).join(',') ?? ''}$homeSuffix",
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist,hcm-beneficiary,hcm-boundary-${runtimeHierarchyType().toLowerCase()}"
+                        : localizationModulesList?.interfaces
+                                .where(
+                                    (e) => e.type == Modules.localizationModule)
+                                .map((e) => e.name.toString())
+                                .join(',') ??
+                            "",
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
