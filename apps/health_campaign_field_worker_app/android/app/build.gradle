@@ -68,13 +68,6 @@ android {
         }
     }
 
-    if (!project.hasProperty('USE_GOOGLE_SERVICES')) {
-        tasks.whenTaskAdded { task ->
-            if (task.name.contains("GoogleServices")) {
-                task.enabled = false
-            }
-        }
-    }
 }
 
 // Exclude sqlite3_flutter_libs since sqlcipher_flutter_libs is used as a drop-in replacement

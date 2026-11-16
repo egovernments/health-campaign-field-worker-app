@@ -5,6 +5,10 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +18,9 @@ import 'package:isar/isar.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
+import 'firebase_options.dart';
 import 'notification_service.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
@@ -25,6 +28,7 @@ import 'data/remote_client.dart';
 import 'notification_service.dart';
 import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
+import 'utils/analytics_service.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
@@ -35,10 +39,37 @@ late Dio _dio;
 late Isar _isar;
 int i = 0;
 
+late FirebaseAnalytics analytics;
+
 void main() async {
+  // Start the cold-start clock before anything else; stopped when app
+  // configuration is ready (see AppBlocObserver / app_startup event).
+  AnalyticsService.instance.markAppStart();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   DartPluginRegistrant.ensureInitialized();
+
+  try {
+    await initialize(options: DefaultFirebaseOptions.currentPlatform);
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') rethrow;
+    // Firebase was already auto-initialized from google-services.xml — just wire Crashlytics.
+    // Framework errors (layout overflows, build errors) are recorded as
+    // non-fatal so they do not distort crash-free-users; they are still
+    // printed to the console so they remain visible while debugging.
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      FirebaseCrashlytics.instance.recordFlutterError(details);
+    };
+    // Errors that escape the Dart zone entirely are real crashes.
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
+  analytics = FirebaseAnalytics.instance;
+  await analytics.logAppOpen();
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
@@ -53,6 +84,22 @@ void main() async {
   }
 
   await envConfig.initialize();
+
+  // PostHog receives the same events as Firebase when a key is configured.
+  await AnalyticsService.instance.setupPostHog(
+    apiKey: envConfig.variables.posthogApiKey,
+    host: envConfig.variables.posthogHost,
+    debug: kDebugMode,
+    sessionReplay: envConfig.variables.posthogSessionReplay,
+    maskReplay: envConfig.variables.posthogReplayMask,
+  );
+
+  // Tag every event from this install with env + tenant so UAT/QA traffic
+  // can be filtered out of production reports.
+  await AnalyticsService.instance.setAppContext(
+    env: envConfig.variables.envType.name,
+    tenantId: envConfig.variables.tenantId,
+  );
 
   // Security checks - enforce exit only in production environment
   if (!kDebugMode) {
@@ -105,12 +152,12 @@ void main() async {
   // Register FCM background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  runApp(MainApplication(
+  runApp(AnalyticsService.instance.wrapForReplay(MainApplication(
     appRouter: AppRouter(),
     isar: _isar,
     client: _dio,
     sql: _sql,
-  ));
+  )));
 
 
 }

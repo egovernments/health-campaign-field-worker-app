@@ -105,9 +105,42 @@ class Variables {
     'mdms-v2/v1/_search',
   );
 
+  //Filtered searches (e.g. FormConfig) time out on the v1 compatibility route,
+  //so they use the native v2 route. Point this at the v1 path on environments
+  //that do not deploy mdms-v2.
+  static const _mdmsV2Api = EnvEntry(
+    'MDMS_V2_API_PATH',
+    'mdms-v2/v2/_search',
+  );
+
   static const _tenantId = EnvEntry(
     'TENANT_ID',
     'default',
+  );
+
+  // PostHog product analytics. Leave the key blank to keep PostHog off; the
+  // key is a public client-side project token, not a secret.
+  static const _posthogApiKey = EnvEntry(
+    'POSTHOG_API_KEY',
+    '',
+  );
+
+  static const _posthogHost = EnvEntry(
+    'POSTHOG_HOST',
+    'https://us.i.posthog.com',
+  );
+
+  // PostHog session replay. Off unless "true". Text and images are masked
+  // unless POSTHOG_REPLAY_MASK is "false"; keep masking on wherever real
+  // beneficiary data is entered.
+  static const _posthogSessionReplay = EnvEntry(
+    'POSTHOG_SESSION_REPLAY',
+    'false',
+  );
+
+  static const _posthogReplayMask = EnvEntry(
+    'POSTHOG_REPLAY_MASK',
+    'true',
   );
 
   static const _actionMapUrl = EnvEntry(
@@ -141,6 +174,34 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+  String get mdmsV2ApiPath => useFallbackValues
+      ? _mdmsV2Api.value
+      : _dotEnv.get(_mdmsV2Api.key, fallback: _mdmsV2Api.value);
+
+  String get posthogApiKey => useFallbackValues
+      ? _posthogApiKey.value
+      : _dotEnv.get(_posthogApiKey.key, fallback: _posthogApiKey.value);
+
+  String get posthogHost => useFallbackValues
+      ? _posthogHost.value
+      : _dotEnv.get(_posthogHost.key, fallback: _posthogHost.value);
+
+  bool get posthogSessionReplay =>
+      (useFallbackValues
+              ? _posthogSessionReplay.value
+              : _dotEnv.get(_posthogSessionReplay.key,
+                  fallback: _posthogSessionReplay.value))
+          .toLowerCase() ==
+      'true';
+
+  bool get posthogReplayMask =>
+      (useFallbackValues
+              ? _posthogReplayMask.value
+              : _dotEnv.get(_posthogReplayMask.key,
+                  fallback: _posthogReplayMask.value))
+          .toLowerCase() !=
+      'false';
 
   String get hierarchyType => useFallbackValues
       ? _hierarchyType.value

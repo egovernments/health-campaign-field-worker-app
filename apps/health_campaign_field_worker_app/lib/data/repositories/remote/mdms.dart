@@ -144,6 +144,28 @@ class MdmsRepository {
     }
   }
 
+  /// Searches the native MDMS v2 route, which returns records under `mdms`
+  /// with the master payload nested in each record's `data` field.
+  Future<List<dynamic>> searchMDMSV2(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      final records = response.data?['mdms'];
+
+      return records is List ? records : <dynamic>[];
+    } on DioError catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
+      rethrow;
+    }
+  }
+
   FutureOr<void> writeToAppConfigDB(
     app_configuration.AppConfigPrimaryWrapperModel result,
     PGRServiceDefinitions pgrServiceDefinitions,

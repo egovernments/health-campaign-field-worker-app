@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:attendance_management/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/repositories/local/attendance_logs.dart';
@@ -29,6 +31,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
@@ -107,6 +111,10 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  // Total facilities downloaded during down sync, not a per-page size
+  static const int facilityFetchLimit = 50;
+  // Upper bound on form configs fetched for a single project
+  static const int formConfigFetchLimit = 100;
   // Modules to load initially (fetch from server and cache locally)
   static const List<String> initialLocalizationModules = [
     'digit-privacy-policy',
@@ -259,20 +267,42 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    // Always initialize Firebase Core (required for FCM, analytics, etc.)
-    await firebase_services.initialize(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Firebase was already initialized in main() — skip if duplicate
+    try {
+      await firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } on FirebaseException catch (e) {
+      if (e.code != 'duplicate-app') rethrow;
+    }
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      await firebase_services.initialize(
-        options: DefaultFirebaseOptions.currentPlatform,
-        onErrorMessage: (value) {
-          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-        },
-      );
+      try {
+        await firebase_services.initialize(
+          options: DefaultFirebaseOptions.currentPlatform,
+          onErrorMessage: (value) {
+            AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+          },
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') rethrow;
+        // Firebase already initialized — wire Crashlytics handlers manually.
+        // Framework errors are non-fatal (see main.dart for the rationale).
+        FlutterError.onError = (errorDetails) {
+          FlutterError.presentError(errorDetails);
+          AppLogger.instance.error(
+              title: 'CRASHLYTICS',
+              message: 'Diagnostic node: ${errorDetails.summary.name}');
+          FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+        };
+        PlatformDispatcher.instance.onError = (error, stack) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: '$error');
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+          return true;
+        };
+      }
     }
 
     _version = version;
@@ -298,7 +328,11 @@ class Constants {
 
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
-          FacilityRemoteRepository(dio, actionMap: actions),
+          FacilityRemoteRepository(
+            dio,
+            actionMap: actions,
+            maxRecords: Constants.facilityFetchLimit,
+          ),
         if (value == DataModelType.productVariant)
           ProductVariantRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.boundary)

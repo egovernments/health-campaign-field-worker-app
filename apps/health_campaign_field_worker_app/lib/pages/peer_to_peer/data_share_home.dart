@@ -1,3 +1,4 @@
+import '../../utils/analytics_service.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -61,6 +62,8 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                       margin: const EdgeInsets.all(spacer4),
                       inline: true,
                       onPressed: () {
+                        AnalyticsService.instance
+                            .logDataShareStarted(direction: 'send');
                         state.maybeMap(
                             orElse: () {},
                             syncInProgress: (value) {
@@ -209,6 +212,8 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                       inline: true,
                       margin: const EdgeInsets.all(spacer4),
                       onPressed: () {
+                        AnalyticsService.instance
+                            .logDataShareStarted(direction: 'receive');
                         context.router.push(
                             DevicesListRoute(deviceType: DeviceType.receiver));
                       },

@@ -1,3 +1,5 @@
+import 'dart:async';
+import '../analytics_hooks.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +26,20 @@ class ResolvedWidgetContext {
   final String? resolvedLabel;
   final String? resolvedDescription;
 
+  /// Identity of the configured widget, used for interaction analytics.
+  final String? fieldName;
+  final String? labelKey;
+  final String? format;
+
   ResolvedWidgetContext({
     required this.state,
     required this.localization,
     this.isDisabled = false,
     this.resolvedLabel,
     this.resolvedDescription,
+    this.fieldName,
+    this.labelKey,
+    this.format,
   });
 
   // ── Convenience accessors ──────────────────────────────────────────────
@@ -205,6 +215,15 @@ class ResolvedWidgetContext {
     BuildContext context,
   ) async {
     if (actionsJson == null || actionsJson.isEmpty) return;
+
+    FlowAnalyticsHooks.onWidgetAction?.call(
+      state.screenKey ?? state.compositeKey,
+      fieldName,
+      labelKey,
+      format,
+      FlowAnalyticsHooks.actionTypesOf(actionsJson),
+      FlowAnalyticsHooks.destinationOf(actionsJson),
+    );
 
     final currentEvalContext = getFreshEvalContext();
 
@@ -387,9 +406,40 @@ abstract class ResolvedFlowWidget implements FlowWidget {
       isDisabled: isDisabled,
       resolvedLabel: resolvedLabel,
       resolvedDescription: resolvedDescription,
+      fieldName: json['fieldName'] as String?,
+      labelKey: (json['label'] ?? json['heading']) as String?,
+      format: json['format'] as String?,
     );
 
-    return buildResolved(json, context, onAction, resolved);
+    // Report the first action of each user interaction for analytics. Many
+    // widgets (filter popups, search bar, switches, selection cards, back
+    // links, panel cards) dispatch through [onAction] directly instead of
+    // [ResolvedWidgetContext.executeActions], so the hook lives here too.
+    // Actions dispatched synchronously in one tap count as one interaction.
+    var reported = false;
+    void trackedOnAction(ActionConfig action) {
+      if (!reported) {
+        reported = true;
+        scheduleMicrotask(() => reported = false);
+        final types = FlowAnalyticsHooks.actionTypesOf(json['onAction'] as List?);
+        if (!types.contains(action.actionType)) types.add(action.actionType);
+        FlowAnalyticsHooks.onWidgetAction?.call(
+          state.screenKey ?? state.compositeKey,
+          json['fieldName'] as String?,
+          (json['label'] ?? json['heading']) as String?,
+          json['format'] as String?,
+          types,
+          FlowAnalyticsHooks.destinationOf(json['onAction'] as List?) ??
+              ((action.actionType == 'NAVIGATION' ||
+                      action.actionType == 'BACK_NAVIGATION')
+                  ? action.properties['name'] as String?
+                  : null),
+        );
+      }
+      onAction(action);
+    }
+
+    return buildResolved(json, context, trackedOnAction, resolved);
   }
 
   /// Override this method to build the widget UI.

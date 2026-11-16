@@ -55,6 +55,7 @@ import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
+import '../utils/constants.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -347,6 +348,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) => FacilityRemoteRepository(
               dio,
               actionMap: actions,
+              maxRecords: Constants.facilityFetchLimit,
             ),
           ),
         if (value == DataModelType.individual)

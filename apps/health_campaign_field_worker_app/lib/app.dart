@@ -5,6 +5,11 @@ import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
+import 'package:digit_flow_builder/analytics_hooks.dart';
+import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
+import 'package:digit_flow_builder/flow_builder_home_page.dart';
+import 'package:digit_forms_engine/pages/forms_render.dart';
+import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -37,6 +42,7 @@ import 'executors/load_unique_id_pool_executor.dart';
 import 'models/downsync/downsync.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
+import 'utils/analytics_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
@@ -87,6 +93,116 @@ class MainApplicationState extends State<MainApplication>
       'LOAD_UNIQUE_ID_POOL',
       LoadUniqueIdPoolExecutor(),
     );
+
+    // Product analytics hooks for the flow builder and forms engine.
+    // Only outcomes a product owner acts on are reported; low-level action
+    // execution is intentionally not tracked.
+    FlowBuilderHomePage.onFlowStart = (pageName, params, config) {
+      AnalyticsService.instance.logFlowScreenOpened(
+        pageName: pageName,
+        config: config,
+      );
+    };
+
+    FlowBuilderHomePage.onFlowEnd = (pageName) {
+      AnalyticsService.instance.logFlowScreenClosed(pageName: pageName);
+    };
+
+    // Button / card / link taps, back links and search triggers in flows.
+    FlowAnalyticsHooks.onWidgetAction =
+        (screenKey, fieldName, labelKey, format, actionTypes, destination) {
+      AnalyticsService.instance.logFlowWidgetTapped(
+        screenKey: screenKey,
+        fieldName: fieldName,
+        labelKey: labelKey,
+        format: format,
+        actionTypes: actionTypes,
+        destination: destination,
+      );
+    };
+
+    // Next / Submit / secondary / popup buttons on forms-engine pages.
+    FormsRenderPage.onFormButtonPressed =
+        (pageName, schemaKey, kind, labelKey, pageNumber, pageCount) {
+      AnalyticsService.instance.logFormButtonPressed(
+        pageName: pageName,
+        schemaKey: schemaKey,
+        kind: kind,
+        labelKey: labelKey,
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+      );
+    };
+
+    // Header back arrow on forms-engine pages.
+    BackNavigationHelpHeaderWidget.onBackPressed = () {
+      AnalyticsService.instance.logBackPressed();
+    };
+
+    // Error and warning toasts raised by flow actions.
+    ActionHandler.registry.onExecute =
+        (String actionType, Map<dynamic, dynamic> properties, Map<String, dynamic> result) {
+      if (actionType != 'SHOW_TOAST') return;
+      final type = (properties['type'] as String?) ?? 'error';
+      if (type != 'error' && type != 'warning') return;
+      AnalyticsService.instance.logErrorShown(
+        messageKey: (properties['message'] as String?) ?? '',
+        screen: (result['parentScreenKey'] ?? properties['parentScreenKey']) as String?,
+        type: type,
+      );
+    };
+
+    FlowCrudBloc.onFlowCompleted = (flowKey, recordTypes) {
+      AnalyticsService.instance.logFlowCompleted(
+        flowKey: flowKey,
+        recordTypes: recordTypes,
+      );
+    };
+
+    FormsRenderPage.onFormPageStart = (pageName, schemaKey, isEdit) {
+      AnalyticsService.instance.logFormOpened(
+        pageName: pageName,
+        schemaKey: schemaKey,
+      );
+    };
+
+    FormsRenderPage.onFormPageEnd = (pageName, schemaKey) {
+      AnalyticsService.instance.logFormClosed(
+        pageName: pageName,
+        schemaKey: schemaKey,
+      );
+    };
+
+    FormsRenderPage.onFormValidationFailed = (pageName, schemaKey, failedFields) {
+      AnalyticsService.instance.logFormValidationFailed(
+        pageName: pageName,
+        schemaKey: schemaKey,
+        failedFields: failedFields,
+      );
+    };
+
+    ActionHandler.registry.onExecuteError =
+        (String actionType, Map<dynamic, dynamic> properties, dynamic error) {
+      AnalyticsService.instance.logActionFailed(
+        action: actionType,
+        error: error.toString(),
+      );
+    };
+
+    FlowBuilderHomePage.onFlowDataUpdate = (
+      screenKey,
+      isLoading,
+      recordCount,
+      isPersisted,
+      errorMessage,
+    ) {
+      if (errorMessage != null) {
+        AnalyticsService.instance.logDataLoadFailed(
+          flowKey: screenKey,
+          error: errorMessage,
+        );
+      }
+    };
   }
 
   @override
@@ -222,8 +338,18 @@ class MainApplicationState extends State<MainApplication>
                                     widget.sql)
                                   ..add(
                                     LocalizationEvent.onLoadLocalization(
-                                      module:
-                                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule && Constants.initialLocalizationModules.contains(element.name.toString())).map((e) => e.name.toString()).join(',')}",
+                                      /*Boundary module (hcm-boundary-<hierarchy>)
+                                        is intentionally excluded here*/
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                                  Modules.localizationModule &&
+                                              Constants
+                                                  .initialLocalizationModules
+                                                  .contains(
+                                                      element.name.toString()))
+                                          .map((e) => e.name.toString())
+                                          .join(','),
                                       tenantId: envConfig.variables.tenantId,
                                       locale: selectedLocale,
                                       path: Constants.localizationApiPath,
@@ -439,8 +565,10 @@ class MainApplicationState extends State<MainApplication>
                                 scaffoldMessengerKey: scaffoldMessengerKey,
                                 routerDelegate: AutoRouterDelegate.declarative(
                                   widget.appRouter,
-                                  navigatorObservers: () =>
-                                      [AppRouterObserver()],
+                                  navigatorObservers: () => [
+                                    AppRouterObserver(),
+                                    ...AnalyticsService.instance.observers,
+                                  ],
                                   routes: (handler) => authState.maybeWhen(
                                     orElse: () => [
                                       const UnauthenticatedRouteWrapper(),

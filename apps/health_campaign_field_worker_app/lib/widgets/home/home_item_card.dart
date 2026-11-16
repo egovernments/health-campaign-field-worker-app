@@ -1,3 +1,4 @@
+import '../../utils/analytics_service.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
@@ -35,7 +36,12 @@ class HomeItemCard extends StatelessWidget {
     final textTheme = theme.digitTextTheme(context);
 
     return DigitCard(
-        onPressed: onPressed,
+        onPressed: onPressed == null
+            ? null
+            : () {
+                AnalyticsService.instance.logHomeTileClicked(labelKey: label);
+                onPressed!();
+              },
         padding: const EdgeInsets.all(spacer1).copyWith(top: spacer1),
         margin: const EdgeInsets.all(spacer2),
         inline: true,

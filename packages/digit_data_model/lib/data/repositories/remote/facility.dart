@@ -8,11 +8,16 @@ import 'package:dio/dio.dart';
 
 class FacilityRemoteRepository
     extends RemoteRepository<FacilityModel, FacilitySearchModel> {
+  /// Caps the total number of records [search] downloads across all pages.
+  /// When null the search pages until every record has been fetched.
+  final int? maxRecords;
+
   FacilityRemoteRepository(
     super.dio, {
     required super.actionMap,
     super.entityName = 'Facility',
     super.isSearchResponsePlural = true,
+    this.maxRecords,
   });
 
   @override
@@ -112,6 +117,13 @@ class FacilityRemoteRepository
       }
 
       allResults.addAll(currentBatch);
+
+      //Stop paging once the configured cap is reached
+      final cap = maxRecords;
+      if (cap != null && allResults.length >= cap) {
+        return allResults.take(cap).toList();
+      }
+
       currentOffset += defaultBatchSize;
       totalCount -= defaultBatchSize;
 

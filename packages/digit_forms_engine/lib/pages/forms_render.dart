@@ -36,6 +36,28 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final Map<String, dynamic>? navigationParams;
   final void Function({Map<String, dynamic>? popupData})? onSecondaryAction;
 
+  /// Called when a form page is entered.
+  static void Function(String pageName, String schemaKey, bool isEdit)? onFormPageStart;
+
+  /// Called when a form page is disposed.
+  static void Function(String pageName, String schemaKey)? onFormPageEnd;
+
+  /// Called when a footer or popup button is pressed. [kind] is one of
+  /// `next`, `submit`, `secondary`, `popup_confirm`, `popup_cancel`;
+  /// [labelKey] is the untranslated label key from the schema;
+  /// [pageNumber] is 1-based and [pageCount] the total pages in the form.
+  static void Function(
+    String pageName,
+    String schemaKey,
+    String kind,
+    String? labelKey,
+    int pageNumber,
+    int pageCount,
+  )? onFormButtonPressed;
+
+  /// Called when form validation fails before submission.
+  static void Function(String pageName, String schemaKey, List<String> failedFields)? onFormValidationFailed;
+
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
@@ -68,14 +90,17 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   @override
   void initState() {
     super.initState();
-    // Register with protection manager with initial false state
-    // Will be updated once we know the actual preventScreenCapture value from schema
     ScreenProtectionManager().registerPage(_protectionPageId, false);
+    FormsRenderPage.onFormPageStart?.call(
+      widget.pageName,
+      widget.currentSchemaKey,
+      widget.isEdit,
+    );
   }
 
   @override
   void dispose() {
-    // Unregister from protection manager
+    FormsRenderPage.onFormPageEnd?.call(widget.pageName, widget.currentSchemaKey);
     ScreenProtectionManager().unregisterPage(_protectionPageId);
     super.dispose();
   }
@@ -170,6 +195,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 : localizations
                                     .translate(schema.actionLabel ?? 'Submit'),
                             onPressed: () async {
+                              FormsRenderPage.onFormButtonPressed?.call(
+                                widget.pageName,
+                                widget.currentSchemaKey,
+                                index < schemaObject.pages.length - 1 ? 'next' : 'submit',
+                                schema.actionLabel ?? (index < schemaObject.pages.length - 1 ? 'Next' : 'Submit'),
+                                index + 1,
+                                schemaObject.pages.length,
+                              );
                               // Prevent multiple simultaneous submissions
                               if (_isSubmitting) return;
 
@@ -250,6 +283,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               if (hasErrors) {
                                 _isSubmitting = false;
                                 setState(() {});
+                                FormsRenderPage.onFormValidationFailed?.call(
+                                  widget.pageName,
+                                  widget.currentSchemaKey,
+                                  currentKeys
+                                      .where((k) => formGroup.control(k).errors.isNotEmpty)
+                                      .toList(),
+                                );
                                 return;
                               }
 
@@ -260,6 +300,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               if (!isCurrentPageValid) {
                                 _isSubmitting = false;
                                 setState(() {});
+                                FormsRenderPage.onFormValidationFailed?.call(
+                                  widget.pageName,
+                                  widget.currentSchemaKey,
+                                  currentKeys
+                                      .where((k) => !formGroup.control(k).valid)
+                                      .toList(),
+                                );
                                 return;
                               }
 
@@ -466,6 +513,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                             .showAlertPopUp!
                                                             .primaryActionLabel),
                                                     onPressed: () {
+                                                      FormsRenderPage.onFormButtonPressed?.call(
+                                                        widget.pageName,
+                                                        widget.currentSchemaKey,
+                                                        'popup_confirm',
+                                                        schema.showAlertPopUp?.primaryActionLabel,
+                                                        0,
+                                                        0,
+                                                      );
                                                       context
                                                           .read<FormsBloc>()
                                                           .add(FormsSubmitEvent(
@@ -496,6 +551,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                             .showAlertPopUp!
                                                             .secondaryActionLabel),
                                                     onPressed: () {
+                                                      FormsRenderPage.onFormButtonPressed?.call(
+                                                        widget.pageName,
+                                                        widget.currentSchemaKey,
+                                                        'popup_cancel',
+                                                        schema.showAlertPopUp?.secondaryActionLabel,
+                                                        0,
+                                                        0,
+                                                      );
                                                       Navigator.of(
                                                         ctx,
                                                         rootNavigator: true,
@@ -622,6 +685,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                     schema.showAlertPopUp!
                                                         .primaryActionLabel),
                                                 onPressed: () {
+                                                  FormsRenderPage.onFormButtonPressed?.call(
+                                                    widget.pageName,
+                                                    widget.currentSchemaKey,
+                                                    'popup_confirm',
+                                                    schema.showAlertPopUp?.primaryActionLabel,
+                                                    0,
+                                                    0,
+                                                  );
                                                   context.read<FormsBloc>().add(
                                                       FormsSubmitEvent(
                                                           isEdit: widget.isEdit,
@@ -646,6 +717,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                     schema.showAlertPopUp!
                                                         .secondaryActionLabel),
                                                 onPressed: () {
+                                                  FormsRenderPage.onFormButtonPressed?.call(
+                                                    widget.pageName,
+                                                    widget.currentSchemaKey,
+                                                    'popup_cancel',
+                                                    schema.showAlertPopUp?.secondaryActionLabel,
+                                                    0,
+                                                    0,
+                                                  );
                                                   Navigator.of(
                                                     ctx,
                                                     rootNavigator: true,
@@ -694,6 +773,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               label: localizations
                                   .translate(schema.secondaryActionLabel!),
                               onPressed: () {
+                                FormsRenderPage.onFormButtonPressed?.call(
+                                  widget.pageName,
+                                  widget.currentSchemaKey,
+                                  'secondary',
+                                  schema.secondaryActionLabel,
+                                  0,
+                                  0,
+                                );
                                 if (schema.showSecondaryAlertPopUp != null) {
                                   _showSecondaryAlertPopUp(
                                     context,
@@ -899,6 +986,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           : localizations
                               .translate(schema.actionLabel ?? 'Submit'),
                       onPressed: () async {
+                        FormsRenderPage.onFormButtonPressed?.call(
+                          widget.pageName,
+                          widget.currentSchemaKey,
+                          index < schemaObject.pages.length - 1 ? 'next' : 'submit',
+                          schema.actionLabel ?? (index < schemaObject.pages.length - 1 ? 'Next' : 'Submit'),
+                          index + 1,
+                          schemaObject.pages.length,
+                        );
                         // Prevent multiple simultaneous submissions
                         if (_isSubmitting) return;
 
@@ -1060,6 +1155,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         label: localizations
                             .translate(schema.secondaryActionLabel!),
                         onPressed: () {
+                          FormsRenderPage.onFormButtonPressed?.call(
+                            widget.pageName,
+                            widget.currentSchemaKey,
+                            'secondary',
+                            schema.secondaryActionLabel,
+                            0,
+                            0,
+                          );
                           if (schema.showSecondaryAlertPopUp != null) {
                             _showSecondaryAlertPopUp(
                               context,
@@ -1320,6 +1423,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () async {
+                FormsRenderPage.onFormButtonPressed?.call(
+                  widget.pageName,
+                  widget.currentSchemaKey,
+                  'submit',
+                  'CORE_COMMON_SUBMIT',
+                  0,
+                  0,
+                );
                 // Prevent multiple simultaneous submissions
                 if (_isSubmitting) return;
 
@@ -1486,6 +1597,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   label:
                       localizations.translate(popUpConfig.primaryActionLabel),
                   onPressed: () {
+                    FormsRenderPage.onFormButtonPressed?.call(
+                      widget.pageName,
+                      widget.currentSchemaKey,
+                      'popup_confirm',
+                      popUpConfig.primaryActionLabel,
+                      0,
+                      0,
+                    );
                     final hasEmptyMandatory = bodyFields.any((field) =>
                         field.mandatory &&
                         commentController.text.trim().isEmpty);
@@ -1510,6 +1629,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   label:
                       localizations.translate(popUpConfig.secondaryActionLabel),
                   onPressed: () {
+                    FormsRenderPage.onFormButtonPressed?.call(
+                      widget.pageName,
+                      widget.currentSchemaKey,
+                      'popup_cancel',
+                      popUpConfig.secondaryActionLabel,
+                      0,
+                      0,
+                    );
                     Navigator.of(ctx, rootNavigator: true).pop();
                   },
                   type: DigitButtonType.secondary,

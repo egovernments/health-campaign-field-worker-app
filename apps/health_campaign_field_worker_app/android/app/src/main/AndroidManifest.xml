@@ -85,5 +85,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="fcm_default_channel" />
+        <!-- PostHog is initialised from Dart with the key from .env (see main.dart). -->
+        <meta-data
+            android:name="com.posthog.posthog.AUTO_INIT"
+            android:value="false" />
     </application>
 </manifest>

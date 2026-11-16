@@ -159,14 +159,12 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   ) {
     setState(() {});
 
+    /*Boundary module (hcm-boundary-<hierarchy>) is intentionally excluded here*/
     final filteredModules = localizationModulesList
         .where((element) =>
             element.type == Modules.localizationModule &&
             Constants.homeLocalizationModules.contains(element.name.toString()))
         .map((e) => e.name.toString())
-        .followedBy([
-          'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}'
-        ])
         .join(',');
 
     context.read<LocalizationBloc>().add(

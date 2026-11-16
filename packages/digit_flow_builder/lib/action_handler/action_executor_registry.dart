@@ -30,6 +30,20 @@ class ActionExecutorRegistry {
 
   final Map<String, ActionExecutor> _executors = {};
 
+  /// Optional hook called after every successful action execution.
+  void Function(
+    String actionType,
+    Map<dynamic, dynamic> properties,
+    Map<String, dynamic> result,
+  )? onExecute;
+
+  /// Optional hook called when an action execution throws an error.
+  void Function(
+    String actionType,
+    Map<dynamic, dynamic> properties,
+    dynamic error,
+  )? onExecuteError;
+
   /// Register default built-in executors
   void registerDefaultExecutors() {
     register('NAVIGATION', NavigationExecutor());
@@ -85,12 +99,13 @@ class ActionExecutorRegistry {
     }
 
     try {
-      return await executor.execute(action, context, enrichedContextData);
+      final result = await executor.execute(action, context, enrichedContextData);
+      onExecute?.call(action.actionType, action.properties, result);
+      return result;
     } catch (e, stackTrace) {
       debugPrint('❌ Error executing action ${action.actionType}: $e');
       debugPrint('Stack trace: $stackTrace');
-
-      // Return original context data if execution fails
+      onExecuteError?.call(action.actionType, action.properties, e);
       return contextData;
     }
   }

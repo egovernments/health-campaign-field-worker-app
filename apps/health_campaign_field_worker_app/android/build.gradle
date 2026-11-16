@@ -13,6 +13,22 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
+// posthog_flutter depends on 'com.posthog:posthog-android:3.+', which floats to
+// releases built with Kotlin 2.1 and minSdk 23 that this project (Kotlin 1.8,
+// minSdk 21) cannot consume. Pin to the release contemporaneous with the
+// plugin version in pubspec.yaml.
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.posthog' &&
+                details.requested.name == 'posthog-android') {
+                details.useVersion '3.14.1'
+                details.because 'Kotlin 1.8 / minSdk 21 compatibility'
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

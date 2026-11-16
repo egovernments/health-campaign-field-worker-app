@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/unique_beneficiary_id/unique_id.dart';
+import '../../utils/analytics_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -243,6 +244,10 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                               mainAxisSize: MainAxisSize.max,
                               capitalizeLetters: false,
                               onPressed: () async {
+                                AnalyticsService.instance.logButtonClicked(
+                                  screen: 'Beneficiary IDs',
+                                  button: 'Download Beneficiary IDs',
+                                );
                                 context.read<UniqueIdBloc>().add(
                                       const UniqueIdEvent
                                           .fetchUniqueIdsFromServer(),

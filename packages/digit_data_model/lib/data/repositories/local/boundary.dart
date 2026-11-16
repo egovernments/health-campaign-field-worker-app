@@ -63,9 +63,13 @@ class BoundaryLocalRepository
       final r = result.read(sql.boundary.boundaryNum);
 
       if (query.isSingle == true) {
+        //An empty boundary table has no max boundaryNum, which is a valid
+        //no-data case rather than an error
+        if (r == null) return [];
+
         (selectQuery
               ..where(buildAnd([
-                sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
+                sql.boundary.boundaryNum.isSmallerOrEqualValue(r),
               ])))
             .limit(r);
       } else {

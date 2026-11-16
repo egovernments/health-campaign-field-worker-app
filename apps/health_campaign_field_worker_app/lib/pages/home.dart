@@ -1,3 +1,4 @@
+import '../utils/analytics_service.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -1705,6 +1706,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                                 i18.syncDialog.closeButtonLabel,
                               ),
                               action: (ctx) {
+                                AnalyticsService.instance.logSyncDialogClosed();
                                 Navigator.pop(ctx);
                               },
                             ),

@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../router/app_router.dart';
+import '../utils/analytics_service.dart';
 import '../sampleJsonConfigs/permission_handler.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
@@ -63,36 +64,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       // Skip permission initialization if disabled
       if (_isDisabled) return;
 
-      // Initialize permissions and check their current status
-      _initializePermissions().then((_) {
-        // Skip if disabled
-        if (_isDisabled) return;
-
-        // Check permissions to update UI status, but don't auto-navigate
-        // User must explicitly click Continue after granting all permissions
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          // Skip if disabled
-          if (_isDisabled) return;
-
-          bool granted = await _checkPermissions();
-          if (!granted) {
-            if (mounted) {
-              // Toast.showToast(
-              //   context,
-              //   message: localizations.translate(
-              //     i18.common.permissionsAlert,
-              //   ),
-              //   type: ToastType.error,
-              // );
-            }
-            return;
-          }
-
-          if (mounted) {
-            context.router.replace(BoundarySelectionRoute());
-          }
-        });
-      });
+      // Initialize permissions and refresh their status for the UI. Navigation
+      // is driven by the user tapping through the page, not by a status gate.
+      _initializePermissions();
     });
   }
 
@@ -177,8 +151,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     }
 
     setState(() {});
-    // NOTE: Do NOT call _checkPermissions() here to avoid premature navigation.
-    // Auto-navigation is handled separately after initialization by _autoNavigateIfAllGranted().
   }
 
   /// Recursively parse permissions from config and build requiredPermissions map
@@ -250,61 +222,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     return false;
   }
 
-  /// Check permission statuses and return true only if all required permissions are granted.
-  Future<bool> _checkPermissions() async {
-    Map<Permission, PermissionStatus> currentStatuses = {};
-
-    // If requiredPermissions is empty, treat it as not granted to avoid accidental navigation.
-    // However, this depends on your policy: if you want empty config => allow navigation,
-    // change the following check accordingly. For safety, we'll treat empty as NOT all granted.
-    if (requiredPermissions.isEmpty) {
-      // Refresh statuses for potential UI rendering.
-      setState(() => statuses = currentStatuses);
-      return false;
-    }
-
-    for (var entry in requiredPermissions.entries) {
-      final status = await entry.key.status;
-      currentStatuses[entry.key] = status;
-    }
-
-    setState(() {
-      statuses = currentStatuses;
-    });
-
-    // If no permissions defined, don't auto-navigate
-    if (requiredPermissions.isEmpty) {
-      debugPrint('requiredPermissions is empty');
-      return false;
-    }
-
-    // Debug: Print all permissions and their required status
-    for (var entry in requiredPermissions.entries) {
-      final isGranted = currentStatuses[entry.key]?.isGranted == true;
-      debugPrint(
-          'Permission: ${entry.key}, Required: ${entry.value}, Granted: $isGranted');
-    }
-
-    // Check permissions:
-    // - Required (entry.value == true): MUST be granted
-    // - Optional (entry.value == false): Can be skipped
-    final allGranted = requiredPermissions.entries.every((entry) {
-      final isRequired = entry.value;
-      final isGranted = currentStatuses[entry.key]?.isGranted == true;
-
-      // Optional permission - don't block navigation
-      if (!isRequired) {
-        return true;
-      }
-
-      // Required permission - must be granted
-      return isGranted;
-    });
-
-    debugPrint('allGranted: $allGranted');
-    return allGranted;
-  }
-
   Future<void> _requestPermission(Permission permission) async {
     try {
       final status = await permission.request();
@@ -313,6 +230,14 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         setState(() {
           statuses[permission] = status;
         });
+      }
+
+      if (!status.isGranted && !status.isLimited) {
+        AnalyticsService.instance.logPermissionDenied(
+          // e.g. "Permission.camera"
+          permission: permission.toString(),
+          permanent: status.isPermanentlyDenied,
+        );
       }
 
       // Handle permanently denied - must open app settings
@@ -461,14 +386,11 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   void attemptNavigation() async {
-    bool granted = await _checkPermissions();
-    if (!granted || !backgroundActivityConfirmed) {
+    if (!backgroundActivityConfirmed) {
       Toast.showToast(
         context,
         message: localizations.translate(
-          !backgroundActivityConfirmed
-              ? i18.common.enablePermissionCheckbox
-              : i18.common.permissionsAlert,
+          i18.common.enablePermissionCheckbox,
         ),
         type: ToastType.error,
       );

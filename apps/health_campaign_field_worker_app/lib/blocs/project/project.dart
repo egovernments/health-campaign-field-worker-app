@@ -196,7 +196,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
-    final batchSize = await _getBatchSize();
+    /*Bandwidth check still gates the online load; the resulting batch size is
+      no longer used as facilities fetch a fixed limit*/
+    await _getBatchSize();
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -268,7 +270,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       try {
-        await _loadFacilities(projects, batchSize);
+        await _loadFacilities(projects);
       } catch (_) {
         emit(
           state.copyWith(
@@ -447,11 +449,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
-  FutureOr<void> _loadFacilities(
-      List<ProjectModel> projects, int batchSize) async {
+  FutureOr<void> _loadFacilities(List<ProjectModel> projects) async {
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: batchSize,
+      limit: Constants.facilityFetchLimit,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -703,28 +704,27 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       try {
-        final formConfigResult = await mdmsRepository.searchMDMS(
-          envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: 'HCM-ADMIN-CONSOLE',
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                      'FormConfig',
-                      filter:
-                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
+        /*The v1 compatibility route cannot evaluate this filter within the
+          gateway timeout, so the form configs are read from the native v2
+          route. isSelected is filtered here because v2 does not match on
+          boolean filter values*/
+        final formConfigRecords = await mdmsRepository.searchMDMSV2(
+          envConfig.variables.mdmsV2ApiPath,
+          {
+            'MdmsCriteria': {
+              'tenantId': envConfig.variables.tenantId,
+              'schemaCode': 'HCM-ADMIN-CONSOLE.FormConfig',
+              'filters': {'project': event.model.referenceID},
+              'limit': Constants.formConfigFetchLimit,
+              'offset': 0,
+            },
+          },
         );
 
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+        final formConfigs = formConfigRecords
+            .map((record) => record['data'])
+            .where((data) => data != null && data['isSelected'] == true)
+            .toList();
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);

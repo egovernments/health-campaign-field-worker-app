@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import '../../blocs/app_localization.dart';
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
+  /// Optional analytics hook fired when the header back arrow is tapped.
+  static VoidCallback? onBackPressed;
+
   final bool showHelp;
   final bool showBackNavigation;
   final bool showLogoutCTA;
@@ -51,6 +54,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       ),
                     ),
                     handleBack: () {
+                      BackNavigationHelpHeaderWidget.onBackPressed?.call();
                       context.router.maybePop();
                       handleBack != null ? handleBack!() : null;
                     },

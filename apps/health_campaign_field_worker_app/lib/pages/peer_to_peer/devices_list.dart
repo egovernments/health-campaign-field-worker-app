@@ -1,3 +1,4 @@
+import '../../utils/analytics_service.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -464,7 +465,13 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                               inline: true,
                               children: [
                                 DigitButton(
-                                  onPressed: handleFooterButtonPress,
+                                  onPressed: () {
+                                    AnalyticsService.instance.logButtonClicked(
+                                      screen: 'Devices List',
+                                      button: 'Send',
+                                    );
+                                    handleFooterButtonPress();
+                                  },
                                   type: DigitButtonType.primary,
                                   label: localizations
                                       .translate(i18.dataShare.sendAction),

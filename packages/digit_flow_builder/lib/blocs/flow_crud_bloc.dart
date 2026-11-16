@@ -1,10 +1,19 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/blocs/state_wrapper_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FlowCrudBloc extends CrudBloc {
+  /// Called once per persisted save with the flow key (`flowConfig["name"]`,
+  /// e.g. `CLOSEHOUSEHOLD`) and the entity type names that were written
+  /// (e.g. `HouseholdModel`, `TaskModel`). Wired up by the app (see
+  /// `app.dart`) so this package stays free of any analytics dependency,
+  /// mirroring `FlowBuilderHomePage.onFlowStart`.
+  static void Function(String flowKey, List<String> recordTypes)?
+      onFlowCompleted;
+
   final Map<String, dynamic> flowConfig;
   final String screenKey;
   final String instanceId;
@@ -134,6 +143,7 @@ class FlowCrudBloc extends CrudBloc {
       FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
+      _notifyFlowCompleted(entities);
       // final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
       wrapper =
           //persistedWrapperConfig != null
@@ -393,6 +403,19 @@ class FlowCrudBloc extends CrudBloc {
               ?.length ??
           0,
     );
+  }
+
+  /// Reports every persisted create to [onFlowCompleted] as a single
+  /// completion of this flow, listing the entity types written. Flows added to
+  /// the config later (stock reconciliation, PGR, attendance, referrals, ...)
+  /// are tracked automatically without touching this bloc again.
+  void _notifyFlowCompleted(List<EntityModel> entities) {
+    final callback = onFlowCompleted;
+    if (callback == null || entities.isEmpty) return;
+
+    final recordTypes =
+        entities.map((e) => e.runtimeType.toString()).toSet().toList();
+    callback(screenKey, recordTypes);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 
 import '../../models/request_info/request_info_model.dart';
+import '../../utils/analytics_service.dart';
 import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 import '../local_store/secure_store/secure_store.dart';
@@ -44,11 +45,24 @@ class AuthTokenInterceptor extends Interceptor {
 }
 
 class ApiLoggerInterceptor extends Interceptor {
+  /// Requests slower than this are reported to analytics as `api_slow`.
+  static const slowRequestThreshold = Duration(seconds: 15);
+
+  static const _startedAtKey = 'analytics_started_at_ms';
+
+  static int? _elapsedMs(RequestOptions options) {
+    final startedAt = options.extra[_startedAtKey];
+    if (startedAt is! int) return null;
+    return DateTime.now().millisecondsSinceEpoch - startedAt;
+  }
+
   @override
   Future<dynamic> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    options.extra[_startedAtKey] = DateTime.now().millisecondsSinceEpoch;
+
     if (options.data is Map || options.data is List) {
       AppLogger.instance.info(
         _getIndentedJson(json.encode(options.data)),
@@ -61,6 +75,14 @@ class ApiLoggerInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
+
+    final elapsed = _elapsedMs(response.requestOptions);
+    if (elapsed != null && elapsed > slowRequestThreshold.inMilliseconds) {
+      AnalyticsService.instance.logSlowRequest(
+        path: response.requestOptions.path,
+        durationMs: elapsed,
+      );
+    }
 
     if (response.requestOptions.path.contains('boundarys')) return;
 
@@ -77,6 +99,18 @@ class ApiLoggerInterceptor extends Interceptor {
         title: '[RESPONSE (error)] ${response.requestOptions.path}',
       );
     }
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    // Path only: never the full URL or query string.
+    AnalyticsService.instance.logRequestFailed(
+      path: err.requestOptions.path,
+      statusCode: err.response?.statusCode,
+      dioType: err.type.name,
+      durationMs: _elapsedMs(err.requestOptions),
+    );
+    super.onError(err, handler);
   }
 
   String _getIndentedJson(String json) {

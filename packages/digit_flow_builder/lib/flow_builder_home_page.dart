@@ -19,6 +19,30 @@ class FlowBuilderHomePage extends LocalizedStatefulWidget {
   final String pageName;
   final Map<String, dynamic>? navigationParams;
 
+  /// Called when a flow screen is entered. [config] is the screen's flow
+  /// configuration (name, category, screenType, body, ...) when registered.
+  static void Function(
+    String pageName,
+    Map<String, dynamic> params,
+    Map<String, dynamic>? config,
+  )? onFlowStart;
+
+  /// Called when a flow screen is exited (disposed).
+  static void Function(String pageName)? onFlowEnd;
+
+  /// Called when the flow screen's data state changes.
+  /// [isLoading] true = fetch started, false = loaded or error.
+  /// [recordCount] number of records loaded (-1 if unknown).
+  /// [isPersisted] true when a CREATE/UPDATE completed.
+  /// [errorMessage] non-null when an error occurred.
+  static void Function(
+    String screenKey,
+    bool isLoading,
+    int recordCount,
+    bool isPersisted,
+    String? errorMessage,
+  )? onFlowDataUpdate;
+
   const FlowBuilderHomePage(
       {super.key, required this.pageName, this.navigationParams});
 
@@ -54,6 +78,12 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
       ScreenProtectionManager()
           .registerPage(widget.pageName, _preventScreenCapture);
     }
+
+    FlowBuilderHomePage.onFlowStart?.call(
+      widget.pageName,
+      widget.navigationParams ?? {},
+      config == null ? null : Map<String, dynamic>.from(config),
+    );
   }
 
   @override
@@ -79,6 +109,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
 
   @override
   void dispose() {
+    FlowBuilderHomePage.onFlowEnd?.call(widget.pageName);
     // For TEMPLATE screens, unregister from ScreenProtectionManager
     if (!_isForm) {
       ScreenProtectionManager().unregisterPage(widget.pageName);
@@ -108,7 +139,20 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
               flowConfig: config,
               service: crudService,
               instanceId: _instanceId,
-              onUpdate: (screenKey, state) {},
+              onUpdate: (screenKey, state) {
+                if (FlowBuilderHomePage.onFlowDataUpdate == null) return;
+                final isPersisted =
+                    state.base?.runtimeType.toString() == 'CrudStatePersisted';
+                final isError =
+                    state.base?.runtimeType.toString() == 'CrudStateError';
+                FlowBuilderHomePage.onFlowDataUpdate?.call(
+                  screenKey,
+                  state.isLoading,
+                  state.stateWrapper?.length ?? -1,
+                  isPersisted,
+                  isError ? state.base.toString() : null,
+                );
+              },
             )..add(const CrudEventInitialize());
           },
         ),
