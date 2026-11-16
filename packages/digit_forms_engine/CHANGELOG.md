@@ -1,3 +1,8 @@
+## 0.1.4
+
+- New page-level `conditions.headerTag`: shows a location-pin tag under the page description naming where the form applies (e.g. the boundary a missed place is added under). `{{navigation.<key>}}` placeholders are resolved and the value is translated; nothing is shown when it resolves to empty or stays unresolved
+- Location (`latLng`) capture popup: description is "Location is required for this form, so please wait while we capture it. Your location is saved automatically once accuracy is 5 m or less." (new single `LOCATION_CAPTURE_SAVE_RULE`, replacing `LOCATION_CAPTURE_SAVE_RULE_GOOD` / `_TIMER`; the threshold is no longer bold). When the popup timer runs out without good accuracy, the status chip shows "Timed out" (`LOCATION_TIMED_OUT`) and the info box shows `LOCATION_CAPTURE_TIMED_OUT_INFO`; Save stays enabled. The info box now uses an info icon with an info border. New `isLocationCaptureTimedOut`
+
 ## 0.1.3
 
 - `radio` fields now render `helpText`. `RadioList` has no `helpText` prop of its own, so the builder draws it under the options using the same style `DigitBaseFormInput` applies (bodyS, secondary text colour, truncated at 256 characters). An error suppresses it, matching how the components library replaces help text with the error rather than stacking both.

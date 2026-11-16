@@ -1,6 +1,7 @@
-## Unreleased
+## 0.2.4
 
 - `menu_card`: the `styling.elevated` drop shadow is now visible. The single 16% shadow blurred over 8 px washed out on the grey page background; it is now a tight edge shadow plus a wider, lighter lift shadow, both using `text.primary` and spacer tokens
+- `NoResultCard`: every illustration is drawn at the height of the original `no_result.svg` (128), so larger illustrations such as `no_result_generic.svg` no longer render oversized
 
 ## 0.2.3
 

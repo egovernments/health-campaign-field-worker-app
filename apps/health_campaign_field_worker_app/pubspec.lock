@@ -575,14 +575,14 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.2.3"
+    version: "0.2.4"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.1.3"
+    version: "0.1.4"
   digit_formula_parser:
     dependency: "direct main"
     description:
@@ -603,7 +603,7 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -614,12 +614,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      path: "flutter/digit-ui-components/digit_components"
-      ref: "UI/ux-audit-hcm-app-2005"
-      resolved-ref: e40678437f77c0138d537aae8e853e395df7027f
-      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
-    source: git
-    version: "0.3.2"
+      name: digit_ui_components
+      sha256: d29572eac5969eb818001064bfcd1cb0884ea3d2acda8d1742f25d8fcad54162
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
   dio:
     dependency: "direct main"
     description:
