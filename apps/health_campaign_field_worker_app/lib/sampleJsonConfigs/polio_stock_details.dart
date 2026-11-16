@@ -840,6 +840,12 @@ final dynamic samplePolioStockDetailsFlows = {
               "conditions": {"wrapInCard": true},
               "mandatory": false,
               "validations": [
+                // Digits only: also blocks typing anything else.
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+\$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
                 {
                   "type": "min",
                   "value": 1,
@@ -898,6 +904,12 @@ final dynamic samplePolioStockDetailsFlows = {
               "conditions": {"wrapInCard": true, "nestIn": "formUsed"},
               "mandatory": false,
               "validations": [
+                // Digits only: also blocks typing anything else.
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+\$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
                 {
                   "type": "min",
                   "value": 1,
@@ -946,6 +958,12 @@ final dynamic samplePolioStockDetailsFlows = {
               "conditions": {"wrapInCard": true},
               "mandatory": false,
               "validations": [
+                // Digits only: also blocks typing anything else.
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+\$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
                 {
                   "type": "min",
                   "value": 1,
@@ -1003,6 +1021,12 @@ final dynamic samplePolioStockDetailsFlows = {
               "conditions": {"wrapInCard": true, "nestIn": "kitUsed"},
               "mandatory": false,
               "validations": [
+                // Digits only: also blocks typing anything else.
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+\$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
                 {
                   "type": "min",
                   "value": 1,

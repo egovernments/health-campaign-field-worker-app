@@ -1,0 +1,1285 @@
+{
+  "name": "STOCK",
+  "flows": [
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "POLIO_STOCK_RETURNED_VIALS_SUCCESS_HEADING",
+          "format": "panelCard",
+          "fieldName": "successCard",
+          "properties": {
+            "type": "success"
+          },
+          "description": "POLIO_STOCK_RETURNED_VIALS_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_MENU",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "vialDetailsMenu",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "backToMenuButton",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_HOME",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backToHomeButton",
+            "properties": {
+              "type": "secondary"
+            }
+          },
+          "primaryActionLabel": "POLIO_STOCK_BACK_TO_MENU",
+          "secondaryActionLabel": "POLIO_STOCK_BACK_TO_HOME"
+        }
+      ],
+      "name": "returnedVialsSuccess",
+      "order": 5,
+      "footer": [],
+      "header": [],
+      "category": "STOCK",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "initActions": [],
+      "submitCondition": null,
+      "preventScreenCapture": false,
+      "isSuccessorErrorScreen": true
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "POLIO_STOCK_ISSUED_VIALS_SUCCESS_HEADING",
+          "format": "panelCard",
+          "fieldName": "successCard",
+          "properties": {
+            "type": "success"
+          },
+          "description": "POLIO_STOCK_ISSUED_VIALS_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_MENU",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "vialDetailsMenu",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "backToMenuButton",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_HOME",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backToHomeButton",
+            "properties": {
+              "type": "secondary"
+            }
+          },
+          "primaryActionLabel": "POLIO_STOCK_BACK_TO_MENU",
+          "secondaryActionLabel": "POLIO_STOCK_BACK_TO_HOME"
+        }
+      ],
+      "name": "issuedVialsSuccess",
+      "order": 4,
+      "footer": [],
+      "header": [],
+      "category": "STOCK",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "initActions": [],
+      "submitCondition": null,
+      "preventScreenCapture": false,
+      "isSuccessorErrorScreen": true
+    },
+    {
+      "body": [
+        {
+          "icon": "FileUpload",
+          "type": "template",
+          "format": "menu_card",
+          "heading": "POLIO_STOCK_RECORD_ISSUED_VIAL_HEADING",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [],
+                "name": "issuedVials",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "issuedMenuCard",
+          "properties": {
+            "icon": "FileUpload"
+          },
+          "schemaCode": null,
+          "description": "POLIO_STOCK_RECORD_ISSUED_VIAL_DESCRIPTION"
+        },
+        {
+          "icon": "Restore",
+          "type": "template",
+          "format": "menu_card",
+          "heading": "POLIO_STOCK_RECORD_RETURNED_VIAL_HEADING",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "maxReturnable",
+                    "value": "{{fn:computeMaxReturnable()}}"
+                  }
+                ],
+                "name": "returnedVials",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "returnedMenuCard",
+          "properties": {
+            "icon": "Restore"
+          },
+          "schemaCode": null,
+          "description": "POLIO_STOCK_RECORD_RETURNED_VIAL_DESCRIPTION"
+        },
+        {
+          "icon": "MedicalServices",
+          "type": "template",
+          "format": "menu_card",
+          "heading": "AEFI_STOCK_RECORD_FORMS_KITS_HEADING",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [],
+                "name": "aefiFormsAndKits",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "aefiFormsAndKitsMenuCard",
+          "description": "AEFI_STOCK_RECORD_FORMS_KITS_DESCRIPTION"
+        }
+      ],
+      "name": "vialDetailsMenu",
+      "order": 1,
+      "footer": [],
+      "header": [
+        {
+          "label": "POLIO_STOCK_BACK_BUTTON_LABEL",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {
+                "name": "HOME",
+                "type": "HOME"
+              }
+            }
+          ]
+        }
+      ],
+      "heading": "POLIO_STOCK_VIAL_DETAILS_HEADING",
+      "category": "STOCK",
+      "navigateTo": null,
+      "screenType": "TEMPLATE",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}"
+              }
+            ],
+            "name": "userAction",
+            "awaitResults": true
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "rootEntity": "UserActionModel",
+        "searchConfig": {
+          "select": [
+            "userAction"
+          ],
+          "primary": "userAction"
+        }
+      },
+      "submitCondition": null,
+      "preventScreenCapture": false
+    },
+    {
+      "name": "returnedVials",
+      "order": 3,
+      "pages": [
+        {
+          "body": null,
+          "flow": "returnedVials",
+          "page": "returnedVialDetails",
+          "type": "object",
+          "label": "POLIO_STOCK_RETURNED_VIALS_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "POLIO_STOCK_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "STOCK",
+          "heading": "POLIO_STOCK_RETURNED_VIALS_HEADING",
+          "project": "CMP-2026-06-29-006369",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_FETCH_CONFIG"
+                    }
+                  }
+                ],
+                "configName": "polioReturnedVials"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "USERACTION",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_RECORD_VIAL"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "name": "returnedVialsSuccess",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_NAVIGATION"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "properties": [
+            {
+              "type": "string",
+              "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "batchLotNumber",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_AVAILABLE_TO_RETURN_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "maxReturnable",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_TOTAL_RETURNED_LABEL",
+              "order": 3,
+              "range": {
+                "max": "navigation.maxReturnable",
+                "min": 1,
+                "errorMessage": "POLIO_STOCK_TOTAL_RETURNED_EXCEEDS_RECEIVED"
+              },
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_TOTAL_RETURNED_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "totalReturned",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_TOTAL_RETURNED_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "POLIO_STOCK_TOTAL_RETURNED_EXCEEDS_RECEIVED"
+                },
+                {
+                  "type": "max",
+                  "value": "navigation.maxReturnable",
+                  "message": "POLIO_STOCK_TOTAL_RETURNED_EXCEEDS_RECEIVED"
+                }
+              ],
+              "errorMessage": "STOCK_RETURNEDVIALS_totalReturned_ERROR",
+              "computedValue": {
+                "sources": [
+                  "openedVialsReturned",
+                  "unopenedSpoiltVialsReturned",
+                  "unopenedUsableVialsRetrieved",
+                  "unopenedUsableVialsReturned"
+                ],
+                "operation": "sum"
+              },
+              "isMultiSelect": false,
+              "required.message": "POLIO_STOCK_TOTAL_RETURNED_REQUIRED"
+            },
+            {
+              "type": "string",
+              "label": "POLIO_STOCK_DETECTED_LOCATION_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_LOCATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "STOCK_RETURNEDVIALS_latLng_ERROR",
+              "isMultiSelect": false,
+              "required.message": "POLIO_STOCK_LOCATION_REQUIRED"
+            }
+          ],
+          "actionLabel": "POLIO_STOCK_SUBMIT_BUTTON",
+          "description": "POLIO_STOCK_RETURNED_VIALS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "project": "CMP-2026-06-29-006369",
+      "summary": false,
+      "version": 2,
+      "category": "STOCK",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_FETCH_CONFIG"
+                }
+              }
+            ],
+            "configName": "polioReturnedVials"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_RECORD_VIAL"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "name": "returnedVialsSuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_NAVIGATION"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "issuedVials",
+      "order": 2,
+      "pages": [
+        {
+          "body": null,
+          "flow": "issuedVials",
+          "page": "issuedVialDetails",
+          "type": "object",
+          "label": "POLIO_STOCK_ISSUED_VIALS_HEADING",
+          "order": 1,
+          "footer": [
+            {
+              "label": "POLIO_STOCK_SUBMIT_BUTTON",
+              "format": "button",
+              "onAction": [],
+              "properties": {
+                "size": "large",
+                "type": "primary",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              }
+            }
+          ],
+          "module": "STOCK",
+          "heading": "POLIO_STOCK_ISSUED_VIALS_HEADING",
+          "project": "CMP-2026-06-29-006369",
+          "summary": false,
+          "version": 1,
+          "onAction": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_FETCH_CONFIG"
+                    }
+                  }
+                ],
+                "configName": "polioIssuedVials"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "USERACTION",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_RECORD_VIAL"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "name": "issuedVialsSuccess",
+                "type": "TEMPLATE",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "POLIO_STOCK_ERROR_NAVIGATION"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "properties": [
+            {
+              "type": "string",
+              "label": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_BATCH_LOT_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "batchLotNumber",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_LABEL",
+              "order": 2,
+              "range": {
+                "max": 1000000,
+                "min": 1,
+                "errorMessage": "POLIO_STOCK_VALUE_TOO_LARGE"
+              },
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_HELPTEXT",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "totalVialsReceivedForDay",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_REQUIRED"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                },
+                {
+                  "type": "max",
+                  "value": 1000000,
+                  "message": "POLIO_STOCK_VALUE_TOO_LARGE"
+                }
+              ],
+              "errorMessage": "STOCK_ISSUEDVIALS_totalVialsReceivedForDay_ERROR",
+              "isMultiSelect": false,
+              "required.message": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_REQUIRED"
+            },
+            {
+              "type": "string",
+              "label": "POLIO_STOCK_DETECTED_LOCATION_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "latLng",
+              "hidden": false,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "required": true,
+              "fieldName": "latLng",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": null,
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "POLIO_STOCK_LOCATION_REQUIRED"
+                }
+              ],
+              "errorMessage": "STOCK_ISSUEDVIALS_latLng_ERROR",
+              "isMultiSelect": false,
+              "required.message": "POLIO_STOCK_LOCATION_REQUIRED"
+            }
+          ],
+          "actionLabel": "POLIO_STOCK_SUBMIT_BUTTON",
+          "description": "POLIO_STOCK_ISSUED_VIALS_DESCRIPTION",
+          "showTabView": false,
+          "submitCondition": null,
+          "preventScreenCapture": false,
+          "conditionalNavigateTo": null
+        }
+      ],
+      "project": "CMP-2026-06-29-006369",
+      "summary": false,
+      "version": 2,
+      "category": "STOCK",
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_FETCH_CONFIG"
+                }
+              }
+            ],
+            "configName": "polioIssuedVials"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_RECORD_VIAL"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "name": "issuedVialsSuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_NAVIGATION"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {},
+      "scrollListener": {}
+    },
+    {
+      "name": "aefiFormsAndKits",
+      "order": 6,
+      "pages": [
+        {
+          "page": "aefiStockLocation",
+          "type": "object",
+          "label": "AEFI_STOCK_LOCATION_HEADING",
+          "order": 1,
+          "properties": [
+            {
+              "type": "string",
+              "label": "AEFI_LOCATION_DATE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "readOnly": true,
+              "required": false,
+              "fieldName": "dateOfRecord",
+              "mandatory": false,
+              "systemDate": true,
+              "validations": [],
+              "includeInForm": true
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "TRANSIT_POST",
+                  "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"
+                },
+                {
+                  "code": "OUTSIDE_HOUSEHOLD_PLACES",
+                  "name": "AEFI_LOCATION_TYPE_OUTSIDE_HOUSEHOLD_PLACES"
+                }
+              ],
+              "label": "AEFI_LOCATION_TYPE_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "dropdown",
+              "isMdms": true,
+              "required": true,
+              "fieldName": "locationType",
+              "mandatory": true,
+              "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES",
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_TYPE_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_TYPE_REQUIRED_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "dynamic",
+              "enums": [],
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "required": true,
+              "fieldName": "aefiStockLocationName",
+              "mandatory": true,
+              "conditions": {
+                "localDataSource": {
+                  "select": [
+                    "facility",
+                    "address"
+                  ],
+                  "filters": [
+                    {
+                      "key": "usage",
+                      "root": "facility",
+                      "value": "{{form.locationType}}",
+                      "operation": "equals"
+                    },
+                    {
+                      "key": "localityBoundaryCode",
+                      "root": "address",
+                      "value": "{{singleton.boundaryAndParentCodes}}",
+                      "operation": "in"
+                    }
+                  ],
+                  "primary": "facility",
+                  "valueKey": "clientReferenceId",
+                  "displayKey": [
+                    "name"
+                  ],
+                  "resultModel": "facility",
+                  "labelControl": "locationNameLabel"
+                }
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_LOCATION_NAME_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "AEFI_LOCATION_NAME_REQUIRED_ERROR",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "AEFI_LOCATION_NAME_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": true,
+              "readOnly": true,
+              "fieldName": "locationNameLabel",
+              "mandatory": false,
+              "validations": [],
+              "includeInForm": true
+            },
+            {
+              "type": "string",
+              "label": "AEFI_STOCK_RECORDED_BY_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "recordedBy",
+              "mandatory": false,
+              "validations": []
+            }
+          ],
+          "actionLabel": "AEFI_NEXT",
+          "description": "AEFI_STOCK_LOCATION_DESCRIPTION"
+        },
+        {
+          "page": "aefiFormsAndKitsDetails",
+          "type": "object",
+          "label": "AEFI_STOCK_RECORD_FORMS_KITS_HEADING",
+          "order": 2,
+          "conditions": {
+            "showDividers": true,
+            "dependentCards": "stacked"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "YES",
+                  "name": "AEFI_ENUM_YES"
+                },
+                {
+                  "code": "NO",
+                  "name": "AEFI_ENUM_NO"
+                }
+              ],
+              "label": "AEFI_STOCK_FORM_AVAILABLE_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "formAvailable",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO"
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_FORM_AVAILABLE_QTY_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "formAvailableQty",
+              "mandatory": false,
+              "conditions": {
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "YES",
+                  "name": "AEFI_ENUM_YES"
+                },
+                {
+                  "code": "NO",
+                  "name": "AEFI_ENUM_NO"
+                }
+              ],
+              "label": "AEFI_STOCK_FORM_USED_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "formUsed",
+              "mandatory": true,
+              "conditions": {
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_FORM_USED_QTY_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "formUsedQty",
+              "mandatory": false,
+              "conditions": {
+                "nestIn": "formUsed",
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.formUsed=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "YES",
+                  "name": "AEFI_ENUM_YES"
+                },
+                {
+                  "code": "NO",
+                  "name": "AEFI_ENUM_NO"
+                }
+              ],
+              "label": "AEFI_STOCK_KIT_AVAILABLE_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "kitAvailable",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO"
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_KIT_AVAILABLE_QTY_LABEL",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "kitAvailableQty",
+              "mandatory": false,
+              "conditions": {
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "YES",
+                  "name": "AEFI_ENUM_YES"
+                },
+                {
+                  "code": "NO",
+                  "name": "AEFI_ENUM_NO"
+                }
+              ],
+              "label": "AEFI_STOCK_KIT_USED_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "required": true,
+              "fieldName": "kitUsed",
+              "mandatory": true,
+              "conditions": {
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "AEFI_STOCK_SELECT_YES_OR_NO"
+                }
+              ],
+              "errorMessage": "AEFI_STOCK_SELECT_YES_OR_NO",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitAvailable=='YES'"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "integer",
+              "label": "AEFI_STOCK_KIT_USED_QTY_LABEL",
+              "order": 8,
+              "value": "",
+              "format": "text",
+              "required": false,
+              "fieldName": "kitUsedQty",
+              "mandatory": false,
+              "conditions": {
+                "nestIn": "kitUsed",
+                "wrapInCard": true
+              },
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^[0-9]+$",
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 1,
+                  "message": "AEFI_STOCK_WHOLE_NUMBER_ERROR"
+                }
+              ],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "type": "custom",
+                    "condition": "aefiFormsAndKitsDetails.kitUsed=='YES'"
+                  }
+                ]
+              }
+            }
+          ],
+          "actionLabel": "AEFI_SUBMIT",
+          "description": "AEFI_STOCK_RECORD_FORMS_KITS_DESCRIPTION"
+        }
+      ],
+      "version": 1,
+      "disabled": false,
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_FETCH_CONFIG"
+                }
+              }
+            ],
+            "configName": "aefiFormsAndKits"
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "USERACTION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "AEFI_STOCK_ERROR_RECORD"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "name": "aefiFormsAndKitsSuccess",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "POLIO_STOCK_ERROR_NAVIGATION"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "initActions": [],
+      "wrapperConfig": {}
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "AEFI_STOCK_SUCCESS_HEADING",
+          "format": "panelCard",
+          "fieldName": "successCard",
+          "properties": {
+            "type": "success"
+          },
+          "description": "AEFI_STOCK_SUCCESS_DESCRIPTION",
+          "primaryAction": {
+            "type": "template",
+            "label": "AEFI_STOCK_RECORD_AGAIN",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "aefiFormsAndKits",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "recordAgainButton"
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "POLIO_STOCK_BACK_TO_HOME",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backToHomeButton"
+          }
+        }
+      ],
+      "name": "aefiFormsAndKitsSuccess",
+      "order": 7,
+      "footer": [],
+      "header": [],
+      "heading": "",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": []
+    }
+  ],
+  "order": 4,
+  "active": true,
+  "project": "CMP-2026-10-30-011277",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "initialPage": "vialDetailsMenu"
+}
