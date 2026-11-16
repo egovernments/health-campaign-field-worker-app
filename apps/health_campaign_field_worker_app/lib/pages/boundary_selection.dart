@@ -120,7 +120,7 @@ class _BoundarySelectionPageState
   /// labels (keyed by the MDMS codes): the base module and the one published
   /// with the project's MDMS FormConfig.
   String get _missedPlaceModules =>
-      'common,${Constants.missedPlaceLocalizationModule},'
+      'hcm-common,${Constants.missedPlaceLocalizationModule},'
       '${missedPlaceProjectModule(context.selectedProject.referenceID)}';
 
   @override
