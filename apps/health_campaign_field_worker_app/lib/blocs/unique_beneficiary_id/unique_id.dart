@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data/repositories/package_repository/remote/unique_id_pool.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -70,7 +71,10 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
     try {
       final deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
-      final deviceUuid = androidInfo.id;
+      // ANDROID_ID (Settings.Secure) is unique per device. device_info_plus's
+      // `androidInfo.id` is the firmware Build.ID, which is the same on every
+      // phone of a model/firmware, so those phones were sent as one device.
+      final deviceUuid = await const AndroidId().getId() ?? androidInfo.id;
 
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult.contains(ConnectivityResult.none)) {
