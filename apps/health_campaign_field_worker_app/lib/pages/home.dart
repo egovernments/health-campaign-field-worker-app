@@ -2529,7 +2529,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+      i18.home.closedHouseHoldLabel: (isPolio
+              ? homeShowcaseData.polioMissedChildren
+              : homeShowcaseData.closedHouseHold)
+          .buildWith(
         child: HomeItemCard(
           icon: isPolio ? Icons.person_search : Icons.home,
           enableCustomIcon: !isPolio,
@@ -3261,8 +3264,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.closedHouseHoldLabel:
-          homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.closedHouseHoldLabel: isPolio
+          ? homeShowcaseData.polioMissedChildren.showcaseKey
+          : homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.polioRegistrationLabel:
           homeShowcaseData.polioRegistration.showcaseKey,
       i18.home.polioMissedChildrenLabel:

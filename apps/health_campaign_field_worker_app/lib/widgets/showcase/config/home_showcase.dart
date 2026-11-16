@@ -111,7 +111,7 @@ class _HomePageShowcaseData {
   );
 
   final dataShare = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.dataShare,
+    messageLocalizationKey: i18.homeShowcase.dataShare,
   );
 
   final dashBoard = ShowcaseItemBuilder(
@@ -119,7 +119,7 @@ class _HomePageShowcaseData {
   );
 
   final beneficiaryId = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.beneficiaryIdLabel,
+    messageLocalizationKey: i18.homeShowcase.beneficiaryId,
   );
 
   final closedHouseHold = ShowcaseItemBuilder(
@@ -127,7 +127,7 @@ class _HomePageShowcaseData {
   );
 
   final transitPost = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.transitPostLabel,
+    messageLocalizationKey: i18.homeShowcase.outsideHouseholdVaccination,
   );
 
   final polioRegistration = ShowcaseItemBuilder(
@@ -135,7 +135,7 @@ class _HomePageShowcaseData {
   );
 
   final polioMissedChildren = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.polioMissedChildrenLabel,
+    messageLocalizationKey: i18.homeShowcase.polioMissedChildren,
   );
 
   final polioStockDetails = ShowcaseItemBuilder(
@@ -143,11 +143,11 @@ class _HomePageShowcaseData {
   );
 
   final polioLqaDataCollection = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.polioLqaDataCollectionLabel,
+    messageLocalizationKey: i18.homeShowcase.polioLqaDataCollection,
   );
 
   final polioInsideMonitoring = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.polioInsideMonitoringLabel,
+    messageLocalizationKey: i18.homeShowcase.polioInsideMonitoring,
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);

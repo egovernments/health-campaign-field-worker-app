@@ -549,6 +549,30 @@ class HomeShowcase {
   String get clf {
     return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
   }
+
+  String get outsideHouseholdVaccination {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_OUTSIDE_HOUSEHOLD_VACCINATION';
+  }
+
+  String get polioMissedChildren {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_MISSED_CHILDREN';
+  }
+
+  String get polioLqaDataCollection {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_LQAS';
+  }
+
+  String get polioInsideMonitoring {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_INDEPENDENT_MONITORING';
+  }
+
+  String get beneficiaryId {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARY_ID';
+  }
+
+  String get dataShare {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_DATA_SHARE';
+  }
 }
 
 class SelectStockShowcase {
