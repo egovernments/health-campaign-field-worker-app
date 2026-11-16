@@ -68,6 +68,49 @@ void main() {
     });
   });
 
+  group('isLocationCaptureTimedOut', () {
+    const timer = Duration(minutes: 2);
+
+    test('not before the timer runs out', () {
+      expect(
+          isLocationCaptureTimedOut(
+              level: LocationAccuracyLevel.low,
+              elapsedSeconds: 119,
+              saveEnabledAfter: timer),
+          isFalse);
+    });
+
+    test('once the timer runs out without good accuracy', () {
+      for (final level in [
+        null,
+        LocationAccuracyLevel.low,
+        LocationAccuracyLevel.fair,
+      ]) {
+        expect(
+            isLocationCaptureTimedOut(
+                level: level, elapsedSeconds: 120, saveEnabledAfter: timer),
+            isTrue,
+            reason: '$level');
+      }
+    });
+
+    test('never with good accuracy', () {
+      expect(
+          isLocationCaptureTimedOut(
+              level: LocationAccuracyLevel.good,
+              elapsedSeconds: 600,
+              saveEnabledAfter: timer),
+          isFalse);
+    });
+
+    test('never without a popup timer', () {
+      expect(
+          isLocationCaptureTimedOut(
+              level: LocationAccuracyLevel.low, elapsedSeconds: 600),
+          isFalse);
+    });
+  });
+
   group('PopupTimer', () {
     PropertySchema field(Map<String, dynamic> popupTimer) =>
         PropertySchema.fromJson({
