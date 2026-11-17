@@ -17,7 +17,7 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: "3.22.1"
+          flutter-version: "3.22.2"  # Dart 3.4.3, the minimum the packages require
 
       - name: Clean previous builds
         run: flutter clean
