@@ -25,25 +25,9 @@ import 'router.dart';
 
 const _previewVersion = 'preview';
 
-/// Modules loaded before login, as the app does (hcm-login, hcm-common), plus
-/// hcm-home for the home screen labels.
-const _appShellModules = 'hcm-login,hcm-common,hcm-home';
-
-Future<void> _loadShellMessages(BuildContext context) async {
-  final store = context.read<PreviewMessages>();
-  try {
-    final s = await MessageServerSettings.load();
-    final list = await fetchMessages(
-      host: s.host,
-      tenantId: s.tenant,
-      locale: s.locale,
-      modules: _appShellModules,
-    );
-    store.addAll(list);
-  } catch (_) {
-    // Labels fall back to their keys.
-  }
-}
+/// The app's pre-login messages (hcm-login, hcm-common, hcm-home).
+Future<void> _loadShellMessages(BuildContext context) =>
+    loadShellMessagesInto(context.read<PreviewMessages>());
 
 String _t(BuildContext context, String key) =>
     context.read<PreviewMessages>().translate(key);

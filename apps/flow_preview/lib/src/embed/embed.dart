@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import '../config_loader.dart';
 import '../digit_account.dart';
 import '../launcher.dart';
+import '../localization.dart';
 import '../messages_loader.dart';
 import '../router.dart';
 import 'embed_bridge_stub.dart'
@@ -55,14 +56,20 @@ class EmbedController extends ChangeNotifier {
 
   PreviewRouter? _router;
   DigitAccount? _account;
+  PreviewMessages? _messages;
 
   bool get insideHost => EmbedBridge.hasParent;
 
   /// Starts listening to the host page and tells it the preview is ready.
-  void start({required PreviewRouter router, required DigitAccount account}) {
+  void start({
+    required PreviewRouter router,
+    required DigitAccount account,
+    required PreviewMessages messages,
+  }) {
     if (_router != null) return;
     _router = router;
     _account = account;
+    _messages = messages;
     EmbedBridge.listen(_onMessage);
     EmbedBridge.send({
       'type': 'hcm-preview:ready',
@@ -163,6 +170,8 @@ class EmbedController extends ChangeNotifier {
         userInfo: Map<String, dynamic>.from(session['userInfo'] as Map),
         hierarchyType: session['hierarchyType'] as String?,
       );
+      // The app loads these before login; embed mode has no login screen.
+      await loadShellMessagesInto(_messages!);
       final project = await account.loadProjectByReference(campaign);
       await account.selectProject(project);
       // The campaign's own hierarchy (boundary names, hcm-boundary-<type>

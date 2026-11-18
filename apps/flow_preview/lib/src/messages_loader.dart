@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'browser_storage_stub.dart'
+    if (dart.library.js_interop) 'browser_storage_web.dart';
 import 'config_loader.dart';
 import 'localization.dart';
 
@@ -222,20 +224,65 @@ class MessageServerSettings {
   /// to the console's server, tenant and locale instead of saved settings.
   static MessageServerSettings? override;
 
-  static Future<MessageServerSettings> load() async {
-    if (override != null) return override!;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return MessageServerSettings(
-        prefs.getString('preview.server') ?? _defaultServer,
-        prefs.getString('preview.tenant') ?? _defaultTenant,
-        prefs.getString('preview.locale') ?? _defaultLocale,
-        prefs.getString('preview.hierarchy') ?? _defaultHierarchy,
-      );
-    } catch (_) {
+  /// Defaults before anything is saved in this browser.
+  ///
+  /// Served from a DIGIT domain (next to the campaign console): that domain's
+  /// own APIs, and the tenant and locale the console left in this origin's
+  /// localStorage (`Employee.tenant-id`, `Employee.locale`). Other servers'
+  /// APIs are not reachable from here (CORS). Served by tool/serve.py: the
+  /// build-time defaults, through its proxy.
+  static MessageServerSettings get pageDefaults {
+    final served = Uri.base.isScheme('http') || Uri.base.isScheme('https');
+    if (useDevProxy || !served) {
       return const MessageServerSettings(
           _defaultServer, _defaultTenant, _defaultLocale, _defaultHierarchy);
     }
+    return MessageServerSettings(
+      '${Uri.base.origin}/',
+      readBrowserStorage('Employee.tenant-id') ??
+          readBrowserStorage('tenant-id') ??
+          _defaultTenant,
+      readBrowserStorage('Employee.locale') ??
+          readBrowserStorage('locale') ??
+          _defaultLocale,
+      _defaultHierarchy,
+    );
+  }
+
+  static Future<MessageServerSettings> load() async {
+    if (override != null) return override!;
+    final d = pageDefaults;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return MessageServerSettings(
+        prefs.getString('preview.server') ?? d.host,
+        prefs.getString('preview.tenant') ?? d.tenant,
+        prefs.getString('preview.locale') ?? d.locale,
+        prefs.getString('preview.hierarchy') ?? d.hierarchy,
+      );
+    } catch (_) {
+      return d;
+    }
+  }
+}
+
+/// Modules the app loads before login (hcm-login, hcm-common), plus hcm-home
+/// for the home screen labels.
+const appShellModules = 'hcm-login,hcm-common,hcm-home';
+
+/// Loads [appShellModules] into [store] with the current settings. Failures
+/// leave labels showing their keys.
+Future<void> loadShellMessagesInto(PreviewMessages store) async {
+  try {
+    final s = await MessageServerSettings.load();
+    store.addAll(await fetchMessages(
+      host: s.host,
+      tenantId: s.tenant,
+      locale: s.locale,
+      modules: appShellModules,
+    ));
+  } catch (e) {
+    debugPrint('Preview: could not load app messages: $e');
   }
 }
 
@@ -259,12 +306,13 @@ Future<List<PreviewMessage>> fetchMessagesFor(PreviewModule module) async {
 }
 
 class _MessagesDialogState extends State<_MessagesDialog> {
-  final _host = TextEditingController(text: _defaultServer);
-  final _tenant = TextEditingController(text: _defaultTenant);
-  final _locale = TextEditingController(text: _defaultLocale);
-  final _hierarchy = TextEditingController(text: _defaultHierarchy);
+  static final _d = MessageServerSettings.pageDefaults;
+  final _host = TextEditingController(text: _d.host);
+  final _tenant = TextEditingController(text: _d.tenant);
+  final _locale = TextEditingController(text: _d.locale);
+  final _hierarchy = TextEditingController(text: _d.hierarchy);
   late final _modules = TextEditingController(
-      text: guessModules(widget.module, hierarchyType: _defaultHierarchy));
+      text: guessModules(widget.module, hierarchyType: _d.hierarchy));
 
   @override
   void initState() {

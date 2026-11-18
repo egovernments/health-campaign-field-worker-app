@@ -55,7 +55,8 @@ class _FlowPreviewAppState extends State<FlowPreviewApp> {
   void initState() {
     super.initState();
     if (isEmbedded) {
-      EmbedController.instance.start(router: _router, account: _account);
+      EmbedController.instance
+          .start(router: _router, account: _account, messages: _messages);
     }
   }
 
