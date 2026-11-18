@@ -1,0 +1,284 @@
+<!doctype html>
+<!--
+  Development test page for the campaign console's "Preview in app" drawer.
+
+  Runs the console's REAL code — AppPreviewDrawer.js, the editor's
+  transformMdmsToAppConfig and i18nKeyConstants, read from a DIGIT-Frontend
+  checkout via serve.py --console-src — against the running preview. Only
+  what the console provides around it is stubbed: Digit.UserService,
+  Digit.StoreData, Digit.CustomService, globalConfigs, useTranslation and
+  the Button component.
+
+  Served by tool/serve.py at /drawer-test (never part of build/web):
+    python3 tool/serve.py --upstream https://unified-qa.digit.org/ \
+      --console-src <DIGIT-Frontend>/health/micro-ui-react19/web/packages/modules/campaign-manager/src
+
+  React, ReactDOM and Babel (to compile the JSX) load from unpkg.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drawer test (dev)</title>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js" crossorigin></script>
+<style>
+  :root { --bg:#f4f4f4; --card:#fff; --ink:#0b0c0c; --muted:#505a5f; --line:#d6d5d4; --accent:#c84c0e; --ok:#00703c; --err:#d4351c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:10px 16px; background:#0b4b66; color:#fff; font-weight:600; }
+  header small { font-weight:400; opacity:.8; margin-left:8px; }
+  main { max-width:760px; padding:16px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px; margin-bottom:12px; }
+  h2 { font-size:14px; margin:0 0 6px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; }
+  @media (max-width: 600px) { .grid { grid-template-columns:1fr; } }
+  label { display:block; font-size:12px; color:var(--muted); margin-top:6px; }
+  input, select { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; font:inherit; }
+  .row { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center; }
+  button.btn { padding:7px 12px; border:1px solid var(--accent); border-radius:4px; font:inherit; cursor:pointer; background:#fff; color:var(--accent); }
+  button.btn.primary { background:var(--accent); color:#fff; }
+  button.btn:disabled { opacity:.5; cursor:default; }
+  #who, .hint { font-size:12px; color:var(--muted); }
+  #log { font:12px/1.4 ui-monospace, monospace; background:#f8f8f8; border:1px solid var(--line); border-radius:4px; padding:6px; height:220px; overflow:auto; white-space:pre-wrap; }
+  .in { color:var(--ok); } .out { color:#1d70b8; } .bad { color:var(--err); } .info { color:var(--muted); }
+</style>
+</head>
+<body>
+<header>“Preview in app” drawer test <small>console code, stubbed console services</small></header>
+<main>
+  <section>
+    <h2>Console session</h2>
+    <div class="grid">
+      <div><label for="server">Server (same as serve.py --upstream)</label><input id="server" value="https://unified-qa.digit.org/"></div>
+      <div><label for="tenant">Tenant</label><input id="tenant" value="qa"></div>
+      <div><label for="user">User ID</label><input id="user" autocomplete="username"></div>
+      <div><label for="password">Password</label><input id="password" type="password" autocomplete="current-password"></div>
+    </div>
+    <div class="row"><button class="btn primary" id="signin">Sign in</button><span id="who">Not signed in: a fake token is used (handshake and error paths only).</span></div>
+  </section>
+
+  <section>
+    <h2>Editor state</h2>
+    <div class="grid">
+      <div><label for="campaign">Campaign number</label><input id="campaign" placeholder="CMP-…"></div>
+      <div><label for="module">Module (flow)</label><input id="module" value="REGISTRATION"></div>
+      <div>
+        <label for="drafts">Draft screens (TransformedFormConfig)</label>
+        <select id="drafts">
+          <option value="sample">Editor sample (configs/fullData.json)</option>
+          <option value="live">Live MDMS search (sign in first)</option>
+          <option value="empty">None</option>
+        </select>
+      </div>
+      <div>
+        <label for="prepare">Current screen</label>
+        <select id="prepare">
+          <option value="ok">Saves without errors</option>
+          <option value="invalid">Has validation errors</option>
+        </select>
+      </div>
+      <div><label for="locale">Console language</label><input id="locale" value="en_MZ"></div>
+    </div>
+    <div class="row"><span id="app"></span><span class="hint">Opens the drawer exactly as the editor's footer button does.</span></div>
+  </section>
+
+  <section>
+    <h2>Log</h2>
+    <div id="log" aria-live="polite"></div>
+  </section>
+</main>
+
+<script>
+(async () => {
+  const $ = (id) => document.getElementById(id);
+  const SRC = "/console-src/";
+  const DRAWER = "pages/employee/NewAppConfiguration/AppPreviewDrawer.js";
+  let session = null;
+
+  function log(cls, text) {
+    const line = document.createElement("div");
+    line.className = cls;
+    line.textContent = `${new Date().toLocaleTimeString()}  ${text}`;
+    $("log").appendChild(line);
+    $("log").scrollTop = $("log").scrollHeight;
+  }
+  const brief = (m) => {
+    const c = { ...m };
+    if (c.session) c.session = { ...c.session, token: "…", userInfo: "…" };
+    if (c.config) c.config = `{name: ${c.config.name}, flows: ${c.config.flows?.length}}`;
+    return JSON.stringify(c);
+  };
+
+  // --- Console stand-ins -------------------------------------------------
+  window.globalConfigs = {
+    getConfig: (k) => ({ HCM_FLOW_PREVIEW_PATH: "/", MDMS_V2_CONTEXT_PATH: "mdms-v2" })[k],
+  };
+
+  const STRINGS = {
+    PREVIEW_IN_APP: "Preview in app",
+    PREVIEW_IN_APP_RELOAD: "Reload draft",
+    PREVIEW_IN_APP_NOTE: "Your unpublished changes, running in the field worker app's screens. Nothing is saved to devices.",
+    PREVIEW_IN_APP_BUILDING: "Preparing your draft…",
+    PREVIEW_IN_APP_STARTING: "Opening the app…",
+    PREVIEW_IN_APP_FIX_ERRORS: "Fix the errors on this screen to preview it.",
+    PREVIEW_IN_APP_NO_DRAFT: "This module has no screens to preview yet.",
+    PREVIEW_IN_APP_FAILED: "The preview could not be opened. Try again.",
+    PREVIEW_IN_APP_NOT_SAME_ORIGIN: "The app preview is not set up for this environment.",
+    APP_CONFIG_CLOSE_PANEL: "Close",
+  };
+  window.__t = (k) => STRINGS[k] || k;
+
+  window.__StubButton = ({ label, title, onClick, isDisabled, variation }) =>
+    React.createElement("button", { type: "button", className: `btn ${variation || ""}`, title, onClick, disabled: !!isDisabled }, label);
+
+  let sample = null;
+  window.Digit = {
+    UserService: {
+      getUser: () =>
+        session
+          ? { access_token: session.token, info: session.userInfo }
+          : { access_token: "fake-token", info: { uuid: "00000000-test", userName: "test", name: "Test user", tenantId: $("tenant").value, roles: [] } },
+    },
+    StoreData: { getCurrentLanguage: () => $("locale").value },
+    CustomService: {
+      getResponse: async ({ url, body }) => {
+        const schema = body?.MdmsCriteria?.schemaCode;
+        const mode = $("drafts").value;
+        log("info", `CustomService ${url} ${schema} (${mode})`);
+        if (mode === "empty") return { mdms: [] };
+        if (mode === "sample") {
+          sample ??= await fetch(SRC + "pages/employee/NewAppConfiguration/configs/fullData.json").then((r) => r.json());
+          if (schema === "HCM-ADMIN-CONSOLE.TransformedFormConfig") {
+            return { mdms: sample.data.map((d) => ({ data: d })) };
+          }
+          return { mdms: [{ data: { name: $("module").value, project: $("campaign").value, version: 1, flows: [] } }] };
+        }
+        // live: same origin, forwarded by serve.py --upstream like the console's dev proxy
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ...body, RequestInfo: { authToken: Digit.UserService.getUser().access_token } }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      },
+    },
+  };
+
+  // --- Load the console's ES modules (JSX compiled in the browser) --------
+  const shims = {
+    react: "const R = window.React; export default R; export const { useState, useEffect, useRef, useCallback, useMemo } = R;",
+    "react-i18next": "export const useTranslation = () => ({ t: window.__t });",
+    "@egovernments/digit-ui-components": "export const Button = window.__StubButton;",
+  };
+  const blob = (code) => URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+  const loaded = {};
+  async function load(path) {
+    if (loaded[path]) return loaded[path];
+    const res = await fetch(SRC + path);
+    if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
+    let code = Babel.transform(await res.text(), { presets: [["react", { runtime: "classic" }]], filename: path }).code;
+    const specs = [...new Set([...code.matchAll(/from\s+["']([^"']+)["']/g)].map((m) => m[1]))];
+    for (const spec of specs) {
+      let target;
+      if (shims[spec]) target = blob(shims[spec]);
+      else if (spec.startsWith(".")) {
+        let resolved = new URL(spec, "https://x/" + path).pathname.slice(1);
+        if (!/\.(js|json)$/.test(resolved)) resolved += ".js";
+        target = await load(resolved);
+      } else throw new Error(`${path} imports ${spec}, which this test page does not stub`);
+      code = code.split(`"${spec}"`).join(`"${target}"`).split(`'${spec}'`).join(`'${target}'`);
+    }
+    return (loaded[path] = blob(code));
+  }
+
+  let Drawer;
+  try {
+    Drawer = (await import(await load(DRAWER))).default;
+    log("info", "Loaded the console's AppPreviewDrawer.js, mdmsToAppConfig.js and i18nKeyConstants.js.");
+  } catch (e) {
+    log("bad", `Could not load the console code: ${e.message}. Start serve.py with --console-src.`);
+    return;
+  }
+
+  // --- Log the protocol both ways -----------------------------------------
+  window.addEventListener("message", (e) => {
+    const f = document.querySelector("iframe");
+    if (e.origin === location.origin && f && e.source === f.contentWindow) {
+      log(e.data?.state === "error" ? "bad" : "in", `← ${brief(e.data)}`);
+    }
+  });
+  new MutationObserver(() => {
+    const f = document.querySelector("iframe");
+    if (f && !f.__watched) {
+      f.__watched = true;
+      f.addEventListener("load", () =>
+        f.contentWindow.addEventListener("message", (e) => {
+          if (e.source === window) log("out", `→ ${brief(e.data)}`);
+        })
+      );
+    }
+  }).observe(document.body, { childList: true, subtree: true });
+
+  // --- The editor's footer button + drawer --------------------------------
+  function App() {
+    const [open, setOpen] = React.useState(false);
+    const prepare = React.useCallback(async () => {
+      const ok = $("prepare").value === "ok";
+      log("info", `prepare(): ${ok ? "current screen saved" : "validation errors"}`);
+      return ok;
+    }, []);
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(window.__StubButton, { variation: "primary", label: "Preview in app", onClick: () => setOpen(true) }),
+      open &&
+        React.createElement(Drawer, {
+          tenantId: $("tenant").value,
+          campaignNumber: $("campaign").value,
+          flowModule: $("module").value,
+          prepare,
+          onClose: () => { setOpen(false); log("info", "Drawer closed."); },
+        })
+    );
+  }
+  ReactDOM.createRoot($("app")).render(React.createElement(App));
+
+  // --- Sign-in (password goes once to the DIGIT server via serve.py) ------
+  $("signin").addEventListener("click", async () => {
+    const server = $("server").value.trim().replace(/\/?$/, "/");
+    const tenantId = $("tenant").value.trim();
+    const body = new URLSearchParams({
+      username: $("user").value.trim(), password: $("password").value,
+      userType: "EMPLOYEE", tenantId, scope: "read", grant_type: "password",
+    });
+    $("signin").disabled = true;
+    try {
+      const res = await fetch("/digit-proxy/user/oauth/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          authorization: "Basic ZWdvdi11c2VyLWNsaWVudDo=", // DIGIT's public client id
+          "X-Digit-Upstream": server,
+        },
+        body,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.access_token) throw new Error(data.error_description || data.error || `HTTP ${res.status}`);
+      session = { token: data.access_token, userInfo: data.UserRequest };
+      $("who").textContent = `Signed in as ${data.UserRequest?.name || data.UserRequest?.userName}.`;
+      log("in", "Signed in.");
+    } catch (e) {
+      session = null;
+      log("bad", `Sign-in failed: ${e.message}`);
+    } finally {
+      $("password").value = "";
+      $("signin").disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

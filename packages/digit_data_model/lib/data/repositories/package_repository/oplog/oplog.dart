@@ -1,5 +1,4 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:isar/isar.dart';
 
 import '../../../../models/entities/hf_referral.dart';
 
@@ -311,16 +310,8 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
       DataModelType type, {
         required String createdBy,
       }) async {
-    final pendingEntries = await isar.opLogs
-        .filter()
-        .entityTypeEqualTo(type)
-        .operationEqualTo(DataOperation.create)
-        .serverGeneratedIdIsNull()
-        .syncedUpEqualTo(false)
-        .syncedDownEqualTo(false)
-        .createdByEqualTo(createdBy)
-        .sortByCreatedAt()
-        .findAll();
+    final pendingEntries =
+        await pendingCreateOpLogs(type, createdBy: createdBy);
 
     final entriesList = pendingEntries.map((e) {
       return OpLogEntry.fromOpLog<PgrServiceModel>(e);

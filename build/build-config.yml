@@ -1,0 +1,20 @@
+#
+# DIGIT Jenkins build config (same format as DIGIT-Frontend/build/build-config.yml).
+#
+# config:
+# -   name: < Name of the job, foo/bar would create job named bar inside folder foo >
+#     build:
+#     - work-dir: < Working directory of the app to be built >
+#       dockerfile: < Path to the dockerfile, optional, assumes dockerfile in working directory if not provided >
+#       image-name: < Docker image name  >
+#
+# The job name below is a proposal: DevOps creates the Jenkins job and may
+# want a different folder.
+config:
+  # Flutter web preview of flow configs, embedded by the campaign console
+  # (served at /flow-preview/ on the console's domain).
+  - name: builds/health-campaign-field-worker-app/flow-preview
+    build:
+      - work-dir: .
+        dockerfile: apps/flow_preview/docker/Dockerfile
+        image-name: hcm-flow-preview

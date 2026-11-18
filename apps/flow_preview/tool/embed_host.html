@@ -1,0 +1,216 @@
+<!doctype html>
+<!--
+  Development stand-in for the campaign console: hosts the preview in an
+  iframe with ?embed=1 and drives it over postMessage, the way the console's
+  app-config editor will. Served by tool/serve.py at /embed-host (not part of
+  build/web, so it is never deployed).
+
+  The password is sent once, through serve.py's proxy, to the DIGIT server's
+  sign-in endpoint. The token is kept in this page's memory only.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embed host (dev)</title>
+<style>
+  :root { --bg:#f4f4f4; --card:#fff; --ink:#0b0c0c; --muted:#505a5f; --line:#d6d5d4; --accent:#c84c0e; --ok:#00703c; --err:#d4351c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:10px 16px; background:#0b4b66; color:#fff; font-weight:600; }
+  header small { font-weight:400; opacity:.8; margin-left:8px; }
+  main { display:grid; grid-template-columns:minmax(300px, 420px) 1fr; gap:16px; padding:16px; height:calc(100vh - 42px); }
+  @media (max-width: 800px) { main { grid-template-columns:1fr; height:auto; } }
+  section { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px; overflow:auto; }
+  h2 { font-size:14px; margin:12px 0 6px; } h2:first-child { margin-top:0; }
+  label { display:block; font-size:12px; color:var(--muted); margin-top:6px; }
+  input, textarea, select { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; font:inherit; }
+  textarea { font:12px/1.4 ui-monospace, monospace; height:160px; resize:vertical; }
+  .row { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  button { padding:7px 12px; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:4px; font:inherit; cursor:pointer; }
+  button.secondary { background:#fff; color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  #who { font-size:12px; margin-top:6px; color:var(--muted); }
+  #log { font:12px/1.4 ui-monospace, monospace; background:#f8f8f8; border:1px solid var(--line); border-radius:4px; padding:6px; height:160px; overflow:auto; white-space:pre-wrap; }
+  .in { color:var(--ok); } .out { color:#1d70b8; } .bad { color:var(--err); }
+  .frame { padding:0; display:flex; flex-direction:column; }
+  .frame .bar { padding:8px 12px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center; font-size:12px; color:var(--muted); }
+  .frame .bar label { display:inline-flex; gap:4px; margin:0; align-items:center; }
+  .frame .bar input { width:auto; }
+  iframe { border:0; flex:1; width:100%; min-height:600px; }
+</style>
+</head>
+<body>
+<header>Embed host <small>dev stand-in for the campaign console</small></header>
+<main>
+  <section>
+    <h2>1. Console session</h2>
+    <label for="server">Server</label>
+    <input id="server" value="https://unified-qa.digit.org/">
+    <label for="tenant">Tenant</label>
+    <input id="tenant" value="qa">
+    <label for="user">User ID</label>
+    <input id="user" autocomplete="username">
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password">
+    <div class="row"><button id="signin">Sign in</button></div>
+    <div id="who">Not signed in.</div>
+
+    <h2>2. Campaign and draft config</h2>
+    <label for="campaign">Campaign number (project referenceID)</label>
+    <input id="campaign" placeholder="CMP-…">
+    <label for="example">Fill from a bundled example</label>
+    <select id="example">
+      <option value="">—</option>
+      <option>closed_household.json</option>
+      <option>complaints.json</option>
+    </select>
+    <label for="config">Draft FormConfig (JSON: {name, flows, …})</label>
+    <textarea id="config" spellcheck="false" placeholder='{"name": "REGISTRATION", "flows": [ … ]}'></textarea>
+    <div class="row">
+      <button id="init" disabled>Send init</button>
+      <button id="update" class="secondary" disabled>Send config update</button>
+    </div>
+
+    <h2>Messages</h2>
+    <div id="log" aria-live="polite"></div>
+  </section>
+
+  <section class="frame">
+    <div class="bar">
+      <label><input type="checkbox" id="phoneframe" checked> Phone frame</label>
+      <button id="reload" class="secondary">Reload preview</button>
+    </div>
+    <iframe id="preview" title="HCM flow preview"></iframe>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const origin = location.origin;
+  const frame = $('preview');
+  let session = null;   // {token, userInfo, tenantId, host}
+  let previewReady = false;
+
+  function log(cls, text) {
+    const line = document.createElement('div');
+    line.className = cls;
+    line.textContent = `${new Date().toLocaleTimeString()}  ${text}`;
+    $('log').appendChild(line);
+    $('log').scrollTop = $('log').scrollHeight;
+  }
+
+  function loadFrame() {
+    previewReady = false;
+    const q = new URLSearchParams({ embed: '1' });
+    if (!$('phoneframe').checked) q.set('frame', 'off');
+    frame.src = `/?${q}`;
+  }
+
+  function send(message) {
+    frame.contentWindow.postMessage(message, origin);
+    const shown = { ...message };
+    if (shown.session) shown.session = { ...shown.session, token: '…', userInfo: '…' };
+    if (shown.config) shown.config = `{${Object.keys(shown.config).join(', ')}}`;
+    log('out', `→ ${JSON.stringify(shown)}`);
+  }
+
+  function readConfig() {
+    const text = $('config').value.trim();
+    if (!text) return undefined;
+    try { return JSON.parse(text); }
+    catch (e) { log('bad', `Config is not valid JSON: ${e.message}`); return null; }
+  }
+
+  function sendInit() {
+    if (!session) { log('bad', 'Sign in first.'); return; }
+    const campaignNumber = $('campaign').value.trim();
+    if (!campaignNumber) { log('bad', 'Enter a campaign number.'); return; }
+    const config = readConfig();
+    if (config === null) return;
+    send({ type: 'hcm-preview:init', session, campaignNumber, ...(config ? { config } : {}) });
+  }
+
+  function refreshButtons() {
+    $('init').disabled = !(session && previewReady);
+    $('update').disabled = !(session && previewReady);
+  }
+
+  window.addEventListener('message', (e) => {
+    if (e.origin !== origin || e.source !== frame.contentWindow) return;
+    const m = e.data || {};
+    log(m.state === 'error' ? 'bad' : 'in', `← ${JSON.stringify(m)}`);
+    if (m.type === 'hcm-preview:ready') {
+      previewReady = true;
+      refreshButtons();
+      // Like the console would: (re)initialise whenever the preview loads.
+      if (session && $('campaign').value.trim()) sendInit();
+    }
+  });
+
+  $('signin').addEventListener('click', async () => {
+    const server = $('server').value.trim().replace(/\/?$/, '/');
+    const tenantId = $('tenant').value.trim();
+    const body = new URLSearchParams({
+      username: $('user').value.trim(),
+      password: $('password').value,
+      userType: 'EMPLOYEE',
+      tenantId,
+      scope: 'read',
+      grant_type: 'password',
+    });
+    $('signin').disabled = true;
+    try {
+      const res = await fetch('/digit-proxy/user/oauth/token', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          // DIGIT's public client id (as the app sends), not a secret.
+          authorization: 'Basic ZWdvdi11c2VyLWNsaWVudDo=',
+          'X-Digit-Upstream': server,
+        },
+        body,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.access_token) {
+        throw new Error(data.error_description || data.error || `HTTP ${res.status}`);
+      }
+      session = { token: data.access_token, userInfo: data.UserRequest, tenantId, host: server };
+      $('who').textContent = `Signed in as ${data.UserRequest?.name || data.UserRequest?.userName} on ${tenantId}.`;
+      log('in', 'Signed in.');
+    } catch (e) {
+      session = null;
+      $('who').textContent = 'Not signed in.';
+      log('bad', `Sign-in failed: ${e.message}`);
+    } finally {
+      $('password').value = '';
+      $('signin').disabled = false;
+      refreshButtons();
+    }
+  });
+
+  $('example').addEventListener('change', async (e) => {
+    if (!e.target.value) return;
+    try {
+      const res = await fetch(`/assets/assets/examples/${e.target.value}`);
+      $('config').value = JSON.stringify(await res.json(), null, 2);
+    } catch (err) {
+      log('bad', `Could not load the example: ${err.message}`);
+    }
+  });
+
+  $('init').addEventListener('click', sendInit);
+  $('update').addEventListener('click', () => {
+    const config = readConfig();
+    if (config) send({ type: 'hcm-preview:config', config });
+    else if (config === undefined) log('bad', 'Paste a config first.');
+  });
+  $('reload').addEventListener('click', loadFrame);
+  $('phoneframe').addEventListener('change', loadFrame);
+
+  loadFrame();
+})();
+</script>
+</body>
+</html>

@@ -366,6 +366,25 @@ abstract class OpLogManager<T extends EntityModel> {
     return markAsNonRecoverable;
   }
 
+  /// Create entries of [type] by [createdBy] that have not been synced up,
+  /// oldest first. Used by managers that sync creates only (e.g. complaints).
+  /// Lives here, next to the Isar queries, so subclasses stay platform-neutral.
+  @protected
+  Future<List<OpLog>> pendingCreateOpLogs(
+    DataModelType type, {
+    required String createdBy,
+  }) =>
+      isar.opLogs
+          .filter()
+          .entityTypeEqualTo(type)
+          .operationEqualTo(DataOperation.create)
+          .serverGeneratedIdIsNull()
+          .syncedUpEqualTo(false)
+          .syncedDownEqualTo(false)
+          .createdByEqualTo(createdBy)
+          .sortByCreatedAt()
+          .findAll();
+
   String? getServerGeneratedId(T entity);
 
   int? getRowVersion(T entity);

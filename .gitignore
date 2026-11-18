@@ -32,6 +32,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 **/build/
+# Except the DIGIT Jenkins build config at the repository root.
+!/build/
+/build/*
+!/build/build-config.yml
 coverage/
 coverage_report/
 Test Results - **.html

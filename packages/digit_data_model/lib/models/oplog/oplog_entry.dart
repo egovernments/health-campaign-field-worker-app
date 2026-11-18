@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../data/local_store/no_sql/schema/oplog.dart' as o show AdditionalId;
+import '../../data/local_store/no_sql/schema/oplog_schema.dart' as o show AdditionalId;
 
 part 'oplog_entry.mapper.dart';
 

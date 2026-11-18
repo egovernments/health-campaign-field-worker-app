@@ -1,0 +1,14 @@
+# Docker build context = repository root (apps/flow_preview/docker/Dockerfile).
+# The image only needs apps/flow_preview and packages/; keep everything else,
+# and all local build output, out of the context.
+*
+!apps/flow_preview/
+!packages/
+
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.idea/
+**/*.iml
+**/.DS_Store

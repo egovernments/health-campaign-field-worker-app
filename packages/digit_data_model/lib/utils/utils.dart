@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:archive/archive.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
+import 'package:sqlite3/common.dart' show SqliteException;
 import 'package:encrypt/encrypt.dart';
 import 'package:uuid/uuid.dart';
 

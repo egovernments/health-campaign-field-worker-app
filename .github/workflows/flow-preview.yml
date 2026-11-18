@@ -1,0 +1,124 @@
+name: Flow preview (web)
+
+# Checks the HCM flow preview (apps/flow_preview) on every change to it or to
+# the packages it runs, and smoke-tests its Docker image. The image itself is
+# built and pushed by DIGIT Jenkins from build/build-config.yml.
+
+on:
+  pull_request:
+    paths:
+      - 'apps/flow_preview/**'
+      - 'packages/**'
+      - '.dockerignore'
+      - '.github/workflows/flow-preview.yml'
+  push:
+    branches: ['master', 'develop']
+    paths:
+      - 'apps/flow_preview/**'
+      - 'packages/**'
+      - '.dockerignore'
+      - '.github/workflows/flow-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Analyze, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/flow_preview
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies (exactly as locked)
+        run: flutter pub get --enforce-lockfile
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos lib test
+
+      - name: Test
+        run: flutter test
+
+      - name: Build (same flags as the Docker image)
+        run: >
+          flutter build web --release
+          --pwa-strategy=none
+          --no-web-resources-cdn
+          --base-href /flow-preview/
+
+      - name: Check build output
+        run: |
+          set -e
+          test -s build/web/sqlite3.wasm            # browser database
+          test -s build/web/canvaskit/canvaskit.wasm # self-hosted, no CDN
+          grep -q '<base href="/flow-preview/">' build/web/index.html
+          # web/flutter_bootstrap.js: no service worker, local CanvasKit.
+          # (`! grep` would not fail the step under set -e.)
+          if grep -q 'serviceWorkerVersion: "' build/web/flutter_bootstrap.js; then
+            echo "flutter_bootstrap.js registers a service worker"; exit 1
+          fi
+          grep -q 'canvasKitBaseUrl: "canvaskit/"' build/web/flutter_bootstrap.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flow-preview-web
+          path: apps/flow_preview/build/web
+          retention-days: 14
+
+  image:
+    name: Docker image smoke test
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -f apps/flow_preview/docker/Dockerfile -t hcm-flow-preview:ci .
+
+      - name: Run and check
+        run: |
+          set -e
+          docker run -d --name preview -p 8080:80 hcm-flow-preview:ci
+          for i in $(seq 1 20); do
+            curl -fs http://localhost:8080/flow-preview/health && break
+            sleep 1
+          done
+          base=http://localhost:8080
+
+          echo "page"
+          curl -fs $base/flow-preview/ | grep -q '<base href="/flow-preview/">'
+
+          echo "deep links fall back to index.html"
+          curl -fs $base/flow-preview/some/route | grep -q 'flutter_bootstrap.js'
+
+          echo "redirect without trailing slash"
+          curl -sI $base/flow-preview | grep -qi '^location: /flow-preview/'
+
+          echo "wasm content type"
+          curl -sI $base/flow-preview/sqlite3.wasm | grep -qi '^content-type: application/wasm'
+
+          echo "only the same origin may frame it"
+          curl -sI $base/flow-preview/ | grep -qi '^x-frame-options: SAMEORIGIN'
+          curl -sI $base/flow-preview/ | grep -qi "frame-ancestors 'self'"
+
+          echo "no long-lived caching of unhashed files"
+          curl -sI $base/flow-preview/main.dart.js | grep -qi '^cache-control: no-cache'
+
+      - name: Container logs
+        if: always()
+        run: docker logs preview || true
