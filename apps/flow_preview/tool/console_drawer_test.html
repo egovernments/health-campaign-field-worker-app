@@ -46,7 +46,7 @@
 </style>
 </head>
 <body>
-<header>“Preview in app” drawer test <small>console code, stubbed console services</small></header>
+<header>“Preview mobile app” popup test <small>console code (My campaigns card), stubbed console services</small></header>
 <main>
   <section>
     <h2>Console session</h2>
@@ -94,7 +94,7 @@
 (async () => {
   const $ = (id) => document.getElementById(id);
   const SRC = "/console-src/";
-  const DRAWER = "pages/employee/NewAppConfiguration/AppPreviewDrawer.js";
+  const DRAWER = "components/MobileAppPreviewPopup.js";
   let session = null;
 
   function log(cls, text) {
@@ -117,16 +117,12 @@
   };
 
   const STRINGS = {
-    PREVIEW_IN_APP: "Preview in app",
-    PREVIEW_IN_APP_RELOAD: "Reload draft",
-    PREVIEW_IN_APP_NOTE: "Your unpublished changes, running in the field worker app's screens. Nothing is saved to devices.",
-    PREVIEW_IN_APP_BUILDING: "Preparing your draft…",
-    PREVIEW_IN_APP_STARTING: "Opening the app…",
-    PREVIEW_IN_APP_FIX_ERRORS: "Fix the errors on this screen to preview it.",
-    PREVIEW_IN_APP_NO_DRAFT: "This module has no screens to preview yet.",
-    PREVIEW_IN_APP_FAILED: "The preview could not be opened. Try again.",
-    PREVIEW_IN_APP_NOT_SAME_ORIGIN: "The app preview is not set up for this environment.",
-    APP_CONFIG_CLOSE_PANEL: "Close",
+    PREVIEW_MOBILE_APP: "Preview mobile app",
+    PREVIEW_MOBILE_APP_CLOSE: "Close",
+    PREVIEW_MOBILE_APP_NOTE: "The campaign's published app, in the field worker app's screens. Sample data only; nothing is saved to devices.",
+    PREVIEW_MOBILE_APP_STARTING: "Opening the app…",
+    PREVIEW_MOBILE_APP_FAILED: "The preview could not be opened. Try again.",
+    PREVIEW_MOBILE_APP_NOT_AVAILABLE: "The app preview is not set up for this environment.",
   };
   window.__t = (k) => STRINGS[k] || k;
 
@@ -197,7 +193,7 @@
   let Drawer;
   try {
     Drawer = (await import(await load(DRAWER))).default;
-    log("info", "Loaded the console's AppPreviewDrawer.js, mdmsToAppConfig.js and i18nKeyConstants.js.");
+    log("info", "Loaded the console's MobileAppPreviewPopup.js and i18nKeyConstants.js.");
   } catch (e) {
     log("bad", `Could not load the console code: ${e.message}. Start serve.py with --console-src.`);
     return;
@@ -233,14 +229,13 @@
     return React.createElement(
       React.Fragment,
       null,
-      React.createElement(window.__StubButton, { variation: "primary", label: "Preview in app", onClick: () => setOpen(true) }),
+      React.createElement(window.__StubButton, { variation: "primary", label: "Preview mobile app", onClick: () => setOpen(true) }),
       open &&
         React.createElement(Drawer, {
           tenantId: $("tenant").value,
           campaignNumber: $("campaign").value,
-          flowModule: $("module").value,
-          prepare,
-          onClose: () => { setOpen(false); log("info", "Drawer closed."); },
+          campaignName: $("module").value,
+          onClose: () => { setOpen(false); log("info", "Popup closed."); },
         })
     );
   }
