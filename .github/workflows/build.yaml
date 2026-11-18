@@ -1,5 +1,5 @@
 name: Build Pipeline
-run-name: Build ${{ github.event.inputs.pipeline_name }}
+run-name: Build ${{ github.event.inputs.pipeline_name || 'flow-preview' }}
 
 # Builds and pushes a Docker image named in build/build-config.yml, the same
 # way DIGIT-Frontend's .github/workflows/build.yaml does: resolve the config,
@@ -19,8 +19,20 @@ on:
         type: choice
         options:
           - flow-preview
+  # TEMPORARY, for testing before this workflow is on master (workflow_dispatch
+  # only works from the default branch): every push to this branch builds and
+  # pushes the flow preview image. Remove before merging.
+  push:
+    branches: ['feature/flow-preview-console-embed']
+    paths:
+      - 'apps/flow_preview/**'
+      - 'packages/**'
+      - '.dockerignore'
+      - 'build/build-config.yml'
+      - '.github/workflows/build.yaml'
 
 env:
+  PIPELINE_NAME: ${{ github.event.inputs.pipeline_name || 'flow-preview' }}
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
@@ -29,7 +41,7 @@ permissions:
 
 jobs:
   resolve-config:
-    name: Resolve ${{ github.event.inputs.pipeline_name }} config
+    name: Resolve ${{ github.event.inputs.pipeline_name || 'flow-preview' }} config
     runs-on: ubuntu-latest
     outputs:
       work_dir:    ${{ steps.setenv.outputs.work_dir }}
@@ -58,7 +70,6 @@ jobs:
       - name: Resolve env from build-config.yml
         id: setenv
         run: |
-          PIPELINE_NAME="${{ github.event.inputs.pipeline_name }}"
           echo "### Pipeline Name - $PIPELINE_NAME" >> $GITHUB_STEP_SUMMARY
 
           # Find exactly one matching config block
@@ -135,9 +146,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name }}-${{ github.ref_name }}
+          key: ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ env.PIPELINE_NAME }}-${{ github.ref_name }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name }}-
+            ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ env.PIPELINE_NAME }}-
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
