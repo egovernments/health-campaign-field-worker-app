@@ -44,9 +44,15 @@ Duration? locationPopupTimer(PopupTimer? popupTimer) {
       : duration;
 }
 
-/// Save needs good accuracy (within accuracyThreshold, 5 m by default). With
-/// a popup timer ([saveEnabledAfter]), any reading can be saved once it runs
-/// out, so a worker is never stuck where accuracy won't improve.
+/// With the popup timer switched off, any reading can still be saved after
+/// this long, so a form is never blocked where accuracy can't reach the
+/// threshold (indoors, dense cover).
+const Duration kLocationSaveFallbackAfter = Duration(minutes: 2);
+
+/// Save needs good accuracy (within accuracyThreshold, 5 m by default). Any
+/// reading can be saved once the popup timer ([saveEnabledAfter]) runs out,
+/// or after [kLocationSaveFallbackAfter] when the timer is off, so a worker
+/// is never stuck where accuracy won't improve.
 @visibleForTesting
 bool canSaveLocation({
   required LocationAccuracyLevel? level,
@@ -55,8 +61,8 @@ bool canSaveLocation({
 }) {
   if (level == null) return false;
   if (level == LocationAccuracyLevel.good) return true;
-  return saveEnabledAfter != null &&
-      elapsedSeconds >= saveEnabledAfter.inSeconds;
+  final after = saveEnabledAfter ?? kLocationSaveFallbackAfter;
+  return elapsedSeconds >= after.inSeconds;
 }
 
 /// The popup timer ran out without a good reading: the status chip shows
@@ -275,9 +281,23 @@ class _LatLngBuilderStatefulWrapperState
 
   @override
   void dispose() {
+    _isCapturing = false;
     _satelliteSub?.cancel();
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
+    // The field can go away while its capture dialog is open (a visibility
+    // rule hides it, the form is rebuilt). Close the dialog too, after this
+    // frame since the navigator may be locked mid-dispose, so it doesn't
+    // keep listening to [_progress] or call back into this disposed state.
+    final dialogContext = _dialogContext;
+    _dialogContext = null;
+    if (dialogContext != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (dialogContext.mounted) {
+          Navigator.of(dialogContext, rootNavigator: true).pop();
+        }
+      });
+    }
     _progress.dispose();
     super.dispose();
   }
@@ -368,6 +388,7 @@ class _LatLngBuilderStatefulWrapperState
   }
 
   void _acceptCurrentReading() {
+    if (!mounted) return;
     final reading = _progress.value;
     if (!_isCapturing || !reading.hasReading) return;
 

@@ -64,6 +64,30 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
     }
 
     final currentUserUuid = FlowBuilderSingleton().loggedInUserUuid;
+
+    // Resolve and mark ASSIGNED as one step, so a concurrent save can't be
+    // handed the same free row in between.
+    return BeneficiaryIdAllocator.runExclusive(() => _allocate(
+          entities: entities,
+          contextData: contextData,
+          repository: repository,
+          currentUserUuid: currentUserUuid,
+          identifierType: identifierType,
+          upgradeDefault: upgradeDefault,
+          isEdit: isEdit,
+        ));
+  }
+
+  Future<Map<String, dynamic>> _allocate({
+    required List<dynamic> entities,
+    required Map<String, dynamic> contextData,
+    required LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
+        repository,
+    required String? currentUserUuid,
+    required String identifierType,
+    required bool upgradeDefault,
+    required bool isEdit,
+  }) async {
     final allocator = BeneficiaryIdAllocator(
       repository: repository,
       userUuid: currentUserUuid,
@@ -117,19 +141,58 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
     }
 
     if (rowsToAssign.isNotEmpty) {
-      await _markAssigned(repository, rowsToAssign, currentUserUuid ?? '');
+      final unmarked =
+          await _markAssigned(repository, rowsToAssign, currentUserUuid ?? '');
+      // A row that could not be marked ASSIGNED stays free in the pool and
+      // would be handed out again. Don't save it on this individual: a lost
+      // pool ID is preferred over a duplicate one.
+      if (unmarked.isNotEmpty) {
+        for (var i = 0; i < updatedEntities.length; i++) {
+          final entity = updatedEntities[i];
+          if (entity is! IndividualModel) continue;
+          final identifiers = entity.identifiers ?? const <IdentifierModel>[];
+          if (!identifiers.any((id) => _usesRow(id, identifierType, unmarked))) {
+            continue;
+          }
+          anyChanged = true;
+          updatedEntities[i] = entity.copyWith(
+            identifiers: identifiers.map((id) {
+              if (!_usesRow(id, identifierType, unmarked)) return id;
+              final replacement = id.copyWith(
+                identifierType: 'DEFAULT',
+                identifierId: IdGen.instance.identifier,
+              );
+              debugPrint('UPDATE_IDENTIFIER_STATUS: downgradedToDefault '
+                  'individual=${entity.clientReferenceId} '
+                  '${id.identifierId} -> ${replacement.identifierId} '
+                  '(pool row not marked ASSIGNED)');
+              return replacement;
+            }).toList(),
+          );
+        }
+      }
     }
 
     if (!anyChanged) return contextData;
     return {...contextData, 'entities': updatedEntities};
   }
 
-  Future<void> _markAssigned(
+  static bool _usesRow(
+    IdentifierModel identifier,
+    String identifierType,
+    Set<String> rowIds,
+  ) =>
+      identifier.identifierType == identifierType &&
+      rowIds.contains(identifier.identifierId);
+
+  /// Marks [rows] ASSIGNED and returns the ids of the rows that failed.
+  Future<Set<String>> _markAssigned(
     LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel> repository,
     List<UniqueIdPoolModel> rows,
     String currentUserUuid,
   ) async {
     final now = DateTime.now().millisecondsSinceEpoch;
+    final failed = <String>{};
     for (final row in rows) {
       final clientAudit = row.clientAuditDetails != null
           ? row.clientAuditDetails!.copyWith(
@@ -150,7 +213,9 @@ class UpdateIdentifierStatusExecutor extends ActionExecutor {
       } catch (e) {
         debugPrint('UPDATE_IDENTIFIER_STATUS: could not mark ${row.id} '
             'ASSIGNED: $e');
+        failed.add(row.id);
       }
     }
+    return failed;
   }
 }

@@ -1330,6 +1330,20 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 b.code == assignedCode &&
                 b.materializedPath != null &&
                 !b.materializedPath!.startsWith('$ancestorPrefix.'));
+        // Nothing stored and the ancestor prefix couldn't be derived: a
+        // scoped fetch now would store leaf-rooted paths. Fail this attempt
+        // as a boundary sync error instead (the refetch flag set above makes
+        // the retry do the full download).
+        if (boundaries.isEmpty && !prefixResolved) {
+          emit(
+            state.copyWith(
+              selectedProject: event.model,
+              loading: false,
+              syncError: ProjectSyncErrorType.boundary,
+            ),
+          );
+          return;
+        }
         if (boundaries.isEmpty || hasLeafRootedPath) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
