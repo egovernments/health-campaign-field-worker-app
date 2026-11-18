@@ -3,8 +3,9 @@
 # Build context is the REPOSITORY ROOT (the preview uses packages/* by path):
 #   docker build -f apps/flow_preview/docker/Dockerfile -t hcm-flow-preview .
 #
-# Served on the same domain as the campaign console, which embeds it in an
-# iframe (?embed=1) and talks to it over postMessage (same origin only).
+# Served on the same domain as the campaign console (workbench-ui), which
+# embeds it in an iframe (?embed=1) and talks to it over postMessage (same
+# origin only). Built by .github/workflows/build.yaml (pipeline flow-preview).
 
 # --- Build ------------------------------------------------------------------
 # Same Flutter version as the APK workflows (.github/workflows/build-apk.yml).
