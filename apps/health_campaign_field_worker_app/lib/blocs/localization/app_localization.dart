@@ -93,6 +93,24 @@ class AppLocalizations {
     return _localizedStrings.isNotEmpty;
   }
 
+  /// Translates `<code>_<SUFFIX>` (e.g. `HOME_BENEFICIARY_LABEL_POLIO`), so a
+  /// label can differ by project type. There is deliberately no fallback to
+  /// [code]: a missing message shows the suffixed code itself, so a string
+  /// that wasn't uploaded is visible. Only an empty [suffix] uses [code].
+  ///
+  /// The suffix is upper-cased and every run of characters outside
+  /// `[A-Z0-9]` becomes `_`, so `MR-DN` looks up `<code>_MR_DN`: localization
+  /// codes are upserted as plain `[A-Z0-9_]` identifiers.
+  String translateWithSuffix(String code, String? suffix) {
+    final normalized = suffix
+        ?.trim()
+        .toUpperCase()
+        .replaceAll(RegExp(r'[^A-Z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    if (normalized == null || normalized.isEmpty) return translate(code);
+    return translate('${code}_$normalized');
+  }
+
   String translate(String localizedValues) {
     final loaded = _messagesByCode[localizedValues];
     if (loaded != null) return loaded;

@@ -730,33 +730,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         return (logTime == entryTime || logTime == exitTime);
       }).toList();
 
-      // Drop de-enrolled attendees. The CRUD wrapper (WrapperBuilder) hands
-      // us Maps shaped like {entity: AttendeeModel, individual: [...],
-      // <mappedFields>: ...} — `denrollmentDate` is not spread onto the top
-      // level, it lives on the underlying AttendeeModel under `entity`. Try
-      // both shapes so the filter still works if this ever changes.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      items = items.where((item) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            return true;
-          }
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Keep only attendees who can be marked on the selected date:
+      // enrolled on or before it (someone enrolled from a later date can't
+      // be marked yet) and not de-enrolled. The CRUD wrapper hands these as
+      // Maps {entity: AttendeeModel, individual: [...], ...};
+      // AttendanceUtils.isAttendeeActiveOn reads both shapes.
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      items = items
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, markDay))
+          .toList();
 
       items = items.map((item) {
         if (item is Map && item['individualId'] != null) {
@@ -842,24 +824,14 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      // Match the render-side drop in todayAttendeesList: de-enrolled
-      // attendees are hidden from the marking list, so counting the raw
-      // `attendees` here would lock Submit forever (collectionLength can
-      // never reach the raw count). Keep only actives.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      final attendees =
-          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
-        dynamic raw;
-        try {
-          raw = (a as dynamic).denrollmentDate;
-        } catch (_) {
-          return true;
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Match the render-side drop in todayAttendeesList: attendees not yet
+      // enrolled on the selected date, or de-enrolled, are hidden from the
+      // marking list, so counting the raw `attendees` here would lock Submit
+      // forever (collectionLength can never reach the raw count).
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
+          .where((a) => AttendanceUtils.isAttendeeActiveOn(a, markDay))
+          .toList();
       final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       // Filter logs for the selected entry and exit times that are not yet uploaded
@@ -1062,32 +1034,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       final list = args.first;
       if (list is! Iterable) return 0;
       final nowMs = DateTime.now().millisecondsSinceEpoch;
-      var count = 0;
-      for (final item in list) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            count++;
-            continue;
-          }
-        }
-        if (raw == null) {
-          count++;
-          continue;
-        }
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null || deDate >= nowMs) count++;
-      }
-      return count;
+      return list
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, nowMs))
+          .length;
     });
 
     FunctionRegistry.register('isLogNotMarked', (args, stateData) {
@@ -1721,9 +1670,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return Container();
     }
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
     final roles = state.userModel.roles.map((e) {
       return e.code;
     });
@@ -2276,9 +2223,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       return null;
     }
 
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
@@ -3169,79 +3114,80 @@ class _HomePageState extends LocalizedState<HomePage> {
       // `sampleOutSideHouseholdVaccinationFlows` module and differed only in
       // the delivery method they scoped to. The flow's own
       // `selectVaccinationLocation` page is the transit-post / CLF chooser, so
-      // one card is enough.
-      i18.home.outsideHouseholdVaccinationLabel:
-          homeShowcaseData.transitPost.buildWith(
-        child: HomeItemCard(
-          icon: Icons.signpost,
-          label: i18.home.outsideHouseholdVaccinationLabel,
-          onPressed: () async {
-            await context.router.push(CurrentBoundaryRoute(
-              onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                    'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+      // one card is enough. Polio-style campaigns only for now.
+      if (isPolio)
+        i18.home.outsideHouseholdVaccinationLabel:
+            homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+            icon: Icons.signpost,
+            label: i18.home.outsideHouseholdVaccinationLabel,
+            onPressed: () async {
+              await context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
 
-                // Site lists show each site's parent boundary code. Its
-                // translation is in SQL from project selection but not yet
-                // in the flow-builder cache, so reload that before the list
-                // renders instead of showing the raw code first.
-                final locale = AppSharedPreferences().getSelectedLocale;
-                if (locale != null && locale.isNotEmpty) {
-                  await ctx
-                      .read<LocalizationBloc>()
-                      .refreshFlowBuilderLocalization(locale);
-                }
-                if (!ctx.mounted) return;
+                  // Site lists show each site's parent boundary code. Its
+                  // translation is in SQL from project selection but not yet
+                  // in the flow-builder cache, so reload that before the list
+                  // renders instead of showing the raw code first.
+                  final locale = AppSharedPreferences().getSelectedLocale;
+                  if (locale != null && locale.isNotEmpty) {
+                    await ctx
+                        .read<LocalizationBloc>()
+                        .refreshFlowBuilderLocalization(locale);
+                  }
+                  if (!ctx.mounted) return;
 
-                await FlowNavigationUtils.navigateToFlowModule(
-                  context: ctx,
-                  config: FlowModuleConfig(
-                    schemaKey: 'OUTSIDEHOUSEHOLD',
-                    sampleFlows: sampleOutSideHouseholdVaccinationFlows,
-                    // Sites are facilities. The list/overview screens search
-                    // the facility table, filter by boundary through the
-                    // address row, and pull the children vaccinated at a
-                    // site (UserActions tagged with the site's
-                    // clientReferenceId) and the site's campaign link.
-                    relationshipMappings: const [
-                      RelationshipMapping(
-                          from: 'address',
-                          to: 'facility',
-                          localKey: 'relatedClientReferenceId',
-                          foreignKey: 'clientReferenceId'),
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'userAction',
-                          localKey: 'clientReferenceId',
-                          foreignKey: 'resourceTag'),
-                      RelationshipMapping(
-                          from: 'facility',
-                          to: 'projectFacility',
-                          localKey: 'id',
-                          foreignKey: 'facilityId'),
-                    ],
-                    nestedModelMappings: const [
-                      NestedModelMapping(
-                        rootModel: 'facility',
-                        fields: {
-                          'address': NestedFieldMapping(
-                            table: 'address',
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'OUTSIDEHOUSEHOLD',
+                      sampleFlows: sampleOutSideHouseholdVaccinationFlows,
+                      // Sites are facilities. The list/overview screens search
+                      // the facility table, filter by boundary through the
+                      // address row, and pull the children vaccinated at a
+                      // site (UserActions tagged with the site's
+                      // clientReferenceId) and the site's campaign link.
+                      relationshipMappings: const [
+                        RelationshipMapping(
+                            from: 'address',
+                            to: 'facility',
+                            localKey: 'relatedClientReferenceId',
+                            foreignKey: 'clientReferenceId'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'userAction',
                             localKey: 'clientReferenceId',
-                            foreignKey: 'relatedClientReferenceId',
-                            type: NestedMappingType.one,
-                          ),
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ));
-          },
+                            foreignKey: 'resourceTag'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'projectFacility',
+                            localKey: 'id',
+                            foreignKey: 'facilityId'),
+                      ],
+                      nestedModelMappings: const [
+                        NestedModelMapping(
+                          rootModel: 'facility',
+                          fields: {
+                            'address': NestedFieldMapping(
+                              table: 'address',
+                              localKey: 'clientReferenceId',
+                              foreignKey: 'relatedClientReferenceId',
+                              type: NestedMappingType.one,
+                            ),
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ));
+            },
+          ),
         ),
-      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {

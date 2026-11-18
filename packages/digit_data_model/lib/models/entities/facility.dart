@@ -15,6 +15,7 @@ class FacilitySearchModel extends EntitySearchModel
   final int? storageCapacity;
   final String? tenantId;
   final String? name;
+
   FacilitySearchModel({
     this.name,
     this.id,

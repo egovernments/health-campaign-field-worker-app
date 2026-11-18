@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 2.1.0
+version: 2.2.0
 
 environment:
   sdk: '>=3.0.0 <=4.0.0'
@@ -45,6 +45,7 @@ dependencies:
   flutter_portal: ^1.1.4
   flutter_background_service: ^5.1.0
   flutter_local_notifications: ^17.1.2
+  android_id: ^0.4.1
   device_info_plus: ^9.1.2
   battery_plus: ^6.0.1
   workmanager: ^0.5.2
@@ -58,7 +59,7 @@ dependencies:
   disk_space_update: ^0.0.2
   sync_service: ^1.0.6
   attendance_management: ^1.0.5+1
-  digit_scanner: ^1.1.0
+  digit_scanner: ^1.1.1
   digit_data_model: ^1.5.0
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2

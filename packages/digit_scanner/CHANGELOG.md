@@ -1,3 +1,7 @@
+## 1.1.1
+
+* New subclass hook on `DigitScannerPageState`: `showEnterManualCodeLink` (default `true`). Override to `false` to hide the "Enter Manual Code" link, e.g. when the host supplies its own manual-entry action via `extraManualEntryContent`. Non-breaking
+
 ## 1.1.0
 
 * Add two subclass hooks on `DigitScannerPageState` for host apps that need a prerequisite step or extra UI on the manual-entry surface:

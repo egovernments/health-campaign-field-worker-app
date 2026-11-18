@@ -344,6 +344,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           UserActionOpLogManager(isar),
         ),
       ),
+      // Uploads userLocation op-log entries (location tracking and new
+      // settlements) in a manual sync, as the background sync does.
+      RepositoryProvider<LocationTrackerLocalBaseRepository>(
+        create: (_) => LocationTrackerLocalBaseRepository(
+          sql,
+          LocationTrackerOpLogManager(isar),
+        ),
+      ),
 
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(

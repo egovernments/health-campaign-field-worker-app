@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../pages/attendance_qr_scanner.dart';
+import '../../utils/attendance_utils.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class AttendanceQrScannerButton extends ResolvedFlowWidget {
@@ -100,6 +101,12 @@ class AttendanceQrScannerButton extends ResolvedFlowWidget {
     Future<void> Function(ScannedIndividualDataModel) onSelected,
   ) async {
     // Navigate to scanner and await return
+    // Only attendees who can be marked today: someone enrolled from a later
+    // date, or de-enrolled, must not be marked by scanning their QR.
+    final today = DateTime.now().millisecondsSinceEpoch;
+    attendees = attendees
+        .where((e) => AttendanceUtils.isAttendeeActiveOn(e, today))
+        .toList();
     List<AttendeeModel> attendeeModels = attendees.map<AttendeeModel>((e) {
       AttendeeModel attendee = e['entity'];
       String? individualNumber = e['individual'].first?.individualId;

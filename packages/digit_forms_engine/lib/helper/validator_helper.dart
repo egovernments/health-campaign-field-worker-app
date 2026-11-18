@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -201,7 +203,10 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
 
         case 'notIn':
           // value: a list, or a navigation reference to one
-          // (e.g. "navigation.existingNames").
+          // (e.g. "navigation.existingNames"); or, to keep names unique per
+          // option of another field, {"from": "navigation.namesByType",
+          // "scopeField": "locationType"} where the reference holds
+          // {optionCode: [names]}.
           if (schemaKey != null) {
             validators.add(Validators.delegate(
               (control) => _notInValidator(rule.value, control, schemaKey),
@@ -280,12 +285,59 @@ int? getMaxLength(List<ValidationRule>? validations) {
 /// those).
 Map<String, dynamic>? _notInValidator(dynamic listOrReference,
     AbstractControl<dynamic> control, String schemaKey) {
-  final list = _resolveNavigationValue(listOrReference, schemaKey);
+  dynamic list;
+  if (listOrReference is Map) {
+    // Scoped form: only names under the selected option of `scopeField`.
+    // Nothing is taken until an option is picked.
+    final scopeField = listOrReference['scopeField']?.toString();
+    final scopeControl = _siblingControl(control, scopeField);
+    if (scopeControl == null) {
+      // The first run happens while the control is built, before it joins
+      // its form group, and a prefilled name may never run again on its own.
+      // Re-run once the group exists so the scope listener gets attached.
+      if (control.parent == null) {
+        scheduleMicrotask(() {
+          if (control.parent != null) control.updateValueAndValidity();
+        });
+      }
+      return null;
+    }
+    _revalidateOnChange(control, scopeControl);
+    final scope = scopeControl.value?.toString();
+    final byScope = _resolveNavigationValue(listOrReference['from'], schemaKey);
+    if (scope == null || scope.isEmpty || byScope is! Map) return null;
+    list = byScope[scope];
+  } else {
+    list = _resolveNavigationValue(listOrReference, schemaKey);
+  }
   final value = control.value?.toString().trim().toLowerCase() ?? '';
   if (list is! List || value.isEmpty) return null;
 
   final taken = list.any((e) => e?.toString().trim().toLowerCase() == value);
   return taken ? {'notIn': true} : null;
+}
+
+/// The control named [name] in [control]'s form group, if any.
+AbstractControl<dynamic>? _siblingControl(
+    AbstractControl<dynamic> control, String? name) {
+  final group = control.parent;
+  if (name == null || group is! FormGroup || !group.contains(name)) {
+    return null;
+  }
+  return group.control(name);
+}
+
+/// Controls already re-validated when their scope control changes.
+final Expando<bool> _revalidating = Expando<bool>('notInScope');
+
+/// Re-runs [control]'s validators whenever [scope] changes. A validator only
+/// runs when its own control changes, so without this a name entered before
+/// picking a clashing type would stay valid.
+void _revalidateOnChange(
+    AbstractControl<dynamic> control, AbstractControl<dynamic> scope) {
+  if (_revalidating[control] == true) return;
+  _revalidating[control] = true;
+  scope.valueChanges.listen((_) => control.updateValueAndValidity());
 }
 
 Map<String, dynamic>? _notEqualToValidator(

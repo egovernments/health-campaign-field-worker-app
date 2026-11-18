@@ -21,10 +21,23 @@ class IconWidget extends ResolvedFlowWidget {
     final size = (properties['size'] as num?)?.toDouble();
 
     return Icon(
-      DigitIconMapping.getIcon(iconData),
+      _resolveIcon(iconData?.toString() ?? ''),
       size: size,
       color: _parseIconColor(context, properties['color']?.toString()),
     );
+  }
+
+  /// Icons the app shows natively but [DigitIconMapping] has no key for.
+  /// Checked only when Digit's map misses, so Digit stays the source of
+  /// truth. `Send` is the home page's peer-to-peer (data share) icon, reused
+  /// on the permissions screen for nearby devices.
+  static const Map<String, IconData> _fallbackIcons = {
+    'Send': Icons.send,
+  };
+
+  IconData _resolveIcon(String key) {
+    if (DigitIconMapping.hasIcon(key)) return DigitIconMapping.getIcon(key);
+    return _fallbackIcons[key] ?? DigitIconMapping.getIcon(key);
   }
 
   /// Theme colour for the icon. Null when unset, leaving the ambient
