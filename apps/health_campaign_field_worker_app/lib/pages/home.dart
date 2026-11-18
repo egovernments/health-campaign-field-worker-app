@@ -38,6 +38,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import 'package:sync_service/data/sync_service.dart';
 import 'package:sync_service/utils/utils.dart' as sync_utils;
+import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -57,6 +58,7 @@ import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
 import '../sampleJsonConfigs/polio_household_strategy.dart';
+import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
 import '../sampleJsonConfigs/polio_outside_vaccination.dart';
@@ -2429,14 +2431,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
+                    // No schema downloaded: fall back to the bundled sample
+                    // for this campaign type (bednet on master).
+                    final fallback = isPolio
+                        ? samplePolioHouseholdStrategyFlows
+                        : sampleBednetFlows;
                     FlowRegistry.setConfig(
-                        samplePolioHouseholdStrategyFlows["flows"]
-                            as List<Map<String, dynamic>>);
+                        fallback["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName:
-                              samplePolioHouseholdStrategyFlows["initialPage"]),
+                      FlowBuilderHomeRoute(pageName: fallback["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -3110,6 +3114,22 @@ class _HomePageState extends LocalizedState<HomePage> {
             },
           ),
         ),
+
+      // --- Transit Post — every other campaign type ---
+      // The merged card above is polio-only; other campaigns keep the
+      // transit_post package flow they had on master.
+      if (!isPolio)
+        i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+            icon: Icons.local_shipping_outlined,
+            label: i18.home.transitPostLabel,
+            onPressed: () => _openModule(() async {
+              const module = "hcm-transit-post";
+              triggerLocalization(module: module);
+              context.router.push(const TransitPostWrapperRoute());
+            }),
+          ),
+        ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -3145,6 +3165,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // Inherits the transit-post showcase key — the card it replaced.
       i18.home.outsideHouseholdVaccinationLabel:
           homeShowcaseData.transitPost.showcaseKey,
+      i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3155,6 +3176,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
       i18.home.outsideHouseholdVaccinationLabel,
+      i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,
       i18.home.polioInsideMonitoringLabel,
@@ -3199,7 +3221,12 @@ class _HomePageState extends LocalizedState<HomePage> {
     }).toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))
+        // Only cards that are actually built: the outside-household and
+        // transit-post cards share a showcase key and only one is shown.
+        .where((f) =>
+            f != i18.home.db &&
+            homeItemsMap.containsKey(f) &&
+            homeItemsShowcaseMap.containsKey(f))
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 

@@ -17,10 +17,11 @@ import 'package:sync_service/data/repositories/sync/sync_up.dart';
 class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
   final RemoteRepository remote;
 
-  /// Oplog entries pushed by [create] whose sync-up still has to be
-  /// recorded by [localMarkSyncUp]. Anything not in this set was skipped and
-  /// stays pending.
-  final Set<int> _pushedEntryIds = {};
+  /// Oplog entries [create] deliberately held back (a link whose facility has
+  /// no server id yet). [localMarkSyncUp] leaves these pending; every other
+  /// entry it receives — creates that were pushed, updates, deletes, single
+  /// operations and non-recoverable errors — is marked synced.
+  final Set<int> _skippedEntryIds = {};
 
   OutsideHouseholdSiteSyncRegistry(this.remote);
 
@@ -44,6 +45,10 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     required MapEntry<DataModelType, List<OpLogEntry<EntityModel>>>
         typeGroupedEntity,
   }) async {
+    // A retry of a previously skipped entry starts clean; it is re-added
+    // below only if it is skipped again.
+    _skippedEntryIds.removeAll(entry.map((e) => e.id).whereType<int>());
+
     switch (typeGroupedEntity.key) {
       case DataModelType.facility:
         await _createFacilities(
@@ -58,7 +63,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         );
       default:
         await remote.bulkCreate(entities);
-        _pushedEntryIds.addAll(entry.map((e) => e.id).whereType<int>());
     }
   }
 
@@ -67,7 +71,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     List<FacilityModel> facilities,
   ) async {
     final bulk = <Map<String, dynamic>>[];
-    final bulkEntryIds = <int>[];
 
     for (final facility in facilities) {
       final clientReferenceId = facility.clientReferenceId;
@@ -78,7 +81,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
       }
 
       bulk.add(_facilityPayload(facility));
-      bulkEntryIds.add(opLog.id!);
     }
 
     if (bulk.isNotEmpty) {
@@ -88,7 +90,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         queryParameters: {'tenantId': DigitDataModelSingleton().tenantId},
         data: {'Facilities': bulk},
       );
-      _pushedEntryIds.addAll(bulkEntryIds);
     }
   }
 
@@ -98,7 +99,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     LocalRepository<EntityModel, EntitySearchModel> local,
   ) async {
     final bulk = <Map<String, dynamic>>[];
-    final bulkEntryIds = <int>[];
 
     for (final queued in links) {
       final clientReferenceId = queued.clientReferenceId;
@@ -116,18 +116,21 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
       ))
           .whereType<ProjectFacilityModel>()
           .firstOrNull;
-      if (current == null) continue;
+      if (current == null) {
+        _skippedEntryIds.add(opLog.id!);
+        continue;
+      }
 
       final facilityClientReferenceId =
           _fieldValue(current, 'facilityClientReferenceId') ?? queued.facilityId;
       if (current.facilityId == facilityClientReferenceId) {
         debugPrint('SITE SYNC: link $clientReferenceId waits for facility '
             '$facilityClientReferenceId to get a server id');
+        _skippedEntryIds.add(opLog.id!);
         continue;
       }
 
       bulk.add(_linkPayload(current));
-      bulkEntryIds.add(opLog.id!);
     }
 
     if (bulk.isNotEmpty) {
@@ -137,7 +140,6 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
         queryParameters: {'tenantId': DigitDataModelSingleton().tenantId},
         data: {'ProjectFacilities': bulk},
       );
-      _pushedEntryIds.addAll(bulkEntryIds);
     }
   }
 
@@ -214,7 +216,8 @@ class OutsideHouseholdSiteSyncRegistry implements SyncUpOperation {
     for (final syncedEntity in entity) {
       final id = syncedEntity.id;
       if (id == null) continue;
-      if (!_pushedEntryIds.contains(id)) continue; // skipped: stays pending
+      // Held back by [create]: stays pending for the next pass.
+      if (_skippedEntryIds.remove(id)) continue;
 
       await local.markSyncedUp(
         entry: syncedEntity,

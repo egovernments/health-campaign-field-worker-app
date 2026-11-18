@@ -413,10 +413,15 @@ class SyncServiceMapper extends SyncEntityMapperListener {
         final currentLinks = current.whereType<ProjectFacilityModel>().toList();
         if (currentLinks.isEmpty) break;
 
-        responseEntities = await remote.search(ProjectFacilitySearchModel(
+        final linkQuery = ProjectFacilitySearchModel(
           projectId: currentLinks.map((e) => e.projectId).toSet().toList(),
           facilityId: currentLinks.map((e) => e.facilityId).toSet().toList(),
-        ));
+        );
+        // Site links are only returned when asked for explicitly — the same
+        // flag ProjectBloc._loadOutsideHouseholdSites sends.
+        responseEntities = await (remote is ProjectFacilityRemoteRepository
+            ? remote.search(linkQuery, onlyOutsideHouseholdSites: true)
+            : remote.search(linkQuery));
 
         for (var element in operationGroupedEntity.value) {
           if (element.id == null) continue;

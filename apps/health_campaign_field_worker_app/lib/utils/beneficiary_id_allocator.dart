@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/id_status.dart';
@@ -98,6 +99,40 @@ class BeneficiaryIdAllocator {
   final bool keepOwnAssigned;
 
   final Set<String> _claimed = <String>{};
+
+  /// State of the [runExclusive] lock: whether a body is running, and the
+  /// callers waiting their turn (first in, first out).
+  static bool _busy = false;
+  static final Queue<Completer<void>> _waiters = Queue<Completer<void>>();
+
+  /// Runs [body] after every earlier [runExclusive] call has finished.
+  ///
+  /// Reading the next free row and marking it ASSIGNED are separate database
+  /// calls, so two saves running at the same time could otherwise both read
+  /// the same free row. Wrap the whole resolve-then-mark sequence in this so
+  /// one save's pool rows are ASSIGNED before the next save looks for one.
+  /// (The app writes the pool from a single isolate.)
+  ///
+  /// A waiter's completer is created by the waiter itself and the lock is
+  /// handed straight to it, so an uncontended call never awaits a future
+  /// created by an earlier call.
+  static Future<T> runExclusive<T>(Future<T> Function() body) async {
+    if (_busy) {
+      final turn = Completer<void>();
+      _waiters.add(turn);
+      await turn.future; // _busy stays true: the lock is handed over
+    }
+    _busy = true;
+    try {
+      return await body();
+    } finally {
+      if (_waiters.isNotEmpty) {
+        _waiters.removeFirst().complete();
+      } else {
+        _busy = false;
+      }
+    }
+  }
 
   static final String _unAssigned = IdStatus.unAssigned.toValue();
 

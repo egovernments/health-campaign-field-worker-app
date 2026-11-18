@@ -112,13 +112,13 @@ class FacilityLocalRepository
 
   /// Writes the facility and, when present, its address and locality.
   ///
-  /// Sites created on the phone must reach the server, so an oplog entry is
-  /// written by default. Downloads go through [bulkCreate], which never
-  /// writes one.
+  /// No oplog entry by default, as on master: downloads call this too. Sites
+  /// created on the phone pass `createOpLog: true` (see
+  /// `DigitCrudService.createEntities`).
   @override
   FutureOr<void> create(
     FacilityModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
     DataOperation dataOperation = DataOperation.create,
   }) async {
     return retryLocalCallOperation(() async {

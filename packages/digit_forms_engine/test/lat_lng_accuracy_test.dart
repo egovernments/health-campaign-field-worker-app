@@ -16,11 +16,17 @@ void main() {
           isFalse);
     });
 
-    test('without a timer, only good accuracy can be saved', () {
+    test('without a timer, any reading saves after the fallback', () {
+      final fallback = kLocationSaveFallbackAfter.inSeconds;
       expect(
           canSaveLocation(
-              level: LocationAccuracyLevel.fair, elapsedSeconds: 600),
+              level: LocationAccuracyLevel.fair,
+              elapsedSeconds: fallback - 1),
           isFalse);
+      expect(
+          canSaveLocation(
+              level: LocationAccuracyLevel.fair, elapsedSeconds: fallback),
+          isTrue);
       expect(
           canSaveLocation(level: LocationAccuracyLevel.good, elapsedSeconds: 0),
           isTrue);
@@ -51,7 +57,8 @@ void main() {
     test('low accuracy only after the popup timer runs out', () {
       expect(
           canSaveLocation(
-              level: LocationAccuracyLevel.low, elapsedSeconds: 600),
+              level: LocationAccuracyLevel.low,
+              elapsedSeconds: kLocationSaveFallbackAfter.inSeconds - 1),
           isFalse);
       expect(
           canSaveLocation(
