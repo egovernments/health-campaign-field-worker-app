@@ -1,7 +1,8 @@
 #
 # Docker build config, same format as DIGIT-Frontend/build/build-config.yml.
-# Built by .github/workflows/build.yaml ("Build Pipeline": Run workflow, pick
-# the branch and the pipeline name, e.g. flow-preview).
+# The published image is built by DIGIT-Frontend's Build Pipeline (pipeline
+# flow-preview, health/flow-preview/Dockerfile there); this entry documents
+# the image for a pipeline that builds from this repository.
 #
 # config:
 # -   name: < Name of the job, foo/bar would create job named bar inside folder foo >

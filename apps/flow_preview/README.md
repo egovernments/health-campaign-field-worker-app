@@ -83,7 +83,7 @@ in) or nothing; "Current screen" simulates validation errors.
 |---|---|
 | Analyze, test, build, and smoke-test the Docker image on every PR | `.github/workflows/flow-preview.yml` |
 | Image (Flutter build → nginx at `/flow-preview/`) | `docker/Dockerfile`, `docker/nginx.conf`; build context is the repo root |
-| Build and push the image | **Build Pipeline** workflow (`.github/workflows/build.yaml`, pipeline `flow-preview`) from `build/build-config.yml` → `egovio/hcm-flow-preview:<branch>-<commit>` |
+| Build and push the image | DIGIT-Frontend's **Build Pipeline** (`.github/workflows/build.yaml`, pipeline `flow-preview`; `health/flow-preview/Dockerfile` there fetches this repo at the branch set in its `build/build-config.yml`) → `egovio/hcm-flow-preview` |
 | Route `/flow-preview/` on the campaign console's (workbench-ui) domain to the service | Helm chart and ingress in the DevOps repository |
 
 ```sh

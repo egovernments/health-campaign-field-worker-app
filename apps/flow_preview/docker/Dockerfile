@@ -5,7 +5,8 @@
 #
 # Served on the same domain as the campaign console (workbench-ui), which
 # embeds it in an iframe (?embed=1) and talks to it over postMessage (same
-# origin only). Built by .github/workflows/build.yaml (pipeline flow-preview).
+# origin only). The published image is built by DIGIT-Frontend's Build
+# Pipeline (pipeline flow-preview), whose Dockerfile repeats these steps.
 
 # --- Build ------------------------------------------------------------------
 # Same Flutter version as the APK workflows (.github/workflows/build-apk.yml).
