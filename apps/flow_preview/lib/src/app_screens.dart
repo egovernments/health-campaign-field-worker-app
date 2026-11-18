@@ -52,8 +52,7 @@ class _AppHeader extends StatelessWidget {
       child: Row(children: [
         if (showBack && context.router.canPop())
           DigitBackButton(
-            digitBackButtonThemeData:
-                const DigitBackButtonThemeData().copyWith(
+            digitBackButtonThemeData: const DigitBackButtonThemeData().copyWith(
               context: context,
               backDigitButtonIcon: Icon(
                 Icons.arrow_left,
@@ -152,11 +151,25 @@ class _AppLoginPageState extends State<AppLoginPage> {
     setState(() => _busy = true);
     final account = context.read<DigitAccount>();
     try {
-      await account.signIn(username: _userId.trim(), password: _password.trim());
+      await account.signIn(
+          username: _userId.trim(), password: _password.trim());
       _password = '';
       if (!mounted) return;
-      await account.loadProjects();
-      if (mounted) context.router.replace(const AppProjectsRoute());
+      final projects = await account.loadProjects();
+      if (!mounted) return;
+      // Opened for one campaign (?campaign=<campaign number>, e.g. from the
+      // console's "Preview mobile app"): go straight to it when this user is
+      // assigned to it; otherwise choose a project as in the app.
+      final campaign = Uri.base.queryParameters['campaign'];
+      final match = campaign == null
+          ? null
+          : projects.where((p) => p.referenceID == campaign).firstOrNull;
+      if (match != null) {
+        await account.selectProject(match);
+        if (mounted) context.router.replace(const AppBoundaryRoute());
+      } else {
+        context.router.replace(const AppProjectsRoute());
+      }
     } catch (e) {
       if (mounted) {
         _toast(context, e.toString().replaceFirst('Exception: ', ''));
@@ -175,11 +188,14 @@ class _AppLoginPageState extends State<AppLoginPage> {
         foregroundColor: theme.colorTheme.paper.primary,
         backgroundColor: theme.colorTheme.primary.primary2,
         actions: [
-          IconButton(
-            tooltip: 'Developer tools (paste or link a config)',
-            icon: const Icon(Icons.developer_mode),
-            onPressed: () => context.router.push(const PreviewHomeRoute()),
-          ),
+          // Not in the console's "Preview mobile app" (?campaign=...): there
+          // the preview should look like the app.
+          if (!Uri.base.queryParameters.containsKey('campaign'))
+            IconButton(
+              tooltip: 'Developer tools (paste or link a config)',
+              icon: const Icon(Icons.developer_mode),
+              onPressed: () => context.router.push(const PreviewHomeRoute()),
+            ),
         ],
       ),
       body: ScrollableContent(
@@ -443,7 +459,8 @@ class AppHomePage extends StatelessWidget {
                         return _HomeItemCard(
                           icon: tile.$1,
                           // Unknown label key: show the module name instead.
-                          label: label == tile.$2 && !_moduleTiles.containsKey(name.toUpperCase())
+                          label: label == tile.$2 &&
+                                  !_moduleTiles.containsKey(name.toUpperCase())
                               ? name
                               : label,
                           onPressed: () => _open(context, c),
@@ -452,9 +469,8 @@ class AppHomePage extends StatelessWidget {
                       childCount: configs.length,
                     ),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: width < 600
-                          ? 3
-                          : (width / 176).floor().clamp(3, 8),
+                      crossAxisCount:
+                          width < 600 ? 3 : (width / 176).floor().clamp(3, 8),
                       childAspectRatio: 104 / 128,
                       mainAxisSpacing: spacer3,
                       crossAxisSpacing: spacer3,
@@ -493,7 +509,8 @@ class _HomeItemCard extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
-  const _HomeItemCard({required this.icon, required this.label, this.onPressed});
+  const _HomeItemCard(
+      {required this.icon, required this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -551,7 +568,6 @@ class _HomeItemCard extends StatelessWidget {
     );
   }
 }
-
 
 /// Same layout and rules as the app's BoundarySelectionPage: a card
 /// "Choose boundaries" with one required dropdown per hierarchy level, each
@@ -738,7 +754,8 @@ class _AppBoundaryPageState extends State<AppBoundaryPage> {
       label: _t(context, '${_hierarchy}_${levels[i]}'),
       isRequired: true,
       child: DigitDropdown<BoundaryModel>(
-        key: ValueKey('${levels[i]}-${_selected[i == 0 ? levels[0] : levels[i - 1]]?.code}'),
+        key: ValueKey(
+            '${levels[i]}-${_selected[i == 0 ? levels[0] : levels[i - 1]]?.code}'),
         onTap: () {},
         isDisabled: disabled,
         sentenceCaseEnabled: false,
@@ -750,7 +767,8 @@ class _AppBoundaryPageState extends State<AppBoundaryPage> {
             ? null
             : DropdownItem(name: name(selected), code: selected.code ?? ''),
         items: [
-          for (final b in items) DropdownItem(name: name(b), code: b.code ?? ''),
+          for (final b in items)
+            DropdownItem(name: name(b), code: b.code ?? ''),
         ],
         onSelect: (value) {
           final b = items.firstWhere((e) => e.code == value.code);
@@ -760,7 +778,6 @@ class _AppBoundaryPageState extends State<AppBoundaryPage> {
     );
   }
 }
-
 
 /// The module a home tile asked to open, waiting for the boundary to be
 /// confirmed.
@@ -798,7 +815,10 @@ class AppCurrentBoundaryPage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    left: spacer4, right: spacer4, top: spacer2, bottom: spacer4),
+                    left: spacer4,
+                    right: spacer4,
+                    top: spacer2,
+                    bottom: spacer4),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -820,7 +840,8 @@ class AppCurrentBoundaryPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Text(_t(context, boundary.code ?? 'No Value'),
+                            child: Text(
+                                _t(context, boundary.code ?? 'No Value'),
                                 style: textTheme.headingM.copyWith(
                                     color: theme.colorTheme.text.primary)),
                           ),
@@ -844,7 +865,8 @@ class AppCurrentBoundaryPage extends StatelessWidget {
                   children: [
                     const SizedBox(height: spacer2),
                     Text(
-                      _t(context, 'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY'),
+                      _t(context,
+                          'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY'),
                       style: textTheme.headingS
                           .copyWith(color: theme.colorTheme.primary.primary2),
                     ),
