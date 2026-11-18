@@ -3272,10 +3272,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            // TEMP: revert before PR — shows the AEFI card before the
-            // HOME_REPORT_AEFI_LABEL role-action exists in MDMS.
-            element == i18.home.reportAefiLabel)
+            element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
         .where((element) {

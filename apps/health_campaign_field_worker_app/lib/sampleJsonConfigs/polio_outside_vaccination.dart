@@ -29,6 +29,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 }
               }
             ],
+            "visible": "{{fn:hasRole('TRANSIT_POST_VACCINATOR')}} == true",
             "fieldName": "transitPostOption",
             "properties": {"icon": "DirectionsBus"},
             "schemaCode": null,
@@ -55,6 +56,7 @@ final dynamic sampleOutSideHouseholdVaccinationFlows = {
                 }
               }
             ],
+            "visible": "{{fn:hasRole('COMMUNITY_CREATOR')}} == true",
             "fieldName": "clfOption",
             "properties": {"icon": "Groups"},
             "schemaCode": null,

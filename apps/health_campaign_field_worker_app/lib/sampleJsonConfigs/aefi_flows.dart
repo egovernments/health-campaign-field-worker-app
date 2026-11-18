@@ -234,6 +234,22 @@ final dynamic sampleAefiFlows = {
                   {
                     "key": "maxAgeMonths",
                     "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                  },
+                  // Location type by role: a Transit Post vaccinator reports
+                  // from a transit post, a community creator from an outside
+                  // household place (see locationType autoFillCondition).
+                  {
+                    "key": "isTransitPostVaccinator",
+                    "value": "{{fn:hasRole('TRANSIT_POST_VACCINATOR')}}"
+                  },
+                  {
+                    "key": "isCommunityCreator",
+                    "value": "{{fn:hasRole('COMMUNITY_CREATOR')}}"
+                  },
+                  {"key": "transitPostType", "value": "TRANSIT_POST"},
+                  {
+                    "key": "outsideHouseholdPlacesType",
+                    "value": "OUTSIDE_HOUSEHOLD_PLACES"
                   }
                 ],
                 "name": "AEFI_CREATE",
@@ -365,7 +381,21 @@ final dynamic sampleAefiFlows = {
               ],
               "errorMessage": "AEFI_LOCATION_TYPE_REQUIRED_ERROR",
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": false,
+              // A user with only one of the two roles gets that type, filled
+              // in and locked; with both or neither they pick it.
+              "autoFillCondition": [
+                {
+                  "value": "{{transitPostType}}",
+                  "expression":
+                      "navigation.isTransitPostVaccinator==true && navigation.isCommunityCreator==false"
+                },
+                {
+                  "value": "{{outsideHouseholdPlacesType}}",
+                  "expression":
+                      "navigation.isCommunityCreator==true && navigation.isTransitPostVaccinator==false"
+                }
+              ]
             },
             {
               "type": "dynamic",
@@ -836,6 +866,19 @@ final dynamic sampleAefiFlows = {
                     {
                       "key": "maxAgeMonths",
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    },
+                    {
+                      "key": "isTransitPostVaccinator",
+                      "value": "{{fn:hasRole('TRANSIT_POST_VACCINATOR')}}"
+                    },
+                    {
+                      "key": "isCommunityCreator",
+                      "value": "{{fn:hasRole('COMMUNITY_CREATOR')}}"
+                    },
+                    {"key": "transitPostType", "value": "TRANSIT_POST"},
+                    {
+                      "key": "outsideHouseholdPlacesType",
+                      "value": "OUTSIDE_HOUSEHOLD_PLACES"
                     }
                   ],
                   "name": "AEFI_CREATE",
