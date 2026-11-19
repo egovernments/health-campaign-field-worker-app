@@ -4,6 +4,7 @@ import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -404,6 +405,24 @@ class MainApplicationState extends State<MainApplication>
                                   return ctx.read<
                                       LocalRepository<FaceAuthEventModel,
                                           FaceAuthEventSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              hfReferralRemoteRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      RemoteRepository<HFReferralModel,
+                                          HFReferralSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
+                              hfReferralLocalRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      LocalRepository<HFReferralModel,
+                                          HFReferralSearchModel>>();
                                 } catch (_) {
                                   return null;
                                 }

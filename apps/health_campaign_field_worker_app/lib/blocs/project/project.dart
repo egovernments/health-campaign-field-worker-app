@@ -8,6 +8,7 @@ import 'package:digit_data_model/data/repositories/package_repository/remote/sto
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/face_auth_event.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -42,6 +43,7 @@ import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
 import '../../utils/mdms_enum_utils.dart';
+import '../../data/aefi_downsync.dart';
 import '../../data/new_settlement_downsync.dart';
 import '../../sampleJsonConfigs/new_settlement.dart';
 import '../../utils/new_settlement_utils.dart';
@@ -95,6 +97,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   /// New settlements are created and searched through it.
   final RemoteRepository<UserActionModel, UserActionSearchModel>?
       userLocationRemoteRepository;
+
+  /// HFReferral repositories (nullable — the remote exists only when the
+  /// user's role-actions include HFReferral). AEFI cases are HFReferrals.
+  final RemoteRepository<HFReferralModel, HFReferralSearchModel>?
+      hfReferralRemoteRepository;
+  final LocalRepository<HFReferralModel, HFReferralSearchModel>?
+      hfReferralLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -178,6 +187,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     this.faceAuthEventRemoteRepository,
     this.faceAuthEventLocalRepository,
     this.userLocationRemoteRepository,
+    this.hfReferralRemoteRepository,
+    this.hfReferralLocalRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -600,8 +611,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   static bool _hasOutsideHouseholdDelivery(ProjectModel project) {
     final cycles = project.additionalDetails?.projectType?.cycles;
     if (cycles == null || cycles.isEmpty) return true;
-    final anyTagged = cycles.any((c) =>
-        (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
+    final anyTagged = cycles.any(
+        (c) => (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
     if (!anyTagged) return true;
     return cycles.any((c) => (c.deliveries ?? const [])
         .any((d) => d.deliveryMethod == 'OUTSIDEHOUSEHOLD'));
@@ -1448,6 +1459,52 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
     }
 
+    // The user's own AEFI cases, so they are listed again after a reinstall
+    // or "clear storage". Only AEFI-reporting roles need them.
+    final aefiUserUuid = await _aefiReporterUuid();
+    if (aefiUserUuid != null) {
+      final hfReferralRemote = hfReferralRemoteRepository;
+      final hfReferralLocal = hfReferralLocalRepository;
+      if (hfReferralRemote == null ||
+          hfReferralLocal == null ||
+          hfReferralRemote.searchPath.isEmpty) {
+        // A role-action gap, not a network error. Still blocked with the
+        // Retry popup (product decision, 2026-11-19), so the missing
+        // role-action is noticed instead of cases going silently missing.
+        AppLogger.instance.error(
+          title: 'ProjectBloc: AEFI downsync',
+          message: 'No HFReferral search action for this user',
+        );
+        emit(state.copyWith(
+          selectedProject: event.model,
+          loading: false,
+          syncError: ProjectSyncErrorType.aefi,
+        ));
+        return;
+      } else {
+        try {
+          reportSyncProgress('aefi');
+          await AefiDownsync(
+            remote: hfReferralRemote,
+            local: hfReferralLocal,
+            onProgress: (downloaded) =>
+                reportSyncProgress('aefi ($downloaded)'),
+          ).run(projectId: event.model.id, userUuid: aefiUserUuid);
+        } catch (error) {
+          AppLogger.instance.error(
+            title: 'ProjectBloc: AEFI downsync',
+            message: '$error',
+          );
+          emit(state.copyWith(
+            selectedProject: event.model,
+            loading: false,
+            syncError: ProjectSyncErrorType.aefi,
+          ));
+          return;
+        }
+      }
+    }
+
     final getSelectedProject = await localSecureStore.selectedProject;
 
     emit(state.copyWith(
@@ -1475,6 +1532,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
 
     return userObject.roles.any((role) => stockRoleCodes.contains(role.code));
+  }
+
+  /// Roles that report AEFI cases. Kept as plain codes because they are not
+  /// in [RolesType].
+  static const _aefiReporterRoles = {
+    'TRANSIT_POST_VACCINATOR',
+    'COMMUNITY_CREATOR',
+  };
+
+  /// The logged-in user's uuid when they hold an AEFI-reporting role, else
+  /// null. Gates the AEFI downsync in project selection.
+  Future<String?> _aefiReporterUuid() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return null;
+
+    final isReporter =
+        userObject.roles.any((role) => _aefiReporterRoles.contains(role.code));
+
+    return isReporter ? userObject.uuid : null;
   }
 
   /// Silently downloads dispatched stock from server without UI dialogs.
@@ -2067,6 +2143,6 @@ enum ProjectSyncErrorType {
   attendance,
   userAction,
   stockDownsync,
-  // Shown as MISSEDPLACES_ERROR.
-  missedPlaces
+  missedPlaces,
+  aefi
 }
