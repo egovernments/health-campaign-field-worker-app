@@ -17,6 +17,26 @@ class TextWidget extends ResolvedFlowWidget {
     void Function(ActionConfig) onAction,
     ResolvedWidgetContext resolved,
   ) {
+    // A text with no `value` shows its `label`, already translated and with
+    // `labelPlaceHolders` filled in (e.g. "{COUNT} transit posts near you").
+    if (json['value'] == null && resolved.resolvedLabel != null) {
+      final properties = json['properties'] as Map<String, dynamic>? ?? {};
+      final style = _applyTextStyle(
+        _parseTextStyle(context, properties['style']?.toString())?.copyWith(
+          color: _parseTextColor(context, properties['color']?.toString()),
+        ),
+        properties['textStyle'],
+      );
+      return WidgetParsers.wrapWithBottomGap(
+        Text(
+          resolved.resolvedLabel!,
+          style: style,
+          textAlign: _parseTextAlign(properties['textAlign']?.toString()),
+        ),
+        properties,
+      );
+    }
+
     // Use the pre-resolved label, or resolve 'value' field as fallback
     final value = json['value'] ?? '';
 
@@ -25,7 +45,13 @@ class TextWidget extends ResolvedFlowWidget {
     final styleKey = properties['style']?.toString();
     final separatedBy = properties['separatedBy'];
     final replaceAll = properties['replaceAll'] as List?;
-    final textStyle = _parseTextStyle(context, styleKey);
+    final baseStyle = _parseTextStyle(context, styleKey);
+    final themedStyle = baseStyle?.copyWith(
+      color: _parseTextColor(context, properties['color']?.toString()),
+    );
+    // An explicit `textStyle` (design values: hex colour, px size, weight,
+    // family, line height) wins over the theme `style` and `color` keys.
+    final textStyle = _applyTextStyle(themedStyle, properties['textStyle']);
 
     var resolvedValue = (separatedBy != null && value is String)
         ? value
@@ -48,15 +74,99 @@ class TextWidget extends ResolvedFlowWidget {
     return WidgetParsers.wrapWithBottomGap(
       Text(
         displayValue.isEmpty ? '--' : displayValue,
-        style: textStyle?.copyWith(
-          color:
-              _parseTextColor(context, properties['color']?.toString()) ?? null,
-        ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: json["maxLines"] ?? 2,
+        style: textStyle,
+        textAlign: _parseTextAlign(properties['textAlign']?.toString()),
+        // `maxLines: 0` means "as many as it takes" — the only way for a
+        // config to ask for genuinely unbounded text, since omitting the key
+        // falls back to the two-line default. Ellipsis only makes sense when
+        // there is a line cap to overflow.
+        overflow: _maxLines(json) == null
+            ? TextOverflow.visible
+            : TextOverflow.ellipsis,
+        maxLines: _maxLines(json),
       ),
       properties,
     );
+  }
+
+  /// Merges a `textStyle` map over [base]. Keys: `color` (#RRGGBB or
+  /// #AARRGGBB), `fontSize` (number or "18px"), `fontWeight` (100–900 or
+  /// "bold"/"normal"), `fontFamily` (first family of a CSS list) and
+  /// `lineHeight` (multiplier).
+  TextStyle? _applyTextStyle(TextStyle? base, dynamic spec) {
+    if (spec is! Map) return base;
+
+    final color = _parseHexColor(spec['color']?.toString());
+    final fontSize = _parseNumber(spec['fontSize']);
+    final fontWeight = _parseFontWeight(spec['fontWeight']);
+    // Bundled families are registered without spaces ("RobotoCondensed"),
+    // while design specs use the CSS name ("Roboto Condensed").
+    final fontFamily = spec['fontFamily']
+        ?.toString()
+        .split(',')
+        .first
+        .replaceAll(RegExp('[\'" ]'), '');
+    final lineHeight = _parseNumber(spec['lineHeight']);
+
+    return (base ?? const TextStyle()).copyWith(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      fontFamily:
+          fontFamily == null || fontFamily.isEmpty ? null : fontFamily,
+      height: lineHeight,
+    );
+  }
+
+  Color? _parseHexColor(String? value) {
+    if (value == null || !value.startsWith('#')) return null;
+    var hex = value.substring(1);
+    if (hex.length == 6) hex = 'FF$hex';
+    if (hex.length != 8) return null;
+    final argb = int.tryParse(hex, radix: 16);
+    return argb == null ? null : Color(argb);
+  }
+
+  double? _parseNumber(dynamic value) {
+    if (value is num) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value.trim().replaceAll(RegExp(r'px$'), ''));
+    }
+    return null;
+  }
+
+  FontWeight? _parseFontWeight(dynamic value) {
+    if (value == 'bold') return FontWeight.bold;
+    if (value == 'normal') return FontWeight.normal;
+    final weight = _parseNumber(value)?.round();
+    if (weight == null || weight < 100 || weight > 900) return null;
+    return FontWeight.values[weight ~/ 100 - 1];
+  }
+
+  int? _maxLines(Map<String, dynamic> json) {
+    final raw = json["maxLines"];
+    if (raw == null) return 2;
+    final value = raw is num ? raw.toInt() : int.tryParse(raw.toString());
+    if (value == null) return 2;
+    return value <= 0 ? null : value;
+  }
+
+  /// Horizontal alignment for the rendered text. Without this a wrapped
+  /// string stays left-aligned inside its block even when the block itself
+  /// has been centred by the surrounding row.
+  TextAlign? _parseTextAlign(String? value) {
+    switch (value) {
+      case 'center':
+        return TextAlign.center;
+      case 'right':
+      case 'end':
+        return TextAlign.end;
+      case 'left':
+      case 'start':
+        return TextAlign.start;
+      default:
+        return null;
+    }
   }
 
   Color? _parseTextColor(BuildContext context, String? colorKey) {

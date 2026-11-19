@@ -1,3 +1,23 @@
+## 1.5.2
+
+* **DB schema: `schemaVersion` 12 → 13.** Outside-household sites (Transit Posts, Outside Household Places) are stored as facilities. The v13 migration adds:
+    * `facility`: nullable `client_reference_id`, `latitude`, `longitude`, `location_accuracy` (a copy of the address GPS, so the generic search can order sites by `__distance`)
+    * `project_facility`: nullable `client_reference_id` (app-local, never sent to the server)
+    * Indexes `facility_clientref`, `facility_usage`, `project_facility_clientref` via `_createOutsideHouseholdSiteIndexes()`, also run on fresh install and in the `beforeOpen` backfill (`IF NOT EXISTS`). `sql_store.g.dart` regenerated
+* `FacilityModel` / `ProjectFacilityModel`: optional `clientReferenceId`, so sites and project links can be created on the device before the server assigns an `id`. `FacilityModel.companion` also writes the address lat/long/accuracy into the new facility columns. Mappers regenerated
+* `FacilitySearchModel` / `ProjectFacilitySearchModel`: `clientReferenceId` filter. `FacilityLocalRepository.search` also filters by `usage` and `boundaryCode` (address locality) and returns `clientReferenceId`, `name`, `nonRecoverableError`, `additionalFields` and the address `locality`; `ProjectFacilityLocalRepository.search` honours `id` and `clientReferenceId`
+* `FacilityLocalRepository.create` / `bulkCreate` also write the facility's address and locality rows. New static helper `addressKeyOf`
+* **Behaviour change:** `create` on `FacilityLocalRepository` and `ProjectFacilityLocalRepository` now defaults to `createOpLog: true`, so sites and links created on the device are uploaded. Downloads through `bulkCreate` still write no oplog entry
+* New `applyServerGeneratedId({clientReferenceId, serverGeneratedId, rowVersion})` on both repositories swaps the placeholder id for the server id after upload; for facilities it also repoints queued `project_facility.facilityId` values
+* `FacilityOpLogManager` / `ProjectFacilityOpLogManager`: client reference id is `clientReferenceId ?? id`; an entity whose `id == clientReferenceId` is treated as unsynced
+* `FacilityAdditionalFields` / `ProjectFacilityAdditionalFields`: `version` defaults to `1` instead of being required, so planner-created sites with a null schema/version decode
+* `ProjectFacilityRemoteRepository.search`: optional `onlyOutsideHouseholdSites` flag to fetch only the project's outside-household site links
+* `ProjectCycleDelivery`: optional `deliveryMethod`, used to scope deliveries by the active delivery method per flow module
+* `BoundaryModel`: `newSettlementBoundaryType` (`NEW_SETTLEMENT`) and the `NewSettlementBoundary` extension (`isNewSettlement`, `selectionKey`, `displayName(translate)`) for worker-added settlements at the last boundary level. `BoundaryBloc` de-duplicates selections by `selectionKey`, since new settlements share their parent's code
+* `BoundaryBloc`: `BoundaryFindEvent` first emits `loading: true`, so a re-login that finds the same boundaries no longer leaves listeners waiting
+* `BoundaryLocalRepository.search` (`isSingle`): one boundary per level ordered by `boundaryNum`, chained from the project's own boundary code instead of whichever root row came first; rows with a null `boundaryNum` or empty `code` are skipped
+* `BoundaryLocalRepository.delete` awaits the SQL delete, so a clear followed by fresh inserts can't race
+
 ## 1.5.1
 
 * `StockModel`: accept the server's `wayBillNumber` (capital B) response key without changing what the mobile client sends. A class-level `MappingHook` on `StockModel` copies `wayBillNumber` → `waybillNumber` in the JSON map before decoding; `toJson` and every Dart caller, DB column, and `{{item.waybillNumber}}` template are unchanged. `stock.mapper.dart` regenerated.

@@ -75,11 +75,13 @@ class ProjectCycle with ProjectCycleMappable {
 class ProjectCycleDelivery with ProjectCycleDeliveryMappable {
   final int id;
   final String deliveryStrategy;
+  final String? deliveryMethod;
   final List<DeliveryDoseCriteria>? doseCriteria;
   final int? mandatoryWaitSinceLastDeliveryInDays;
   ProjectCycleDelivery(
       {required this.id,
       required this.deliveryStrategy,
+      this.deliveryMethod,
       this.doseCriteria,
       this.mandatoryWaitSinceLastDeliveryInDays});
 }

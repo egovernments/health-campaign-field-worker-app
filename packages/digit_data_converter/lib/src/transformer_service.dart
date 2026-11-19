@@ -935,22 +935,7 @@ class FormEntityMapper {
     }
 
     if (instruction.startsWith('__value:')) {
-      final valueStr = instruction.replaceFirst('__value:', '').trim();
-
-      if (valueStr == 'DATETIME.NOW') {
-        return DateTime.now().millisecondsSinceEpoch;
-      }
-
-      // Try to convert to bool, int, double, or null
-      if (valueStr == 'true') return true;
-      if (valueStr == 'false') return false;
-      if (valueStr == 'null') return null;
-      final intVal = int.tryParse(valueStr);
-      if (intVal != null) return intVal;
-      final doubleVal = double.tryParse(valueStr);
-      if (doubleVal != null) return doubleVal;
-
-      return valueStr; // fallback to string
+      return _coerceLiteral(instruction.replaceFirst('__value:', '').trim());
     }
 
     if (instruction == '__generate:clientAudit' && updateMapping == false) {
@@ -1071,12 +1056,72 @@ class FormEntityMapper {
       }
     }
 
+    // Format: __default:literal:path
+    // Example: __default:2:householdDetails.memberCount
+    //
+    // Resolves `path`, and falls back to `literal` when it comes back
+    // missing. `__switch:` cannot express this — any non-null key with no
+    // explicit case also lands on its `default` branch, so a real value
+    // would be replaced too.
+    //
+    // Params-first ordering and the rejoin below mirror `__pad:`, so the
+    // path may itself be a directive (`__default:2:__context:memberCount`).
+    // The literal goes through the same coercion as `__value:`, so
+    // `__default:2:...` yields int 2 and still fits an int field.
+    if (instruction.startsWith('__default:')) {
+      final defaultContent = instruction.replaceFirst('__default:', '');
+      final separatorIndex = defaultContent.indexOf(':');
+
+      if (separatorIndex == -1) {
+        throw Exception(
+            'Invalid __default format. Expected: __default:literal:path');
+      }
+
+      final literal = defaultContent.substring(0, separatorIndex).trim();
+      final valuePath = defaultContent.substring(separatorIndex + 1).trim();
+
+      final value = getValueFromMapping(valuePath, data, currentModel, context,
+          updateMapping: updateMapping,
+          listItemIndex: listItemIndex,
+          listSourcePath: listSourcePath);
+
+      // An empty string counts as missing: a numeric form field that was
+      // shown and left blank arrives as '' rather than null, and that
+      // should take the default just the same as a field never shown.
+      if (value == null || (value is String && value.trim().isEmpty)) {
+        return _coerceLiteral(literal);
+      }
+
+      return value;
+    }
+
     if (instruction.startsWith('__context:')) {
       final path = instruction.replaceFirst('__context:', '');
       return _getValueFromPath(context, path);
     }
 
     return _getValueFromPath(data, instruction);
+  }
+
+  /// Coerces a config literal to the type its text implies, so an int field
+  /// gets an int rather than a string. Shared by `__value:` and the fallback
+  /// half of `__default:` so the two can't drift apart.
+  dynamic _coerceLiteral(String valueStr) {
+    if (valueStr == 'DATETIME.NOW') {
+      return DateTime.now().millisecondsSinceEpoch;
+    }
+
+    if (valueStr == 'true') return true;
+    if (valueStr == 'false') return false;
+    if (valueStr == 'null') return null;
+
+    final intVal = int.tryParse(valueStr);
+    if (intVal != null) return intVal;
+
+    final doubleVal = double.tryParse(valueStr);
+    if (doubleVal != null) return doubleVal;
+
+    return valueStr;
   }
 
   Map<String, String> _parseSwitchMapping(String raw) {

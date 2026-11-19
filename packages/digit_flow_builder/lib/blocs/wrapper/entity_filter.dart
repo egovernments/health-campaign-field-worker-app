@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 
 import '../flow_crud_bloc.dart';
+import '../../utils/utils.dart' show getEntityTypeName;
 import 'entity_field_accessor.dart';
 import 'value_resolver.dart';
 
@@ -10,6 +11,20 @@ class EntityFilter {
   final String? screenKey;
 
   EntityFilter(this._resolver, {this.screenKey});
+
+  /// Resolves a filter value that may be a `{{fieldName}}` template pointing
+  /// at a `searchBar`'s entry in widgetData. Non-template values pass through
+  /// unchanged.
+  dynamic _resolveWidgetDataTemplate(
+    dynamic raw,
+    Map<String, dynamic>? widgetData,
+  ) {
+    if (raw is String && raw.contains('{{')) {
+      final key = raw.replaceAll('{{', '').replaceAll('}}', '').trim();
+      return widgetData?[key];
+    }
+    return raw;
+  }
 
   /// Checks whether a root entity passes all configured filters.
   bool passesFilters(
@@ -31,6 +46,12 @@ class EntityFilter {
       'navigation': navigationParams,
     };
 
+    // Search terms typed into a `searchBar` live in widgetData, keyed by the
+    // widget's fieldName — the same source [findRelatedEntities] reads for
+    // relation-level search.
+    final widgetData =
+        stateKey != null ? FlowCrudStateRegistry().get(stateKey)?.widgetData : null;
+
     for (final filter in filters) {
       final field = filter['field'];
       final equals = filter['equals'];
@@ -44,7 +65,44 @@ class EntityFilter {
           final resolvedEquals =
               _resolver.resolveValue(equalsFrom, root, resolveContext);
           if (resolvedEquals != null && value != resolvedEquals) return false;
-        } else if (equals != null && value != equals) return false;
+        } else if (filter.containsKey('contains')) {
+          // Case-insensitive substring match, mirroring the relation-level
+          // `contains` filter. An unset or empty term passes everything, so a
+          // cleared search box restores the full list.
+          final term = _resolveWidgetDataTemplate(filter['contains'], widgetData);
+          final termText = term?.toString() ?? '';
+          if (termText.isEmpty) continue;
+
+          // Optional. Set it to the search bar's `minSearchChars` when this
+          // filter refines one. Below that threshold the bar drops its own
+          // query filter and re-runs the base search, but deliberately keeps
+          // the term in widgetData so the visible text isn't erased — so this
+          // filter is what has to stand down, or the list stays narrowed by a
+          // term the bar already treats as inactive.
+          final minChars = (filter['minChars'] as num?)?.toInt();
+          if (minChars != null && termText.length < minChars) continue;
+
+          final actual = value?.toString().toLowerCase() ?? '';
+          if (!actual.contains(termText.toLowerCase())) return false;
+        } else if (filter.containsKey('notEquals')) {
+          // Drop the root when the field DOES hold the value. Used to keep
+          // outside-household site links out of stock/facility lists.
+          if (value == filter['notEquals']) return false;
+        } else if (filter.containsKey('notIn')) {
+          final excluded = filter['notIn'];
+          if (excluded is List && excluded.contains(value)) return false;
+        } else if (equals is String && equals.contains('{{')) {
+          // A `{{key}}` value is a selection held in widgetData (e.g. a
+          // filter popup's dropdown). Nothing selected passes everything,
+          // as relation-level `equals` filters already do.
+          final expected = _resolveWidgetDataTemplate(equals, widgetData);
+          if (expected == null || (expected is String && expected.isEmpty)) {
+            continue;
+          }
+          if (value?.toString() != expected.toString()) return false;
+        } else if (equals != null && value != equals) {
+          return false;
+        }
       } else {
         final entityType = filter['entity'];
         final condition = filter['condition'];
@@ -99,7 +157,7 @@ class EntityFilter {
     // Create a local context that includes both the current entity and wrapper data
     final localContext = <String, dynamic>{
       ...wrapperData,
-      if (root is EntityModel) root.runtimeType.toString(): root,
+      if (root is EntityModel) getEntityTypeName(root): root,
     };
 
     final equalsValue = equalsFrom != null

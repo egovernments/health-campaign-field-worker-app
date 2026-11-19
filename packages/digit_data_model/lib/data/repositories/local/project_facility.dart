@@ -19,6 +19,11 @@ class ProjectFacilityLocalRepository
             ..where(
               buildAnd(
                 [
+                  if (query.id != null)
+                    sql.projectFacility.id.isIn(query.id!),
+                  if (query.clientReferenceId != null)
+                    sql.projectFacility.clientReferenceId
+                        .isIn(query.clientReferenceId!),
                   if (query.projectId != null)
                     sql.projectFacility.projectId.isIn(query.projectId!),
                   if (query.facilityId != null)
@@ -37,6 +42,7 @@ class ProjectFacilityLocalRepository
           tenantId: projectFacility.tenantId,
           rowVersion: projectFacility.rowVersion,
           id: projectFacility.id,
+          clientReferenceId: projectFacility.clientReferenceId,
           isDeleted: projectFacility.isDeleted,
           additionalFields: projectFacility.additionalFields != null
               ? ProjectFacilityAdditionalFieldsMapper.fromJson(
@@ -47,6 +53,9 @@ class ProjectFacilityLocalRepository
     });
   }
 
+  /// No oplog entry by default, as on master: downloads call this too. Links
+  /// created on the phone (outside-household sites) pass `createOpLog: true`
+  /// (see `DigitCrudService.createEntities`).
   @override
   FutureOr<void> create(
     ProjectFacilityModel entity, {
@@ -84,6 +93,23 @@ class ProjectFacilityLocalRepository
           mode: InsertMode.insertOrReplace,
         );
       });
+    });
+  }
+
+  /// Replaces the placeholder [id] (the app-local clientReferenceId) of a
+  /// link created on the phone with the id the server assigned to it.
+  Future<void> applyServerGeneratedId({
+    required String clientReferenceId,
+    required String serverGeneratedId,
+    int? rowVersion,
+  }) async {
+    return retryLocalCallOperation(() async {
+      await (sql.update(sql.projectFacility)
+            ..where((t) => t.clientReferenceId.equals(clientReferenceId)))
+          .write(ProjectFacilityCompanion(
+        id: Value(serverGeneratedId),
+        rowVersion: Value(rowVersion),
+      ));
     });
   }
 

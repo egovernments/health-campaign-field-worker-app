@@ -704,6 +704,9 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
       v.deliveryStrategy;
   static const Field<ProjectCycleDelivery, String> _f$deliveryStrategy =
       Field('deliveryStrategy', _$deliveryStrategy);
+  static String? _$deliveryMethod(ProjectCycleDelivery v) => v.deliveryMethod;
+  static const Field<ProjectCycleDelivery, String> _f$deliveryMethod =
+      Field('deliveryMethod', _$deliveryMethod, opt: true);
   static List<DeliveryDoseCriteria>? _$doseCriteria(ProjectCycleDelivery v) =>
       v.doseCriteria;
   static const Field<ProjectCycleDelivery, List<DeliveryDoseCriteria>>
@@ -720,6 +723,7 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
   final MappableFields<ProjectCycleDelivery> fields = const {
     #id: _f$id,
     #deliveryStrategy: _f$deliveryStrategy,
+    #deliveryMethod: _f$deliveryMethod,
     #doseCriteria: _f$doseCriteria,
     #mandatoryWaitSinceLastDeliveryInDays:
         _f$mandatoryWaitSinceLastDeliveryInDays,
@@ -731,6 +735,7 @@ class ProjectCycleDeliveryMapper extends ClassMapperBase<ProjectCycleDelivery> {
     return ProjectCycleDelivery(
         id: data.dec(_f$id),
         deliveryStrategy: data.dec(_f$deliveryStrategy),
+        deliveryMethod: data.dec(_f$deliveryMethod),
         doseCriteria: data.dec(_f$doseCriteria),
         mandatoryWaitSinceLastDeliveryInDays:
             data.dec(_f$mandatoryWaitSinceLastDeliveryInDays));
@@ -801,6 +806,7 @@ abstract class ProjectCycleDeliveryCopyWith<
   $R call(
       {int? id,
       String? deliveryStrategy,
+      String? deliveryMethod,
       List<DeliveryDoseCriteria>? doseCriteria,
       int? mandatoryWaitSinceLastDeliveryInDays});
   ProjectCycleDeliveryCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -829,11 +835,13 @@ class _ProjectCycleDeliveryCopyWithImpl<$R, $Out>
   $R call(
           {int? id,
           String? deliveryStrategy,
+          Object? deliveryMethod = $none,
           Object? doseCriteria = $none,
           Object? mandatoryWaitSinceLastDeliveryInDays = $none}) =>
       $apply(FieldCopyWithData({
         if (id != null) #id: id,
         if (deliveryStrategy != null) #deliveryStrategy: deliveryStrategy,
+        if (deliveryMethod != $none) #deliveryMethod: deliveryMethod,
         if (doseCriteria != $none) #doseCriteria: doseCriteria,
         if (mandatoryWaitSinceLastDeliveryInDays != $none)
           #mandatoryWaitSinceLastDeliveryInDays:
@@ -844,6 +852,7 @@ class _ProjectCycleDeliveryCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       deliveryStrategy:
           data.get(#deliveryStrategy, or: $value.deliveryStrategy),
+      deliveryMethod: data.get(#deliveryMethod, or: $value.deliveryMethod),
       doseCriteria: data.get(#doseCriteria, or: $value.doseCriteria),
       mandatoryWaitSinceLastDeliveryInDays: data.get(
           #mandatoryWaitSinceLastDeliveryInDays,

@@ -12,6 +12,7 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_face_verification/digit_face_verification.dart';
 import 'package:digit_flow_builder/action_handler/action_executor_registry.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
@@ -22,13 +23,12 @@ import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
@@ -57,12 +57,13 @@ import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
 import '../sampleJsonConfigs/inventory_reports.dart';
 import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/polio_household_strategy.dart';
+import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/polio_inside_household_monitoring.dart';
 import '../sampleJsonConfigs/polio_lqa_data_collection.dart';
+import '../sampleJsonConfigs/polio_outside_vaccination.dart';
 import '../sampleJsonConfigs/polio_stock_details.dart';
-import '../sampleJsonConfigs/registration_bednet_flows.dart';
 import '../sampleJsonConfigs/registration_smc_flows.dart';
-import '../sampleJsonConfigs/registration_flows.dart';
 import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/attendance_utils.dart';
 import '../utils/date_util_attendance.dart';
@@ -82,16 +83,16 @@ import '../widgets/attendance/custom_row_widget.dart';
 import '../widgets/attendance/face_auth_event_dots_widget.dart';
 import '../widgets/attendance/group_list_view_widget.dart';
 import '../widgets/attendance/signature_compare_dialog_widget.dart';
+import '../widgets/download_progress/download_spinner_content.dart';
+import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
-import 'package:digit_face_verification/digit_face_verification.dart';
-import '../widgets/face_auth/face_auth_session_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
-import '../widgets/download_progress/download_spinner_content.dart';
 import '../widgets/localized.dart';
+import '../widgets/polio_group_vaccination/age_band_dropdown.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
@@ -268,8 +269,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // referencing these formats render as empty space instead of the
       // "Unknown widget format" error placeholder.
       FlowWidgetFactory.register(const NoOpFaceAuthWidget('faceAuthEventDots'));
-      FlowWidgetFactory
-          .register(const NoOpFaceAuthWidget('faceAuthEventLegend'));
+      FlowWidgetFactory.register(
+          const NoOpFaceAuthWidget('faceAuthEventLegend'));
     }
 
     // Register custom action executor for REDOSE eligibility check
@@ -348,6 +349,20 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const CycleDropDown();
+      },
+    );
+    // Polio group-vaccination age band — options derived from the active
+    // cycle's delivery `doseCriteria.condition` (e.g. `age >= 0 && age < 12`
+    // → "0-11 months"). schemaName is the current form's schemaKey, set by
+    // screen_builder — so ADD_TRANSIT_CHILD and ADD_CLF_CHILD share this
+    // one registration.
+    CustomComponentRegistry().registerBuilder(
+      'ageBand',
+      (context, stateAccessor) {
+        return AgeBandDropDown(
+          schemaName: stateAccessor.currentPageName,
+          formControlName: 'ageBand',
+        );
       },
     );
     CustomComponentRegistry().registerBuilder(
@@ -479,8 +494,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       // different nesting depths; try the flat key first, then the entity
       // path (matches face_auth_event_dots_widget.dart:_resolveIndividualId).
       final entity = attendee is Map ? attendee['entity'] : null;
-      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
-          (entity is Map ? entity['individualId'] : null);
+      final individualId =
+          (attendee is Map ? attendee['individualId'] : null) ??
+              (entity is Map ? entity['individualId'] : null);
 
       var attendanceCollectionData =
           widgetData?["attendanceCollection"]?[individualId];
@@ -510,8 +526,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       double? currentStatus;
 
       final entity = attendee is Map ? attendee['entity'] : null;
-      final individualId = (attendee is Map ? attendee['individualId'] : null) ??
-          (entity is Map ? entity['individualId'] : null);
+      final individualId =
+          (attendee is Map ? attendee['individualId'] : null) ??
+              (entity is Map ? entity['individualId'] : null);
 
       var attendanceCollectionData =
           widgetData["attendanceCollection"]?[individualId];
@@ -689,33 +706,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         return (logTime == entryTime || logTime == exitTime);
       }).toList();
 
-      // Drop de-enrolled attendees. The CRUD wrapper (WrapperBuilder) hands
-      // us Maps shaped like {entity: AttendeeModel, individual: [...],
-      // <mappedFields>: ...} — `denrollmentDate` is not spread onto the top
-      // level, it lives on the underlying AttendeeModel under `entity`. Try
-      // both shapes so the filter still works if this ever changes.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      items = items.where((item) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            return true;
-          }
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Keep only attendees who can be marked on the selected date:
+      // enrolled on or before it (someone enrolled from a later date can't
+      // be marked yet) and not de-enrolled. The CRUD wrapper hands these as
+      // Maps {entity: AttendeeModel, individual: [...], ...};
+      // AttendanceUtils.isAttendeeActiveOn reads both shapes.
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      items = items
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, markDay))
+          .toList();
 
       items = items.map((item) {
         if (item is Map && item['individualId'] != null) {
@@ -801,24 +800,14 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       final attendanceCollection = widgetData?['attendanceCollection'] as Map?;
 
-      // Match the render-side drop in todayAttendeesList: de-enrolled
-      // attendees are hidden from the marking list, so counting the raw
-      // `attendees` here would lock Submit forever (collectionLength can
-      // never reach the raw count). Keep only actives.
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      final attendees =
-          ((attendanceRegisterModel?.attendees ?? []) as List).where((a) {
-        dynamic raw;
-        try {
-          raw = (a as dynamic).denrollmentDate;
-        } catch (_) {
-          return true;
-        }
-        if (raw == null) return true;
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null) return true;
-        return deDate >= nowMs;
-      }).toList();
+      // Match the render-side drop in todayAttendeesList: attendees not yet
+      // enrolled on the selected date, or de-enrolled, are hidden from the
+      // marking list, so counting the raw `attendees` here would lock Submit
+      // forever (collectionLength can never reach the raw count).
+      final markDay = selectedDate ?? DateTime.now().millisecondsSinceEpoch;
+      final attendees = ((attendanceRegisterModel?.attendees ?? []) as List)
+          .where((a) => AttendanceUtils.isAttendeeActiveOn(a, markDay))
+          .toList();
       final attendanceLogs = attendanceRegisterModel?.attendanceLog ?? [];
 
       // Filter logs for the selected entry and exit times that are not yet uploaded
@@ -1021,32 +1010,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       final list = args.first;
       if (list is! Iterable) return 0;
       final nowMs = DateTime.now().millisecondsSinceEpoch;
-      var count = 0;
-      for (final item in list) {
-        dynamic raw;
-        if (item is Map) {
-          raw = item['denrollmentDate'];
-          if (raw == null && item['entity'] != null) {
-            try {
-              raw = (item['entity'] as dynamic).denrollmentDate;
-            } catch (_) {}
-          }
-        } else {
-          try {
-            raw = (item as dynamic).denrollmentDate;
-          } catch (_) {
-            count++;
-            continue;
-          }
-        }
-        if (raw == null) {
-          count++;
-          continue;
-        }
-        final deDate = raw is int ? raw : int.tryParse(raw.toString());
-        if (deDate == null || deDate >= nowMs) count++;
-      }
-      return count;
+      return list
+          .where((item) => AttendanceUtils.isAttendeeActiveOn(item, nowMs))
+          .length;
     });
 
     FunctionRegistry.register('isLogNotMarked', (args, stateData) {
@@ -1680,9 +1646,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return Container();
     }
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
     final roles = state.userModel.roles.map((e) {
       return e.code;
     });
@@ -2235,9 +2199,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       return null;
     }
 
-    final isPolio =
-        context.selectedProject.projectType?.toUpperCase().contains('POLIO') ==
-            true;
+    final isPolio = isPolioStyleCampaign(context.selectedProject.projectType);
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
@@ -2316,15 +2278,16 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
-          icon: isPolio ? Icons.vaccines : Icons.all_inbox,
+          icon: isPolio ? Icons.family_restroom : Icons.all_inbox,
           label: isPolio
               ? i18.home.polioRegistrationLabel
               : i18.home.beneficiaryLabel,
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                    'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
+                final moduleName = isPolio
+                    ? 'hcm-householdstrategy-${context.selectedProject.referenceID},hcm-beneficiary'
+                    : 'hcm-registration-${context.selectedProject.referenceID},hcm-beneficiary';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
@@ -2441,11 +2404,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                   dynamicEntityModelListener: EntityModelMapMapper(),
                 );
+                // Scope delivery-method filter to this module. For polio the
+                // beneficiary card is the HOUSEHOLDSTRATEGY flow; non-polio
+                // apps use REGISTRATION (no method-tagged deliveries expected).
+                FlowBuilderSingleton().setActiveDeliveryMethod(
+                    isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION');
                 try {
                   if (schemaJsonRaw != null) {
                     final allSchemas =
                         json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                    final data = allSchemas['REGISTRATION'];
+                    final data = isPolio
+                        ? allSchemas['HOUSEHOLDSTRATEGY']
+                        : allSchemas['REGISTRATION'];
 
                     final registrationDeliveryData = data?['data'];
                     final flowsData = (registrationDeliveryData['flows']
@@ -2461,12 +2431,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                           pageName: registrationDeliveryData["initialPage"]),
                     );
                   } else {
-                    FlowRegistry.setConfig(sampleBednetFlows["flows"]
-                        as List<Map<String, dynamic>>);
+                    // No schema downloaded: fall back to the bundled sample
+                    // for this campaign type (bednet on master).
+                    final fallback = isPolio
+                        ? samplePolioHouseholdStrategyFlows
+                        : sampleBednetFlows;
+                    FlowRegistry.setConfig(
+                        fallback["flows"] as List<Map<String, dynamic>>);
                     NavigationRegistry.setupNavigation(ctx);
                     ctx.router.push(
-                      FlowBuilderHomeRoute(
-                          pageName: sampleBednetFlows["initialPage"]),
+                      FlowBuilderHomeRoute(pageName: fallback["initialPage"]),
                     );
                   }
                 } catch (e) {
@@ -2478,27 +2452,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      /// TODO: NEED TO UPDATE CLF
-
-      // i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.account_balance,
-      //     label: i18.home.clfLabel,
-      //     onPressed: () async {
-      //       RegistrationDeliverySingleton()
-      //           .setHouseholdType(HouseholdType.community);
-      //       if (isTriggerLocalisation) {
-      //         triggerLocalization();
-      //         isTriggerLocalisation = false;
-      //       }
-      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
-      //     },
-      //   ),
-      // ),
-
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
-          icon: isPolio ? Icons.child_care : Icons.home,
+          icon: isPolio ? Icons.person_search : Icons.home,
           enableCustomIcon: !isPolio,
           customIconSize: 40,
           customIcon: isPolio ? "" : Constants.closedHouseholdSvg,
@@ -2508,15 +2464,16 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.router.push(CurrentBoundaryRoute(
               onBoundarySelected: (ctx) => _openModule(() async {
-                final moduleName =
-                    'hcm-closehousehold-${context.selectedProject.referenceID}';
+                final moduleName = isPolio
+                    ? 'hcm-missedchildren-${context.selectedProject.referenceID}'
+                    : 'hcm-closehousehold-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
 
                 await FlowNavigationUtils.navigateToFlowModule(
                   context: ctx,
                   config: FlowModuleConfig(
-                    schemaKey: 'CLOSEHOUSEHOLD',
+                    schemaKey: isPolio ? 'MISSEDCHILDREN' : 'CLOSEHOUSEHOLD',
                     sampleFlows: sampleCloseHouseholdFlows,
                   ),
                 );
@@ -3078,17 +3035,101 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
+      // --- Outside household vaccination — polio ---
+      // Replaces the separate CLF and transit-post cards: both opened the same
+      // `sampleOutSideHouseholdVaccinationFlows` module and differed only in
+      // the delivery method they scoped to. The flow's own
+      // `selectVaccinationLocation` page is the transit-post / CLF chooser, so
+      // one card is enough. Polio-style campaigns only for now.
+      if (isPolio)
+        i18.home.outsideHouseholdVaccinationLabel:
+            homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-        icon: Icons.local_shipping_outlined,
-        label: i18.home.transitPostLabel,
-        onPressed: () => _openModule(() async {
-          const module = "hcm-transit-post";
-          // if (isTriggerLocalisation) {
-          triggerLocalization(module: module);
-          context.router.push(const TransitPostWrapperRoute());
-        }),
-      )),
+            icon: Icons.signpost,
+            label: i18.home.outsideHouseholdVaccinationLabel,
+            onPressed: () async {
+              await context.router.push(CurrentBoundaryRoute(
+                onBoundarySelected: (ctx) => _openModule(() async {
+                  final moduleName =
+                      'hcm-outsidehousehold-${ctx.selectedProject.referenceID}';
+                  triggerLocalization(module: moduleName);
+                  isTriggerLocalisation = false;
+
+                  // Site lists show each site's parent boundary code. Its
+                  // translation is in SQL from project selection but not yet
+                  // in the flow-builder cache, so reload that before the list
+                  // renders instead of showing the raw code first.
+                  final locale = AppSharedPreferences().getSelectedLocale;
+                  if (locale != null && locale.isNotEmpty) {
+                    await ctx
+                        .read<LocalizationBloc>()
+                        .refreshFlowBuilderLocalization(locale);
+                  }
+                  if (!ctx.mounted) return;
+
+                  await FlowNavigationUtils.navigateToFlowModule(
+                    context: ctx,
+                    config: FlowModuleConfig(
+                      schemaKey: 'OUTSIDEHOUSEHOLD',
+                      sampleFlows: sampleOutSideHouseholdVaccinationFlows,
+                      // Sites are facilities. The list/overview screens search
+                      // the facility table, filter by boundary through the
+                      // address row, and pull the children vaccinated at a
+                      // site (UserActions tagged with the site's
+                      // clientReferenceId) and the site's campaign link.
+                      relationshipMappings: const [
+                        RelationshipMapping(
+                            from: 'address',
+                            to: 'facility',
+                            localKey: 'relatedClientReferenceId',
+                            foreignKey: 'clientReferenceId'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'userAction',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'resourceTag'),
+                        RelationshipMapping(
+                            from: 'facility',
+                            to: 'projectFacility',
+                            localKey: 'id',
+                            foreignKey: 'facilityId'),
+                      ],
+                      nestedModelMappings: const [
+                        NestedModelMapping(
+                          rootModel: 'facility',
+                          fields: {
+                            'address': NestedFieldMapping(
+                              table: 'address',
+                              localKey: 'clientReferenceId',
+                              foreignKey: 'relatedClientReferenceId',
+                              type: NestedMappingType.one,
+                            ),
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ));
+            },
+          ),
+        ),
+
+      // --- Transit Post — every other campaign type ---
+      // The merged card above is polio-only; other campaigns keep the
+      // transit_post package flow they had on master.
+      if (!isPolio)
+        i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+            icon: Icons.local_shipping_outlined,
+            label: i18.home.transitPostLabel,
+            onPressed: () => _openModule(() async {
+              const module = "hcm-transit-post";
+              triggerLocalization(module: module);
+              context.router.push(const TransitPostWrapperRoute());
+            }),
+          ),
+        ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -3121,8 +3162,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.polioInsideMonitoringLabel:
           homeShowcaseData.polioInsideMonitoring.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      // Inherits the transit-post showcase key — the card it replaced.
+      i18.home.outsideHouseholdVaccinationLabel:
+          homeShowcaseData.transitPost.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
-      // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
@@ -3132,7 +3175,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
-      // i18.home.clfLabel, // TODO: Uncomment when CLF is implemented
+      i18.home.outsideHouseholdVaccinationLabel,
       i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.polioLqaDataCollectionLabel,
@@ -3153,6 +3196,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db,
     ];
 
+    // Second filter (on top of role-action `displayName` gating above):
+    // hide method-bound cards when the current project's cycles don't carry
+    // a delivery for their method. Legacy configs where no cycle carries a
+    // `deliveryMethod` are left alone by `hasDeliveryMethod`.
+    final Map<String, String> labelToDeliveryMethod = {
+      i18.home.beneficiaryLabel: isPolio ? 'HOUSEHOLDSTRATEGY' : 'REGISTRATION',
+      i18.home.outsideHouseholdVaccinationLabel: 'OUTSIDEHOUSEHOLD',
+    };
+
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
             state.actionsWrapper.actions
@@ -3162,10 +3214,19 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.db)
         .where(
             (element) => !(isPolio && element == i18.home.stockSyncDataLabel))
-        .toList();
+        .where((element) {
+      final method = labelToDeliveryMethod[element];
+      if (method == null) return true;
+      return FlowBuilderSingleton().hasDeliveryMethod(method);
+    }).toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db && homeItemsShowcaseMap.containsKey(f))
+        // Only cards that are actually built: the outside-household and
+        // transit-post cards share a showcase key and only one is shown.
+        .where((f) =>
+            f != i18.home.db &&
+            homeItemsMap.containsKey(f) &&
+            homeItemsShowcaseMap.containsKey(f))
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 

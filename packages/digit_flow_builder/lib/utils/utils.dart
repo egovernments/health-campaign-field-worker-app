@@ -32,6 +32,11 @@ class FlowBuilderSingleton {
   BeneficiaryType? _beneficiaryType;
   ProjectTypeModel? _projectType;
   ProjectModel? _selectedProject;
+  // Untouched copies of the campaign-scoped models used as the source of
+  // truth when the active delivery method changes and we need to re-derive
+  // the filtered [_projectType] / [_selectedProject] from scratch.
+  ProjectTypeModel? _rawProjectType;
+  ProjectModel? _rawSelectedProject;
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
@@ -39,9 +44,21 @@ class FlowBuilderSingleton {
   List<Map<String, dynamic>>?
       _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
   int? _beneficiaryIdMinCount;
+  String? _activeDeliveryMethod;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
+    // A parent set for an earlier boundary must not outlive it; callers that
+    // know the parent set it after this.
+    _parentBoundaryModel = null;
+  }
+
+  BoundaryModel? _parentBoundaryModel;
+
+  /// Parent of [boundary], when the host app can resolve it (null at the
+  /// top level). Used for records kept one level above the selection.
+  void setParentBoundary({BoundaryModel? boundary}) {
+    _parentBoundaryModel = boundary;
   }
 
   void setPersistenceConfiguration(
@@ -64,6 +81,14 @@ class FlowBuilderSingleton {
     _maxRadius = maxRadius;
     _projectId = projectId;
     _beneficiaryType = selectedBeneficiaryType;
+    // Store raw as the source of truth. The delivery-method filter is only
+    // applied later, at module tap, by [setActiveDeliveryMethod] — the schema
+    // isn't known at project-selection time. Clearing the stale method here
+    // prevents a prior module's filter from carrying over across project
+    // re-selects.
+    _rawProjectType = projectType;
+    _rawSelectedProject = selectedProject;
+    _activeDeliveryMethod = null;
     _projectType = projectType;
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
@@ -79,8 +104,66 @@ class FlowBuilderSingleton {
     _tenantId = tenantId;
   }
 
+  // Seed just the projectId. Background isolates don't call setInitialData
+  // (they have no user session), but sync mappers still key requests off
+  // projectId — so the app entrypoint rehydrates it from persistent storage.
+  void setProjectId(String projectId) {
+    _projectId = projectId;
+  }
+
   void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
     _templateConfigs = templateConfigs;
+  }
+
+  // Active delivery method for the module the user is currently inside
+  // (CLF / TRANSITPOST / HOUSEHOLDSTRATEGY for polio, or the module schemaKey
+  // otherwise). Setting this re-derives [_projectType] / [_selectedProject]
+  // from their untouched raw copies so a single cycle with multiple
+  // method-specific deliveries is scoped per flow — all downstream reads
+  // (registry helpers, wrapper builder, direct singleton access) see the
+  // same filtered view.
+  void setActiveDeliveryMethod(String? method) {
+    _activeDeliveryMethod = method;
+    _projectType = _filterProjectTypeByActiveMethod(_rawProjectType);
+    _selectedProject = _filterProjectByActiveMethod(_rawSelectedProject);
+  }
+
+  /// Returns [pt] with each cycle's `deliveries` narrowed to the active
+  /// delivery method. Returns the input unchanged when no method is active,
+  /// or when the campaign predates method-tagged deliveries (any cycle where
+  /// no delivery carries `deliveryMethod` is left as-is).
+  ProjectTypeModel? _filterProjectTypeByActiveMethod(ProjectTypeModel? pt) {
+    if (pt == null) return pt;
+    final method = _activeDeliveryMethod;
+    if (method == null || method.isEmpty) return pt;
+    final cycles = pt.cycles;
+    if (cycles == null || cycles.isEmpty) return pt;
+    final filteredCycles = cycles.map((cycle) {
+      final deliveries = cycle.deliveries;
+      if (deliveries == null || deliveries.isEmpty) return cycle;
+      final anyTagged = deliveries.any((d) => d.deliveryMethod != null);
+      if (!anyTagged) return cycle;
+      return cycle.copyWith(
+        deliveries:
+            deliveries.where((d) => d.deliveryMethod == method).toList(),
+      );
+    }).toList();
+    return pt.copyWith(cycles: filteredCycles);
+  }
+
+  /// Returns [project] with `additionalDetails.projectType` filtered by the
+  /// active delivery method. Copy chain preserves untouched siblings.
+  ProjectModel? _filterProjectByActiveMethod(ProjectModel? project) {
+    if (project == null) return project;
+    final method = _activeDeliveryMethod;
+    if (method == null || method.isEmpty) return project;
+    final ad = project.additionalDetails;
+    if (ad == null) return project;
+    final filteredPt = _filterProjectTypeByActiveMethod(ad.projectType);
+    if (identical(filteredPt, ad.projectType)) return project;
+    return project.copyWith(
+      additionalDetails: ad.copyWith(projectType: filteredPt),
+    );
   }
 
   String? get tenantId => _tenantId;
@@ -99,6 +182,8 @@ class FlowBuilderSingleton {
 
   BoundaryModel? get boundary => _boundaryModel;
 
+  BoundaryModel? get parentBoundary => _parentBoundaryModel;
+
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
 
@@ -109,6 +194,27 @@ class FlowBuilderSingleton {
   List<Map<String, dynamic>>? get userRoles => _userRoles;
 
   int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
+
+  String? get activeDeliveryMethod => _activeDeliveryMethod;
+
+  /// Whether the current project's cycles contain any delivery tagged with
+  /// [method]. Reads from the untouched [_rawProjectType] so the answer
+  /// doesn't shrink when [setActiveDeliveryMethod] has filtered the visible
+  /// view.
+  ///
+  /// Legacy-safe: when no cycle carries a `deliveryMethod` at all (older
+  /// configs that predate method tagging), returns true — callers use this
+  /// to decide whether to hide a home card, and "no tags" should not hide
+  /// anything.
+  bool hasDeliveryMethod(String method) {
+    final cycles = _rawProjectType?.cycles;
+    if (cycles == null || cycles.isEmpty) return true;
+    final anyTagged = cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
+    if (!anyTagged) return true;
+    return cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod == method));
+  }
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -143,6 +249,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'type': pageMap['type'],
         'format': pageMap['format'],
         'description': pageMap['description'],
+        'labelPlaceHolders': pageMap['labelPlaceHolders'],
+        'descriptionPlaceHolders': pageMap['descriptionPlaceHolders'],
         'actionLabel': pageMap['actionLabel'],
         'properties': properties,
         'value': pageMap['value'],
@@ -375,6 +483,13 @@ bool _isResolutionEmpty(dynamic value) {
 String _translateWithLocalization(String text, dynamic localization) {
   final trimmed = text.trim();
   if (trimmed.isEmpty) return text;
+
+  // Bare numeric values (e.g. a resolved `.length` count or an id) must
+  // not be sent through localization — a stale catalog row keyed on a
+  // digit like "1"/"2" with an empty translation would wipe the cell.
+  if (RegExp(r'^-?\d+(\.\d+)?$').hasMatch(trimmed)) {
+    return text;
+  }
 
   try {
     final translated = localization.translate(trimmed);
@@ -638,13 +753,38 @@ Map<String, dynamic> singletonToMap() {
     "projectType": s.projectType?.toJson(),
     "selectedProject": s.selectedProject?.toJson(),
     "boundary": s.boundary?.toJson(),
+    // Selected boundary code plus its parent's, comma-separated for an `in`
+    // search filter. The parent is the second-last segment of
+    // materializedPath (codes joined by '.').
+    "boundaryAndParentCodes": _boundaryAndParentCodes(s.boundary),
     "persistenceConfiguration": s.persistenceConfiguration?.toString(),
     "loggedInUser": s.loggedInUser?.toJson(),
     "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
-    "beneficiaryIdMinCount": s.beneficiaryIdMinCount
+    "beneficiaryIdMinCount": s.beneficiaryIdMinCount,
+    "activeDeliveryMethod": s.activeDeliveryMethod,
   };
+}
+
+String? _boundaryAndParentCodes(BoundaryModel? boundary) {
+  final code = boundary?.code;
+  if (code == null || code.isEmpty) return null;
+  final parent = parentBoundaryCodeOf(boundary);
+  return [if (parent != null && parent != code) parent, code].join(',');
+}
+
+/// Code of [boundary]'s parent: the second-last segment of its
+/// materializedPath (codes joined by '.'), or null at the top level or
+/// when the path is unknown. A worker-added settlement already carries its
+/// parent's code.
+String? parentBoundaryCodeOf(BoundaryModel? boundary) {
+  if (boundary != null && boundary.isNewSettlement) return boundary.code;
+  final segments = (boundary?.materializedPath ?? '')
+      .split('.')
+      .where((s) => s.isNotEmpty)
+      .toList();
+  return segments.length > 1 ? segments[segments.length - 2] : null;
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths

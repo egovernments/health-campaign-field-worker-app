@@ -23,11 +23,11 @@ class NoResultCardWidget extends ResolvedFlowWidget {
 
     if (compositeKey == null) {
       return NoResultCard(
+        svgAsset: json['image'] as String?,
         label: json['labelPlaceHolders'] != null
             ? resolved.resolveTextWithPlaceHolders(
                 json['label'], json['labelPlaceHolders'])
-            : resolved.resolveTextWithArgs(
-                json['label'], json['labelArgs']),
+            : resolved.resolveTextWithArgs(json['label'], json['labelArgs']),
         description: json['descriptionPlaceHolders'] != null
             ? resolved.resolveTextWithPlaceHolders(
                 json['description'], json['descriptionPlaceHolders'])
@@ -53,6 +53,7 @@ class NoResultCardWidget extends ResolvedFlowWidget {
         return Padding(
           padding: const EdgeInsets.only(top: spacer6),
           child: NoResultCard(
+            svgAsset: json['image'] as String?,
             label: json['labelPlaceHolders'] != null
                 ? resolved.resolveTextWithPlaceHolders(
                     json['label'], json['labelPlaceHolders'])
@@ -73,8 +74,18 @@ class NoResultCardWidget extends ResolvedFlowWidget {
 class NoResultCard extends StatelessWidget {
   final String? label;
   final String? description;
+
+  /// Illustration asset path. Defaults to the app's `no_result.svg` (the
+  /// unsuccessful beneficiary search art); lists of other things, such as
+  /// sites, set `image` in config to a generic illustration instead.
+  final String? svgAsset;
   final AlignmentGeometry align;
   final double padding;
+
+  /// Height of the original `no_result.svg`. Every illustration is drawn at
+  /// this height, so a larger one (such as `no_result_generic.svg`) shows at
+  /// the same size instead of its own.
+  static const double imageHeight = 128;
 
   const NoResultCard({
     super.key,
@@ -82,12 +93,13 @@ class NoResultCard extends StatelessWidget {
     this.padding = spacer4,
     required this.label,
     this.description,
+    this.svgAsset,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const String noResultSvg = 'assets/icons/svg/no_result.svg';
+    final String noResultSvg = svgAsset ?? 'assets/icons/svg/no_result.svg';
 
     return Padding(
       padding: EdgeInsets.all(padding),
@@ -98,7 +110,7 @@ class NoResultCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset(noResultSvg),
+                SvgPicture.asset(noResultSvg, height: imageHeight),
                 const SizedBox(height: spacer2),
                 Text(
                   label ?? '',

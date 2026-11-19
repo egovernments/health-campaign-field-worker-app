@@ -41,10 +41,16 @@ class FacilityOpLogManager extends OpLogManager<FacilityModel> {
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
-  String getClientReferenceId(FacilityModel entity) => entity.id;
+  String getClientReferenceId(FacilityModel entity) =>
+      entity.clientReferenceId ?? entity.id;
 
+  /// A site created on the phone carries its clientReferenceId in [id]
+  /// until the server assigns a real id, so it must look "unsynced".
   @override
-  String? getServerGeneratedId(FacilityModel entity) => entity.id;
+  String? getServerGeneratedId(FacilityModel entity) =>
+      entity.clientReferenceId != null && entity.id == entity.clientReferenceId
+          ? null
+          : entity.id;
 
   @override
   int? getRowVersion(FacilityModel entity) => entity.rowVersion;
@@ -66,10 +72,15 @@ class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
-  String getClientReferenceId(ProjectFacilityModel entity) => entity.id;
+  String getClientReferenceId(ProjectFacilityModel entity) =>
+      entity.clientReferenceId ?? entity.id;
 
+  /// See [FacilityOpLogManager.getServerGeneratedId].
   @override
-  String? getServerGeneratedId(ProjectFacilityModel entity) => entity.id;
+  String? getServerGeneratedId(ProjectFacilityModel entity) =>
+      entity.clientReferenceId != null && entity.id == entity.clientReferenceId
+          ? null
+          : entity.id;
 
   @override
   int? getRowVersion(ProjectFacilityModel entity) => entity.rowVersion;

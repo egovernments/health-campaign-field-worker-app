@@ -1,4 +1,5 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/utils/scanner_comparison_utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
@@ -7,6 +8,7 @@ import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'blocs/widget_readiness_registry.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -68,6 +70,17 @@ dynamic resolveTemplates(dynamic input, Map<String, dynamic> nav) {
   return input; // numbers, bools, null untouched
 }
 
+/// Whether [node] (an action list or action, including nested ones such as
+/// onSuccess/onError branches) contains a SEARCH_EVENT.
+bool _containsSearch(Object? node) {
+  if (node is Map) {
+    if (node['actionType'] == 'SEARCH_EVENT') return true;
+    return node.values.any(_containsSearch);
+  }
+  if (node is List) return node.any(_containsSearch);
+  return false;
+}
+
 class _ScreenBuilderState extends State<ScreenBuilder> {
   late final String _instanceId;
   late final String _schemaKey;
@@ -89,12 +102,64 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      // Mark the page as loading from first paint when it has initActions
+      // to run — otherwise any widget consuming `FlowCrudState.isLoading`
+      // (e.g. listView's `showLoader`) sees "not loading, empty wrapper"
+      // during the window between page mount and the first SEARCH_EVENT
+      // reaching CrudBloc. That window can be hundreds of ms on its own
+      // and up to `waitForWidget.timeoutMs` when GPS is involved, long
+      // enough to flash an empty-state card before loading UI gets a
+      // chance. CrudBloc's own CrudStateLoading transition takes over
+      // once the first search dispatches. Only when a search is among the
+      // init actions: nothing else clears the flag, so a page whose init
+      // actions don't search would stay "loading" for good.
+      if (_containsSearch(initActions)) {
+        final existing =
+            FlowCrudStateRegistry().getByCompositeKey(_compositeKey);
+        FlowCrudStateRegistry().updateByCompositeKey(
+          _compositeKey,
+          (existing ?? const FlowCrudState()).copyWith(isLoading: true),
+        );
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Initialize FormSubmissionRegistry if not already done
         _initializeFormSubmissionRegistry();
 
         // Register form submission handler
         _registerFormHandler();
+
+        // Optional: hold the first dispatch until a sibling widget has
+        // contributed its init-time filter (e.g. the searchBar's
+        // headless `proximity` block). Without this, initActions fires
+        // immediately with the configured filters only, and the
+        // proximity SEARCH_EVENT lands moments later — causing a second
+        // search and a flash of unsorted results before `__distance`
+        // ordering kicks in. GPS failure is handled by `awaitSignal`'s
+        // timeout: if no fix lands in [timeoutMs], we fall through and
+        // fire initActions without the proximity filter (same behaviour
+        // as a flow with no `waitForWidget`).
+        final waitSpec = widget.config['waitForWidget'];
+        if (waitSpec != null) {
+          String? signalName;
+          var timeoutMs = 3000;
+          if (waitSpec is String) {
+            signalName = waitSpec;
+          } else if (waitSpec is Map) {
+            signalName = waitSpec['name'] as String?;
+            final rawTimeout = waitSpec['timeoutMs'];
+            if (rawTimeout is int) timeoutMs = rawTimeout;
+          }
+          if (signalName != null && signalName.isNotEmpty) {
+            await WidgetReadinessRegistry().awaitSignal(
+              _compositeKey,
+              signalName,
+              timeout: Duration(milliseconds: timeoutMs),
+            );
+          }
+        }
+        if (!mounted) return;
 
         debugPrint('ScreenBuilder: initActions for $_schemaKey, compositeKey=$_compositeKey');
         debugPrint('ScreenBuilder: navigationParams=${widget.navigationParams}');
@@ -191,6 +256,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         instanceId: _instanceId,
       );
     }
+    WidgetReadinessRegistry().dispose(_compositeKey);
     // Note: State disposal is handled by FlowBuilderHomePage using composite key
     // This ensures each page instance's state is disposed correctly
     super.dispose();
@@ -398,8 +464,12 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                   ...mergedNavParams,
                   if (isEdit) ...registryFormData,
                   // System values always present
-                  'administrativeArea': localizations
-                      .translate(FlowBuilderSingleton().boundary?.code ?? ''),
+                  // A worker-added settlement shows its own name; its code
+                  // is the parent's.
+                  'administrativeArea': FlowBuilderSingleton()
+                          .boundary
+                          ?.displayName(localizations.translate) ??
+                      localizations.translate(''),
                   'availableIDs': {'DEFAULT': IdGen.instance.identifier},
                   'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
                   'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,

@@ -15,6 +15,7 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
+const newSettlement = NewSettlement();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -241,7 +242,8 @@ class Common {
       'CORE_COMMON_INFO_DESC_INTERNET_CONNECTION';
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
   String get logoutConfirmationHeading => 'HCM_LOGOUT_CONFIRMATION_HEADING';
-  String get logoutConfirmationDescription => 'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
+  String get logoutConfirmationDescription =>
+      'HCM_LOGOUT_CONFIRMATION_DESCRIPTION';
 
   String get coreCommonOr => 'CORE_COMMON_OR';
   String get commentKey => 'COMMENT_KEY';
@@ -683,7 +685,7 @@ class Login {
 
   String get labelText => 'LOGIN_LABEL_TEXT';
 
-  String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
+  String get userNamePlaceholder => 'USERNAME_PLACEHOLDER';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
   String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
@@ -942,6 +944,12 @@ class Home {
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 
+  /// Display label for the merged polio outside-household card, which
+  /// replaces the separate CLF and transit-post cards. The card is still
+  /// keyed on [transitPostLabel] so backend role actions keep gating it.
+  String get outsideHouseholdVaccinationLabel =>
+      'HOME_OUTSIDE_HOUSEHOLD_VACCINATION_LABEL';
+
   String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
 
   String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
@@ -955,8 +963,7 @@ class Home {
   String get polioLqaDataCollectionLabel =>
       'HOME_POLIO_LQA_DATA_COLLECTION_LABEL';
 
-  String get polioInsideMonitoringLabel =>
-      'HOME_POLIO_INSIDE_MONITORING_LABEL';
+  String get polioInsideMonitoringLabel => 'HOME_POLIO_INSIDE_MONITORING_LABEL';
 
   String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
 
@@ -1000,11 +1007,13 @@ class BeneficiaryID {
 
   String get dataFoundBeneficiaryIds => 'DATA_FOUND_BENEFICIARY_IDS';
 
-  String get dataFoundBeneficiaryIdsContent => 'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
+  String get dataFoundBeneficiaryIdsContent =>
+      'DATA_FOUND_BENEFICIARY_IDS_CONTENT';
 
   String get dataNotFoundBeneficiaryIds => 'DATA_NOT_FOUND_BENEFICIARY_IDS';
 
-  String get dataNotFoundBeneficiaryIdsContent => 'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
+  String get dataNotFoundBeneficiaryIdsContent =>
+      'DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT';
 }
 
 class DataShare {
@@ -1534,7 +1543,8 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get proceedWithoutDownloading => 'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
+  String get proceedWithoutDownloading =>
+      'CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
 
@@ -1734,8 +1744,7 @@ class FaceAuth {
   // Re-verification popup / overlay
   String get scanToProceed => 'FACE_AUTH_SCAN_TO_PROCEED';
   String get verifyToContinue => 'FACE_AUTH_VERIFY_TO_CONTINUE';
-  String get verifyToContinueWorking =>
-      'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
+  String get verifyToContinueWorking => 'FACE_AUTH_VERIFY_TO_CONTINUE_WORKING';
   String get systemUserVerifyFirst => 'FACE_AUTH_SYSTEM_USER_VERIFY_FIRST';
   String get coWorkerVerification => 'FACE_AUTH_COWORKER_VERIFICATION';
   String get scanEachFace => 'FACE_AUTH_SCAN_EACH_FACE';
@@ -1751,4 +1760,16 @@ class DatabaseError {
   String get databaseErrorMessage => 'DATABASE_ERROR_MESSAGE';
 
   String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
+}
+
+/// Codes for adding a missed place at the lowest boundary level. Messages
+/// use `{LEVEL}` for that level's localized name (Settlement, Village, ...).
+class NewSettlement {
+  const NewSettlement();
+
+  String get notFoundLabel => 'MISSED_PLACE_NOT_FOUND_LABEL';
+
+  String get addAction => 'MISSED_PLACE_ADD_ACTION';
+
+  String get savedToast => 'MISSED_PLACE_SAVED_TOAST';
 }

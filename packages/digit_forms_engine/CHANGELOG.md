@@ -1,3 +1,28 @@
+## 0.1.4
+
+- New page-level `conditions.headerTag`: shows a location-pin tag under the page description naming where the form applies (e.g. the boundary a missed place is added under). `{{navigation.<key>}}` placeholders are resolved and the value is translated; nothing is shown when it resolves to empty or stays unresolved
+- Location (`latLng`) capture popup: description is "Location is required for this form, so please wait while we capture it. Your location is saved automatically once accuracy is 5 m or less." (new single `LOCATION_CAPTURE_SAVE_RULE`, replacing `LOCATION_CAPTURE_SAVE_RULE_GOOD` / `_TIMER`; the threshold is no longer bold). When the popup timer runs out without good accuracy, the status chip shows "Timed out" (`LOCATION_TIMED_OUT`) and the info box shows `LOCATION_CAPTURE_TIMED_OUT_INFO`; Save stays enabled. The info box now uses an info icon with an info border. New `isLocationCaptureTimedOut`
+
+## 0.1.3
+
+- `radio` fields now render `helpText`. `RadioList` has no `helpText` prop of its own, so the builder draws it under the options using the same style `DigitBaseFormInput` applies (bodyS, secondary text colour, truncated at 256 characters). An error suppresses it, matching how the components library replaces help text with the error rather than stacking both.
+- Added the `multiSelectDropdown` field format: renders `MultiSelectDropDown` from the field's `enums` without the config also having to set `isMultiSelect: true`. Selections are stored dot-joined, and the summary page splits and localizes them like other multi-select fields. Composer fields declared as `"type": "array"` already fall back to `string`, so they pick this up.
+- Location (`latLng`) capture rebuilt in the style of ODK Collect on the shared `Popup`: live accuracy, a Searching / Good / Fair / Low status chip, elapsed time, satellite count and a pulsing pin
+- A reading at or below `accuracyThreshold` (default 5 m) is saved automatically with a "Location saved" toast; the 10 m fallback is gone. `unacceptableAccuracyThreshold` only adds a "fair" colour band; neither rule becomes a form validator
+- New `popupTimer` property (`PopupTimer`: `enabled`, `minutes`, `seconds`; numbers or text). Once it runs out Save accepts any reading. Defaults to 30 s; `enabled: false` turns it off
+- After 30 s without good accuracy the popup shows a hint chosen from accuracy and satellite count. Satellite count comes from the host on the `digit_forms_engine/gnss_satellites` `EventChannel`; hosts without it just don't show the line
+- Closing the popup leaves the field empty, so a required field fails until captured. Recapture shows whenever there is no value or accuracy is above the threshold, and is hidden for read-only fields; a prefilled value is kept
+- Fixed capture waiting forever on "Searching…" when a finished load returned the coordinates the bloc already held
+- New `GpsWarmup`: shared, reference-counted high-accuracy GPS session that `FormsRenderPage` starts when the form has a `latLng` field, so the fix is already improving when the field is reached. It never requests permission. `location` is now a direct dependency
+- New `notIn` validator: fails when the value matches a list or `navigation.*` entry (case- and space-insensitive). The scoped form `{from, scopeField}` checks per option of another field and re-validates when it changes (unique site names per type)
+- Pages whose fields are all `hidden` are kept when a field sets `includeInForm` or `includeInSummary`; the form flow skips them, so a page can appear only on the summary
+- Summary page: `includeInSummary: true` overrides `hidden`; empty fields are left out instead of showing `--`; boolean `checkbox` values show as read-only checkboxes; tighter card spacing
+- Back on the summary page clears the form (`FormsClearFormEvent`) and returns to the opening screen, so the next entry starts empty
+- A hidden `custom` field with `includeInForm: true` is built off screen (`Offstage`), so components that set their own value while building still send it
+- `dob` picker: label above the card with the required asterisk; new `innerLabel` for the date input (falls back to `label`, then `CORE_COMMON_DOB`). A bare `{{name}}` in `minAge`/`maxAge` reads navigation params or a form control
+- Selection card: deselecting the only option clears the value so the required error shows, instead of throwing and restoring the option
+- Tests: `test/lat_lng_accuracy_test.dart` (accuracy levels, save rule, popup-timer parsing, hints, `GpsWarmup.schemaHasLocationField`) and a widget test for off-screen custom fields
+
 ## 0.1.2
 
 - Fix multi-select summary rendering: gate the dot-split on the `isMultiSelect` schema flag instead of a regex that only accepted purely alphabetic dot-joined tokens, so enum codes with underscores or digits (e.g. `MOB_VAN`, `HEALTH_WORKER`) now localize instead of being shown raw with dots. Remove the now-unused `isDotSeparatedKey` helper.

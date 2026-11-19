@@ -34,7 +34,12 @@ final dynamic stockReconciliationFlows = {
         "wrapperName": "InventoryWrapper",
         "groupByType": true,
         "rootEntity": "ProjectFacilityModel",
-        "filters": [],
+        "filters": [
+          {
+            "field": "additionalFields.fields.facilityLevel",
+            "notEquals": "site"
+          }
+        ],
         "relations": [
           {
             "name": "facility",

@@ -25,7 +25,9 @@ class ProximitySearchWidget extends ResolvedFlowWidget {
       return _ProximitySearchStateful(
         json: json,
         onAction: onAction,
-        externalValue: state.widgetData[fieldKey] as bool? ?? false,
+        // Null means the worker never set it, so the config default applies;
+        // false means they switched it off and that must stick.
+        externalValue: state.widgetData[fieldKey] as bool?,
         onUpdateWidgetData: state.updateWidgetData,
       );
     });
@@ -35,7 +37,7 @@ class ProximitySearchWidget extends ResolvedFlowWidget {
 class _ProximitySearchStateful extends StatefulWidget {
   final Map<String, dynamic> json;
   final void Function(ActionConfig) onAction;
-  final bool externalValue;
+  final bool? externalValue;
   final void Function(String key, dynamic value) onUpdateWidgetData;
 
   const _ProximitySearchStateful({
@@ -53,9 +55,15 @@ class _ProximitySearchStateful extends StatefulWidget {
 class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   bool _value = false;
 
+  /// Guards the one-shot dispatch for a switch that starts on.
+  bool _autoApplied = false;
+
   String? _lat;
   String? _long;
   double? _accuracy;
+
+  String get _fieldKey =>
+      widget.json['fieldName'] as String? ?? 'proximitySearch';
 
   @override
   void initState() {
@@ -63,19 +71,58 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
 
     /// Restore persisted widgetData value (e.g. popup reopened) so this
     /// behaves like the plain switch widget; fall back to config default.
-    _value = widget.externalValue || widget.json['defaultValue'] == true;
+    // Only an unset value falls back to the config default; an explicit
+    // false (switched off, or a removed filter chip) keeps the switch off
+    // when the popup is reopened instead of re-applying the filter.
+    _value = widget.externalValue ?? widget.json['defaultValue'] == true;
 
     /// Fetch location immediately after mount (no dialog / no delay)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LocationBloc>().add(const LoadLocationEvent());
+      if (!mounted) return;
+      final locationBloc = context.read<LocationBloc>();
+      locationBloc.add(const LoadLocationEvent());
+      // A fix may already be cached, in which case the BlocConsumer listener
+      // never fires (it only sees transitions) and a default-on switch would
+      // sit there having applied nothing.
+      _adoptLocation(locationBloc.state);
     });
+  }
+
+  /// Copies the first usable fix into local state, then applies it if the
+  /// switch is already on.
+  void _adoptLocation(LocationState state) {
+    if (state.latitude == null || _lat != null) {
+      _maybeAutoApply();
+      return;
+    }
+    setState(() {
+      _lat = state.latitude?.toString();
+      _long = state.longitude?.toString();
+      _accuracy = state.accuracy;
+    });
+    _maybeAutoApply();
+  }
+
+  /// Dispatches the configured search once GPS resolves for a switch that
+  /// started on (`defaultValue: true`). Toggling is what normally dispatches,
+  /// so without this a default-on switch renders as enabled while no
+  /// proximity filter has ever been applied. Runs at most once; the user
+  /// toggling afterwards goes through [DigitSwitch.onChanged] as usual.
+  void _maybeAutoApply() {
+    if (_autoApplied || !_value) return;
+    if (_lat == null || _long == null) return;
+    _autoApplied = true;
+    widget.onUpdateWidgetData(_fieldKey, true);
+    _triggerActions(true);
   }
 
   @override
   void didUpdateWidget(_ProximitySearchStateful oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Respond to external reset — e.g. Clear button cleared widgetData
-    if (!widget.externalValue && oldWidget.externalValue && _value) {
+    if (widget.externalValue != true &&
+        oldWidget.externalValue == true &&
+        _value) {
       setState(() => _value = false);
     }
   }
@@ -85,16 +132,17 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
     final localization = LocalizationContext.maybeOf(context);
 
     return BlocConsumer<LocationBloc, LocationState>(
-      listener: (context, state) {
-        if (state.latitude != null && _lat == null) {
-          setState(() {
-            _lat = state.latitude?.toString();
-            _long = state.longitude?.toString();
-            _accuracy = state.accuracy;
-          });
-        }
-      },
+      listener: (context, state) => _adoptLocation(state),
       builder: (context, state) {
+        // Headless mode: the proximity filter applies on its own once GPS
+        // resolves, with no control on screen. Used where nearby is not a
+        // worker-facing choice but a standing constraint on the list. The
+        // widget still has to be built — `visible: false` would skip it
+        // entirely and nothing would hold the LocationBloc subscription.
+        if (widget.json['hideSwitch'] == true) {
+          return const SizedBox.shrink();
+        }
+
         final locationReady = _lat != null && _long != null;
 
         return DigitSwitch(
@@ -103,9 +151,8 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
           disabled: !locationReady,
           onChanged: (newValue) {
             setState(() => _value = newValue);
-            final fieldKey =
-                widget.json['fieldName'] as String? ?? 'proximitySearch';
-            widget.onUpdateWidgetData(fieldKey, newValue);
+            _autoApplied = true;
+            widget.onUpdateWidgetData(_fieldKey, newValue);
             _triggerActions(newValue);
           },
         );
@@ -219,10 +266,19 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
           return {
             "key": json['fieldName'],
             if (radius != null) "value": radius,
+            // Carry through an explicit `root` so the filter lands on the
+            // intended table. Without one the executor falls back to the
+            // search name, which only happens to be right when that name
+            // matches a table.
+            if (item is Map && item['root'] != null) "root": item['root'],
             "lat": _lat,
             "long": _long,
             "accuracy": _accuracy,
-            "operation": "within"
+            // A config can ask for `withinOrUnlocated` to keep records that
+            // have no location; anything else is a plain radius filter.
+            "operation": item is Map && item['operation'] == 'withinOrUnlocated'
+                ? 'withinOrUnlocated'
+                : 'within'
           };
         }).toList();
       }

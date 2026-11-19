@@ -14,6 +14,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     this.initialDate,
     this.navigationParams,
     super.validations,
+    super.innerLabel,
   });
 
   @override
@@ -23,43 +24,72 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final minAge = _parseAgeConstraint('minAge', form, navigationParams);
     final maxAge = _parseAgeConstraint('maxAge', form, navigationParams);
     final validationMessages = buildValidationMessages(validations, loc);
+    final isRequiredField =
+        validations?.any((v) => v.type == 'required') ?? false;
 
     return ReactiveWrapperField(
       formControlName: formControlName,
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
-      builder: (field) => DigitDobPicker(
-        initialDate: initialDate ?? DateTime(1900),
-        datePickerFormControl: formControlName,
-        datePickerLabel: label ?? 'date of birth',
-        ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
-        yearsHintLabel: loc.translate(
-          'YEARS_HINT_TEXT',
+      // LabeledField wraps the whole picker so the label sits above the
+      // card (outside the box) and the required-asterisk is rendered.
+      // `DigitDobPicker` ships with its own internal LabeledField around
+      // the date input, so we pass an empty `datePickerLabel` to it to
+      // avoid a duplicate label inside the card — leaves a small blank
+      // slot where that inner label used to be. `labelInline: false`
+      // forces the stacked (label-above-child) layout on tablet/desktop
+      // too; the inline variant would put the label beside the card.
+      builder: (field) => LabeledField(
+        label: label,
+        isRequired: isRequiredField,
+        labelInline: false,
+        child: DigitDobPicker(
+          initialDate: initialDate ?? DateTime(1900),
+          datePickerFormControl: formControlName,
+          // Inner labels ("Date of birth" above the date input, "Age"
+          // above the year/month pair) stay visible so each section
+          // reads cleanly inside the card. We skip `isRequired` so the
+          // inner LabeledFields don't paint their own asterisks — the
+          // outer wrapper above the card already carries the only
+          // user-facing `*` for the whole field.
+          //
+          // Prefers the schema's own `innerLabel` so the config can
+          // differ from the outer `label` (e.g. outer "Date of birth or
+          // age" above the card, inner "Date of birth" above the date
+          // input). Falls back to the outer label — and finally to
+          // `CORE_COMMON_DOB` — for configs that only define one.
+          datePickerLabel: (innerLabel != null && innerLabel!.isNotEmpty)
+              ? innerLabel!
+              : (label ?? loc.translate('CORE_COMMON_DOB')),
+          ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
+          yearsHintLabel: loc.translate(
+            'YEARS_HINT_TEXT',
+          ),
+          monthsHintLabel: loc.translate(
+            'MONTHS_HINT_TEXT',
+          ),
+          separatorLabel: loc.translate(
+            'SEPARATOR_LABEL_TEXT',
+          ),
+          cancelText: loc.translate('CORE_COMMON_CANCEL'),
+          confirmText: loc.translate('CORE_COMMON_OK'),
+          initialValue: form.control(formControlName).value != null &&
+                  (form.control(formControlName).value as String)
+                      .trim()
+                      .isNotEmpty
+              ? form.control(formControlName).value as String
+              : null,
+          yearsAndMonthsErrMsg: '',
+          errorMessage: _getDobErrorMessage(field.control, context),
+          onChangeOfFormControl: (value) {
+            _handleDobValidation(
+              value,
+              form.control(formControlName),
+              minAge,
+              maxAge,
+            );
+          },
         ),
-        monthsHintLabel: loc.translate(
-          'MONTHS_HINT_TEXT',
-        ),
-        separatorLabel: loc.translate(
-          'SEPARATOR_LABEL_TEXT',
-        ),
-        cancelText: loc.translate('CORE_COMMON_CANCEL'),
-        confirmText: loc.translate('CORE_COMMON_OK'),
-        initialValue: form.control(formControlName).value != null &&
-                (form.control(formControlName).value as String)
-                    .trim()
-                    .isNotEmpty
-            ? form.control(formControlName).value as String
-            : null,
-        yearsAndMonthsErrMsg: '',
-        errorMessage: _getDobErrorMessage(field.control, context),
-        onChangeOfFormControl: (value) {
-          _handleDobValidation(
-            value,
-            form.control(formControlName),
-            minAge,
-            maxAge,
-          );
-        },
       ),
     );
   }
@@ -96,8 +126,13 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
             _evaluateCondition(condition, formGroup, navParams);
         evaluated = conditionResult ? truePart : falsePart;
       } else {
-        // Not a ternary — use inner expression directly
-        evaluated = expr;
+        // Not a ternary. A bare `{{name}}` is a reference: resolve it from
+        // navigation params or the form before falling back to treating it
+        // as a literal. This is how a campaign-driven limit reaches the
+        // picker — the engine can't read the project's delivery config
+        // itself, so the caller passes the resolved month count in as a
+        // navigation param (e.g. `{{minAgeMonths}}`).
+        evaluated = _resolveNumericReference(expr, formGroup, navParams) ?? expr;
       }
     }
 
@@ -108,6 +143,28 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final months = totalMonths % 12;
 
     return (years, months);
+  }
+
+  /// Resolves [name] to a number held in navigation params or a form control,
+  /// returned as a string for the caller to parse. Null when it resolves to
+  /// nothing numeric, so the caller can fall back to treating the expression
+  /// as a literal.
+  String? _resolveNumericReference(
+    String name,
+    FormGroup formGroup,
+    Map<String, dynamic>? navParams,
+  ) {
+    dynamic value;
+    if (navParams != null && navParams.containsKey(name)) {
+      value = navParams[name];
+    } else if (formGroup.contains(name)) {
+      value = formGroup.control(name).value;
+    }
+
+    if (value == null) return null;
+    if (value is num) return value.toInt().toString();
+    final text = value.toString().trim();
+    return int.tryParse(text) != null ? text : null;
   }
 
   /// Evaluate a condition variable from form controls or navigation params.

@@ -93,6 +93,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.projectTypes;
       case "FormConfig":
         return MasterEnums.formConfig;
+      case "ROLES_FOR_MISSED_PLACES":
+        return MasterEnums.rolesForMissedPlaces;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -169,6 +171,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "projectTypes";
       case MasterEnums.formConfig:
         return "FormConfig";
+      case MasterEnums.rolesForMissedPlaces:
+        return "ROLES_FOR_MISSED_PLACES";
     }
   }
 }

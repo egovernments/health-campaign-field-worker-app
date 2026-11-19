@@ -11,15 +11,40 @@ import 'package:flutter/material.dart';
 class DigitCrudService extends CrudService {
   final BuildContext context;
 
+  /// Lets the app pick the repository for specific entities, e.g. one that
+  /// syncs through a different endpoint. Returns null to use the default.
+  final DataRepository<EntityModel, EntitySearchModel>? Function(
+      EntityModel entity)? repositoryOverride;
+
   DigitCrudService(
       {required super.relationshipMap,
       required super.nestedModelMappings,
       required super.searchEntityRepository,
-      required this.context});
+      required this.context,
+      this.repositoryOverride});
+
+  /// Facility and project-facility repositories don't write an oplog by
+  /// default (their downloads go through `create` too), so sites created in
+  /// a flow ask for one explicitly. Everything else keeps its default.
+  @override
+  Future<void> createEntities(List<EntityModel> entities) async {
+    for (final entity in entities) {
+      final repository = getRepositoryForEntity(entity);
+      if ((entity is FacilityModel || entity is ProjectFacilityModel) &&
+          repository is LocalRepository<EntityModel, EntitySearchModel>) {
+        await repository.create(entity, createOpLog: true);
+      } else {
+        await super.createEntities([entity]);
+      }
+    }
+  }
 
   @override
   DataRepository<EntityModel, EntitySearchModel> getRepositoryForEntity(
       EntityModel entity) {
+    final override = repositoryOverride?.call(entity);
+    if (override != null) return override;
+
     if (entity is HouseholdModel) {
       return context.repository<HouseholdModel, HouseholdSearchModel>(context);
     } else if (entity is IndividualModel) {
@@ -36,6 +61,10 @@ class DigitCrudService extends CrudService {
     } else if (entity is ProjectFacilityModel) {
       return context.repository<ProjectFacilityModel,
           ProjectFacilitySearchModel>(context);
+    } else if (entity is FacilityModel) {
+      // Outside-household sites (Transit Posts / Outside Household Places)
+      // are created from the app as facilities.
+      return context.repository<FacilityModel, FacilitySearchModel>(context);
     } else if (entity is ProductVariantModel) {
       return context
           .repository<ProductVariantModel, ProductVariantSearchModel>(context);

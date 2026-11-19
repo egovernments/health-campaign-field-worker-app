@@ -6867,6 +6867,30 @@ class $FacilityTable extends Facility
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<double> locationAccuracy = GeneratedColumn<double>(
+      'location_accuracy', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
   static const VerificationMeta _isPermanentMeta =
       const VerificationMeta('isPermanent');
   @override
@@ -6981,6 +7005,10 @@ class $FacilityTable extends Facility
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        clientReferenceId,
+        latitude,
+        longitude,
+        locationAccuracy,
         isPermanent,
         usage,
         storageCapacity,
@@ -7013,6 +7041,26 @@ class $FacilityTable extends Facility
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
     }
     if (data.containsKey('is_permanent')) {
       context.handle(
@@ -7119,6 +7167,14 @@ class $FacilityTable extends Facility
     return FacilityData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id']),
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude']),
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}location_accuracy']),
       isPermanent: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_permanent']),
       usage: attachedDatabase.typeMapping
@@ -7164,6 +7220,10 @@ class $FacilityTable extends Facility
 
 class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String id;
+  final String? clientReferenceId;
+  final double? latitude;
+  final double? longitude;
+  final double? locationAccuracy;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -7183,6 +7243,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String? additionalFields;
   const FacilityData(
       {required this.id,
+      this.clientReferenceId,
+      this.latitude,
+      this.longitude,
+      this.locationAccuracy,
       this.isPermanent,
       this.usage,
       this.storageCapacity,
@@ -7204,6 +7268,18 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    if (!nullToAbsent || clientReferenceId != null) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || locationAccuracy != null) {
+      map['location_accuracy'] = Variable<double>(locationAccuracy);
+    }
     if (!nullToAbsent || isPermanent != null) {
       map['is_permanent'] = Variable<bool>(isPermanent);
     }
@@ -7261,6 +7337,18 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   FacilityCompanion toCompanion(bool nullToAbsent) {
     return FacilityCompanion(
       id: Value(id),
+      clientReferenceId: clientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientReferenceId),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      locationAccuracy: locationAccuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationAccuracy),
       isPermanent: isPermanent == null && nullToAbsent
           ? const Value.absent()
           : Value(isPermanent),
@@ -7317,6 +7405,11 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FacilityData(
       id: serializer.fromJson<String>(json['id']),
+      clientReferenceId:
+          serializer.fromJson<String?>(json['clientReferenceId']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      locationAccuracy: serializer.fromJson<double?>(json['locationAccuracy']),
       isPermanent: serializer.fromJson<bool?>(json['isPermanent']),
       usage: serializer.fromJson<String?>(json['usage']),
       storageCapacity: serializer.fromJson<int?>(json['storageCapacity']),
@@ -7342,6 +7435,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'clientReferenceId': serializer.toJson<String?>(clientReferenceId),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'locationAccuracy': serializer.toJson<double?>(locationAccuracy),
       'isPermanent': serializer.toJson<bool?>(isPermanent),
       'usage': serializer.toJson<String?>(usage),
       'storageCapacity': serializer.toJson<int?>(storageCapacity),
@@ -7364,6 +7461,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
 
   FacilityData copyWith(
           {String? id,
+          Value<String?> clientReferenceId = const Value.absent(),
+          Value<double?> latitude = const Value.absent(),
+          Value<double?> longitude = const Value.absent(),
+          Value<double?> locationAccuracy = const Value.absent(),
           Value<bool?> isPermanent = const Value.absent(),
           Value<String?> usage = const Value.absent(),
           Value<int?> storageCapacity = const Value.absent(),
@@ -7383,6 +7484,14 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           Value<String?> additionalFields = const Value.absent()}) =>
       FacilityData(
         id: id ?? this.id,
+        clientReferenceId: clientReferenceId.present
+            ? clientReferenceId.value
+            : this.clientReferenceId,
+        latitude: latitude.present ? latitude.value : this.latitude,
+        longitude: longitude.present ? longitude.value : this.longitude,
+        locationAccuracy: locationAccuracy.present
+            ? locationAccuracy.value
+            : this.locationAccuracy,
         isPermanent: isPermanent.present ? isPermanent.value : this.isPermanent,
         usage: usage.present ? usage.value : this.usage,
         storageCapacity: storageCapacity.present
@@ -7426,6 +7535,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   String toString() {
     return (StringBuffer('FacilityData(')
           ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
           ..write('isPermanent: $isPermanent, ')
           ..write('usage: $usage, ')
           ..write('storageCapacity: $storageCapacity, ')
@@ -7448,30 +7561,39 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      isPermanent,
-      usage,
-      storageCapacity,
-      auditCreatedBy,
-      nonRecoverableError,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedBy,
-      clientCreatedBy,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      tenantId,
-      name,
-      isDeleted,
-      rowVersion,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        clientReferenceId,
+        latitude,
+        longitude,
+        locationAccuracy,
+        isPermanent,
+        usage,
+        storageCapacity,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        tenantId,
+        name,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FacilityData &&
           other.id == this.id &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
           other.isPermanent == this.isPermanent &&
           other.usage == this.usage &&
           other.storageCapacity == this.storageCapacity &&
@@ -7493,6 +7615,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
 
 class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<String> id;
+  final Value<String?> clientReferenceId;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<double?> locationAccuracy;
   final Value<bool?> isPermanent;
   final Value<String?> usage;
   final Value<int?> storageCapacity;
@@ -7513,6 +7639,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<int> rowid;
   const FacilityCompanion({
     this.id = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
     this.isPermanent = const Value.absent(),
     this.usage = const Value.absent(),
     this.storageCapacity = const Value.absent(),
@@ -7534,6 +7664,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   });
   FacilityCompanion.insert({
     required String id,
+    this.clientReferenceId = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
     this.isPermanent = const Value.absent(),
     this.usage = const Value.absent(),
     this.storageCapacity = const Value.absent(),
@@ -7555,6 +7689,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   }) : id = Value(id);
   static Insertable<FacilityData> custom({
     Expression<String>? id,
+    Expression<String>? clientReferenceId,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<double>? locationAccuracy,
     Expression<bool>? isPermanent,
     Expression<String>? usage,
     Expression<int>? storageCapacity,
@@ -7576,6 +7714,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
       if (isPermanent != null) 'is_permanent': isPermanent,
       if (usage != null) 'usage': usage,
       if (storageCapacity != null) 'storage_capacity': storageCapacity,
@@ -7601,6 +7743,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
 
   FacilityCompanion copyWith(
       {Value<String>? id,
+      Value<String?>? clientReferenceId,
+      Value<double?>? latitude,
+      Value<double?>? longitude,
+      Value<double?>? locationAccuracy,
       Value<bool?>? isPermanent,
       Value<String?>? usage,
       Value<int?>? storageCapacity,
@@ -7621,6 +7767,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       Value<int>? rowid}) {
     return FacilityCompanion(
       id: id ?? this.id,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
       isPermanent: isPermanent ?? this.isPermanent,
       usage: usage ?? this.usage,
       storageCapacity: storageCapacity ?? this.storageCapacity,
@@ -7647,6 +7797,18 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<double>(locationAccuracy.value);
     }
     if (isPermanent.present) {
       map['is_permanent'] = Variable<bool>(isPermanent.value);
@@ -7709,6 +7871,10 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   String toString() {
     return (StringBuffer('FacilityCompanion(')
           ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
           ..write('isPermanent: $isPermanent, ')
           ..write('usage: $usage, ')
           ..write('storageCapacity: $storageCapacity, ')
@@ -11661,6 +11827,12 @@ class $ProjectFacilityTable extends ProjectFacility
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _facilityIdMeta =
       const VerificationMeta('facilityId');
   @override
@@ -11762,6 +11934,7 @@ class $ProjectFacilityTable extends ProjectFacility
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        clientReferenceId,
         facilityId,
         projectId,
         auditCreatedBy,
@@ -11793,6 +11966,12 @@ class $ProjectFacilityTable extends ProjectFacility
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
     }
     if (data.containsKey('facility_id')) {
       context.handle(
@@ -11893,6 +12072,8 @@ class $ProjectFacilityTable extends ProjectFacility
     return ProjectFacilityData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id']),
       facilityId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}facility_id'])!,
       projectId: attachedDatabase.typeMapping
@@ -11935,6 +12116,7 @@ class $ProjectFacilityTable extends ProjectFacility
 class ProjectFacilityData extends DataClass
     implements Insertable<ProjectFacilityData> {
   final String id;
+  final String? clientReferenceId;
   final String facilityId;
   final String projectId;
   final String? auditCreatedBy;
@@ -11952,6 +12134,7 @@ class ProjectFacilityData extends DataClass
   final String? additionalFields;
   const ProjectFacilityData(
       {required this.id,
+      this.clientReferenceId,
       required this.facilityId,
       required this.projectId,
       this.auditCreatedBy,
@@ -11971,6 +12154,9 @@ class ProjectFacilityData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    if (!nullToAbsent || clientReferenceId != null) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId);
+    }
     map['facility_id'] = Variable<String>(facilityId);
     map['project_id'] = Variable<String>(projectId);
     if (!nullToAbsent || auditCreatedBy != null) {
@@ -12018,6 +12204,9 @@ class ProjectFacilityData extends DataClass
   ProjectFacilityCompanion toCompanion(bool nullToAbsent) {
     return ProjectFacilityCompanion(
       id: Value(id),
+      clientReferenceId: clientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientReferenceId),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
@@ -12067,6 +12256,8 @@ class ProjectFacilityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ProjectFacilityData(
       id: serializer.fromJson<String>(json['id']),
+      clientReferenceId:
+          serializer.fromJson<String?>(json['clientReferenceId']),
       facilityId: serializer.fromJson<String>(json['facilityId']),
       projectId: serializer.fromJson<String>(json['projectId']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -12090,6 +12281,7 @@ class ProjectFacilityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'clientReferenceId': serializer.toJson<String?>(clientReferenceId),
       'facilityId': serializer.toJson<String>(facilityId),
       'projectId': serializer.toJson<String>(projectId),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -12110,6 +12302,7 @@ class ProjectFacilityData extends DataClass
 
   ProjectFacilityData copyWith(
           {String? id,
+          Value<String?> clientReferenceId = const Value.absent(),
           String? facilityId,
           String? projectId,
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -12127,6 +12320,9 @@ class ProjectFacilityData extends DataClass
           Value<String?> additionalFields = const Value.absent()}) =>
       ProjectFacilityData(
         id: id ?? this.id,
+        clientReferenceId: clientReferenceId.present
+            ? clientReferenceId.value
+            : this.clientReferenceId,
         facilityId: facilityId ?? this.facilityId,
         projectId: projectId ?? this.projectId,
         auditCreatedBy:
@@ -12166,6 +12362,7 @@ class ProjectFacilityData extends DataClass
   String toString() {
     return (StringBuffer('ProjectFacilityData(')
           ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('facilityId: $facilityId, ')
           ..write('projectId: $projectId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -12188,6 +12385,7 @@ class ProjectFacilityData extends DataClass
   @override
   int get hashCode => Object.hash(
       id,
+      clientReferenceId,
       facilityId,
       projectId,
       auditCreatedBy,
@@ -12208,6 +12406,7 @@ class ProjectFacilityData extends DataClass
       identical(this, other) ||
       (other is ProjectFacilityData &&
           other.id == this.id &&
+          other.clientReferenceId == this.clientReferenceId &&
           other.facilityId == this.facilityId &&
           other.projectId == this.projectId &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -12227,6 +12426,7 @@ class ProjectFacilityData extends DataClass
 
 class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   final Value<String> id;
+  final Value<String?> clientReferenceId;
   final Value<String> facilityId;
   final Value<String> projectId;
   final Value<String?> auditCreatedBy;
@@ -12245,6 +12445,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   final Value<int> rowid;
   const ProjectFacilityCompanion({
     this.id = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
     this.facilityId = const Value.absent(),
     this.projectId = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -12264,6 +12465,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   });
   ProjectFacilityCompanion.insert({
     required String id,
+    this.clientReferenceId = const Value.absent(),
     required String facilityId,
     required String projectId,
     this.auditCreatedBy = const Value.absent(),
@@ -12285,6 +12487,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
         projectId = Value(projectId);
   static Insertable<ProjectFacilityData> custom({
     Expression<String>? id,
+    Expression<String>? clientReferenceId,
     Expression<String>? facilityId,
     Expression<String>? projectId,
     Expression<String>? auditCreatedBy,
@@ -12304,6 +12507,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
       if (facilityId != null) 'facility_id': facilityId,
       if (projectId != null) 'project_id': projectId,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -12327,6 +12531,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
 
   ProjectFacilityCompanion copyWith(
       {Value<String>? id,
+      Value<String?>? clientReferenceId,
       Value<String>? facilityId,
       Value<String>? projectId,
       Value<String?>? auditCreatedBy,
@@ -12345,6 +12550,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
       Value<int>? rowid}) {
     return ProjectFacilityCompanion(
       id: id ?? this.id,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
       facilityId: facilityId ?? this.facilityId,
       projectId: projectId ?? this.projectId,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -12369,6 +12575,9 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
     }
     if (facilityId.present) {
       map['facility_id'] = Variable<String>(facilityId.value);
@@ -12425,6 +12634,7 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   String toString() {
     return (StringBuffer('ProjectFacilityCompanion(')
           ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('facilityId: $facilityId, ')
           ..write('projectId: $projectId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -46938,6 +47148,10 @@ class $$DocumentTableOrderingComposer
 
 typedef $$FacilityTableInsertCompanionBuilder = FacilityCompanion Function({
   required String id,
+  Value<String?> clientReferenceId,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<double?> locationAccuracy,
   Value<bool?> isPermanent,
   Value<String?> usage,
   Value<int?> storageCapacity,
@@ -46959,6 +47173,10 @@ typedef $$FacilityTableInsertCompanionBuilder = FacilityCompanion Function({
 });
 typedef $$FacilityTableUpdateCompanionBuilder = FacilityCompanion Function({
   Value<String> id,
+  Value<String?> clientReferenceId,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<double?> locationAccuracy,
   Value<bool?> isPermanent,
   Value<String?> usage,
   Value<int?> storageCapacity,
@@ -47000,6 +47218,10 @@ class $$FacilityTableTableManager extends RootTableManager<
               $$FacilityTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<String> id = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<double?> locationAccuracy = const Value.absent(),
             Value<bool?> isPermanent = const Value.absent(),
             Value<String?> usage = const Value.absent(),
             Value<int?> storageCapacity = const Value.absent(),
@@ -47021,6 +47243,10 @@ class $$FacilityTableTableManager extends RootTableManager<
           }) =>
               FacilityCompanion(
             id: id,
+            clientReferenceId: clientReferenceId,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
             isPermanent: isPermanent,
             usage: usage,
             storageCapacity: storageCapacity,
@@ -47042,6 +47268,10 @@ class $$FacilityTableTableManager extends RootTableManager<
           ),
           getInsertCompanionBuilder: ({
             required String id,
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<double?> locationAccuracy = const Value.absent(),
             Value<bool?> isPermanent = const Value.absent(),
             Value<String?> usage = const Value.absent(),
             Value<int?> storageCapacity = const Value.absent(),
@@ -47063,6 +47293,10 @@ class $$FacilityTableTableManager extends RootTableManager<
           }) =>
               FacilityCompanion.insert(
             id: id,
+            clientReferenceId: clientReferenceId,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
             isPermanent: isPermanent,
             usage: usage,
             storageCapacity: storageCapacity,
@@ -47102,6 +47336,26 @@ class $$FacilityTableFilterComposer
   $$FacilityTableFilterComposer(super.$state);
   ColumnFilters<String> get id => $state.composableBuilder(
       column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -47196,6 +47450,26 @@ class $$FacilityTableOrderingComposer
   $$FacilityTableOrderingComposer(super.$state);
   ColumnOrderings<String> get id => $state.composableBuilder(
       column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -48851,6 +49125,7 @@ class $$ProjectBeneficiaryTableOrderingComposer
 typedef $$ProjectFacilityTableInsertCompanionBuilder = ProjectFacilityCompanion
     Function({
   required String id,
+  Value<String?> clientReferenceId,
   required String facilityId,
   required String projectId,
   Value<String?> auditCreatedBy,
@@ -48871,6 +49146,7 @@ typedef $$ProjectFacilityTableInsertCompanionBuilder = ProjectFacilityCompanion
 typedef $$ProjectFacilityTableUpdateCompanionBuilder = ProjectFacilityCompanion
     Function({
   Value<String> id,
+  Value<String?> clientReferenceId,
   Value<String> facilityId,
   Value<String> projectId,
   Value<String?> auditCreatedBy,
@@ -48911,6 +49187,7 @@ class $$ProjectFacilityTableTableManager extends RootTableManager<
               $$ProjectFacilityTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<String> id = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
             Value<String> facilityId = const Value.absent(),
             Value<String> projectId = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -48930,6 +49207,7 @@ class $$ProjectFacilityTableTableManager extends RootTableManager<
           }) =>
               ProjectFacilityCompanion(
             id: id,
+            clientReferenceId: clientReferenceId,
             facilityId: facilityId,
             projectId: projectId,
             auditCreatedBy: auditCreatedBy,
@@ -48949,6 +49227,7 @@ class $$ProjectFacilityTableTableManager extends RootTableManager<
           ),
           getInsertCompanionBuilder: ({
             required String id,
+            Value<String?> clientReferenceId = const Value.absent(),
             required String facilityId,
             required String projectId,
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -48968,6 +49247,7 @@ class $$ProjectFacilityTableTableManager extends RootTableManager<
           }) =>
               ProjectFacilityCompanion.insert(
             id: id,
+            clientReferenceId: clientReferenceId,
             facilityId: facilityId,
             projectId: projectId,
             auditCreatedBy: auditCreatedBy,
@@ -49005,6 +49285,11 @@ class $$ProjectFacilityTableFilterComposer
   $$ProjectFacilityTableFilterComposer(super.$state);
   ColumnFilters<String> get id => $state.composableBuilder(
       column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -49089,6 +49374,11 @@ class $$ProjectFacilityTableOrderingComposer
   $$ProjectFacilityTableOrderingComposer(super.$state);
   ColumnOrderings<String> get id => $state.composableBuilder(
       column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

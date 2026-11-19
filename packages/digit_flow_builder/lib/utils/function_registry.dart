@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widget_registry.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -62,6 +62,84 @@ String _localizeFormattedDate(String formatted, DateTime date) {
   return formatted.replaceFirst(english, localized);
 }
 
+/// Returns the deliveries scoped to the currently active flow module
+/// (see [FlowBuilderSingleton.activeDeliveryMethod]).
+///
+/// A single cycle can carry multiple deliveries — one per method
+/// (TRANSITPOST / CLF / HOUSEHOLDSTRATEGY). Consumers that count doses
+/// or evaluate eligibility must only see the deliveries their flow owns.
+///
+/// The filter is a no-op when: the active method isn't set, or none of the
+/// deliveries carry a `deliveryMethod` (older configs). Non-matching but
+/// method-tagged deliveries are dropped even if that yields an empty list —
+/// misconfigured campaigns should surface, not silently show all doses.
+List _filteredDeliveries(List? deliveries) {
+  if (deliveries == null || deliveries.isEmpty) return deliveries ?? const [];
+  final method = FlowBuilderSingleton().activeDeliveryMethod;
+  if (method == null || method.isEmpty) return deliveries;
+  final anyTagged = deliveries.any((d) {
+    try {
+      return (d as dynamic).deliveryMethod != null;
+    } catch (_) {
+      return false;
+    }
+  });
+  if (!anyTagged) return deliveries;
+  return deliveries.where((d) {
+    try {
+      return (d as dynamic).deliveryMethod == method;
+    } catch (_) {
+      return false;
+    }
+  }).toList();
+}
+
+/// Value of [key] in a task's additionalFields.fields, or null.
+dynamic _taskAdditionalField(Map<String, dynamic> task, String key) {
+  final fields = task['additionalFields']?['fields'] as List?;
+  for (final field in fields ?? const []) {
+    if (field is Map && field['key'] == key) return field['value'];
+  }
+  return null;
+}
+
+/// Latest task (by createdTime) recorded for the current running cycle,
+/// or null when there is no running cycle or no task for it.
+Map<String, dynamic>? _latestCurrentCycleTask(dynamic rawTasks) {
+  if (rawTasks is! List || rawTasks.isEmpty) return null;
+
+  final tasks = rawTasks.map((item) {
+    if (item is Map<String, dynamic>) return item;
+    if (item is Map) return Map<String, dynamic>.from(item);
+    try {
+      return (item as dynamic).toMap() as Map<String, dynamic>;
+    } catch (_) {
+      return <String, dynamic>{};
+    }
+  }).toList();
+
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final selectedCycle =
+      FlowBuilderSingleton().projectType?.cycles?.firstWhereOrNull(
+            (e) => (e.startDate ?? 0) < now && (e.endDate ?? 0) > now,
+          );
+  if (selectedCycle == null) return null;
+
+  final currentCycleTasks = tasks.where((task) {
+    final cycleIndex = int.tryParse(
+        _taskAdditionalField(task, 'cycleIndex')?.toString() ?? '');
+    return cycleIndex == selectedCycle.id;
+  }).toList();
+  if (currentCycleTasks.isEmpty) return null;
+
+  currentCycleTasks.sort((a, b) {
+    final aTime = a['clientAuditDetails']?['createdTime'] ?? 0;
+    final bTime = b['clientAuditDetails']?['createdTime'] ?? 0;
+    return (bTime as num).compareTo(aTime as num);
+  });
+  return currentCycleTasks.first;
+}
+
 class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
@@ -74,6 +152,7 @@ class TaskStatus {
   static const String administrationFailed = 'ADMINISTRATION_FAILED';
   static const String visited = 'VISITED';
   static const String noActiveCycle = 'NO_ACTIVE_CYCLE';
+  static const String vaccinatedElsewhere = 'VACCINATED_ELSEWHERE';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -438,7 +517,7 @@ void initializeFunctionRegistry() {
       for (final cycle in projectType.cycles ?? []) {
         if ((cycle.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
             (cycle.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch) {
-          for (final delivery in cycle.deliveries ?? []) {
+          for (final delivery in _filteredDeliveries(cycle.deliveries)) {
             for (final dc in delivery.doseCriteria ?? []) {
               final condition = dc.condition ?? '';
               if (condition.isEmpty) {
@@ -654,8 +733,8 @@ void initializeFunctionRegistry() {
     );
     if (currentCycle == null) return false;
 
-    final deliveries = currentCycle.deliveries as List?;
-    if (deliveries == null || deliveries.isEmpty) return false;
+    final deliveries = _filteredDeliveries(currentCycle.deliveries as List?);
+    if (deliveries.isEmpty) return false;
 
     // ── 3. Build available variables from all entity maps passed ──────
     // Fully generic: extracts every scalar top-level field and every
@@ -884,10 +963,12 @@ void initializeFunctionRegistry() {
         }).toList() ??
         [];
 
-    // If no valid cycle or cycle has no deliveries, return true (nothing to deliver)
+    // If no valid cycle or cycle has no deliveries (for the active flow),
+    // return true (nothing to deliver in this flow).
+    final selectedDeliveries = _filteredDeliveries(selectedCycle?.deliveries);
     if (selectedCycle == null ||
         selectedCycle.id == 0 ||
-        (selectedCycle.deliveries ?? []).isEmpty) {
+        selectedDeliveries.isEmpty) {
       return true;
     }
 
@@ -943,10 +1024,17 @@ void initializeFunctionRegistry() {
         return true;
       }
 
+      // Vaccinated elsewhere was recorded - nothing left to deliver this cycle.
+      if (lastTaskStatus == TaskStatus.vaccinatedElsewhere &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id) {
+        return true;
+      }
+
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
       if (lastDose != null &&
-          lastDose == selectedCycle.deliveries?.length &&
+          lastDose == selectedDeliveries.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||
@@ -1075,6 +1163,11 @@ void initializeFunctionRegistry() {
         final hasRedose = redoseFn.call([args[1]], stateData);
         if (hasRedose == true) return true;
       }
+
+      // Also eligible after vaccinated elsewhere following unable-to-deliver.
+      final elsewhereFn =
+          FunctionRegistry.get('hasVaccinatedElsewhereForCurrentCycle');
+      if (elsewhereFn?.call([args[1]], stateData) == true) return true;
     }
 
     return false;
@@ -1333,6 +1426,76 @@ void initializeFunctionRegistry() {
   ///
   /// This function checks if the next cycle is within the valid range of cycles
   /// and if delivery recording is allowed based on the current project configuration.
+  /// Number of sites in a site list that have a recorded location.
+  ///
+  /// Under the outside-household proximity search those are exactly the
+  /// sites within the radius; sites without coordinates (null or 0/0) are
+  /// listed too but aren't "nearby", so they're not counted.
+  ///
+  /// - **Function Name**: `'countLocatedSites'`
+  /// - **Arguments**: the list's wrapper items (`contextData`).
+  /// - **Returns**: the count, 0 for anything that isn't a list.
+  FunctionRegistry.register("countLocatedSites", (args, stateData) {
+    final items = args.isNotEmpty ? args.first : null;
+    if (items is! List) return 0;
+    return items.where((item) {
+      final site = item is Map ? item['FacilityModel'] : item;
+      if (site is! FacilityModel) return false;
+      final lat = site.address?.latitude;
+      final lon = site.address?.longitude;
+      return lat != null && lon != null && !(lat == 0 && lon == 0);
+    }).length;
+  });
+
+  /// Names of the sites (FacilityModel) in a list's wrapper items, grouped
+  /// by site type (`additionalFields.fields.outsideHouseholdCategory`), for
+  /// a setup form's duplicate-name check: `notIn` with
+  /// `{"from": "navigation.existingNamesByType", "scopeField": <type field>}`
+  /// rejects a name only when a site of the same type already has it.
+  ///
+  /// - **Function Name**: `'siteNamesByType'`
+  /// - **Arguments**: the list's wrapper items (`stateWrapper`).
+  /// - **Returns**: `{typeCode: [names]}`; null when the argument isn't a
+  ///   list, so navigation falls back to resolving it from the screen state.
+  FunctionRegistry.register("siteNamesByType", (args, stateData) {
+    final items = args.isNotEmpty ? args.first : null;
+    if (items is! List) return null;
+    final byType = <String, List<String>>{};
+    for (final item in items) {
+      final site = item is Map ? item['FacilityModel'] : item;
+      if (site is! FacilityModel) continue;
+      final name = site.name?.trim();
+      if (name == null || name.isEmpty) continue;
+      final type = site.additionalFields?.fields
+          .where((f) => f.key == 'outsideHouseholdCategory')
+          .firstOrNull
+          ?.value
+          ?.toString();
+      if (type == null || type.isEmpty) continue;
+      (byType[type] ??= []).add(name);
+    }
+    return byType;
+  });
+
+  /// Area options for lists scoped to the selected boundary and its parent
+  /// (the `boundaryAndParentCodes` singleton): the parent first, then the
+  /// selected boundary. `name` is the boundary code, which the dropdown
+  /// localises to the boundary's name.
+  ///
+  /// - **Function Name**: `'getBoundaryAndParentOptions'`
+  /// - **Arguments**: none.
+  /// - **Returns**: `[{name, code}]`, empty when no boundary is selected.
+  FunctionRegistry.register("getBoundaryAndParentOptions", (args, stateData) {
+    final boundary = FlowBuilderSingleton().boundary;
+    final code = boundary?.code;
+    if (code == null || code.isEmpty) return <Map<String, dynamic>>[];
+    final parent = parentBoundaryCodeOf(boundary);
+    return [
+      if (parent != null && parent != code) parent,
+      code,
+    ].map((c) => <String, dynamic>{'name': c, 'code': c}).toList();
+  });
+
   /// Registers a function to get unique complaint types from ComplaintWrapper.
   ///
   /// - **Function Name**: `'getUniqueComplaintTypes'`
@@ -1490,7 +1653,10 @@ void initializeFunctionRegistry() {
 
     // Return as dropdown format [{name: code, code: code}]
     return uniqueLocalities
-        .map((code) => {'name': code, 'code': code})
+        // `code` is the stored address.locality.code, which is now a
+        // dot-separated hierarchy path (MOZ.NAMPULA.MONAPO.ITOCULO).
+        // Filtering still matches the full code; only the label is trimmed.
+        .map((code) => {'name': code.split('.').last, 'code': code})
         .toList();
   });
 
@@ -2382,6 +2548,29 @@ void initializeFunctionRegistry() {
     } catch (_) {
       return 0;
     }
+  });
+
+  /// True when the latest current-cycle task is Unable To Deliver with
+  /// reason ABSENCE or REFUSED. Drives the "Vaccinated elsewhere" button on
+  /// revisit.
+  FunctionRegistry.register('wasAbsentOrRefusedForCurrentCycle',
+      (args, stateData) {
+    final latest = _latestCurrentCycleTask(args.isNotEmpty ? args.first : null);
+    if (latest == null) return false;
+
+    final status = latest['status']?.toString().toUpperCase();
+    final reason =
+        _taskAdditionalField(latest, 'reason')?.toString().toUpperCase();
+    return status == TaskStatus.administrationFailed &&
+        (reason == 'ABSENCE' || reason == 'REFUSED');
+  });
+
+  /// True when the latest current-cycle task is VACCINATED_ELSEWHERE.
+  FunctionRegistry.register('hasVaccinatedElsewhereForCurrentCycle',
+      (args, stateData) {
+    final latest = _latestCurrentCycleTask(args.isNotEmpty ? args.first : null);
+    return latest?['status']?.toString().toUpperCase() ==
+        TaskStatus.vaccinatedElsewhere;
   });
 }
 

@@ -381,6 +381,15 @@ class MainApplicationState extends State<MainApplication>
                                   ctx.read<UserActionLocalRepository>(),
                               userActionRemoteRepository:
                                   ctx.read<UserActionRemoteRepository>(),
+                              userLocationRemoteRepository: (() {
+                                try {
+                                  return ctx.read<
+                                      RemoteRepository<UserActionModel,
+                                          UserActionSearchModel>>();
+                                } catch (_) {
+                                  return null;
+                                }
+                              }()),
                               faceAuthEventRemoteRepository: (() {
                                 try {
                                   return ctx.read<

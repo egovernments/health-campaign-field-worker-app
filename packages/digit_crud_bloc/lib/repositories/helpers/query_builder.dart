@@ -123,7 +123,7 @@ class QueryBuilder {
 
     // Filters apply to the first (originally-rooted) related table.
     for (final filter in filtersOnFirstTable) {
-      if (filter.operator == 'within') {
+      if (_isWithin(filter.operator)) {
         final expr = _buildWithinBoundingBoxExpression(firstTable, filter);
         if (expr != null) subquery.where(expr);
         continue;
@@ -221,7 +221,7 @@ class QueryBuilder {
     for (final pair in pathFilterPairs) {
       final filterTable = _tableInfo(sql, pair.path.first.from);
       for (final filter in pair.filters) {
-        if (filter.operator == 'within') {
+        if (_isWithin(filter.operator)) {
           final expr = _buildWithinBoundingBoxExpression(filterTable, filter);
           if (expr != null) subquery.where(expr);
           continue;
@@ -272,18 +272,45 @@ class QueryBuilder {
     const earthRadius = 6371.0;
     const degToRad = math.pi / 180.0;
 
-    final deltaLat = radiusInKm / earthRadius;
+    // radius / earthRadius is an angle in radians; the stored coordinates
+    // are degrees, so convert. Without it a 5 km box was ~87 m across.
+    final deltaLat = (radiusInKm / earthRadius) / degToRad;
     final deltaLon =
-        radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+        (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+            degToRad;
 
     final minLat = centerLat - deltaLat;
     final maxLat = centerLat + deltaLat;
     final minLon = centerLon - deltaLon;
     final maxLon = centerLon + deltaLon;
 
-    return (latField as Expression<double>).isBetweenValues(minLat, maxLat) &
-        (lonField as Expression<double>).isBetweenValues(minLon, maxLon);
+    final box = _numericCoordinate(latField).isBetweenValues(minLat, maxLat) &
+        _numericCoordinate(lonField).isBetweenValues(minLon, maxLon);
+    if (filter.operator != withinOrUnlocatedOperator) return box;
+    return box | _unlocatedExpression(latField, lonField);
   }
+
+  /// Whether [operator] is a radius filter: `within`, or
+  /// [withinOrUnlocatedOperator], which also keeps rows without coordinates.
+  static bool _isWithin(String operator) =>
+      operator == 'within' || operator == withinOrUnlocatedOperator;
+
+  /// SQL test for a row with no recorded location: a null coordinate, or the
+  /// 0/0 placeholder a record gets when it was saved without a GPS fix.
+  static Expression<bool> _unlocatedExpression(
+    GeneratedColumn<Object> latField,
+    GeneratedColumn<Object> lonField,
+  ) {
+    final lat = _numericCoordinate(latField);
+    final lon = _numericCoordinate(lonField);
+    return latField.isNull() |
+        lonField.isNull() |
+        (lat.equals(0) & lon.equals(0));
+  }
+
+  /// Dart counterpart of [_unlocatedExpression] for rows read back.
+  static bool _isUnlocated(double? lat, double? lon) =>
+      lat == null || lon == null || (lat == 0 && lon == 0);
 
   /// Builds `(col1 = v OR col2 = v …)` for an `equalsAny` filter applied
   /// inside a cross-table subquery. Mirrors the queryRawTable path's
@@ -537,6 +564,7 @@ class QueryBuilder {
           if (values.isEmpty) return '1 = 1';
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
+        case withinOrUnlocatedOperator:
           return '1 = 1';
         case 'notEqual':
         case 'notEquals':
@@ -655,6 +683,7 @@ class QueryBuilder {
         case 'isNotNull':
         case 'isNull':
         case 'within':
+        case withinOrUnlocatedOperator:
           break;
         case 'notExists':
           dynamic innerVal = filter.value;
@@ -745,10 +774,13 @@ class QueryBuilder {
     }
 
     double? centerLat, centerLon, radiusInKm;
+    // Set by a [withinOrUnlocatedOperator] filter: rows with no coordinates
+    // survive the radius checks below and sort after located rows.
+    var keepUnlocated = false;
 
     for (final filter in filters.where((f) => f.root == table)) {
       // Handle 'within' filter separately
-      if (filter.operator == 'within') {
+      if (_isWithin(filter.operator)) {
         if (filter.coordinates == null || filter.value == null) {
           throw Exception(
               "Missing coordinates or radius for 'within' operator");
@@ -771,22 +803,27 @@ class QueryBuilder {
         const earthRadius = 6371.0;
         const degToRad = math.pi / 180.0;
 
-        final deltaLat = radiusInKm / earthRadius;
+        // Radians to degrees, as in the bounding box above.
+        final deltaLat = (radiusInKm / earthRadius) / degToRad;
         final deltaLon =
-            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+            (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+                degToRad;
 
         final minLat = centerLat - deltaLat;
         final maxLat = centerLat + deltaLat;
         final minLon = centerLon - deltaLon;
         final maxLon = centerLon + deltaLon;
 
-        final latExpr = latField as Expression<double>;
-        final lonExpr = lonField as Expression<double>;
+        final latExpr = _numericCoordinate(latField);
+        final lonExpr = _numericCoordinate(lonField);
 
         final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
             lonExpr.isBetweenValues(minLon, maxLon);
 
-        whereClauses.add(boundingBox);
+        keepUnlocated = filter.operator == withinOrUnlocatedOperator;
+        whereClauses.add(keepUnlocated
+            ? boundingBox | _unlocatedExpression(latField, lonField)
+            : boundingBox);
         continue;
       }
 
@@ -928,10 +965,10 @@ class QueryBuilder {
         // but route through selectOnly so the full whereClauses (bounding
         // box + any cross-table extraConstraints) are honored — the previous
         // raw-SQL path silently dropped extraConstraints from the count.
-        final latCol = dynamicTable.$columns
-            .firstWhere((c) => c.$name == 'latitude') as Expression<double>;
-        final lonCol = dynamicTable.$columns
-            .firstWhere((c) => c.$name == 'longitude') as Expression<double>;
+        final latCol = _numericCoordinate(
+            dynamicTable.$columns.firstWhere((c) => c.$name == 'latitude'));
+        final lonCol = _numericCoordinate(
+            dynamicTable.$columns.firstWhere((c) => c.$name == 'longitude'));
         final geoQuery = sql.selectOnly(dynamicTable)
           ..addColumns([latCol, lonCol]);
         if (whereClauses.isNotEmpty) {
@@ -958,8 +995,8 @@ class QueryBuilder {
           return rawResults.where((row) {
             final lat = row.read(latCol);
             final lon = row.read(lonCol);
-            if (lat == null || lon == null) return false;
-            return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+            if (_isUnlocated(lat, lon)) return keepUnlocated;
+            return haversine(centerLat!, centerLon!, lat!, lon!) <= radiusInKm!;
           }).length;
         }();
       } else {
@@ -1007,21 +1044,56 @@ class QueryBuilder {
     // Apply ordering if provided
     if (orderBy != null && isPrimaryTable) {
       final SearchOrderBy searchOrder = orderBy;
-      final orderColumn = camelToSnake(searchOrder.field);
-      final col = dynamicTable.$columns.firstWhere(
-        (c) => c.$name == orderColumn,
-        orElse: () =>
-            throw Exception('Order column $orderColumn not found in $table'),
-      );
 
       final orderingMode = searchOrder.order.toUpperCase() == 'ASC'
           ? OrderingMode.asc
           : OrderingMode.desc;
 
-      dataQuery.orderBy([OrderingTerm(expression: col, mode: orderingMode)]);
+      Expression<Object>? orderExpression;
+
+      if (searchOrder.field == distanceOrderField) {
+        // Nearest-first. Only meaningful alongside a 'within' filter on this
+        // table, which is what supplies the centre — and which also means the
+        // bounding box is in `whereClauses`, so rows with a null lat/lon are
+        // already excluded. Without that they would sort to the very top,
+        // since SQLite orders NULLs first ascending.
+        if (centerLat != null && centerLon != null) {
+          orderExpression = _buildDistanceOrderExpression(
+            dynamicTable,
+            centerLat,
+            centerLon,
+            unlocatedLast: keepUnlocated,
+          );
+        }
+        // No centre: leave the query unordered rather than throwing. A
+        // distance sort with nothing to measure from is a config mistake,
+        // not a reason to fail the whole search.
+      } else {
+        final orderColumn = camelToSnake(searchOrder.field);
+        orderExpression = dynamicTable.$columns.firstWhere(
+          (c) => c.$name == orderColumn,
+          orElse: () =>
+              throw Exception('Order column $orderColumn not found in $table'),
+        );
+      }
+
+      if (orderExpression != null) {
+        dataQuery.orderBy(
+          [OrderingTerm(expression: orderExpression, mode: orderingMode)],
+        );
+      }
     }
 
-    if (pagination != null && isPrimaryTable) {
+    final bool geoActive =
+        centerLat != null && centerLon != null && radiusInKm != null;
+
+    // With a radius filter the exact cut runs in Dart after this query, so
+    // SQL LIMIT/OFFSET would page the bounding-box rows, not the rows inside
+    // the circle: pages come back short, and the next page's SQL offset
+    // re-reads rows an earlier page already returned. Page the filtered
+    // rows instead (below). The bounding box is a small area — a settlement
+    // or ward — so reading all of it is bounded.
+    if (pagination != null && isPrimaryTable && !geoActive) {
       dataQuery.limit(pagination.limit, offset: pagination.offset);
     }
 
@@ -1109,13 +1181,104 @@ class QueryBuilder {
       }
 
       rows = rows.where((row) {
-        final lat = row['latitude'] as double?;
-        final lon = row['longitude'] as double?;
-        if (lat == null || lon == null) return false;
-        return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+        final lat = _coordinateToDouble(row['latitude']);
+        final lon = _coordinateToDouble(row['longitude']);
+        if (_isUnlocated(lat, lon)) return keepUnlocated;
+        return haversine(centerLat!, centerLon!, lat!, lon!) <= radiusInKm!;
       }).toList();
+
+      // Page the rows inside the radius (SQL paging was skipped above).
+      if (pagination != null && isPrimaryTable) {
+        rows = rows
+            .skip(pagination.offset)
+            .take(pagination.limit)
+            .toList();
+      }
     }
 
     return rows;
+  }
+
+  /// A lat/lon column as a numeric SQL expression, whatever its declared
+  /// type.
+  ///
+  /// Most tables store coordinates as REAL (`address`, `household`), but some
+  /// store them as TEXT (`user_action`). Text can't be compared or ordered
+  /// numerically — '9.5' sorts after '10.2' — and casting the column object
+  /// straight to `Expression<double>` throws, because `GeneratedColumn<String>`
+  /// is not one. Route the text case through a SQL CAST instead.
+  static Expression<double> _numericCoordinate(GeneratedColumn<Object> column) {
+    final Expression<Object> expression = column;
+    if (expression is Expression<double>) return expression;
+    return expression.cast<double>();
+  }
+
+  /// Reads a coordinate out of a result row, tolerating both storage types.
+  static double? _coordinateToDouble(Object? value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  /// Squared planar distance from (centreLat, centreLon), as a SQL
+  /// expression — for ordering only, never for display.
+  ///
+  /// Sorting by this gives the same order as a true Haversine distance at
+  /// the scale this is used (a settlement or ward), because the two are
+  /// monotonic in each other over small spans. Using it instead of the real
+  /// thing keeps the sort inside SQLite: Haversine needs trig, which isn't
+  /// available there unless the build enables math functions, and the
+  /// alternative — pulling every row in the bounding box into Dart to sort
+  /// it — means decrypting those pages through SQLCipher on every search.
+  ///
+  /// Longitude degrees shrink towards the poles, so the longitude term is
+  /// scaled by cos(latitude). One cosine at the centre is accurate enough
+  /// across a span this small. The square root is skipped because it does
+  /// not change the ordering.
+  ///
+  /// With [unlocatedLast] (a [withinOrUnlocatedOperator] search), rows with
+  /// no recorded location get a distance larger than any real one, so they
+  /// follow every located row instead of sorting first (NULL) or by their
+  /// distance from 0/0.
+  static Expression<double> _buildDistanceOrderExpression(
+    TableInfo<Table, Object?> table,
+    double centerLat,
+    double centerLon, {
+    bool unlocatedLast = false,
+  }) {
+    final latField = table.$columns.firstWhere(
+      (c) => c.$name == 'latitude',
+      orElse: () => throw Exception(
+          'Latitude column not found in ${table.actualTableName}'),
+    );
+    final lonField = table.$columns.firstWhere(
+      (c) => c.$name == 'longitude',
+      orElse: () => throw Exception(
+          'Longitude column not found in ${table.actualTableName}'),
+    );
+    final latExpr = _numericCoordinate(latField);
+    final lonExpr = _numericCoordinate(lonField);
+
+    const degToRad = math.pi / 180.0;
+    final lonScale = math.cos(centerLat * degToRad);
+
+    final dLat = latExpr - Variable<double>(centerLat);
+    final dLon =
+        (lonExpr - Variable<double>(centerLon)) * Variable<double>(lonScale);
+
+    final distance = dLat * dLat + dLon * dLon;
+    if (!unlocatedLast) return distance;
+
+    // Squared degrees: any real distance is far below this.
+    const unlocatedDistance = 1e12;
+    return CaseWhenExpression<double>(
+      cases: [
+        CaseWhen(
+          _unlocatedExpression(latField, lonField),
+          then: const Constant<double>(unlocatedDistance),
+        ),
+      ],
+      orElse: distance,
+    );
   }
 }

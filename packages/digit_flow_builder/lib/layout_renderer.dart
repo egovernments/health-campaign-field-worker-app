@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -435,9 +436,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                             // (defaults to true when absent).
                             if (widget.config['showLocationTag'] != false) ...[
                               Tag(
-                                label: localizations.translate(
-                                    FlowBuilderSingleton().boundary?.code ??
-                                        ""),
+                                // A new settlement shows its own name; its
+                                // code is the parent's.
+                                label: FlowBuilderSingleton()
+                                        .boundary
+                                        ?.displayName(localizations.translate) ??
+                                    localizations.translate(""),
                                 isIcon: true,
                                 isStroke: true,
                                 borderColor: Theme.of(context)
@@ -645,8 +649,15 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                               if (widgets.isNotEmpty) widgets.removeLast();
                               return widgets;
                             })(),
-                            // Scroll loading indicator at bottom of content
-                            if (_showLoadingIndicator && isLoading)
+                            // Scroll-bottom "load more" indicator — only
+                            // meaningful once content is already showing;
+                            // for the initial-load + empty case a
+                            // widget-level loader (e.g.
+                            // `listView.showLoader`) handles it, and
+                            // firing this unconditionally doubled up.
+                            if (_showLoadingIndicator &&
+                                isLoading &&
+                                currentWrapperLength > 0)
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: spacer4),
@@ -660,8 +671,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage>
                     ],
                   ),
                 ),
-                // Loading overlay when search/CRUD operation is in progress
-                if (isLoading) DigitLoaders.inlineLoader(),
+                // Refresh indicator: show only while existing content is
+                // being re-loaded. The empty-initial-load case is covered
+                // by widget-level loaders (e.g. `listView.showLoader`),
+                // so firing this unconditionally used to double up.
+                if (isLoading && currentWrapperLength > 0)
+                  DigitLoaders.inlineLoader(),
               ],
             ),
           ),

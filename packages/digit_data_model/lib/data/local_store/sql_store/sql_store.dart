@@ -140,7 +140,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 12; // Increment schema version
+  int get schemaVersion => 13; // Increment schema version
 
   Future<void> _createTaskSearchIndexes() async {
     await customStatement('''
@@ -211,6 +211,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             await _createTaskSearchIndexes();
             await _createNameAndEntityClientRefIndexes();
             await _createV12HotPathIndexes();
+            await _createOutsideHouseholdSiteIndexes();
             await customStatement('ANALYZE');
           } catch (e) {
             if (kDebugMode) {
@@ -484,6 +485,24 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               }
             }
           }
+
+          if (from < 13) {
+            // v13: outside-household sites are stored as facilities. The
+            // facility table gains the app-generated clientReferenceId and a
+            // denormalised GPS copy (for nearest-first ordering); the
+            // project-facility table gains an app-local clientReferenceId so
+            // a link can be queued before its facility has a server id.
+            // Runs after every older step. Each column is added on its own
+            // (see _ensureOutsideHouseholdSiteColumns), and beforeOpen
+            // repeats the check, so one failure can't leave the rest missing.
+            await _ensureOutsideHouseholdSiteColumns(migrator);
+            try {
+              await _createOutsideHouseholdSiteIndexes();
+            } catch (e) {
+              debugPrint('Failed to create outside-household site indexes in '
+                  'v13 migration: $e');
+            }
+          }
         },
         // Runs AFTER onCreate / onUpgrade complete, but BEFORE the app
         // executes its first user query. This is the right hook for a
@@ -512,11 +531,16 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           // a device). Every statement below is `CREATE INDEX IF NOT
           // EXISTS`, so this is a no-op on freshly-created DBs and on
           // subsequent opens — cheap enough to run every launch.
+          // Self-heal devices whose v13 upgrade could not add every
+          // outside-household site column. No-op when all are present.
+          await _ensureOutsideHouseholdSiteColumns(createMigrator());
+
           final indexSw = Stopwatch()..start();
           try {
             await _createTaskSearchIndexes();
             await _createNameAndEntityClientRefIndexes();
             await _createV12HotPathIndexes();
+            await _createOutsideHouseholdSiteIndexes();
           } catch (e) {
             if (kDebugMode) {
               print("beforeOpen index backfill failed: $e");
@@ -564,6 +588,54 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// Indexes that were originally declared via `@TableIndex` on the
   /// Name, Individual, and Household tables. Idempotent — safe to call on
   /// both fresh-installs (no-op via IF NOT EXISTS) and upgrades.
+  /// Indexes for outside-household site lookups: sites are filtered by
+  /// `usage` (site type) and resolved by `client_reference_id` after sync.
+  /// Every statement is IF NOT EXISTS so this is safe to run on every open.
+  /// Adds each v13 outside-household site column that is missing, one at a
+  /// time, so a failure on one doesn't skip the others. Failures are logged
+  /// in every build mode (not swallowed); the next open retries them.
+  Future<void> _ensureOutsideHouseholdSiteColumns(Migrator migrator) async {
+    final columns = <(TableInfo, GeneratedColumn)>[
+      (facility, facility.clientReferenceId),
+      (facility, facility.latitude),
+      (facility, facility.longitude),
+      (facility, facility.locationAccuracy),
+      (projectFacility, projectFacility.clientReferenceId),
+    ];
+    final existing = <String, Set<String>>{};
+    for (final (table, column) in columns) {
+      final tableName = table.actualTableName;
+      try {
+        final present = existing[tableName] ??= (await customSelect(
+                'PRAGMA table_info($tableName)')
+            .get())
+            .map((row) => row.read<String>('name'))
+            .toSet();
+        if (present.contains(column.name)) continue;
+        await migrator.addColumn(table, column);
+        present.add(column.name);
+      } catch (e) {
+        debugPrint('v13 migration: could not add $tableName.${column.name}: '
+            '$e');
+      }
+    }
+  }
+
+  Future<void> _createOutsideHouseholdSiteIndexes() async {
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS facility_clientref
+      ON facility (client_reference_id);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS facility_usage
+      ON facility (usage);
+    ''');
+    await customStatement('''
+      CREATE INDEX IF NOT EXISTS project_facility_clientref
+      ON project_facility (client_reference_id);
+    ''');
+  }
+
   Future<void> _createNameAndEntityClientRefIndexes() async {
     await customStatement('''
       CREATE INDEX IF NOT EXISTS name_givenname

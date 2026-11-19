@@ -44,6 +44,12 @@ on:
         required: false
         default: '/health-project/check/bandwidth'
         type: string
+      face_auth_enabled:
+        description: 'Enable face authentication (FACE_AUTH_ENABLED)'
+        required: true
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
       build_type:
         description: 'Build Type'
         required: true
@@ -109,6 +115,7 @@ jobs:
           RECEIVE_TIMEOUT=120000
           SEND_TIMEOUT=120000
           CHECK_BANDWIDTH_API="${{ inputs.check_bandwidth_api }}"
+          FACE_AUTH_ENABLED=${{ inputs.face_auth_enabled }}
           EOF
 
       - name: Display Configuration
@@ -118,6 +125,7 @@ jobs:
           echo "Base URL: ${{ inputs.base_url }}"
           echo "Tenant ID: ${{ inputs.tenant_id }}"
           echo "Build Type: ${{ inputs.build_type }}"
+          echo "Face auth enabled: ${{ inputs.face_auth_enabled }}"
           echo "Override Deps: ${{ inputs.override_dependencies }}"
 
       - name: Install Project Dependencies (with optional local overrides)

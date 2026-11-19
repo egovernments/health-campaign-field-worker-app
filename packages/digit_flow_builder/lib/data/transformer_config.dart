@@ -6,7 +6,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -51,7 +51,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           }
@@ -202,6 +202,7 @@ final jsonConfig = {
   // "clientReferenceId" mapping against individuals[index].clientReferenceId
   // (see transformer_service.dart:882–916).
   "bulkProjectBeneficiaryFromMembers": {
+    "fallbackModel": "ProjectBeneficiaryModel",
     "models": {
       "ProjectBeneficiaryModel": {
         "listSource": "__context:individuals",
@@ -224,7 +225,7 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "householdDetails.memberCount",
+          "memberCount": "__default:2:householdDetails.memberCount",
           "latitude": "beneficiaryLocation.latLng[0]",
           "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -269,7 +270,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
+            "memberCount": "__default:2:householdDetails.memberCount",
             "caregiverConsent": "caregiverConsent.consentToParticipate",
             "negativeConsentReason": "caregiverConsent.negativeConsentReason",
             "locality": "__context:selectedBoundaryCode",
@@ -419,9 +420,11 @@ final jsonConfig = {
     }
   },
   "indirectBulkDelivery": {
+    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
+        "skipFirst": 0,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -444,9 +447,13 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            // Household location, not a per-member capture.
+            // "latitude": "DeliveryDetails.latLng[0]",
+            // "longitude": "DeliveryDetails.latLng[1]",
+            // "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -538,9 +545,13 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
+            // Household location, not a per-member capture.
+            // "latitude": "DeliveryDetails.latLng[0]",
+            // "longitude": "DeliveryDetails.latLng[1]",
+            // "locationAccuracy": "DeliveryDetails.latLng[2]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -623,9 +634,12 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // The ineligible branch is submitted from the eligibilityChecklist
+            // form, so the captured location lives under that page key. There
+            // is no `address` page in this flow.
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -653,6 +667,9 @@ final jsonConfig = {
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
+            "latitude": "eligibilityChecklist.latLng[0]",
+            "longitude": "eligibilityChecklist.latLng[1]",
+            "locationAccuracy": "eligibilityChecklist.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -687,9 +704,11 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Location is captured on the unableToDeliver form itself; this
+            // flow has no `address` page and no DeliveryDetails page.
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -721,11 +740,9 @@ final jsonConfig = {
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
             "comment": "unableToDeliver.comment",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
-            "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]",
+            "latitude": "unableToDeliver.latLng[0]",
+            "longitude": "unableToDeliver.latLng[1]",
+            "locationAccuracy": "unableToDeliver.latLng[2]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -760,9 +777,13 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Household location, not a per-member capture.
+            // "latitude": "address.latLng[0]",
+            // "longitude": "address.latLng[1]",
+            // "locationAccuracy": "address.latLng[1]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -794,11 +815,16 @@ final jsonConfig = {
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
             "comment": "unableToDeliver.comment",
-            "latitude": "DeliveryDetails.latLng[0]",
-            "longitude": "DeliveryDetails.latLng[1]",
-            "locationAccuracy": "DeliveryDetails.latLng[2]",
-            "lat": "DeliveryDetails.latLng[0]",
-            "lng": "DeliveryDetails.latLng[1]",
+            // "latitude": "DeliveryDetails.latLng[0]",
+            // "longitude": "DeliveryDetails.latLng[1]",
+            // "locationAccuracy": "DeliveryDetails.latLng[2]",
+            // "lat": "DeliveryDetails.latLng[0]",
+            // "lng": "DeliveryDetails.latLng[1]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
+            "lat": "__context:householdLatLng[0]",
+            "lng": "__context:householdLatLng[1]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -834,9 +860,13 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Household location, not a per-member capture.
+            // "latitude": "address.latLng[0]",
+            // "longitude": "address.latLng[1]",
+            // "locationAccuracy": "address.latLng[1]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -867,6 +897,8 @@ final jsonConfig = {
             "reasonForRedose": "RedoseDetails.reasonForRedose",
             "redoseComments": "RedoseDetails.redoseComments",
             "taskType": "__value:REDOSE",
+            // A redose is only given on a revisit.
+            "revisit": "__value:true",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -1215,7 +1247,7 @@ final jsonConfig = {
             "pincode": "locationDetails.pincode",
             "type": "locationDetails.typeOfAddress",
             "locality": {
-              "code": "__context:selectedBoundaryCode",
+              "code": "__context:selectedBoundaryHierarchyCode",
               "name": "__context:selectedBoundaryName",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion"
@@ -1230,7 +1262,8 @@ final jsonConfig = {
             "supervisorName": "complaintDetails.supervisorName",
             "supervisorContactNumber":
                 "complaintDetails.supervisorContactNumber ",
-            "otherComplaintDescription": "complaintType.otherReason"
+            "otherComplaintDescription": "complaintType.otherReason",
+            "boundaryCode": "__context:selectedBoundaryHierarchyCode"
           },
           "clientAuditDetails": "__generate:clientAudit"
         }
@@ -1632,7 +1665,10 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_SUCCESS",
+          // Not ADMINISTRATION_SUCCESS: the dose is counted where the child
+          // was vaccinated, so this task must not count as a household dose.
+          // "status": "__value:ADMINISTRATION_SUCCESS",
+          "status": "__value:VACCINATED_ELSEWHERE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -1647,9 +1683,13 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "address.latLng[0]",
-            "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.latLng[1]",
+            // Household location, not a per-member capture.
+            // "latitude": "address.latLng[0]",
+            // "longitude": "address.latLng[1]",
+            // "locationAccuracy": "address.latLng[1]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
@@ -1676,16 +1716,26 @@ final jsonConfig = {
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "taskType": "__value:VACCINATED_ELSEWHERE",
+            // "true" from the revisit button, "false" from the first visit.
+            "revisit": "__context:isRevisit",
             "doseIndex": "__context:doseIndex",
             "cycleIndex": "__context:cycleIndex",
             "settlementType": "__context:settlementType",
-            "siteName": "vaccinatedElsewhere.siteName",
-            "region": "vaccinatedElsewhere.region",
-            "latitude": "vaccinatedElsewhere.latLng[0]",
-            "longitude": "vaccinatedElsewhere.latLng[1]",
-            "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
-            "lat": "vaccinatedElsewhere.latLng[0]",
-            "lng": "vaccinatedElsewhere.latLng[1]",
+            // "siteName": "vaccinatedElsewhere.siteName",
+            // "region": "vaccinatedElsewhere.region",
+            "vaccinationLocation": "vaccinatedElsewhere.vaccinationLocation",
+            "vaccinationLocationOther":
+                "vaccinatedElsewhere.vaccinationLocationOther",
+            // "latitude": "vaccinatedElsewhere.latLng[0]",
+            // "longitude": "vaccinatedElsewhere.latLng[1]",
+            // "locationAccuracy": "vaccinatedElsewhere.latLng[2]",
+            // "lat": "vaccinatedElsewhere.latLng[0]",
+            // "lng": "vaccinatedElsewhere.latLng[1]",
+            "latitude": "__context:householdLatLng[0]",
+            "longitude": "__context:householdLatLng[1]",
+            "locationAccuracy": "__context:householdLatLng[2]",
+            "lat": "__context:householdLatLng[0]",
+            "lng": "__context:householdLatLng[1]",
             "locality": "__context:selectedBoundaryCode",
             "localityCode": "__context:selectedBoundaryCode"
           },
@@ -1717,6 +1767,7 @@ final jsonConfig = {
     }
   },
   "polioStockDetails": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1746,6 +1797,7 @@ final jsonConfig = {
     }
   },
   "polioIssuedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1770,6 +1822,8 @@ final jsonConfig = {
                 "issuedVialDetails.additionalUnopenedVialsReceived",
             "totalVialsReceivedForDay":
                 "issuedVialDetails.totalVialsReceivedForDay",
+            "totalMixingSyringes": "issuedVialDetails.totalMixingSyringes",
+            "totalDiluentsIssued": "issuedVialDetails.totalDiluentsIssued",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1777,6 +1831,7 @@ final jsonConfig = {
     }
   },
   "polioReturnedVials": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1804,6 +1859,10 @@ final jsonConfig = {
                 "returnedVialDetails.unopenedSpoiltVialsReturned",
             "openedVialsReturned": "returnedVialDetails.openedVialsReturned",
             "totalReturned": "returnedVialDetails.totalReturned",
+            "unusedDiluentsReturned":
+                "returnedVialDetails.unusedDiluentsReturned",
+            "spoiledDiluentsReturned":
+                "returnedVialDetails.spoiledDiluentsReturned",
             "locality": "__context:selectedBoundaryCode"
           }
         }
@@ -1834,7 +1893,219 @@ final jsonConfig = {
       }
     }
   },
+  // Outside-household sites. A site is a Facility (type in `usage`) plus a
+  // project-facility link carrying the frontline worker. The link points at
+  // the facility's clientReferenceId until sync swaps in the server id.
+  "transitSite": {
+    "fallbackModel": "FacilityModel",
+    "models": {
+      "FacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:FacilityModel.clientReferenceId",
+          "tenantId": "__context:tenantId",
+          "name": "sessionSetup.locationName",
+          "usage": "__value:TRANSIT_POST",
+          "isPermanent": "__value:true",
+          "address": {
+            "tenantId": "__context:tenantId",
+            "relatedClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "latitude": "sessionSetup.gpsStart[0]",
+            "longitude": "sessionSetup.gpsStart[1]",
+            "locationAccuracy": "sessionSetup.gpsStart[2]",
+            "type": "__value:PERMANENT",
+            "locality": {
+              "code": "__context:parentBoundaryCode",
+              "name": "__context:parentBoundaryName",
+              "tenantId": "__context:tenantId"
+            },
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "outsideHouseholdCategory": "sessionSetup.transitLocationType",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea"
+          }
+        }
+      },
+      "ProjectFacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:ProjectFacilityModel.clientReferenceId",
+          "facilityId": "__ref:FacilityModel.clientReferenceId",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "frontlineWorkerName": "sessionSetup.workerName",
+            "frontlineWorkerPhone": "sessionSetup.workerPhone",
+            "facilityClientReferenceId":
+                "__ref:FacilityModel.clientReferenceId",
+            "facilityLevel": "__value:site"
+          }
+        }
+      }
+    }
+  },
+  "clfSite": {
+    "fallbackModel": "FacilityModel",
+    "models": {
+      "FacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:FacilityModel.clientReferenceId",
+          "tenantId": "__context:tenantId",
+          "name": "sessionSetup.locationName",
+          "usage": "__value:OUTSIDE_HOUSEHOLD_PLACES",
+          "isPermanent": "__value:true",
+          "address": {
+            "tenantId": "__context:tenantId",
+            "relatedClientReferenceId": "__ref:FacilityModel.clientReferenceId",
+            "latitude": "sessionSetup.gpsStart[0]",
+            "longitude": "sessionSetup.gpsStart[1]",
+            "locationAccuracy": "sessionSetup.gpsStart[2]",
+            "type": "__value:PERMANENT",
+            "locality": {
+              "code": "__context:parentBoundaryCode",
+              "name": "__context:parentBoundaryName",
+              "tenantId": "__context:tenantId"
+            },
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "outsideHouseholdCategory": "sessionSetup.clfLocationType",
+            "responsiblePerson": "sessionSetup.responsiblePerson",
+            "contactNumber": "sessionSetup.contactNumber",
+            "sessionDate": "sessionSetup.sessionDate",
+            "sessionArea": "sessionSetup.sessionArea"
+          }
+        }
+      },
+      "ProjectFacilityModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "id": "__ref:ProjectFacilityModel.clientReferenceId",
+          "facilityId": "__ref:FacilityModel.clientReferenceId",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "frontlineWorkerName": "sessionSetup.workerName",
+            "frontlineWorkerPhone": "sessionSetup.workerPhone",
+            "facilityClientReferenceId":
+                "__ref:FacilityModel.clientReferenceId",
+            "facilityLevel": "__value:site"
+          }
+        }
+      }
+    }
+  },
+  // A worker-added settlement: a NEW_SETTLEMENT user action against the
+  // parent boundary's code. Context keys come from the form's
+  // FETCH_TRANSFORMER_CONFIG data (navigation params).
+  "newSettlement": {
+    "fallbackModel": "UserActionModel",
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "boundaryCode": "__context:parentBoundaryCode",
+          "action": "__value:NEW_SETTLEMENT",
+          "latitude": "settlementDetails.gps[0]",
+          "longitude": "settlementDetails.gps[1]",
+          "locationAccuracy": "settlementDetails.gps[2]",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "settlementName": "settlementDetails.settlementName",
+            "settlementType": "settlementDetails.settlementType",
+            "securityLevel": "settlementDetails.securityLevel",
+            "accessRoute": "settlementDetails.accessRoute"
+          }
+        }
+      }
+    }
+  },
+  "groupVacChild": {
+    "fallbackModel": "UserActionModel",
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:OTHER",
+          "resourceTag": "__context:SessionClientReferenceId",
+          "latitude": "__context:latitude",
+          "longitude": "__context:longitude",
+          "locationAccuracy": "__context:locationAccuracy",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "formType": "__value:GROUP_VAC_CHILD",
+            "childName": "childDetails.childName",
+            "childSex": "childDetails.childSex",
+            "ageBand": "childDetails.ageBand",
+            "childDob": "childDetails.childDob",
+            "directionOfTravel": "childDetails.directionOfTravel",
+            "nationality": "childDetails.nationality",
+            "opvPrior": "childDetails.opvPrior",
+            "ipvPrior": "childDetails.ipvPrior",
+            "twoDropsAdministered": "confirmVaccination.twoDropsAdministered",
+            "fingerMarked": "confirmVaccination.fingerMarked",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
+  "groupVacReferral": {
+    "fallbackModel": "UserActionModel",
+    "models": {
+      "UserActionModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "latitude": "referralDetails.gpsReferral[0]",
+          "longitude": "referralDetails.gpsReferral[1]",
+          "locationAccuracy": "referralDetails.gpsReferral[2]",
+          "projectId": "__context:projectId",
+          "boundaryCode": "__context:selectedBoundaryCode",
+          "tenantId": "__context:tenantId",
+          "action": "__value:OTHER",
+          "resourceTag": "__context:SessionClientReferenceId",
+          "timestamp": "__value:DATETIME.NOW",
+          "isSync": "__value:false",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "formType": "__value:GROUP_VAC_REFERRAL",
+            "contactPerson": "referralDetails.contactPerson",
+            "contactNumber": "referralDetails.contactNumber",
+            "address": "referralDetails.address",
+            "referralReason": "referralDetails.referralReason",
+            "locality": "__context:selectedBoundaryCode"
+          }
+        }
+      }
+    }
+  },
   "lqaClusterData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1872,6 +2143,7 @@ final jsonConfig = {
     }
   },
   "lqaChildData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1914,6 +2186,7 @@ final jsonConfig = {
     }
   },
   "lqaCloseoutData": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {
@@ -1943,6 +2216,7 @@ final jsonConfig = {
     }
   },
   "polioInsideHousehold": {
+    "fallbackModel": "UserActionModel",
     "models": {
       "UserActionModel": {
         "mappings": {

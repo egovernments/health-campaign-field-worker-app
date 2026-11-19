@@ -3,6 +3,7 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
 import '../../layout_renderer.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
@@ -14,6 +15,108 @@ class ListViewWidget extends ResolvedFlowWidget {
 
   @override
   Widget buildResolved(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
+    final showLoader = json['showLoader'] == true;
+    final compositeKey = resolved.compositeKey;
+
+    // Default path: zero behavioural drift for every existing listView.
+    // Only opt-in configs enter the reactive branch below.
+    if (!showLoader || compositeKey == null) {
+      return _renderList(json, context, onAction, resolved);
+    }
+
+    // Reactive branch: rebuild on registry updates so the loader flips
+    // off the instant a Crud search returns. Without this, a sync read
+    // would freeze the loader on the first-paint snapshot and the list
+    // would never appear.
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
+      builder: (context, _, __) {
+        final state = FlowCrudStateRegistry().getByCompositeKey(compositeKey);
+
+        // `state == null` means Crud hasn't produced any state yet
+        // (page just mounted, pre-initActions). Treat it as loading
+        // so the configured empty-state card doesn't flash under a
+        // pending search. `isLoading` covers the in-flight window.
+        final isLoading = state == null || state.isLoading == true;
+        final items = _itemsFor(resolved, json, state);
+        final isEmpty = items == null || (items is List && items.isEmpty);
+
+        if (isLoading && isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (!isLoading && isEmpty) {
+          final emptyChild = json['emptyChild'];
+          if (emptyChild is Map) {
+            return _renderEmptyChild(
+              Map<String, dynamic>.from(emptyChild),
+              context,
+              onAction,
+              resolved,
+            );
+          }
+          return const SizedBox.shrink();
+        }
+
+        return _renderList(json, context, onAction, resolved);
+      },
+    );
+  }
+
+  /// Resolves the item list the way the widget already did, but against
+  /// an explicit [state] passed in from the reactive builder — the
+  /// `resolved.state` snapshot would be stale otherwise.
+  dynamic _itemsFor(
+    ResolvedWidgetContext resolved,
+    Map<String, dynamic> json,
+    FlowCrudState? state,
+  ) {
+    final rawState = (state?.stateWrapper ?? resolved.state.contextData) ?? [];
+    final dataSourceKey = json['dataSource'] ?? json['dataSource'] as String?;
+    dynamic items = rawState;
+
+    if (dataSourceKey != null && rawState.isNotEmpty) {
+      if (dataSourceKey.startsWith('item.')) {
+        final fieldPath = dataSourceKey.substring(5);
+        items = resolved.state.itemData != null
+            ? _resolveNestedField(resolved.state.itemData!, fieldPath)
+            : [];
+      } else {
+        items = rawState[0]?[dataSourceKey];
+      }
+    }
+    return items;
+  }
+
+  Widget _renderEmptyChild(
+    Map<String, dynamic> emptyChild,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
+    final stateData = resolved.stateData;
+    if (stateData == null) return const SizedBox.shrink();
+    final processed = preprocessConfigWithState(emptyChild, stateData);
+    return LayoutMapper.map(
+      processed,
+      stateData,
+      context,
+      onAction,
+      compositeKey: resolved.compositeKey,
+    );
+  }
+
+  Widget _renderList(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../blocs/localization/app_localization.dart';
+import '../../utils/extensions/extensions.dart';
 
 class HomeItemCard extends StatelessWidget {
   final IconData icon;
@@ -90,13 +91,16 @@ class HomeItemCard extends StatelessWidget {
                 // bodyS on tablet is 16px * 1.37 line-height = ~44px for two
                 // lines; spacer10 (40) clipped the second line ("Stock
                 // Reconcili..."). spacer12 fits both mobile and tablet.
-                height: spacer12,
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context).translate(label),
+                    // Per-project-type label, e.g.
+                    // HOME_BENEFICIARY_LABEL_POLIO. No fallback to the base
+                    // code, so a missing string shows as its raw code.
+                    AppLocalizations.of(context)
+                        .translateWithSuffix(label, _projectType(context)),
                     style: textTheme.bodyS,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -106,5 +110,14 @@ class HomeItemCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Type of the selected project, or null when none is selected yet.
+  static String? _projectType(BuildContext context) {
+    try {
+      return context.selectedProject.projectType;
+    } catch (_) {
+      return null;
+    }
   }
 }

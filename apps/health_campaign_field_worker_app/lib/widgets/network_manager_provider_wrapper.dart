@@ -56,6 +56,7 @@ import 'package:transit_post/data/repositories/remote/user_action.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/new_settlement.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -335,6 +336,20 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => UserActionLocalRepository(
           sql,
           UserActionOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<NewSettlementLocalRepository>(
+        create: (_) => NewSettlementLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
+        ),
+      ),
+      // Uploads userLocation op-log entries (location tracking and new
+      // settlements) in a manual sync, as the background sync does.
+      RepositoryProvider<LocationTrackerLocalBaseRepository>(
+        create: (_) => LocationTrackerLocalBaseRepository(
+          sql,
+          LocationTrackerOpLogManager(isar),
         ),
       ),
 

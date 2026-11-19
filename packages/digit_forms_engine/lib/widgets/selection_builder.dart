@@ -41,14 +41,23 @@ class JsonSchemaSelectionBuilder extends JsonSchemaBuilder<String> {
           showParentContainer: true,
           initialSelection: field.value != null
               ? field.value!.split('.').map((code) {
-            return localizedOptions.firstWhere(
-                  (e) => e.code == code,
-              orElse: () => Option(code: code, name: code),
-            );
-          }).toList()
+                  return localizedOptions.firstWhere(
+                    (e) => e.code == code,
+                    orElse: () => Option(code: code, name: code),
+                  );
+                }).toList()
               : [],
           onSelectionChanged: (selected) {
             field.control.markAsTouched();
+
+            // Deselecting the only option leaves nothing selected. Clear the
+            // value so the required check shows its error; reading
+            // `selected.first` here would throw and keep the old value, which
+            // made the card jump back to the deselected option.
+            if (selected.isEmpty) {
+              field.didChange(null);
+              return;
+            }
 
             final selectedCodes = (isMultiSelect ?? false)
                 ? selected.map((e) => e.code).toList()

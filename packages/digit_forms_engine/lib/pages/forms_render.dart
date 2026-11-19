@@ -5,7 +5,9 @@ import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/checkbox_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -23,6 +25,7 @@ import '../helper/form_builder_helper.dart';
 import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
+import '../utils/gps_warmup.dart';
 import '../utils/screen_protection_manager.dart';
 import '../utils/utils.dart';
 import '../widgets/multi_entity_tab_view.dart';
@@ -58,6 +61,8 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   bool _hasInitializedProtection = false;
   bool _isSubmitting = false;
+  bool _gpsWarmupChecked = false;
+  bool _holdsGpsWarmup = false;
 
   /// GlobalKey to access MultiEntityTabViewState for programmatic tab navigation
   final GlobalKey<MultiEntityTabViewState> _multiEntityTabKey =
@@ -79,7 +84,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   void dispose() {
     // Unregister from protection manager
     ScreenProtectionManager().unregisterPage(_protectionPageId);
+    if (_holdsGpsWarmup) GpsWarmup.instance.release();
     super.dispose();
+  }
+
+  /// Starts high-accuracy GPS as soon as a form with a location field opens,
+  /// so the fix has converged by the time that field is reached. Every page
+  /// route holds it, so it stays on until the whole form is closed.
+  void _warmGpsIfNeeded(SchemaObject schemaObject) {
+    if (_gpsWarmupChecked) return;
+    _gpsWarmupChecked = true;
+    if (GpsWarmup.schemaHasLocationField(schemaObject)) {
+      _holdsGpsWarmup = true;
+      GpsWarmup.instance.acquire();
+    }
   }
 
   /// Update screen protection based on the current page's preventScreenCapture flag
@@ -104,6 +122,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final phs = schema.descriptionPlaceHolders;
     if (phs == null || phs.isEmpty) return translated;
     return _applyPlaceHolders(translated, phs);
+  }
+
+  /// Pin tag under the page description naming where the form applies, e.g.
+  /// the boundary a missed place is added under. Set by
+  /// `conditions.headerTag` on the page; `{{navigation.<key>}}` is resolved
+  /// and the value translated, so a boundary code shows its name. Nothing is
+  /// shown when it resolves to empty or stays unresolved.
+  List<Widget> _buildHeaderTag(PropertySchema schema) {
+    final template = schema.conditions?['headerTag'];
+    if (template is! String || template.trim().isEmpty) return const [];
+    final value = _resolvePlaceholderValue(template).trim();
+    if (value.isEmpty || value.contains('{{')) return const [];
+    final colors = Theme.of(context).colorTheme;
+    return [
+      const SizedBox(height: spacer2),
+      Tag(
+        label: localizations.translate(value),
+        type: TagType.monochrome,
+        isIcon: true,
+        isStroke: true,
+        borderColor: colors.primary.primary2,
+        customIcon: Icon(
+          Icons.location_on_outlined,
+          size: spacer4,
+          color: colors.primary.primary2,
+        ),
+        customTextStyle: Theme.of(context)
+            .digitTextTheme(context)
+            .bodyS
+            .copyWith(color: colors.primary.primary2),
+      ),
+    ];
   }
 
   /// Replaces `{KEY}` tokens with resolved placeholder values.
@@ -155,6 +205,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          _warmGpsIfNeeded(schemaObject);
 
           if (widget.isSummary) {
             return _buildSummaryPage(context, schemaObject);
@@ -691,12 +743,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   pages[currentPageKey]?.order ?? 0;
 
 // Find the next page with an integer order > currentOrder.floor()
+// Skip all-hidden pages — those exist only for the summary/submission
+// payload and shouldn't be navigated to in the form flow.
                               final nextPageEntry = pages.entries.where((e) {
                                 final order = e.value.order;
-                                return order != null &&
-                                    order > currentOrder &&
-                                    order % 1 ==
-                                        0; // Only integers (e.g. 6.0, not 5.1)
+                                if (order == null ||
+                                    order <= currentOrder ||
+                                    order % 1 != 0) return false;
+                                final props = e.value.properties?.values;
+                                if (props == null || props.isEmpty) return false;
+                                return props.any((p) => p.hidden != true);
                               }).toList()
                                 ..sort((a, b) =>
                                     a.value.order!.compareTo(b.value.order!));
@@ -910,6 +966,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                               .secondary),
                                 ),
                               ],
+                              ..._buildHeaderTag(schema),
                             ],
                           ),
                         ),
@@ -965,6 +1022,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                   .secondary),
                                     ),
                                   ],
+                                  ..._buildHeaderTag(schema),
                                   if (schema.conditions?['infoCardText'] !=
                                       null) ...[
                                     const SizedBox(height: spacer2),
@@ -1561,13 +1619,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final shownPages = schemaObject.pages.entries.where((entry) {
       final pageSchema = entry.value;
 
-      final values = pageSchema.properties?.values.map((field) => field.value);
+      final props = pageSchema.properties?.values;
+      if (props == null || props.isEmpty) return false;
 
-      return values?.any((v) => v != null && v.toString().trim().isNotEmpty) ??
-          false;
+      // Skip pages where no property can appear on the summary. Mirrors the
+      // field-level rule: `includeInSummary: true` explicitly overrides
+      // `hidden: true`, so a page whose fields are all hidden but explicitly
+      // opted into summary (e.g. a checklist card) still renders.
+      final hasSummarizableProp = props.any((p) =>
+          p.includeInSummary == true ||
+          (p.includeInSummary != false && p.hidden != true));
+      if (!hasSummarizableProp) return false;
+
+      return props.any(
+          (p) => p.value != null && p.value.toString().trim().isNotEmpty);
     }).toList();
 
-    return ScrollableContent(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        // Back-nav from summary: reset the form so the next entry starts
+        // fresh (not pre-filled with the just-abandoned values), and pop
+        // all form pages off the router so the user lands on the screen
+        // that launched the form.
+        context
+            .read<FormsBloc>()
+            .add(FormsClearFormEvent(schemaKey: widget.currentSchemaKey));
+        context.router.popUntil((route) {
+          return route.settings.name != FormsRenderRoute.name;
+        });
+      },
+      child: ScrollableContent(
         enableFixedDigitButton: true,
         // Same inset as the form pages' back header (no bottom padding), so
         // the gap between Back and the first card matches the previous page.
@@ -1623,6 +1706,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 right: spacer4,
                 bottom: spacer4,
               ),
+              // Children carry their own vertical rhythm — LabelValueSummary
+              // already pads 16px under its heading and LabelValueItem /
+              // the bool rows pad 4px top and bottom. DigitCard's default
+              // (16px on mobile) stacked on top of those, leaving 36px under
+              // a checklist heading against 20px under the Child Details
+              // heading in the same summary. At 0 both land on 20px, and a
+              // page mixing label/value rows with checkboxes keeps the 8px
+              // row rhythm across the join.
+              spacing: 0,
               children: [
                 LabelValueSummary(
                   padding: EdgeInsets.zero,
@@ -1636,6 +1728,23 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                   items: _renderSummaryLabelValueItems(entry.value),
                 ),
+                // Grouped into a single card child on purpose. DigitCard puts
+                // its inter-child spacing (16px on mobile) between every
+                // child, so passing the rows in as siblings spaced
+                // consecutive checkboxes 24px apart — 16px plus each row's
+                // own 4px top/bottom padding — three times the 8px that
+                // LabelValueItem rows get in the same card. One child means
+                // the 16px applies once, above the group.
+                ...(() {
+                  final boolRows = _renderSummaryBoolRows(entry.value);
+                  if (boolRows.isEmpty) return const <Widget>[];
+                  return [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: boolRows,
+                    ),
+                  ];
+                })(),
               ],
             ),
           const SizedBox(height: spacer2),
@@ -1647,7 +1756,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   ),
             ),
           ),
-        ]);
+        ]),
+    );
   }
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
@@ -1656,9 +1766,31 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final dateFormatter = DateFormat('dd MMM yyyy', currentLocale);
 
     return properties.entries
-        .where((entry) =>
-            entry.value.includeInSummary != false && entry.value.hidden != true)
-        .map((entry) {
+        .where((entry) {
+      // Show if either:
+      // - explicitly opted in (`includeInSummary: true`) — this overrides `hidden`
+      //   so a field can live on the form as hidden (with `includeInForm: true`
+      //   to preserve its value) and surface only on the summary page.
+      // - not opted out AND not hidden.
+      if (entry.value.includeInSummary == true) return true;
+      return entry.value.includeInSummary != false &&
+          entry.value.hidden != true;
+    }).where((entry) {
+      // Skip fields with no captured value — they render as "--" noise and
+      // are usually conditionally-visible fields the user never saw.
+      final v = entry.value.value;
+      if (v == null) return false;
+      if (v is String && v.trim().isEmpty) return false;
+      if (v is List && v.isEmpty) return false;
+      return true;
+    }).where((entry) {
+      // Boolean-checkbox rows are rendered separately by
+      // `_renderSummaryBoolRows` as standalone Padding+Row widgets so the
+      // check-icon sits flush with the card's left edge — bypassing
+      // LabelValueItem's fixed 24px inter-column spacer.
+      final v = entry.value.value;
+      return !(v is bool && entry.value.format == PropertySchemaFormat.checkbox);
+    }).map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
 
@@ -1683,7 +1815,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
-      } else if (rawValue is String && entry.value.isMultiSelect == true) {
+      } else if (rawValue is String &&
+          (entry.value.isMultiSelect == true ||
+              entry.value.format ==
+                  PropertySchemaFormat.multiSelectDropdown)) {
         displayValue = rawValue
             .split('.')
             .where((e) => e.trim().isNotEmpty)
@@ -1716,6 +1851,50 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         labelFlex: 5,
         maxLines: 5,
         padding: const EdgeInsets.symmetric(vertical: spacer1),
+      );
+    }).toList();
+  }
+
+  /// Renders boolean-checkbox summary rows with [DigitCheckbox] so they match
+  /// the checkbox used on the form pages. Kept out of [LabelValueItem], whose
+  /// fixed 24px inter-column spacer would indent the box away from the card's
+  /// left edge.
+  List<Widget> _renderSummaryBoolRows(PropertySchema schema) {
+    final theme = Theme.of(context);
+    final properties = schema.properties ?? {};
+
+    return properties.entries.where((entry) {
+      if (entry.value.includeInSummary == true) return true;
+      return entry.value.includeInSummary != false &&
+          entry.value.hidden != true;
+    }).where((entry) {
+      final v = entry.value.value;
+      return v is bool && entry.value.format == PropertySchemaFormat.checkbox;
+    }).map<Widget>((entry) {
+      final label = localizations.translate(entry.value.label ?? entry.key);
+      final rawValue = entry.value.value as bool;
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: spacer1),
+        child: DigitCheckbox(
+          value: rawValue,
+          label: label,
+          // Display-only: `readOnly` nulls the tap handler so the box can't
+          // be toggled out of sync with the value already captured.
+          readOnly: true,
+          onChanged: (_) {},
+          // Labels are localized sentences already — don't re-case them.
+          capitalizeFirstLetter: false,
+          // `readOnly` feeds DigitCheckboxIcon's `isDisabled`, which would
+          // swap in the disabled grey. Point both the selected and disabled
+          // colors at the accent this summary already used, so a read-only
+          // row still reads as confirmed rather than greyed out.
+          checkboxThemeData:
+              DigitCheckboxThemeData.defaultTheme(context).copyWith(
+            context: context,
+            selectedIconColor: theme.colorTheme.primary.primary2,
+            disabledIconColor: theme.colorTheme.primary.primary2,
+          ),
+        ),
       );
     }).toList();
   }

@@ -81,7 +81,6 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     final crudCtx = CrudItemContext.of(context);
-    final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
     final screenKey =
         crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
@@ -94,8 +93,23 @@ class TransformerExecutor extends ActionExecutor {
     final compositeKey =
         crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
 
-    // Update state with composite key if available, fallback to config name
-    FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
+    // Update the form data of this screen's state, keyed by composite key if
+    // available, else by config name. Keep the rest of the state: replacing it
+    // with a fresh FlowCrudState wiped the search screen's results and widget
+    // data (search bar, beneficiary ID pool count, next ID) whenever a
+    // transformer ran from a result card, so Register then fell back to the
+    // low-ID popup and a DEFAULT identifier (RC-01).
+    final stateKey = compositeKey ?? config?["name"];
+    final existingState =
+        stateKey != null ? FlowCrudStateRegistry().get(stateKey) : null;
+    final flowState = FlowCrudState(
+      base: existingState?.base,
+      stateWrapper: existingState?.stateWrapper,
+      formData: formValuesToUse,
+      widgetData: existingState?.widgetData,
+      isLoading: existingState?.isLoading ?? false,
+    );
+    FlowCrudStateRegistry().update(stateKey, flowState);
 
     // Check if this is edit mode (supports both isEdit and isUpdate flags)
     final navigationParams = contextData['navigation'] is Map
@@ -189,6 +203,22 @@ class TransformerExecutor extends ActionExecutor {
       "user": FlowBuilderSingleton().loggedInUser,
       "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
       "selectedBoundaryCode": FlowBuilderSingleton().boundary?.code,
+      // The selected boundary's parent; falls back to the selected code when
+      // the parent is unknown (top level or no materializedPath).
+      "parentBoundaryCode": FlowBuilderSingleton().parentBoundary?.code ??
+          parentBoundaryCodeOf(FlowBuilderSingleton().boundary) ??
+          FlowBuilderSingleton().boundary?.code,
+      "parentBoundaryName": FlowBuilderSingleton().parentBoundary?.name,
+      // Friendly display name for the selected boundary (used for
+      // locality.name — display only, not sent to any backend hierarchy field).
+      "selectedBoundaryName": FlowBuilderSingleton().boundary?.name,
+      // Dot-separated top-to-current-level boundary path, e.g. for PGR
+      // complaint address.locality.code. Falls back to the leaf code.
+      "selectedBoundaryHierarchyCode":
+          (FlowBuilderSingleton().boundary?.materializedPath?.isNotEmpty ??
+                  false)
+              ? FlowBuilderSingleton().boundary?.materializedPath
+              : FlowBuilderSingleton().boundary?.code,
       "hierarchyType": DigitDataModelSingleton().hierarchyType ??
           FlowBuilderSingleton()
               .selectedProject

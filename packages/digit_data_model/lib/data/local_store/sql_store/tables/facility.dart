@@ -3,6 +3,15 @@ import 'package:drift/drift.dart';
 
 class Facility extends Table {
   TextColumn get id => text()();
+  // App-generated id for sites created on the phone (outside-household
+  // Transit Posts / Outside Household Places). Nullable because ordinary
+  // facilities downloaded from the server may not carry one.
+  TextColumn get clientReferenceId => text().nullable()();
+  // Denormalised copy of the facility address GPS so the generic search can
+  // order sites by `__distance` (which only looks at the primary table).
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
+  RealColumn get locationAccuracy => real().nullable()();
   BoolColumn get isPermanent => boolean().nullable()();
   TextColumn get usage => text().nullable()();
   IntColumn get storageCapacity => integer().nullable()();

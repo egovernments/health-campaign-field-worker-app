@@ -23,6 +23,7 @@ import '../data/repositories/local/localization.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/new_settlement_utils.dart';
 import '../utils/runtime_hierarchy.dart';
 import '../utils/utils.dart';
 import '../widgets/download_progress/download_spinner_content.dart';
@@ -91,7 +92,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   state.selectedProject?.address?.boundary != null;
 
               if ((syncDialogRoute?.isActive ?? false) && !willNavigate) {
-                Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .removeRoute(syncDialogRoute!);
               }
 
               if (error != null) {
@@ -111,7 +113,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           ? (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true)
+                                    .removeRoute(syncDialogRoute!);
                               }
                               context
                                   .read<ProjectBloc>()
@@ -120,7 +123,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           : (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true)
+                                    .removeRoute(syncDialogRoute!);
                               }
                               cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
@@ -135,14 +139,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ),
                       action: (context) {
                         if (syncDialogRoute?.isActive ?? false) {
-                          Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
+                          Navigator.of(context, rootNavigator: true)
+                              .removeRoute(syncDialogRoute!);
                         }
                       },
                     ),
                   ),
                 );
 
-                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .push(syncDialogRoute!);
 
                 return;
               } else if (state.loading) {
@@ -169,7 +175,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   ),
                 );
 
-                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true)
+                    .push(syncDialogRoute!);
               }
 
               final selectedProject = state.selectedProject;
@@ -226,7 +233,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                                 context
                                     .read<AuthBloc>()
                                     .add(const AuthLogoutEvent());
-                              },                            ),
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -272,9 +280,20 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     final selectedLocale = AppSharedPreferences().getSelectedLocale!;
     final locBloc = context.read<LocalizationBloc>();
 
-    // Build module string for campaign localizations
-    const moduleKey =
-        'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST,STOCK,LQA,INSIDEMONITORING';
+    // Build module string for campaign localizations.
+    //
+    // Must stay in step with the `hcm-<key>-<referenceID>` module names the
+    // home cards pass to `triggerLocalization`. Anything missing here is not
+    // in SQL when home runs `loadLocalization`, so it misses the
+    // `_loadLocale` rehydrate of the flow-builder/forms caches and the module
+    // renders raw codes until its own tap-time fetch lands — that dispatch is
+    // fire-and-forget, so the route paints first. The polio modules
+    // (CLF / TRANSITPOST / HOUSEHOLDSTRATEGY / MISSEDCHILDREN) were absent
+    // and showed exactly that.
+    const moduleKey = 'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,'
+        'CLOSEHOUSEHOLD,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,'
+        'CHECKLIST,STOCK,LQA,INSIDEMONITORING,CLF,TRANSITPOST,'
+        'OUTSIDEHOUSEHOLD,HOUSEHOLDSTRATEGY,MISSEDCHILDREN';
     final keys = moduleKey.split(',').map((e) => e.trim()).toList();
     final moduleNames =
         keys.map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId');
@@ -318,16 +337,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     // every project selection for no gain.
     final campaignCacheFuture = () async {
       try {
-        final cachedRows = await LocalizationLocalRepository().fetchLocalization(
+        final cachedRows =
+            await LocalizationLocalRepository().fetchLocalization(
           sql: locBloc.sql,
           locale: selectedLocale,
           module: fullModuleString,
         );
         final cachedModules = cachedRows.map((l) => l.module).toSet();
         final requestedModules = moduleNames.toList();
-        final missingModules = requestedModules
-            .where((m) => !cachedModules.contains(m))
-            .toList();
+        final missingModules =
+            requestedModules.where((m) => !cachedModules.contains(m)).toList();
         if (missingModules.isEmpty) return;
         final results = await locBloc.localizationRepository.loadLocalization(
           path: Constants.localizationApiPath,
@@ -346,34 +365,53 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
     try {
       // Wait for both campaign caching and boundary finding concurrently
-      await Future.wait([
-        campaignCacheFuture,
-        boundaryBloc.stream
-            .firstWhere((element) => element.boundaryList.isNotEmpty),
-      ]);
-
-      // Cache permission handler localizations for the SELECTED locale only.
-      final permHandlerModule =
-          'hcm-permissionhandler-$projectReferenceId';
-      try {
-        final localResults =
-            await LocalizationLocalRepository().fetchLocalization(
-          sql: locBloc.sql,
-          locale: selectedLocale,
-          module: permHandlerModule,
-        );
-        if (localResults.isEmpty) {
-          final results = await locBloc.localizationRepository.loadLocalization(
-            path: Constants.localizationApiPath,
-            locale: selectedLocale,
-            module: permHandlerModule,
-            tenantId: envConfig.variables.tenantId,
-          );
-          await LocalizationLocalRepository().create(results, locBloc.sql);
+      // Wait for the find to finish, not just for any state with
+      // boundaries: on a re-login the bloc still holds the previous
+      // session's list, so `boundaryList.isNotEmpty` alone would match the
+      // find's own `loading` state. The timeout keeps the sync dialog from
+      // hanging if the find never settles; stored boundaries are enough
+      // to continue.
+      final boundariesFound = boundaryBloc.stream
+          .firstWhere((s) => !s.loading && s.boundaryList.isNotEmpty)
+          .timeout(const Duration(seconds: 30), onTimeout: () {
+        if (boundaryBloc.state.boundaryList.isEmpty) {
+          throw TimeoutException('No boundaries found for $boundary');
         }
-      } catch (e) {
-        debugPrint(
-            'error caching permission handler localization for $selectedLocale: $e');
+        return boundaryBloc.state;
+      });
+      await Future.wait([campaignCacheFuture, boundariesFound]);
+
+      // Cache permission handler localizations for the SELECTED locale only,
+      // together with the missed-place form's (MDMS FormConfig MISSEDPLACE),
+      // which the boundary page opens before any home card loads it.
+      final permHandlerModule = 'hcm-permissionhandler-$projectReferenceId';
+      final missedPlaceModule = missedPlaceProjectModule(projectReferenceId);
+      for (final module in [permHandlerModule, missedPlaceModule]) {
+        try {
+          final localResults =
+              await LocalizationLocalRepository().fetchLocalization(
+            sql: locBloc.sql,
+            locale: selectedLocale,
+            module: module,
+          );
+          if (localResults.isEmpty) {
+            final results =
+                await locBloc.localizationRepository.loadLocalization(
+              path: Constants.localizationApiPath,
+              locale: selectedLocale,
+              module: module,
+              tenantId: envConfig.variables.tenantId,
+            );
+            debugPrint('localization: $module returned ${results.length} '
+                'messages for $selectedLocale');
+            await LocalizationLocalRepository().create(results, locBloc.sql);
+          } else {
+            debugPrint('localization: $module already cached '
+                '(${localResults.length} messages for $selectedLocale)');
+          }
+        } catch (e) {
+          debugPrint('error caching $module localization for $selectedLocale: $e');
+        }
       }
 
       // Cache boundary localization for the SELECTED locale in the main
@@ -412,6 +450,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       final allBoundaryCodes = allBoundaries
           .expand((b) => [
                 b.code,
+                // Ancestors above the assigned boundary aren't stored as
+                // rows, but screens still show them (e.g. a village's
+                // parent locality), so fetch their names too. Every row's
+                // materializedPath holds its full root-to-self code chain.
+                ...?b.materializedPath?.split('.'),
                 if (b.label != null && b.label!.isNotEmpty)
                   '${hierarchyType}_${b.label}',
               ])
@@ -434,8 +477,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           locale: selectedLocale,
           codes: allBoundaryCodes,
         );
-        final missingCodes =
-            allBoundaryCodes.difference(cachedCodes).toList();
+        final missingCodes = allBoundaryCodes.difference(cachedCodes).toList();
         if (missingCodes.isNotEmpty) {
           final results = await locBloc.localizationRepository.loadLocalization(
             path: Constants.localizationApiPath,
@@ -459,7 +501,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // leaving the other two unresolved because `_loadLocale` clears the
       // map and refills only what matches the current filter.
       locBloc.add(LocalizationEvent.onLoadLocalization(
-        module: '$fullModuleString,$permHandlerModule,$boundaryModule',
+        module:
+            '$fullModuleString,$permHandlerModule,$boundaryModule,hcm-common,'
+            '${Constants.missedPlaceLocalizationModule},$missedPlaceModule',
         tenantId: envConfig.variables.tenantId,
         locale: selectedLocale,
         path: Constants.localizationApiPath,
@@ -483,8 +527,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       // equal state that Bloc suppresses). Without the cap this
       // `firstWhere` would hang forever behind the sync dialog.
       final currentState = locBloc.state;
-      final alreadySettled = currentState.index == resolvedIndex &&
-          !currentState.loading;
+      final alreadySettled =
+          currentState.index == resolvedIndex && !currentState.loading;
       if (!alreadySettled) {
         try {
           await locBloc.stream

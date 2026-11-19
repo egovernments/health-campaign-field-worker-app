@@ -30,6 +30,13 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   Widget build(BuildContext context) {
     final form = ReactiveForm.of(context) as FormGroup;
 
+    // A hidden custom component that is still part of the form
+    // (includeInForm: true) is built off screen, so a component that fills
+    // its own value while building (e.g. the resource card) still sets it.
+    if (_isOffstageCustomField(widget.schema)) {
+      return Offstage(child: ExcludeFocus(child: _buildByType(form)));
+    }
+
     // Handle conditional display logic
     if (_shouldHideField(form, widget.schema, widget.formControlName)) {
       return const SizedBox.shrink();
@@ -324,6 +331,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     });
   }
 
+  bool _isOffstageCustomField(PropertySchema schema) =>
+      schema.hidden == true &&
+      schema.includeInForm == true &&
+      schema.format == PropertySchemaFormat.custom;
+
   /// Conditionally hide based on display behavior
   bool _shouldHideField(
       FormGroup form, PropertySchema schema, String formName) {
@@ -433,6 +445,23 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           readOnly: _isReadOnly,
         );
 
+      // Dedicated multi-select dropdown format. Same builder as `dropdown`,
+      // but multi-select is implied by the format so the config does not need
+      // to also set `isMultiSelect: true`. Values are stored dot-joined.
+      case PropertySchemaFormat.multiSelectDropdown:
+        return JsonSchemaDropdownBuilder(
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          label: _resolveLabel(widget.schema.label),
+          form: form,
+          formControlName: widget.formControlName,
+          enums: widget.schema.enums ?? [],
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          isMultiselect: true,
+          readOnly: _isReadOnly,
+        );
+
       case PropertySchemaFormat.mobileNumber:
         return JsonSchemaStringBuilder(
           form: form,
@@ -453,6 +482,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.dob:
         return JsonSchemaDOBBuilder(
           label: _resolveLabel(widget.schema.label),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
@@ -514,6 +545,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
           label: _resolveLabel(widget.schema.label),
           enums: widget.schema.enums ?? [],
           labelStyle: separateCard
@@ -539,6 +571,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: _resolveLabel(widget.schema.label),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          validations: widget.schema.validations,
+          saveEnabledAfter: locationPopupTimer(widget.schema.popupTimer),
         );
 
       case PropertySchemaFormat.textArea:
@@ -708,6 +742,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
           label: _resolveLabel(widget.schema.label),
           enums: widget.schema.enums ?? [],
           readOnly: widget.schema.readOnly ?? false,
@@ -764,6 +799,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return !_shouldHideField(form, subSchema, entry.key);
     }).toList();
 
+    // Hidden custom fields kept in the form (includeInForm: true). They are
+    // added after the visible fields and built off screen, so the visible
+    // fields' spacing and dividers stay exactly as before.
+    final offstageEntries = entries.where((entry) {
+      final subSchema = entry.value;
+      if (subSchema.displayOnly == true) return false;
+      return _isOffstageCustomField(subSchema);
+    }).toList();
+
     final bool showDividers = widget.schema.conditions?['showDividers'] == true;
     final dividerColor =
         Theme.of(context).colorTheme.generic.divider;
@@ -771,7 +815,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: visibleEntries.asMap().entries.map((entry) {
+      children: [
+        ...visibleEntries.asMap().entries.map((entry) {
         final index = entry.key;
         final mapEntry = entry.value;
 
@@ -824,7 +869,18 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: fieldWidget,
               );
-      }).toList(),
+      }),
+        // Each of these builds as Offstage (see build()), so it takes no space.
+        ...offstageEntries.map((entry) => JsonFormBuilder(
+              key: ValueKey(entry.key),
+              pageName: widget.pageName,
+              currentSchemaKey: widget.currentSchemaKey,
+              formControlName: entry.key,
+              schema: entry.value,
+              components: widget.components,
+              navigationParams: widget.navigationParams,
+            )),
+      ],
     );
   }
 

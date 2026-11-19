@@ -216,7 +216,15 @@ class SearchExecutor extends ActionExecutor {
     final skipAccumulatedFilters =
         data['skipAccumulatedFilters'] as bool? ?? false;
 
-    // Update SearchStateManager with resolved filters (will merge with existing)
+    // Update SearchStateManager with resolved filters.
+    //
+    // Replace the whole searchName bucket. Merging by key instead would let
+    // independent sources that share a searchName accumulate and AND
+    // together: on referralInbox the search bar writes {name, contains} and
+    // the QR scanner writes {beneficiaryId, equals}, both under
+    // `hFReferral` and neither preceded by a CLEAR_STATE — so searching by
+    // name and then scanning would return nothing. Configs that need a
+    // base-scope filter to survive must re-declare it in their own `data`.
     if (!skipAccumulatedFilters &&
         compositeKey != null &&
         resolvedFilters.isNotEmpty) {

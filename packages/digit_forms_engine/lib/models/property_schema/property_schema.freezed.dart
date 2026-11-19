@@ -104,7 +104,10 @@ mixin _$PropertySchema {
   @JsonKey(fromJson: _labelPlaceHoldersOrNull)
   List<LabelPlaceHolder>? get descriptionPlaceHolders =>
       throw _privateConstructorUsedError; // Render page label/description outside the card (before it)
-  bool? get showLabelOutsideCard => throw _privateConstructorUsedError;
+  bool? get showLabelOutsideCard =>
+      throw _privateConstructorUsedError; // latLng fields: capture time after which Save is enabled whatever the accuracy
+  @JsonKey(fromJson: _popupTimerOrNull)
+  PopupTimer? get popupTimer => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -178,7 +181,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? descriptionPlaceHolders,
-      bool? showLabelOutsideCard});
+      bool? showLabelOutsideCard,
+      @JsonKey(fromJson: _popupTimerOrNull) PopupTimer? popupTimer});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -188,6 +192,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
   $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
   $VisibilityConditionCopyWith<$Res>? get submitCondition;
   $ComparisonConfigCopyWith<$Res>? get comparisonConfig;
+  $PopupTimerCopyWith<$Res>? get popupTimer;
 }
 
 /// @nodoc
@@ -252,6 +257,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
     Object? showLabelOutsideCard = freezed,
+    Object? popupTimer = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -450,6 +456,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.showLabelOutsideCard
           : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
               as bool?,
+      popupTimer: freezed == popupTimer
+          ? _value.popupTimer
+          : popupTimer // ignore: cast_nullable_to_non_nullable
+              as PopupTimer?,
     ) as $Val);
   }
 
@@ -550,6 +560,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       return _then(_value.copyWith(comparisonConfig: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PopupTimerCopyWith<$Res>? get popupTimer {
+    if (_value.popupTimer == null) {
+      return null;
+    }
+
+    return $PopupTimerCopyWith<$Res>(_value.popupTimer!, (value) {
+      return _then(_value.copyWith(popupTimer: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -620,7 +642,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       List<LabelPlaceHolder>? descriptionPlaceHolders,
-      bool? showLabelOutsideCard});
+      bool? showLabelOutsideCard,
+      @JsonKey(fromJson: _popupTimerOrNull) PopupTimer? popupTimer});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -638,6 +661,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $VisibilityConditionCopyWith<$Res>? get submitCondition;
   @override
   $ComparisonConfigCopyWith<$Res>? get comparisonConfig;
+  @override
+  $PopupTimerCopyWith<$Res>? get popupTimer;
 }
 
 /// @nodoc
@@ -700,6 +725,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? labelPlaceHolders = freezed,
     Object? descriptionPlaceHolders = freezed,
     Object? showLabelOutsideCard = freezed,
+    Object? popupTimer = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -898,6 +924,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.showLabelOutsideCard
           : showLabelOutsideCard // ignore: cast_nullable_to_non_nullable
               as bool?,
+      popupTimer: freezed == popupTimer
+          ? _value.popupTimer
+          : popupTimer // ignore: cast_nullable_to_non_nullable
+              as PopupTimer?,
     ));
   }
 }
@@ -962,7 +992,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? descriptionPlaceHolders,
-      this.showLabelOutsideCard})
+      this.showLabelOutsideCard,
+      @JsonKey(fromJson: _popupTimerOrNull) this.popupTimer})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -1177,10 +1208,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
 // Render page label/description outside the card (before it)
   @override
   final bool? showLabelOutsideCard;
+// latLng fields: capture time after which Save is enabled whatever the accuracy
+  @override
+  @JsonKey(fromJson: _popupTimerOrNull)
+  final PopupTimer? popupTimer;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders, showLabelOutsideCard: $showLabelOutsideCard)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, textCapitalization: $textCapitalization, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, showSecondaryAlertPopUp: $showSecondaryAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, secondaryActionLabel: $secondaryActionLabel, comparisonConfig: $comparisonConfig, labelPlaceHolders: $labelPlaceHolders, descriptionPlaceHolders: $descriptionPlaceHolders, showLabelOutsideCard: $showLabelOutsideCard, popupTimer: $popupTimer)';
   }
 
   @override
@@ -1275,7 +1310,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality().equals(
                 other._descriptionPlaceHolders, _descriptionPlaceHolders) &&
             (identical(other.showLabelOutsideCard, showLabelOutsideCard) ||
-                other.showLabelOutsideCard == showLabelOutsideCard));
+                other.showLabelOutsideCard == showLabelOutsideCard) &&
+            (identical(other.popupTimer, popupTimer) ||
+                other.popupTimer == popupTimer));
   }
 
   @JsonKey(ignore: true)
@@ -1330,7 +1367,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         comparisonConfig,
         const DeepCollectionEquality().hash(_labelPlaceHolders),
         const DeepCollectionEquality().hash(_descriptionPlaceHolders),
-        showLabelOutsideCard
+        showLabelOutsideCard,
+        popupTimer
       ]);
 
   @JsonKey(ignore: true)
@@ -1410,7 +1448,9 @@ abstract class _PropertySchema implements PropertySchema {
       final List<LabelPlaceHolder>? labelPlaceHolders,
       @JsonKey(fromJson: _labelPlaceHoldersOrNull)
       final List<LabelPlaceHolder>? descriptionPlaceHolders,
-      final bool? showLabelOutsideCard}) = _$PropertySchemaImpl;
+      final bool? showLabelOutsideCard,
+      @JsonKey(fromJson: _popupTimerOrNull)
+      final PopupTimer? popupTimer}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1535,6 +1575,9 @@ abstract class _PropertySchema implements PropertySchema {
   List<LabelPlaceHolder>? get descriptionPlaceHolders;
   @override // Render page label/description outside the card (before it)
   bool? get showLabelOutsideCard;
+  @override // latLng fields: capture time after which Save is enabled whatever the accuracy
+  @JsonKey(fromJson: _popupTimerOrNull)
+  PopupTimer? get popupTimer;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -3079,6 +3122,198 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
   @override
   @JsonKey(ignore: true)
   _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PopupTimer _$PopupTimerFromJson(Map<String, dynamic> json) {
+  return _PopupTimer.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PopupTimer {
+  @JsonKey(fromJson: _boolOrNull)
+  bool? get enabled => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _timerPartOrNull)
+  int? get minutes => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _timerPartOrNull)
+  int? get seconds => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PopupTimerCopyWith<PopupTimer> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PopupTimerCopyWith<$Res> {
+  factory $PopupTimerCopyWith(
+          PopupTimer value, $Res Function(PopupTimer) then) =
+      _$PopupTimerCopyWithImpl<$Res, PopupTimer>;
+  @useResult
+  $Res call(
+      {@JsonKey(fromJson: _boolOrNull) bool? enabled,
+      @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+      @JsonKey(fromJson: _timerPartOrNull) int? seconds});
+}
+
+/// @nodoc
+class _$PopupTimerCopyWithImpl<$Res, $Val extends PopupTimer>
+    implements $PopupTimerCopyWith<$Res> {
+  _$PopupTimerCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = freezed,
+    Object? minutes = freezed,
+    Object? seconds = freezed,
+  }) {
+    return _then(_value.copyWith(
+      enabled: freezed == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      minutes: freezed == minutes
+          ? _value.minutes
+          : minutes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      seconds: freezed == seconds
+          ? _value.seconds
+          : seconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PopupTimerImplCopyWith<$Res>
+    implements $PopupTimerCopyWith<$Res> {
+  factory _$$PopupTimerImplCopyWith(
+          _$PopupTimerImpl value, $Res Function(_$PopupTimerImpl) then) =
+      __$$PopupTimerImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(fromJson: _boolOrNull) bool? enabled,
+      @JsonKey(fromJson: _timerPartOrNull) int? minutes,
+      @JsonKey(fromJson: _timerPartOrNull) int? seconds});
+}
+
+/// @nodoc
+class __$$PopupTimerImplCopyWithImpl<$Res>
+    extends _$PopupTimerCopyWithImpl<$Res, _$PopupTimerImpl>
+    implements _$$PopupTimerImplCopyWith<$Res> {
+  __$$PopupTimerImplCopyWithImpl(
+      _$PopupTimerImpl _value, $Res Function(_$PopupTimerImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enabled = freezed,
+    Object? minutes = freezed,
+    Object? seconds = freezed,
+  }) {
+    return _then(_$PopupTimerImpl(
+      enabled: freezed == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      minutes: freezed == minutes
+          ? _value.minutes
+          : minutes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      seconds: freezed == seconds
+          ? _value.seconds
+          : seconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PopupTimerImpl extends _PopupTimer {
+  const _$PopupTimerImpl(
+      {@JsonKey(fromJson: _boolOrNull) this.enabled,
+      @JsonKey(fromJson: _timerPartOrNull) this.minutes,
+      @JsonKey(fromJson: _timerPartOrNull) this.seconds})
+      : super._();
+
+  factory _$PopupTimerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PopupTimerImplFromJson(json);
+
+  @override
+  @JsonKey(fromJson: _boolOrNull)
+  final bool? enabled;
+  @override
+  @JsonKey(fromJson: _timerPartOrNull)
+  final int? minutes;
+  @override
+  @JsonKey(fromJson: _timerPartOrNull)
+  final int? seconds;
+
+  @override
+  String toString() {
+    return 'PopupTimer(enabled: $enabled, minutes: $minutes, seconds: $seconds)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PopupTimerImpl &&
+            (identical(other.enabled, enabled) || other.enabled == enabled) &&
+            (identical(other.minutes, minutes) || other.minutes == minutes) &&
+            (identical(other.seconds, seconds) || other.seconds == seconds));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, enabled, minutes, seconds);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PopupTimerImplCopyWith<_$PopupTimerImpl> get copyWith =>
+      __$$PopupTimerImplCopyWithImpl<_$PopupTimerImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PopupTimerImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PopupTimer extends PopupTimer {
+  const factory _PopupTimer(
+          {@JsonKey(fromJson: _boolOrNull) final bool? enabled,
+          @JsonKey(fromJson: _timerPartOrNull) final int? minutes,
+          @JsonKey(fromJson: _timerPartOrNull) final int? seconds}) =
+      _$PopupTimerImpl;
+  const _PopupTimer._() : super._();
+
+  factory _PopupTimer.fromJson(Map<String, dynamic> json) =
+      _$PopupTimerImpl.fromJson;
+
+  @override
+  @JsonKey(fromJson: _boolOrNull)
+  bool? get enabled;
+  @override
+  @JsonKey(fromJson: _timerPartOrNull)
+  int? get minutes;
+  @override
+  @JsonKey(fromJson: _timerPartOrNull)
+  int? get seconds;
+  @override
+  @JsonKey(ignore: true)
+  _$$PopupTimerImplCopyWith<_$PopupTimerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

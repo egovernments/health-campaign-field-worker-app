@@ -65,17 +65,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
 
         // Show popup if popupConfig is provided
         if (popupConfig != null) {
-          // Execute onOpenAction before showing popup
-          final onOpenActions = popupConfig['onOpenAction'] as List<dynamic>?;
-          if (onOpenActions != null) {
-            for (var raw in onOpenActions) {
-              if (raw is Map<String, dynamic>) {
-                final action = ActionConfig.fromJson(raw);
-                onAction(action);
-              }
-            }
-          }
-
+          _runActions(popupConfig['onOpenAction'], onAction);
           await _showActionPopup(context, popupConfig, onAction, screenKey,
               stateData, item, listIndex, compositeKey, resolved.evalContext);
         }
@@ -204,6 +194,16 @@ class ActionPopupWidget extends ResolvedFlowWidget {
         popupConfig['barrierDismissible'] as bool? ?? true;
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
+
+    // Footer actions use original context which has LocalizationContext in its
+    // tree. A button whose `visible` rule is false builds to an empty widget,
+    // so keep only real buttons instead of casting every result.
+    final footerButtons = footerActions
+        .whereType<Map<String, dynamic>>()
+        .map((actionJson) =>
+            FlowWidgetFactory.build(actionJson, context, onAction))
+        .whereType<DigitButton>()
+        .toList();
     final popupType = popupConfig['type'] as String? ?? 'simple';
 
     return showCustomPopup(
@@ -228,9 +228,25 @@ class ActionPopupWidget extends ResolvedFlowWidget {
                 )
               : null,
           titleIconAlignment: CrossAxisAlignment.center,
+          // If `onCloseAction` is declared, cross-tap fires it (config must
+          // include CLOSE_POPUP — otherwise a manual pop here plus a
+          // CLOSE_POPUP in the list would double-pop the underlying route).
+          // Otherwise fall back to the original close-only behavior.
           onCrossTap: showCloseButton
               ? () {
-                  Navigator.of(ctx, rootNavigator: true).pop();
+                  final onCloseActions = popupConfig['onCloseAction'];
+                  if (onCloseActions is! List || onCloseActions.isEmpty) {
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                    return;
+                  }
+                  _runActions(onCloseActions, onAction);
+                  // Pop unless the config closes itself, otherwise an
+                  // `onCloseAction` declared purely for a side effect would
+                  // leave the dialog with no exit (`barrierDismissible` is
+                  // itself config-driven).
+                  if (!_declaresClosePopup(onCloseActions)) {
+                    Navigator.of(ctx, rootNavigator: true).pop();
+                  }
                 }
               : null,
           actionSpacing: spacer2,
@@ -260,22 +276,37 @@ class ActionPopupWidget extends ResolvedFlowWidget {
               return const SizedBox.shrink();
             }),
           ],
-          actions: footerActions.isEmpty
-              ? null
-              : footerActions
-                  .whereType<Map<String, dynamic>>()
-                  .map((actionJson) {
-                  // Footer actions use original context which has LocalizationContext in its tree
-                  return FlowWidgetFactory.build(
-                    actionJson,
-                    context,
-                    onAction,
-                  ) as DigitButton;
-                }).toList(),
+          actions: footerButtons.isEmpty ? null : footerButtons,
           inlineActions: true,
         );
       },
     );
+  }
+
+  /// Whether [actions] declares a CLOSE_POPUP anywhere, including inside a
+  /// conditional wrapper's nested `actions`. A shallow scan would miss the
+  /// nested form and pop here as well as in the executor, bouncing the user
+  /// off the underlying page.
+  bool _declaresClosePopup(List<dynamic> actions) {
+    for (final raw in actions) {
+      if (raw is! Map) continue;
+      if (raw['actionType'] == 'CLOSE_POPUP') return true;
+      final nested = raw['actions'];
+      if (nested is List && _declaresClosePopup(nested)) return true;
+    }
+    return false;
+  }
+
+  /// Runs a list of raw action-config maps through [onAction]. Silently
+  /// skips null/non-Map entries. Shared by `onOpenAction` (button press) and
+  /// `onCloseAction` (cross-tap).
+  void _runActions(dynamic actions, void Function(ActionConfig) onAction) {
+    if (actions is! List) return;
+    for (final raw in actions) {
+      if (raw is Map<String, dynamic>) {
+        onAction(ActionConfig.fromJson(raw));
+      }
+    }
   }
 
   DigitButtonType _parseButtonType(String? type) {

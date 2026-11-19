@@ -255,7 +255,8 @@ Navigate to different pages based on field values:
 | `text` | string | Plain text input |
 | `textArea` | string | Multi-line text input |
 | `numeric` | string | Number input with min/max constraints |
-| `dropdown` | string | Single or multi-select dropdown |
+| `dropdown` | string | Single or multi-select dropdown (multi via `isMultiSelect: true`) |
+| `multiSelectDropdown` | string / array | Multi-select dropdown; selections stored dot-joined (`A.B.C`) |
 | `radio` | string | Radio button group |
 | `checkbox` | boolean | Boolean checkbox |
 | `date` | string | Date picker with range support |

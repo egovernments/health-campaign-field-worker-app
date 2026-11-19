@@ -7,6 +7,9 @@ import 'package:drift/drift.dart';
 @TableIndex(name: 'project_facility_facilityid', columns: {#facilityId})
 class ProjectFacility extends Table {
   TextColumn get id => text()();
+  // App-local only: identifies a link created on the phone before the
+  // server assigns an id. Never sent to the server.
+  TextColumn get clientReferenceId => text().nullable()();
   TextColumn get facilityId => text()();
   TextColumn get projectId => text()();
   TextColumn get auditCreatedBy => text().nullable()();

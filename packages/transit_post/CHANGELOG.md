@@ -1,3 +1,7 @@
+## 1.0.3
+
+* `UserActionLocalRepository.search` now applies the `action`, `projectId` and `boundaryCode` filters of `UserActionSearchModel` (only `clientReferenceId` was applied before)
+
 ## 1.0.2
 
 * Added VACCINATION_FAILED filter and refreshed `transit_post_record_vaccination` and `transit_post_selection` pages

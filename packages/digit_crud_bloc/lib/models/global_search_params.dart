@@ -5,6 +5,24 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'global_search_params.freezed.dart';
 part 'global_search_params.g.dart';
 
+/// Sentinel [SearchOrderBy.field] that sorts by distance from the centre of
+/// a `within` filter rather than by a column — nearest first with
+/// `order: "ASC"`.
+///
+/// It is not a column name, so it only works on a table that also carries a
+/// `within` filter in the same search: that filter is what supplies the
+/// centre point. Without one the ordering is skipped.
+const String distanceOrderField = '__distance';
+
+/// A `within` that also keeps rows with no recorded location (null
+/// coordinates, or 0/0). Located rows still have to be inside the radius;
+/// unlocated ones can't be placed, so they pass and, under a
+/// [distanceOrderField] sort, come after every located row.
+///
+/// For lists where a missing GPS fix must not hide a record, such as
+/// outside-household sites added by planners without coordinates.
+const String withinOrUnlocatedOperator = 'withinOrUnlocated';
+
 /// Defines how filters across multiple tables are combined.
 enum MultiTableFilterLogic {
   /// All filters must match (intersection). Default behavior.

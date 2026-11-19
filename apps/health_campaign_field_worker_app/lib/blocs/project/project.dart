@@ -24,6 +24,7 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
@@ -40,6 +41,10 @@ import '../../utils/download_image.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/stock_calculation_utils.dart';
+import '../../utils/mdms_enum_utils.dart';
+import '../../data/new_settlement_downsync.dart';
+import '../../sampleJsonConfigs/new_settlement.dart';
+import '../../utils/new_settlement_utils.dart';
 import '../../utils/utils.dart';
 import '../auth/auth.dart';
 import '../push_notification/push_notification.dart';
@@ -85,6 +90,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       faceAuthEventRemoteRepository;
   final LocalRepository<FaceAuthEventModel, FaceAuthEventSearchModel>?
       faceAuthEventLocalRepository;
+
+  /// userLocation API (nullable — only when the service registry has it).
+  /// New settlements are created and searched through it.
+  final RemoteRepository<UserActionModel, UserActionSearchModel>?
+      userLocationRemoteRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -167,6 +177,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.userActionRemoteRepository,
     this.faceAuthEventRemoteRepository,
     this.faceAuthEventLocalRepository,
+    this.userLocationRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -389,87 +400,141 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(ProjectModel project) async {
-    final userObject = await localSecureStore.userRequestModel;
+  // The assigned boundary's own materializedPath, minus its last segment —
+  // i.e. the ancestor chain above it. Null if not found in [tree].
+  String? _ancestorPrefixFor(List<BoundaryModel> tree, String? assignedCode) {
+    if (assignedCode == null) return null;
+    final assigned = tree.firstWhere(
+      (b) => b.code == assignedCode,
+      orElse: () => BoundaryModel(),
+    );
+    final segs = assigned.materializedPath?.split('.');
+    if (segs == null || segs.length <= 1) return null;
+    return segs.sublist(0, segs.length - 1).join('.');
+  }
+
+  // Prefixes every boundary's materializedPath with [prefix], so a scoped
+  // fetch (rooted at the project's assigned boundary) ends up with the
+  // same full root-to-leaf path a full-tree fetch would have produced.
+  List<BoundaryModel> _withAncestorPrefix(
+    List<BoundaryModel> boundaries,
+    String? prefix,
+  ) {
+    if (prefix == null) return boundaries;
+    return boundaries
+        .map((b) => b.copyWith(
+              materializedPath: '$prefix.${b.materializedPath}',
+            ))
+        .toList();
+  }
+
+  /// Boundary types around the project's assigned boundary, in the order the
+  /// project-facility search expects: parent, current, child. Null when the
+  /// project has no assigned boundary.
+  Future<({String? parent, String current, String? child})?>
+      _projectBoundaryLevels(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
     final assignedBoundaryType = project.address?.boundaryType;
     final assignedBoundaryCode = project.address?.boundary;
-    List<String>? boundaryTypes;
+    if (assignedBoundaryType == null || assignedBoundaryCode == null) {
+      return null;
+    }
+    // Derive parent → current → child boundary types from the boundary
+    // search API response for the CURRENT hierarchy (multi-hierarchy
+    // safe). We fetch the full hierarchy tree with no `codes` filter (or
+    // reuse one already fetched by the caller); the remote client's
+    // `_flattenBoundaryMap` computes `materializedPath` and
+    // `boundaryNum` root-to-leaf, so once flattened we can locate the
+    // assigned code by materializedPath (which is unique) and take
+    // parent (boundaryNum-1) and child (boundaryNum+1) types.
+    try {
+      // `??` only fires on null, so an empty list from a caller whose
+      // own fetch failed would be accepted and leave the parent/child
+      // type lookup with nothing to match. Treat empty as not prefetched.
+      final treeRows = (prefetchedTree != null && prefetchedTree.isNotEmpty)
+          ? prefetchedTree
+          : await boundaryRemoteRepository.search(
+              BoundarySearchModel(),
+            );
 
-    if (assignedBoundaryType != null && assignedBoundaryCode != null) {
-      // Derive parent → current → child boundary types from the boundary
-      // search API response for the CURRENT hierarchy (multi-hierarchy
-      // safe). We fetch the full hierarchy tree with no `codes` filter;
-      // the remote client's
-      // `_flattenBoundaryMap` computes `materializedPath` and
-      // `boundaryNum` root-to-leaf, so once flattened we can locate the
-      // assigned code by materializedPath (which is unique) and take
-      // parent (boundaryNum-1) and child (boundaryNum+1) types.
-      try {
-        final treeRows = await boundaryRemoteRepository.search(
-          BoundarySearchModel(),
-        );
+      // Locate the assigned row anywhere in the tree by exact code
+      // match.
+      final assigned = treeRows.firstWhere(
+        (b) => b.code == assignedBoundaryCode,
+        orElse: () => BoundaryModel(code: assignedBoundaryCode),
+      );
 
-        // Locate the assigned row anywhere in the tree by exact code
-        // match.
-        final assigned = treeRows.firstWhere(
-          (b) => b.code == assignedBoundaryCode,
-          orElse: () => BoundaryModel(code: assignedBoundaryCode),
-        );
+      final assignedPath = assigned.materializedPath;
+      final assignedNum = assigned.boundaryNum;
 
-        final assignedPath = assigned.materializedPath;
-        final assignedNum = assigned.boundaryNum;
+      String? parentType;
+      String? childType;
 
-        String? parentType;
-        String? childType;
-
-        if (assignedNum != null && assignedPath != null) {
-          // Parent's materializedPath is assigned's minus the last
-          // (dot-separated) segment. This is authoritative — no
-          // reliance on boundary-code underscore structure.
-          if (assignedNum > 1) {
-            final segs = assignedPath.split('.');
-            if (segs.length >= 2) {
-              final parentPath = segs.sublist(0, segs.length - 1).join('.');
-              final parent = treeRows.firstWhere(
-                (b) =>
-                    b.materializedPath == parentPath &&
-                    b.label != null &&
-                    b.label!.isNotEmpty,
-                orElse: () => BoundaryModel(),
-              );
-              parentType = parent.label;
-            }
+      if (assignedNum != null && assignedPath != null) {
+        // Parent's materializedPath is assigned's minus the last
+        // (dot-separated) segment. This is authoritative — no
+        // reliance on boundary-code underscore structure.
+        if (assignedNum > 1) {
+          final segs = assignedPath.split('.');
+          if (segs.length >= 2) {
+            final parentPath = segs.sublist(0, segs.length - 1).join('.');
+            final parent = treeRows.firstWhere(
+              (b) =>
+                  b.materializedPath == parentPath &&
+                  b.label != null &&
+                  b.label!.isNotEmpty,
+              orElse: () => BoundaryModel(),
+            );
+            parentType = parent.label;
           }
-
-          // Child = any row whose materializedPath starts with
-          // assigned's + '.' and whose boundaryNum is exactly one deeper.
-          final childPrefix = '$assignedPath.';
-          final child = treeRows.firstWhere(
-            (b) =>
-                b.boundaryNum == assignedNum + 1 &&
-                b.label != null &&
-                b.label!.isNotEmpty &&
-                (b.materializedPath?.startsWith(childPrefix) ?? false),
-            orElse: () => BoundaryModel(),
-          );
-          childType = child.label;
         }
 
-        boundaryTypes = [
-          if (parentType != null && parentType.isNotEmpty) parentType,
-          assignedBoundaryType,
-          if (childType != null && childType.isNotEmpty) childType,
-        ];
-      } catch (e) {
-        // Any failure falls through to the single-type default below —
-        // same behaviour the old MDMS path had when it couldn't find a
-        // match.
-        debugPrint(
-            'boundary-derivation from search response failed: $e');
+        // Child = any row whose materializedPath starts with
+        // assigned's + '.' and whose boundaryNum is exactly one deeper.
+        final childPrefix = '$assignedPath.';
+        final child = treeRows.firstWhere(
+          (b) =>
+              b.boundaryNum == assignedNum + 1 &&
+              b.label != null &&
+              b.label!.isNotEmpty &&
+              (b.materializedPath?.startsWith(childPrefix) ?? false),
+          orElse: () => BoundaryModel(),
+        );
+        childType = child.label;
       }
 
-      boundaryTypes ??= [assignedBoundaryType];
+      return (
+        parent: (parentType?.isNotEmpty ?? false) ? parentType : null,
+        current: assignedBoundaryType,
+        child: (childType?.isNotEmpty ?? false) ? childType : null,
+      );
+    } catch (e) {
+      // Any failure falls through to the current-type-only default
+      // below, same as the old MDMS path when it couldn't find a match.
+      debugPrint('boundary-derivation from search response failed: $e');
     }
+
+    return (parent: null, current: assignedBoundaryType, child: null);
+  }
+
+  FutureOr<void> _loadProjectFacilities(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
+    final userObject = await localSecureStore.userRequestModel;
+    final levels = await _projectBoundaryLevels(
+      project,
+      prefetchedTree: prefetchedTree,
+    );
+    final boundaryTypes = levels == null
+        ? null
+        : [
+            if (levels.parent != null) levels.parent!,
+            levels.current,
+            if (levels.child != null) levels.child!,
+          ];
 
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
@@ -505,8 +570,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
           await facilityLocalRepository.bulkCreate(facilities);
         } catch (e) {
-          debugPrint(
-              'facility fetch failed for chunk starting at $i: $e');
+          debugPrint('facility fetch failed for chunk starting at $i: $e');
         }
       }
     }
@@ -541,6 +605,126 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             );
       }
     }
+  }
+
+  /// Site type codes from MDMS `HCM.OUTSIDE_HOUSEHOLD_TYPES`. A facility
+  /// whose `usage` is one of these is an outside-household site.
+  static const outsideHouseholdSiteTypes = [
+    'TRANSIT_POST',
+    'OUTSIDE_HOUSEHOLD_PLACES',
+  ];
+
+  /// Mirrors `FlowBuilderSingleton.hasDeliveryMethod`, which is not yet
+  /// populated at project-select time.
+  static bool _hasOutsideHouseholdDelivery(ProjectModel project) {
+    final cycles = project.additionalDetails?.projectType?.cycles;
+    if (cycles == null || cycles.isEmpty) return true;
+    final anyTagged = cycles.any((c) =>
+        (c.deliveries ?? const []).any((d) => d.deliveryMethod != null));
+    if (!anyTagged) return true;
+    return cycles.any((c) => (c.deliveries ?? const [])
+        .any((d) => d.deliveryMethod == 'OUTSIDEHOUSEHOLD'));
+  }
+
+  /// Downloads the outside-household sites linked to this project.
+  ///
+  /// The project-facility search with `onlyOutsideHouseholdSites=true`
+  /// returns the project's site links; the sites are then fetched by those
+  /// facility ids. Links are tagged `facilityLevel = site` so stock and
+  /// referral facility pickers, which keep `current` links only, never show
+  /// a site.
+  FutureOr<void> _loadOutsideHouseholdSites(
+    ProjectModel project, {
+    List<BoundaryModel>? prefetchedTree,
+  }) async {
+    // The outside-household flow runs for Polio-style campaigns only for now.
+    if (!isPolioStyleCampaign(project.projectType)) return;
+    if (!_hasOutsideHouseholdDelivery(project)) return;
+
+    // Same boundary-typed search as _loadProjectFacilities, but without the
+    // parent level: sites belong to this boundary or the ones below it.
+    final boundaryLevels = await _projectBoundaryLevels(
+      project,
+      prefetchedTree: prefetchedTree,
+    );
+    final siteBoundaryTypes = boundaryLevels == null
+        ? null
+        : [
+            boundaryLevels.current,
+            if (boundaryLevels.child != null) boundaryLevels.child!,
+          ];
+
+    // onlyOutsideHouseholdSites is a project-facility search option, not
+    // part of the generic RemoteRepository search.
+    final linkRepo = projectFacilityRemoteRepository;
+    final linkQuery = ProjectFacilitySearchModel(
+      projectId: [project.id],
+      boundaryTypes: siteBoundaryTypes,
+    );
+    final links = await (linkRepo is ProjectFacilityRemoteRepository
+        ? linkRepo.search(linkQuery, onlyOutsideHouseholdSites: true)
+        : linkRepo.search(linkQuery));
+
+    // A site set Inactive loses its link. Links of the project's other
+    // facilities (FacilityMap) are dropped below by the site-type check.
+    final activeLinks = links.where((l) => l.isDeleted != true).toList();
+    final siteIds = activeLinks.map((l) => l.facilityId).toSet().toList();
+    if (siteIds.isEmpty) return;
+
+    final sites = <FacilityModel>[];
+    const chunkSize = 100;
+    for (var i = 0; i < siteIds.length; i += chunkSize) {
+      final end =
+          (i + chunkSize < siteIds.length) ? i + chunkSize : siteIds.length;
+      try {
+        sites.addAll(await facilityRemoteRepository.search(
+          FacilitySearchModel(
+            tenantId: envConfig.variables.tenantId,
+            id: siteIds.sublist(i, end),
+          ),
+        ));
+      } catch (e) {
+        debugPrint('site fetch failed for chunk starting at $i: $e');
+      }
+    }
+
+    // Keep site types only, so an ordinary facility link is never re-tagged
+    // `site`. The app keys a site by its clientReferenceId (children
+    // vaccinated there carry it as resourceTag), so planner-added sites that
+    // lack one get the server id as a stable stand-in.
+    final activeSites = sites
+        .where((f) =>
+            f.isDeleted != true &&
+            outsideHouseholdSiteTypes.contains(f.usage))
+        .map((f) => f.clientReferenceId == null
+            ? f.copyWith(clientReferenceId: f.id)
+            : f)
+        .toList();
+    if (activeSites.isEmpty) return;
+
+    final savedIds = activeSites.map((f) => f.id).toSet();
+    await facilityLocalRepository.bulkCreate(activeSites);
+    await projectFacilityLocalRepository.bulkCreate(
+      activeLinks
+          .where((l) => savedIds.contains(l.facilityId))
+          .map(_tagAsSiteLink)
+          .toList(),
+    );
+  }
+
+  /// The remote repository stamps every link `facilityLevel = current`;
+  /// a site link is re-tagged `site` so facility pickers skip it.
+  static ProjectFacilityModel _tagAsSiteLink(ProjectFacilityModel link) {
+    final fields = (link.additionalFields?.fields ?? const [])
+        .where((f) => f.key != 'facilityLevel')
+        .toList();
+    return link.copyWith(
+      additionalFields: ProjectFacilityAdditionalFields(
+        schema: link.additionalFields?.schema ?? 'OutsideHouseholdAssignment',
+        version: link.additionalFields?.version ?? 1,
+        fields: [...fields, const AdditionalField('facilityLevel', 'site')],
+      ),
+    );
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
@@ -656,7 +840,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .whereType<String>()
             .join(',');
       }
-      debugPrint('[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
+      debugPrint(
+          '[FaceAuth] userRoles fetched for ${rolesByUuid.length} users');
 
       return individuals.map((ind) {
         final roles = ind.userUuid != null ? rolesByUuid[ind.userUuid] : null;
@@ -746,6 +931,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     List<BoundaryModel> boundaries;
+    List<BoundaryModel> fullBoundaryTree = [];
     try {
       try {
         if (context.loggedInUserRoles
@@ -945,12 +1131,23 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         final formConfigs = await mdmsRepository.searchMDMS(
           envConfig.variables.mdmsApiPath,
           tenantId: envConfig.variables.tenantId,
-          schemaCode: '${ModuleEnums.hcmAdminConsole.toValue()}.${MasterEnums.formConfig.toValue()}',
+          schemaCode:
+              '${ModuleEnums.hcmAdminConsole.toValue()}.${MasterEnums.formConfig.toValue()}',
           filters: {'project': event.model.referenceID},
         );
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);
+        }
+
+        // Until the missed-place FormConfig is published, store the local
+        // sample so its options are filled from MDMS the same way. A copy,
+        // since enrichment mutates the config in place.
+        if (!formConfigs
+            .any((config) => config['name'] == newSettlementSchemaKey)) {
+          await enrichFormSchemasWithEnumsForForms(
+            json.decode(json.encode(sampleNewSettlementFlows)),
+          );
         }
       } catch (e) {
         emit(
@@ -964,6 +1161,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           debugPrint(e.toString());
         }
         return;
+      }
+
+      // Roles that may add a missed place on the boundary page. A failed
+      // fetch keeps the roles saved last time.
+      try {
+        final roleRecords = await mdmsRepository.searchMDMS(
+          envConfig.variables.mdmsApiPath,
+          tenantId: envConfig.variables.tenantId,
+          schemaCode:
+              '${ModuleEnums.hcm.toValue()}.${MasterEnums.rolesForMissedPlaces.toValue()}',
+        );
+        await AppSharedPreferences()
+            .setMissedPlaceRoles(missedPlaceRoleCodes(roleRecords));
+      } catch (e) {
+        debugPrint('missed-place roles fetch failed: $e');
       }
 
       reportSyncProgress('projectType');
@@ -1023,15 +1235,63 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
+      // Fetched once and reused for: (1) prefixing the scoped boundary
+      // fetch below with the assigned boundary's real ancestor path, and
+      // (2) _loadProjectFacilities' parent/child boundary-type lookup —
+      // avoids sending this (potentially large) full-tree request twice.
+      try {
+        fullBoundaryTree = await boundaryRemoteRepository.search(
+          BoundarySearchModel(),
+        );
+      } catch (e) {
+        debugPrint('full boundary tree fetch failed: $e');
+      }
+      final ancestorPrefix = _ancestorPrefixFor(
+        fullBoundaryTree,
+        event.model.address?.boundary,
+      );
+
+      // The full-tree fetch above is deliberately non-fatal, so the prefix
+      // can be underivable for survivable reasons: a transient failure, an
+      // empty payload, or a project whose hierarchyType came from the env
+      // fallback and so is absent from the fetched tree. Persisting
+      // leaf-rooted paths in that state would ship a truncated hierarchy to
+      // the server, so prefer the already-stored rows and schedule a
+      // refetch — but never block entry to the project over it. If no local
+      // rows exist either, the empty-boundaries branch below still errors.
+      final assignedCode = event.model.address?.boundary;
+      final prefixResolved = assignedCode == null ||
+          fullBoundaryTree.any((b) => b.code == assignedCode);
+      if (!prefixResolved) {
+        debugPrint(
+          'ancestor prefix underivable for $assignedCode — '
+          'keeping stored boundaries and scheduling a refetch',
+        );
+        await localSecureStore.setBoundaryRefetch(true);
+      }
+
       reportSyncProgress('boundary');
-      if (rowversionList.firstOrNull?.version != serverVersion ||
-          boundaryRefetched) {
+      if (prefixResolved &&
+          (rowversionList.firstOrNull?.version != serverVersion ||
+              boundaryRefetched)) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
             codes: event.model.address?.boundary,
           ),
         );
+        boundaries = _withAncestorPrefix(boundaries, ancestorPrefix);
+        // A refetch (first login after a logout, or a new egov-location
+        // version) replaces the stored tree. Adding to it would keep the
+        // previous user's or the old assignment's boundaries, which then
+        // show up on the boundary page. Only clear once the download has
+        // something to replace them with.
+        if (boundaries.isNotEmpty) {
+          await boundaryLocalRepository.delete(
+            BoundaryModel(),
+            createOpLog: false,
+          );
+        }
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
@@ -1058,13 +1318,40 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             codes: event.model.address?.boundary,
           ),
         );
-        if (boundaries.isEmpty) {
+        // Rows written by a build that predates ancestor prefixing are
+        // leaf-rooted. The egov-location rowversion does not change for
+        // them, so without this they stay stale until the next re-login.
+        // Scope the check to the assigned row: the local search matches
+        // materializedPath with `like('%code%')`, so siblings whose code
+        // merely contains the assigned one (MONAPO vs MONAPO_SUL) also come
+        // back and would never match the prefix, re-fetching every time.
+        final hasLeafRootedPath = ancestorPrefix != null &&
+            boundaries.any((b) =>
+                b.code == assignedCode &&
+                b.materializedPath != null &&
+                !b.materializedPath!.startsWith('$ancestorPrefix.'));
+        // Nothing stored and the ancestor prefix couldn't be derived: a
+        // scoped fetch now would store leaf-rooted paths. Fail this attempt
+        // as a boundary sync error instead (the refetch flag set above makes
+        // the retry do the full download).
+        if (boundaries.isEmpty && !prefixResolved) {
+          emit(
+            state.copyWith(
+              selectedProject: event.model,
+              loading: false,
+              syncError: ProjectSyncErrorType.boundary,
+            ),
+          );
+          return;
+        }
+        if (boundaries.isEmpty || hasLeafRootedPath) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
               codes: event.model.address?.boundary,
             ),
           );
+          boundaries = _withAncestorPrefix(boundaries, ancestorPrefix);
           if (boundaries.isEmpty) {
             emit(
               state.copyWith(
@@ -1106,7 +1393,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Load project facilities after project selection
     try {
       reportSyncProgress('projectFacility');
-      await _loadProjectFacilities(event.model);
+      await _loadProjectFacilities(event.model,
+          prefetchedTree: fullBoundaryTree);
+      // Outside-household site links only come back when asked for
+      // (onlyOutsideHouseholdSites), so sites get their own download. A failure here must not
+      // block project selection.
+      try {
+        await _loadOutsideHouseholdSites(event.model,
+            prefetchedTree: fullBoundaryTree);
+      } catch (e) {
+        debugPrint('outside-household site download failed: $e');
+      }
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
@@ -1117,9 +1414,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     try {
-      // Trigger silent stock downsync after project facilities are loaded
-      reportSyncProgress('stock');
-      await _silentStockDownSync(event.model);
+      // Trigger silent stock downsync after project facilities are loaded.
+      //
+      // Only stock-handling roles need it. Without this gate every other
+      // role still pays for the two local searches inside the method before
+      // its own `receiverIds.isEmpty` check bails out, and still surfaces a
+      // `stockDownsync` sync error if any of that throws.
+      if (await _handlesStock()) {
+        reportSyncProgress('stock');
+        await _silentStockDownSync(event.model);
+      }
     } catch (_) {
       emit(state.copyWith(
         selectedProject: event.model,
@@ -1129,6 +1433,33 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
+    // Missed places are downloaded only for the roles in MDMS
+    // HCM.ROLES_FOR_MISSED_PLACES (fetched above), the same roles the
+    // boundary page lets add one.
+    final userLocationRemote = userLocationRemoteRepository;
+    if (userLocationRemote != null && await _handlesMissedPlaces()) {
+      try {
+        reportSyncProgress('newSettlement');
+        await NewSettlementDownsync(
+          remote: userLocationRemote,
+          local: userActionLocalRepository,
+          onProgress: (downloaded) =>
+              reportSyncProgress('newSettlement ($downloaded)'),
+        ).run(event.model.id);
+      } catch (error) {
+        AppLogger.instance.error(
+          title: 'ProjectBloc: new settlement downsync',
+          message: '$error',
+        );
+        emit(state.copyWith(
+          selectedProject: event.model,
+          loading: false,
+          syncError: ProjectSyncErrorType.missedPlaces,
+        ));
+        return;
+      }
+    }
+
     final getSelectedProject = await localSecureStore.selectedProject;
 
     emit(state.copyWith(
@@ -1136,6 +1467,41 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  /// Whether the logged-in user holds a role that receives dispatched stock.
+  ///
+  /// Gates [_silentStockDownSync] at its call site. Returns false when the
+  /// user can't be read, so an unreadable secure store skips the downsync
+  /// rather than running it for a user whose roles are unknown.
+  Future<bool> _handlesStock() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return false;
+
+    const stockRoles = {
+      RolesType.warehouseManager,
+      RolesType.distributor,
+      RolesType.healthFacilityWorker
+    };
+
+    final stockRoleCodes = stockRoles.map((e) => e.toValue()).toSet();
+
+    return userObject.roles.any((role) => stockRoleCodes.contains(role.code));
+  }
+
+  /// Whether the logged-in user holds a role listed in MDMS
+  /// `HCM.ROLES_FOR_MISSED_PLACES`, saved by [_handleProjectSelection].
+  ///
+  /// Gates the missed-place download. Returns false when the user can't be
+  /// read or no roles are saved, so the download is skipped rather than run
+  /// for every role.
+  Future<bool> _handlesMissedPlaces() async {
+    final userObject = await localSecureStore.userRequestModel;
+    if (userObject == null) return false;
+
+    final missedPlaceRoles = AppSharedPreferences().missedPlaceRoles.toSet();
+    return userObject.roles
+        .any((role) => missedPlaceRoles.contains(role.code));
   }
 
   /// Silently downloads dispatched stock from server without UI dialogs.
@@ -1617,51 +1983,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     await storeSchema(formConfigs);
   }
 
-  void _collectSchemaCodes(dynamic node, Set<String> schemaCodes) {
-    if (node is Map) {
-      final schemaCode = node['schemaCode'];
-      if (schemaCode is String && schemaCode.isNotEmpty) {
-        final parts = schemaCode.split('.');
-        if (parts.length == 2) {
-          schemaCodes.add(schemaCode);
-        }
-      }
-      for (final value in node.values) {
-        _collectSchemaCodes(value, schemaCodes);
-      }
-    } else if (node is List) {
-      for (final item in node) {
-        _collectSchemaCodes(item, schemaCodes);
-      }
-    }
-  }
+  // A schemaCode can name several masters separated by commas; see
+  // utils/mdms_enum_utils.dart.
+  void _collectSchemaCodes(dynamic node, Set<String> schemaCodes) =>
+      collectSchemaCodes(node, schemaCodes);
 
+  // Merges the records of every master named in schemaCode; see
+  // utils/mdms_enum_utils.dart.
   void _applyEnumsToSchemaCodes(
     dynamic node,
     Map<String, List<dynamic>> enumsBySchemaCode,
-  ) {
-    if (node is Map) {
-      final schemaCode = node['schemaCode'];
-      if (schemaCode is String && schemaCode.isNotEmpty) {
-        final enumValues = enumsBySchemaCode[schemaCode];
-        if (enumValues != null && enumValues.isNotEmpty) {
-          node['enums'] = enumValues
-              .map((e) => {
-                    'code': e['code'],
-                    'name': e['name'] ?? e['code'],
-                  })
-              .toList();
-        }
-      }
-      for (final value in node.values) {
-        _applyEnumsToSchemaCodes(value, enumsBySchemaCode);
-      }
-    } else if (node is List) {
-      for (final item in node) {
-        _applyEnumsToSchemaCodes(item, enumsBySchemaCode);
-      }
-    }
-  }
+  ) =>
+      applyEnumsToSchemaCodes(node, enumsBySchemaCode);
 
   Future<void> _createUserActionForDeviceSwitch(ProjectModel project) async {
     final deviceSwitchReason = await localSecureStore.deviceSwitchReason;
@@ -1760,5 +2093,7 @@ enum ProjectSyncErrorType {
   appConfig,
   attendance,
   userAction,
-  stockDownsync
+  stockDownsync,
+  // Shown as MISSEDPLACES_ERROR.
+  missedPlaces
 }

@@ -48,6 +48,10 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   bool _toastShown = false;
 
+  // True when the schema hides this card (built off screen only to fill its
+  // value). A hidden card must not show or dismiss toasts on the page.
+  bool _hiddenFromSchema = false;
+
   // Memoized form and subscription management
   FormGroup? _memoizedForm;
   List<DeliveryProductVariant>? _lastProductVariants;
@@ -67,7 +71,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     }
     _formSubscriptions.clear();
     // Dismiss any active toasts when widget is disposed (e.g., page navigation)
-    ToastManager().dismissAll(showAnim: false);
+    if (!_hiddenFromSchema) ToastManager().dismissAll(showAnim: false);
     super.dispose();
   }
 
@@ -163,6 +167,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           // Found it; pull values
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
+          _hiddenFromSchema = schema.hidden == true;
           labelFromSchema = schema.label ?? schema.innerLabel;
 
           // Extract validation messages from schema
@@ -222,7 +227,8 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 // building. Both have to be deferred to after the frame.
 
                 // Show toast when field is invalid and touched (via ReactiveWrapperField)
-                if (field.control.invalid &&
+                if (!_hiddenFromSchema &&
+                    field.control.invalid &&
                     field.control.touched &&
                     !_toastShown) {
                   _toastShown = true;
@@ -239,7 +245,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 }
 
                 // Reset toast flag and dismiss any active toast when field becomes valid
-                if (!field.control.invalid) {
+                if (!_hiddenFromSchema && !field.control.invalid) {
                   _toastShown = false;
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (!mounted) return;
@@ -270,7 +276,14 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                         for (int index = 0; index < _controllers.length; index++) ...[
                           const SizedBox(height: spacer4),
                           ResourceBeneficiaryCard(
-                          maxQuantity: _maxQuantities[index],
+                          // Key by the underlying control so a row that is
+                          // deleted and re-added gets fresh child state
+                          // instead of reusing the old row's internals.
+                          key: ObjectKey(
+                            _controlAt(form, _resourceDeliveredKey, index) ??
+                                index,
+                          ),
+                          maxQuantity: _maxQuantityAt(index),
                           readOnly: isReadOnlyFromSchema,
                           form: form,
                           cardIndex: index,
@@ -278,7 +291,9 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                           variants: productVariants,
                           onProductChanged: (index, product) {
                             setState(() {
-                              _maxQuantities[index] = product.quantity;
+                              if (index < _maxQuantities.length) {
+                                _maxQuantities[index] = product.quantity;
+                              }
                             });
                           },
                           onDelete: (index) {
@@ -287,6 +302,9 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             (form.control(_quantityDistributedKey) as FormArray)
                                 .removeAt(index);
                             _controllers.removeAt(index);
+                            if (index < _maxQuantities.length) {
+                              _maxQuantities.removeAt(index);
+                            }
                             setState(() {});
                           },
                         ),
@@ -310,7 +328,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                                     .length >=
                                 (productVariants ?? []).length,
                         onPressed: () {
-                          addController(form);
+                          addController(form, productVariants);
                           setState(() {
                             _controllers.add(_controllers.length);
                           });
@@ -486,13 +504,48 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     );
   }
 
-  void addController(FormGroup form) {
-    (form.control(_resourceDeliveredKey) as FormArray).add(
-      FormControl<DeliveryProductVariant>(),
+  /// Safe lookup of the control backing row [index], used only for keying.
+  AbstractControl? _controlAt(FormGroup form, String key, int index) {
+    final array = form.control(key) as FormArray;
+    return index < array.controls.length ? array.controls[index] : null;
+  }
+
+  int? _maxQuantityAt(int index) =>
+      index < _maxQuantities.length ? _maxQuantities[index] : null;
+
+  void addController(
+    FormGroup form,
+    List<DeliveryProductVariant>? productVariants,
+  ) {
+    final resourceArray = form.control(_resourceDeliveredKey) as FormArray;
+    final quantityArray = form.control(_quantityDistributedKey) as FormArray;
+
+    // Seed the new row with the first product that is not already in the list.
+    // Rows built by _buildForm come pre-filled this way, and when the schema
+    // marks the card read-only the user cannot pick a product or a quantity
+    // themselves — an empty row would be impossible to fill in and would keep
+    // the page invalid.
+    final usedIds = resourceArray.value
+            ?.whereType<DeliveryProductVariant>()
+            .map((e) => e.productVariantId)
+            .toSet() ??
+        <dynamic>{};
+    final nextVariant = productVariants?.firstWhereOrNull(
+      (variant) => !usedIds.contains(variant.productVariantId),
     );
-    (form.control(_quantityDistributedKey) as FormArray).add(
-      FormControl<int>(value: 0, validators: [Validators.min(1)]),
+
+    resourceArray.add(
+      FormControl<DeliveryProductVariant>(value: nextVariant),
     );
+    quantityArray.add(
+      FormControl<int>(
+        value: nextVariant?.quantity ?? 0,
+        validators: [Validators.min(1)],
+      ),
+    );
+    // Keep _maxQuantities aligned with the rows; it is indexed by row position
+    // and read on every build.
+    _maxQuantities.add(nextVariant?.quantity);
   }
 
   FormGroup _buildForm(

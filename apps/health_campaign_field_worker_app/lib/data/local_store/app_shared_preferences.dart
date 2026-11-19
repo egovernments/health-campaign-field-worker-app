@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppSharedPreferences {
   static const String isFirstLaunchKey = 'isFirstLaunch';
   static const String userSelectedLocale = 'userSelectedLocale';
+  static const String missedPlaceRolesKey = 'missedPlaceRoles';
 
   SharedPreferences? _sharedPreferences;
 
@@ -44,5 +45,14 @@ class AppSharedPreferences {
       userSelectedLocale,
       localeString,
     );
+  }
+
+  /// Roles allowed to add a missed place (MDMS
+  /// `HCM.ROLES_FOR_MISSED_PLACES`), saved at project selection.
+  List<String> get missedPlaceRoles =>
+      sharedPreferences.getStringList(missedPlaceRolesKey) ?? const [];
+
+  Future<void> setMissedPlaceRoles(List<String> roles) async {
+    await sharedPreferences.setStringList(missedPlaceRolesKey, roles);
   }
 }
