@@ -854,6 +854,8 @@ final dynamic sampleAefiFlows = {
             "type": "template",
             "label": "AEFI_SUCCESS_REPORT_ANOTHER",
             "format": "button",
+            // Show the label as translated so "AEFI" stays in capitals.
+            "capitalizeLetters": false,
             "onAction": [
               {
                 "actionType": "NAVIGATION",

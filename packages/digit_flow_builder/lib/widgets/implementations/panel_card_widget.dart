@@ -135,6 +135,10 @@ class PanelCardWidget extends ResolvedFlowWidget {
             size: DigitButtonSize.large,
             label: localization?.translate(primaryAction['label'] ?? '') ??
                 (primaryAction['label'] ?? ''),
+            // Optional per action: `"capitalizeLetters": false` shows the
+            // label as translated (keeps acronyms like "AEFI"). Default true
+            // title-cases every word, as before.
+            capitalizeLetters: primaryAction['capitalizeLetters'] != false,
             onPressed: () => handleAction(json['primaryAction']),
           ),
         if (secondaryAction != null)
@@ -144,6 +148,7 @@ class PanelCardWidget extends ResolvedFlowWidget {
             label:
                 localization?.translate(secondaryAction['label'] ?? '') ??
                     (secondaryAction['label'] ?? ''),
+            capitalizeLetters: secondaryAction['capitalizeLetters'] != false,
             onPressed: () => handleAction(json['secondaryAction']),
           ),
       ],
