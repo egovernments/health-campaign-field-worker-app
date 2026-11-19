@@ -229,11 +229,11 @@ final dynamic sampleAefiFlows = {
                 "data": [
                   {
                     "key": "minAgeMonths",
-                    "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                    "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                   },
                   {
                     "key": "maxAgeMonths",
-                    "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                   },
                   // Location type by role: a Transit Post vaccinator reports
                   // from a transit post, a community creator from an outside
@@ -861,11 +861,11 @@ final dynamic sampleAefiFlows = {
                   "data": [
                     {
                       "key": "minAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                      "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "maxAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                      "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "isTransitPostVaccinator",

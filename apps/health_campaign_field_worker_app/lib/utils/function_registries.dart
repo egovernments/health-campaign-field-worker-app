@@ -101,11 +101,20 @@ class FunctionRegistries {
   ///
   /// Returns null when the campaign carries no age-tagged dose criteria, so
   /// the picker simply applies no constraint rather than rejecting every date.
+  ///
+  /// An optional second argument names a delivery method, e.g.
+  /// `{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}`: only that
+  /// method's deliveries are read. AEFI uses it to follow the Outside
+  /// Household delivery's age range, like the transit post child form, while
+  /// its module keeps no active delivery method.
   void _registerDeliveryAgeFunctions() {
     FunctionRegistry.register('getDeliveryAgeLimit', (args, stateData) {
       final wantMax =
           args.isNotEmpty && args[0]?.toString().toLowerCase() == 'max';
-      final bounds = _deliveryAgeBoundsInMonths();
+      final method = args.length > 1 ? args[1]?.toString().trim() : null;
+      final bounds = _deliveryAgeBoundsInMonths(
+        deliveryMethod: (method == null || method.isEmpty) ? null : method,
+      );
       if (bounds == null) return null;
       return wantMax ? bounds.$2 : bounds.$1;
     });
@@ -117,7 +126,11 @@ class FunctionRegistries {
   /// `0 <= age && age < 12`), strips whitespace, and splits on `&&` or a bare
   /// `and`, matching the age-band dropdown's parsing of the same strings.
   /// Strict `>` / `<` are nudged by one so the window stays inclusive.
-  (int, int)? _deliveryAgeBoundsInMonths() {
+  ///
+  /// With [deliveryMethod], only deliveries tagged with that method are read.
+  /// A cycle where no delivery carries a method (configs older than method
+  /// tagging) is read whole, as before.
+  (int, int)? _deliveryAgeBoundsInMonths({String? deliveryMethod}) {
     final cycles = FlowBuilderSingleton().projectType?.cycles;
     if (cycles == null || cycles.isEmpty) return null;
 
@@ -127,6 +140,13 @@ class FunctionRegistries {
       orElse: () => cycles.first,
     );
 
+    var deliveries = activeCycle.deliveries ?? <ProjectCycleDelivery>[];
+    if (deliveryMethod != null &&
+        deliveries.any((d) => d.deliveryMethod != null)) {
+      deliveries =
+          deliveries.where((d) => d.deliveryMethod == deliveryMethod).toList();
+    }
+
     final ageRightMin = RegExp(r'age(>=?)(\d+)');
     final ageRightMax = RegExp(r'age(<=?)(\d+)');
     final ageLeftMin = RegExp(r'(\d+)(<=?)age');
@@ -135,7 +155,7 @@ class FunctionRegistries {
     int? lowest;
     int? highest;
 
-    for (final delivery in activeCycle.deliveries ?? []) {
+    for (final delivery in deliveries) {
       for (final dc in delivery.doseCriteria ?? []) {
         final raw = (dc.condition ?? '') as String;
         if (raw.isEmpty) continue;
