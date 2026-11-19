@@ -27,10 +27,12 @@ jobs:
           flutter-version: "3.22.2"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
         with:
-          api-level: 33
-          build-tools: 33.0.2
+          # The action's default list includes the retired 'tools' package,
+          # which sdkmanager no longer finds (exit 1). Install only what the
+          # build needs; compileSdk is 34 (android/app/build.gradle).
+          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
 
       - name: Install Dependencies
         run: flutter pub get
@@ -49,6 +51,7 @@ jobs:
           echo "CHECK_BANDWIDTH_API=${{ vars.CHECK_BANDWIDTH_API }}" >> apps/health_campaign_field_worker_app/.env
           echo "HIERARCHY_TYPE=${{ vars.HIERARCHY_TYPE }}" >> apps/health_campaign_field_worker_app/.env
           echo "ENV_NAME=${{ vars.ENV_NAME }}" >> apps/health_campaign_field_worker_app/.env
+          echo "FACE_AUTH_ENABLED=${{ vars.FACE_AUTH_ENABLED }}" >> apps/health_campaign_field_worker_app/.env
 
       - name: Verify .env file
         run: |

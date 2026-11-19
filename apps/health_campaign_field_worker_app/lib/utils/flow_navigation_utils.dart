@@ -28,16 +28,31 @@ class FlowModuleConfig {
   /// Nested model mappings for the CRUD service
   final List<NestedModelMapping> nestedModelMappings;
 
+  /// Delivery method this module's deliveries are tagged with. Defaults to
+  /// [schemaKey] when that is a method the project's deliveries carry.
+  final String? deliveryMethod;
+
   const FlowModuleConfig({
     required this.schemaKey,
     required this.sampleFlows,
     this.relationshipMappings = const [],
     this.nestedModelMappings = const [],
+    this.deliveryMethod,
   });
 }
 
 /// Utility class for handling flow-based module navigation
 class FlowNavigationUtils {
+  static String? _deliveryMethodFor(FlowModuleConfig config) {
+    if (config.deliveryMethod != null) return config.deliveryMethod;
+    final singleton = FlowBuilderSingleton();
+    // Untagged (legacy) projects make hasDeliveryMethod return true; the
+    // filter is a no-op for them, so the key is harmless there.
+    return singleton.hasDeliveryMethod(config.schemaKey)
+        ? config.schemaKey
+        : null;
+  }
+
   /// Navigates to a flow-based module with the given configuration
   ///
   /// This handles:
@@ -55,11 +70,15 @@ class FlowNavigationUtils {
     bool awaitPop = false,
   }) async {
     try {
-      // Scope any downstream delivery-method filtering (registry helpers,
+      // Scope downstream delivery-method filtering (registry helpers,
       // wrapper `where` clauses via `singleton.activeDeliveryMethod`) to the
-      // module the user is entering. Non-delivery modules still set this, but
-      // the value simply won't match any delivery.deliveryMethod.
-      FlowBuilderSingleton().setActiveDeliveryMethod(config.schemaKey);
+      // module the user is entering — but only when the project really has
+      // deliveries tagged with that method. Modules whose key is not a
+      // delivery method (MISSEDCHILDREN, MISSEDPLACE, COMPLAINTS, ...) would
+      // otherwise filter every cycle down to an empty delivery list and break
+      // eligibility, age bands and dose counts.
+      FlowBuilderSingleton()
+          .setActiveDeliveryMethod(_deliveryMethodFor(config));
 
       // Set up CRUD service
       CrudBlocSingleton().setData(

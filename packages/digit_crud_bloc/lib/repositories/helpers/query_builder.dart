@@ -272,9 +272,12 @@ class QueryBuilder {
     const earthRadius = 6371.0;
     const degToRad = math.pi / 180.0;
 
-    final deltaLat = radiusInKm / earthRadius;
+    // radius / earthRadius is an angle in radians; the stored coordinates
+    // are degrees, so convert. Without it a 5 km box was ~87 m across.
+    final deltaLat = (radiusInKm / earthRadius) / degToRad;
     final deltaLon =
-        radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+        (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+            degToRad;
 
     final minLat = centerLat - deltaLat;
     final maxLat = centerLat + deltaLat;
@@ -800,9 +803,11 @@ class QueryBuilder {
         const earthRadius = 6371.0;
         const degToRad = math.pi / 180.0;
 
-        final deltaLat = radiusInKm / earthRadius;
+        // Radians to degrees, as in the bounding box above.
+        final deltaLat = (radiusInKm / earthRadius) / degToRad;
         final deltaLon =
-            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+            (radiusInKm / (earthRadius * math.cos(centerLat * degToRad))) /
+                degToRad;
 
         final minLat = centerLat - deltaLat;
         final maxLat = centerLat + deltaLat;
@@ -1082,14 +1087,14 @@ class QueryBuilder {
     final bool geoActive =
         centerLat != null && centerLon != null && radiusInKm != null;
 
-    if (pagination != null && isPrimaryTable) {
-      // The exact radius cut runs in Dart after this query, so a plain LIMIT
-      // hands back a short page: the bounding box is the square around the
-      // circle, and the corners it adds are ~21% of its area. Over-fetch by
-      // more than that margin and trim back to `limit` once the cut has run.
-      final fetchLimit =
-          geoActive ? (pagination.limit * 1.5).ceil() + 5 : pagination.limit;
-      dataQuery.limit(fetchLimit, offset: pagination.offset);
+    // With a radius filter the exact cut runs in Dart after this query, so
+    // SQL LIMIT/OFFSET would page the bounding-box rows, not the rows inside
+    // the circle: pages come back short, and the next page's SQL offset
+    // re-reads rows an earlier page already returned. Page the filtered
+    // rows instead (below). The bounding box is a small area — a settlement
+    // or ward — so reading all of it is bounded.
+    if (pagination != null && isPrimaryTable && !geoActive) {
+      dataQuery.limit(pagination.limit, offset: pagination.offset);
     }
 
     // Drift serializes statements on a single connection, so a "parallel"
@@ -1182,9 +1187,12 @@ class QueryBuilder {
         return haversine(centerLat!, centerLon!, lat!, lon!) <= radiusInKm!;
       }).toList();
 
-      // Trim the over-fetch back to the page the caller asked for.
-      if (pagination != null && isPrimaryTable && rows.length > pagination.limit) {
-        rows = rows.sublist(0, pagination.limit);
+      // Page the rows inside the radius (SQL paging was skipped above).
+      if (pagination != null && isPrimaryTable) {
+        rows = rows
+            .skip(pagination.offset)
+            .take(pagination.limit)
+            .toList();
       }
     }
 

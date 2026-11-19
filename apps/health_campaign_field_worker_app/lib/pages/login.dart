@@ -149,13 +149,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       validationMessages: {
                         "required": (control) {
                           return localizations.translate(
-                            '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                            '${i18.login.userNamePlaceholder}_IS_REQUIRED',
                           );
                         },
                       },
                       builder: (field) => LabeledField(
                         label: localizations.translate(
-                          i18.login.userIdPlaceholder,
+                          i18.login.userNamePlaceholder,
                         ),
                         capitalizedFirstLetter: false,
                         isRequired: true,

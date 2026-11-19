@@ -1447,6 +1447,36 @@ void initializeFunctionRegistry() {
     }).length;
   });
 
+  /// Names of the sites (FacilityModel) in a list's wrapper items, grouped
+  /// by site type (`additionalFields.fields.outsideHouseholdCategory`), for
+  /// a setup form's duplicate-name check: `notIn` with
+  /// `{"from": "navigation.existingNamesByType", "scopeField": <type field>}`
+  /// rejects a name only when a site of the same type already has it.
+  ///
+  /// - **Function Name**: `'siteNamesByType'`
+  /// - **Arguments**: the list's wrapper items (`stateWrapper`).
+  /// - **Returns**: `{typeCode: [names]}`; null when the argument isn't a
+  ///   list, so navigation falls back to resolving it from the screen state.
+  FunctionRegistry.register("siteNamesByType", (args, stateData) {
+    final items = args.isNotEmpty ? args.first : null;
+    if (items is! List) return null;
+    final byType = <String, List<String>>{};
+    for (final item in items) {
+      final site = item is Map ? item['FacilityModel'] : item;
+      if (site is! FacilityModel) continue;
+      final name = site.name?.trim();
+      if (name == null || name.isEmpty) continue;
+      final type = site.additionalFields?.fields
+          .where((f) => f.key == 'outsideHouseholdCategory')
+          .firstOrNull
+          ?.value
+          ?.toString();
+      if (type == null || type.isEmpty) continue;
+      (byType[type] ??= []).add(name);
+    }
+    return byType;
+  });
+
   /// Area options for lists scoped to the selected boundary and its parent
   /// (the `boundaryAndParentCodes` singleton): the parent first, then the
   /// selected boundary. `name` is the boundary code, which the dropdown

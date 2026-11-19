@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.2"
+  android_id:
+    dependency: "direct main"
+    description:
+      name: android_id
+      sha256: f6489be4c4380cdb55a99db5b03764d936e84e9d5258a26571aa500bd1159fe0
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   ansicolor:
     dependency: transitive
     description:
@@ -533,21 +541,21 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.1.1"
+    version: "0.1.2"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.5"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.5.1"
+    version: "1.5.2"
   digit_dss:
     dependency: "direct main"
     description:
@@ -575,14 +583,14 @@ packages:
       path: "../../packages/digit_flow_builder"
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.2.4"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.1.2"
+    version: "0.1.4"
   digit_formula_parser:
     dependency: "direct main"
     description:
@@ -603,7 +611,7 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -614,12 +622,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      path: "flutter/digit-ui-components/digit_components"
-      ref: "UI/ux-audit-hcm-app-2005"
-      resolved-ref: e40678437f77c0138d537aae8e853e395df7027f
-      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
-    source: git
-    version: "0.3.2"
+      name: digit_ui_components
+      sha256: d29572eac5969eb818001064bfcd1cb0884ea3d2acda8d1742f25d8fcad54162
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
   dio:
     dependency: "direct main"
     description:
@@ -2131,7 +2138,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.5"
+    version: "1.0.6"
   sync_http:
     dependency: transitive
     description:
@@ -2225,7 +2232,7 @@ packages:
       path: "../../packages/transit_post"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   type_plus:
     dependency: transitive
     description:

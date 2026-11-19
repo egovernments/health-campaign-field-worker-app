@@ -98,6 +98,13 @@ class _BoundarySelectionPageState
   /// entries on the last level under the parent whose code they carry.
   List<UserActionModel> _newSettlements = [];
 
+  /// Bumped when the create form pre-selects a place on the last level, to
+  /// rebuild the dropdown so it shows that pick. Only an outside change may
+  /// rebuild it: replacing the dropdown while its options are open disposes
+  /// the page's Overlay (MultiSelectDropDown.dispose in digit_ui_components),
+  /// which throws "setState() called after dispose" on the next navigation.
+  int _lastLevelDropdownVersion = 0;
+
   // DropdownItem has no `==` and the multi-select matches selections by
   // identity, reading `options` and `initialOptions` in different frames.
   // Reusing one instance per entry keeps them equal across rebuilds.
@@ -113,7 +120,7 @@ class _BoundarySelectionPageState
   /// labels (keyed by the MDMS codes): the base module and the one published
   /// with the project's MDMS FormConfig.
   String get _missedPlaceModules =>
-      'common,${Constants.missedPlaceLocalizationModule},'
+      'hcm-common,${Constants.missedPlaceLocalizationModule},'
       '${missedPlaceProjectModule(context.selectedProject.referenceID)}';
 
   @override
@@ -997,12 +1004,14 @@ class _BoundarySelectionPageState
                                               child: (isLastLevel &&
                                                       !isSingleItemLastLevel)
                                                   ? MultiSelectDropDown(
-                                                      // Rebuild when a created
-                                                      // settlement is added and
+                                                      // Rebuild only when the
+                                                      // list changes or a
+                                                      // created place is
                                                       // pre-selected from
-                                                      // outside the dropdown.
+                                                      // outside; never on a
+                                                      // pick made inside it.
                                                       key: ValueKey(
-                                                          '${filteredItems.length}_${state.selectedLastLevelBoundaries.where((b) => b.isNewSettlement).map((b) => b.selectionKey).join(',')}'),
+                                                          '${filteredItems.length}_$_lastLevelDropdownVersion'),
                                                       sentenceCaseEnabled:
                                                           false,
                                                       maxItems: appConfiguration
@@ -1342,7 +1351,13 @@ class _BoundarySelectionPageState
                                                       levelName),
                                               style: Theme.of(context)
                                                   .digitTextTheme(context)
-                                                  .bodyS,
+                                                  .headingS
+                                                  .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorTheme
+                                                        .primary
+                                                        .primary2,
+                                                  ),
                                             ),
                                             const SizedBox(height: spacer2),
                                             DigitButton(
@@ -1518,6 +1533,7 @@ class _BoundarySelectionPageState
     context.read<BoundaryBloc>().add(
           BoundaryMultiSelectEvent(label: label, selectedBoundaries: selected),
         );
+    setState(() => _lastLevelDropdownVersion++);
     if (created) {
       Toast.showToast(
         context,

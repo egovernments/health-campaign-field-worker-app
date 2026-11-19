@@ -23,6 +23,22 @@ class DigitCrudService extends CrudService {
       required this.context,
       this.repositoryOverride});
 
+  /// Facility and project-facility repositories don't write an oplog by
+  /// default (their downloads go through `create` too), so sites created in
+  /// a flow ask for one explicitly. Everything else keeps its default.
+  @override
+  Future<void> createEntities(List<EntityModel> entities) async {
+    for (final entity in entities) {
+      final repository = getRepositoryForEntity(entity);
+      if ((entity is FacilityModel || entity is ProjectFacilityModel) &&
+          repository is LocalRepository<EntityModel, EntitySearchModel>) {
+        await repository.create(entity, createOpLog: true);
+      } else {
+        await super.createEntities([entity]);
+      }
+    }
+  }
+
   @override
   DataRepository<EntityModel, EntitySearchModel> getRepositoryForEntity(
       EntityModel entity) {

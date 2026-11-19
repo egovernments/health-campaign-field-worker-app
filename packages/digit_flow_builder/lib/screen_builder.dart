@@ -70,6 +70,17 @@ dynamic resolveTemplates(dynamic input, Map<String, dynamic> nav) {
   return input; // numbers, bools, null untouched
 }
 
+/// Whether [node] (an action list or action, including nested ones such as
+/// onSuccess/onError branches) contains a SEARCH_EVENT.
+bool _containsSearch(Object? node) {
+  if (node is Map) {
+    if (node['actionType'] == 'SEARCH_EVENT') return true;
+    return node.values.any(_containsSearch);
+  }
+  if (node is List) return node.any(_containsSearch);
+  return false;
+}
+
 class _ScreenBuilderState extends State<ScreenBuilder> {
   late final String _instanceId;
   late final String _schemaKey;
@@ -100,8 +111,10 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       // and up to `waitForWidget.timeoutMs` when GPS is involved, long
       // enough to flash an empty-state card before loading UI gets a
       // chance. CrudBloc's own CrudStateLoading transition takes over
-      // once the first search dispatches.
-      if (initActions.isNotEmpty) {
+      // once the first search dispatches. Only when a search is among the
+      // init actions: nothing else clears the flag, so a page whose init
+      // actions don't search would stay "loading" for good.
+      if (_containsSearch(initActions)) {
         final existing =
             FlowCrudStateRegistry().getByCompositeKey(_compositeKey);
         FlowCrudStateRegistry().updateByCompositeKey(

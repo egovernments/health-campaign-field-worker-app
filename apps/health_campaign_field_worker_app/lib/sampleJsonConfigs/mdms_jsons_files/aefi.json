@@ -242,6 +242,22 @@
                     {
                       "key": "maxAgeMonths",
                       "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                    },
+                    {
+                      "key": "isTransitPostVaccinator",
+                      "value": "{{fn:hasRole('TRANSIT_POST_VACCINATOR')}}"
+                    },
+                    {
+                      "key": "isCommunityCreator",
+                      "value": "{{fn:hasRole('COMMUNITY_CREATOR')}}"
+                    },
+                    {
+                      "key": "transitPostType",
+                      "value": "TRANSIT_POST"
+                    },
+                    {
+                      "key": "outsideHouseholdPlacesType",
+                      "value": "OUTSIDE_HOUSEHOLD_PLACES"
                     }
                   ],
                   "name": "AEFI_CREATE",
@@ -379,7 +395,17 @@
                 ],
                 "errorMessage": "AEFI_LOCATION_TYPE_REQUIRED_ERROR",
                 "isMultiSelect": false,
-                "includeInSummary": false
+                "includeInSummary": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{transitPostType}}",
+                    "expression": "navigation.isTransitPostVaccinator==true && navigation.isCommunityCreator==false"
+                  },
+                  {
+                    "value": "{{outsideHouseholdPlacesType}}",
+                    "expression": "navigation.isCommunityCreator==true && navigation.isTransitPostVaccinator==false"
+                  }
+                ]
               },
               {
                 "type": "dynamic",
@@ -878,6 +904,22 @@
                       {
                         "key": "maxAgeMonths",
                         "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                      },
+                      {
+                        "key": "isTransitPostVaccinator",
+                        "value": "{{fn:hasRole('TRANSIT_POST_VACCINATOR')}}"
+                      },
+                      {
+                        "key": "isCommunityCreator",
+                        "value": "{{fn:hasRole('COMMUNITY_CREATOR')}}"
+                      },
+                      {
+                        "key": "transitPostType",
+                        "value": "TRANSIT_POST"
+                      },
+                      {
+                        "key": "outsideHouseholdPlacesType",
+                        "value": "OUTSIDE_HOUSEHOLD_PLACES"
                       }
                     ],
                     "name": "AEFI_CREATE",

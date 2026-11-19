@@ -129,7 +129,7 @@ SearchStateManager()
 **Composite key format**: `screenKey::instanceId::searchName`
 
 **Filter management**:
-- `updateFilters(screenKey, searchName, newFilters)` - Merges by filter `key` field (replaces existing with same key)
+- `updateFilters(screenKey, searchName, newFilters, {triggerSearch = true})` - Replaces ALL filters for that searchName with `newFilters` (no merge by `key`, so stale filters from another source sharing the searchName don't persist); accumulation across searchNames happens in `getAllFilters`
 - `removeFiltersByKeys(screenKey, searchName, filterKeys)` - Removes specific filters
 - `removeFiltersByKeysForScreen(screenKey, filterKeys)` - Removes across ALL searchNames
 - `getAllFilters(screenKey)` - Gets deduplicated filters across all searchNames

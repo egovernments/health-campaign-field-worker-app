@@ -1,3 +1,8 @@
+## 0.0.5
+
+- Added the `__default:literal:path` directive: resolves `path` and falls back to `literal` when the value is missing or a blank string (e.g. `__default:2:householdDetails.memberCount`). `path` may itself be a directive
+- `__value:` and `__default:` share one literal coercion, so `__default:2:...` yields int `2` and still fits an int field
+
 ## 0.0.4
 
 - Fix checkbox fields sending `null` instead of `false` in `additionalFields`

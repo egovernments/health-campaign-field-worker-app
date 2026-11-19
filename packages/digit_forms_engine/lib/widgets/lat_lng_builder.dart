@@ -44,9 +44,15 @@ Duration? locationPopupTimer(PopupTimer? popupTimer) {
       : duration;
 }
 
-/// Save needs good accuracy (within accuracyThreshold, 5 m by default). With
-/// a popup timer ([saveEnabledAfter]), any reading can be saved once it runs
-/// out, so a worker is never stuck where accuracy won't improve.
+/// With the popup timer switched off, any reading can still be saved after
+/// this long, so a form is never blocked where accuracy can't reach the
+/// threshold (indoors, dense cover).
+const Duration kLocationSaveFallbackAfter = Duration(minutes: 2);
+
+/// Save needs good accuracy (within accuracyThreshold, 5 m by default). Any
+/// reading can be saved once the popup timer ([saveEnabledAfter]) runs out,
+/// or after [kLocationSaveFallbackAfter] when the timer is off, so a worker
+/// is never stuck where accuracy won't improve.
 @visibleForTesting
 bool canSaveLocation({
   required LocationAccuracyLevel? level,
@@ -55,6 +61,20 @@ bool canSaveLocation({
 }) {
   if (level == null) return false;
   if (level == LocationAccuracyLevel.good) return true;
+  final after = saveEnabledAfter ?? kLocationSaveFallbackAfter;
+  return elapsedSeconds >= after.inSeconds;
+}
+
+/// The popup timer ran out without a good reading: the status chip shows
+/// "Timed out" and the info box asks the worker to move and try again. Save
+/// stays enabled per [canSaveLocation], so any reading can still be kept.
+@visibleForTesting
+bool isLocationCaptureTimedOut({
+  required LocationAccuracyLevel? level,
+  required int elapsedSeconds,
+  Duration? saveEnabledAfter,
+}) {
+  if (level == LocationAccuracyLevel.good) return false;
   return saveEnabledAfter != null &&
       elapsedSeconds >= saveEnabledAfter.inSeconds;
 }
@@ -261,9 +281,23 @@ class _LatLngBuilderStatefulWrapperState
 
   @override
   void dispose() {
+    _isCapturing = false;
     _satelliteSub?.cancel();
     _releaseGpsWarmup();
     _elapsedTimer?.cancel();
+    // The field can go away while its capture dialog is open (a visibility
+    // rule hides it, the form is rebuilt). Close the dialog too, after this
+    // frame since the navigator may be locked mid-dispose, so it doesn't
+    // keep listening to [_progress] or call back into this disposed state.
+    final dialogContext = _dialogContext;
+    _dialogContext = null;
+    if (dialogContext != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (dialogContext.mounted) {
+          Navigator.of(dialogContext, rootNavigator: true).pop();
+        }
+      });
+    }
     _progress.dispose();
     super.dispose();
   }
@@ -354,6 +388,7 @@ class _LatLngBuilderStatefulWrapperState
   }
 
   void _acceptCurrentReading() {
+    if (!mounted) return;
     final reading = _progress.value;
     if (!_isCapturing || !reading.hasReading) return;
 
@@ -407,22 +442,20 @@ class _LatLngBuilderStatefulWrapperState
     return _t(loc, 'LOCATION_ACCURACY_M', '{} m', value);
   }
 
-  /// Save rule with the save threshold in bold: "You can save once accuracy
-  /// is **5 m or less**." or, with a popup timer, "You can save once accuracy
-  /// is **5 m or less**, or when the timer ends."
-  TextSpan _saveRuleSpan(FormLocalization loc, TextStyle boldStyle) {
-    final template = widget.saveEnabledAfter != null
-        ? _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_TIMER',
-            'You can save once accuracy is {save}, or when the timer ends.')
-        : _t(loc, 'LOCATION_CAPTURE_SAVE_RULE_GOOD',
-            'You can save once accuracy is {save}.');
+  /// Save rule with the save threshold filled in: "Your location is saved
+  /// automatically once accuracy is 5 m or less." The English here is only
+  /// the fallback; the shown text comes from these keys in localisation
+  /// (`hcm-common`).
+  TextSpan _saveRuleSpan(FormLocalization loc) {
+    final template = _t(loc, 'LOCATION_CAPTURE_SAVE_RULE',
+        'Your location is saved automatically once accuracy is {save}.');
     final save = _t(loc, 'LOCATION_ACCURACY_OR_LESS', '{} or less',
         _formatAccuracy(loc, widget.accuracyThreshold));
     final parts = template.split('{save}');
     return TextSpan(children: [
       TextSpan(text: parts.first),
       for (final rest in parts.skip(1)) ...[
-        TextSpan(text: save, style: boldStyle),
+        TextSpan(text: save),
         TextSpan(text: rest),
       ],
     ]);
@@ -498,39 +531,54 @@ class _LatLngBuilderStatefulWrapperState
                   // final saveTimerLeft = saveTimer == null || canSave
                   //     ? null
                   //     : saveTimer.inSeconds - progress.elapsedSeconds;
-                  final hint = _hintText(loc, progress);
+                  final timedOut = isLocationCaptureTimedOut(
+                    level: level,
+                    elapsedSeconds: progress.elapsedSeconds,
+                    saveEnabledAfter: widget.saveEnabledAfter,
+                  );
+                  final hint = timedOut
+                      ? _t(loc, 'LOCATION_CAPTURE_TIMED_OUT_INFO',
+                          'We could not get an accurate location this time. Move to an open area near the households and try again.')
+                      : _hintText(loc, progress);
 
                   final Color color;
                   final Color softColor;
                   final IconData? statusIcon;
                   final String status;
-                  switch (level) {
-                    case null:
-                      color = colors.text.secondary;
-                      softColor = colors.generic.background;
-                      statusIcon = null;
-                      status = _t(loc, 'LOCATION_SEARCHING', 'Searching…');
-                      break;
-                    case LocationAccuracyLevel.low:
-                      color = colors.alert.error;
-                      softColor = colors.alert.errorBg;
-                      statusIcon = Icons.error;
-                      status = _t(loc, 'LOCATION_ACCURACY_LOW', 'Low accuracy');
-                      break;
-                    case LocationAccuracyLevel.fair:
-                      color = colors.alert.warning;
-                      softColor = colors.alert.warningBg;
-                      statusIcon = Icons.contrast;
-                      status =
-                          _t(loc, 'LOCATION_ACCURACY_FAIR', 'Fair accuracy');
-                      break;
-                    case LocationAccuracyLevel.good:
-                      color = colors.alert.success;
-                      softColor = colors.alert.successBg;
-                      statusIcon = Icons.check_circle;
-                      status =
-                          _t(loc, 'LOCATION_ACCURACY_GOOD', 'Good accuracy');
-                      break;
+                  if (timedOut) {
+                    color = colors.alert.error;
+                    softColor = colors.alert.errorBg;
+                    statusIcon = Icons.error;
+                    status = _t(loc, 'LOCATION_TIMED_OUT', 'Timed out');
+                  } else {
+                    switch (level) {
+                      case null:
+                        color = colors.text.secondary;
+                        softColor = colors.generic.background;
+                        statusIcon = null;
+                        status = _t(loc, 'LOCATION_SEARCHING', 'Searching…');
+                        break;
+                      case LocationAccuracyLevel.low:
+                        color = colors.alert.error;
+                        softColor = colors.alert.errorBg;
+                        statusIcon = Icons.error;
+                        status = _t(loc, 'LOCATION_ACCURACY_LOW', 'Low accuracy');
+                        break;
+                      case LocationAccuracyLevel.fair:
+                        color = colors.alert.warning;
+                        softColor = colors.alert.warningBg;
+                        statusIcon = Icons.contrast;
+                        status =
+                            _t(loc, 'LOCATION_ACCURACY_FAIR', 'Fair accuracy');
+                        break;
+                      case LocationAccuracyLevel.good:
+                        color = colors.alert.success;
+                        softColor = colors.alert.successBg;
+                        statusIcon = Icons.check_circle;
+                        status =
+                            _t(loc, 'LOCATION_ACCURACY_GOOD', 'Good accuracy');
+                        break;
+                    }
                   }
 
                   return Popup(
@@ -554,13 +602,7 @@ class _LatLngBuilderStatefulWrapperState
                                     'Please wait while we capture your location.'),
                           ),
                           const TextSpan(text: ' '),
-                          _saveRuleSpan(
-                            loc,
-                            TextStyle(
-                              color: colors.text.primary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          _saveRuleSpan(loc),
                         ]),
                         style: mutedStyle,
                       ),
@@ -700,13 +742,14 @@ class _LatLngBuilderStatefulWrapperState
                             padding: const EdgeInsets.all(spacer2),
                             decoration: BoxDecoration(
                               color: colors.alert.infoBg,
-                              borderRadius: BorderRadius.circular(spacer1),
+                              border: Border.all(color: colors.alert.info),
+                              borderRadius: BorderRadius.circular(spacer2),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
-                                  Icons.lightbulb_outline,
+                                  Icons.info,
                                   size: spacer5,
                                   color: colors.alert.info,
                                 ),
@@ -766,13 +809,23 @@ class _LatLngBuilderStatefulWrapperState
     final loc = FormLocalization.of(context);
     final theme = Theme.of(context);
 
-    // Only react to actual reading changes; loading/permission flag toggles
-    // re-emit the previous (possibly stale) coordinates.
+    // React to reading changes, and to the end of a location load. Other
+    // flag toggles re-emit the previous (possibly stale) coordinates, but a
+    // load that finishes has just fetched a fresh fix: when it equals the
+    // stored one (a phone standing still, or the bloc already holding this
+    // reading from another screen) nothing "changes", and without this the
+    // dialog would wait forever on "Searching...".
     return BlocListener<LocationBloc, LocationState>(
       listenWhen: (prev, curr) =>
           prev.latitude != curr.latitude ||
           prev.longitude != curr.longitude ||
-          prev.accuracy != curr.accuracy,
+          prev.accuracy != curr.accuracy ||
+          // A load that ended without permission or with location off
+          // fetched nothing, so only a successful one counts.
+          (prev.loading &&
+              !curr.loading &&
+              curr.hasPermissions == true &&
+              curr.serviceEnabled),
       listener: (context, state) => _onReading(state),
       child: Builder(builder: (context) {
         String displayText = '';

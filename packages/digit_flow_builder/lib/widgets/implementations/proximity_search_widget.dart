@@ -25,7 +25,9 @@ class ProximitySearchWidget extends ResolvedFlowWidget {
       return _ProximitySearchStateful(
         json: json,
         onAction: onAction,
-        externalValue: state.widgetData[fieldKey] as bool? ?? false,
+        // Null means the worker never set it, so the config default applies;
+        // false means they switched it off and that must stick.
+        externalValue: state.widgetData[fieldKey] as bool?,
         onUpdateWidgetData: state.updateWidgetData,
       );
     });
@@ -35,7 +37,7 @@ class ProximitySearchWidget extends ResolvedFlowWidget {
 class _ProximitySearchStateful extends StatefulWidget {
   final Map<String, dynamic> json;
   final void Function(ActionConfig) onAction;
-  final bool externalValue;
+  final bool? externalValue;
   final void Function(String key, dynamic value) onUpdateWidgetData;
 
   const _ProximitySearchStateful({
@@ -69,7 +71,10 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
 
     /// Restore persisted widgetData value (e.g. popup reopened) so this
     /// behaves like the plain switch widget; fall back to config default.
-    _value = widget.externalValue || widget.json['defaultValue'] == true;
+    // Only an unset value falls back to the config default; an explicit
+    // false (switched off, or a removed filter chip) keeps the switch off
+    // when the popup is reopened instead of re-applying the filter.
+    _value = widget.externalValue ?? widget.json['defaultValue'] == true;
 
     /// Fetch location immediately after mount (no dialog / no delay)
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -115,7 +120,9 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   void didUpdateWidget(_ProximitySearchStateful oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Respond to external reset — e.g. Clear button cleared widgetData
-    if (!widget.externalValue && oldWidget.externalValue && _value) {
+    if (widget.externalValue != true &&
+        oldWidget.externalValue == true &&
+        _value) {
       setState(() => _value = false);
     }
   }
