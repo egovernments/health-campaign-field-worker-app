@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -201,6 +202,21 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
           }
           break;
 
+        case 'startDate':
+        case 'endDate':
+          // `{{otherField}}`: the date must not be before (startDate) or
+          // after (endDate) that field's date, re-checked whenever it
+          // changes. `{{today}}` and fixed bounds only limit the picker
+          // (json_form_builder.dart `_dateBound`), as before.
+          final otherField = _dateBoundFieldName(rule.value);
+          if (otherField != null) {
+            final isStart = rule.type == 'startDate';
+            validators.add(Validators.delegate(
+              (control) => _dateBoundValidator(otherField, isStart, control),
+            ) as Validator<T>);
+          }
+          break;
+
         case 'notIn':
           // value: a list, or a navigation reference to one
           // (e.g. "navigation.existingNames"); or, to keep names unique per
@@ -315,6 +331,60 @@ Map<String, dynamic>? _notInValidator(dynamic listOrReference,
 
   final taken = list.any((e) => e?.toString().trim().toLowerCase() == value);
   return taken ? {'notIn': true} : null;
+}
+
+final RegExp _dateBoundRef = RegExp(r'^\{\{\s*([A-Za-z0-9_]+)\s*\}\}$');
+
+/// The field named by a `{{field}}` date bound, or null for `{{today}}`,
+/// numbers and anything else.
+String? _dateBoundFieldName(dynamic value) {
+  if (value is! String) return null;
+  final name = _dateBoundRef.firstMatch(value.trim())?.group(1);
+  return name == 'today' ? null : name;
+}
+
+/// Fails when [control]'s date is before ([isStart]) or after the date in
+/// sibling field [otherField], comparing days only (same day passes). Empty
+/// values pass; `required` handles those.
+Map<String, dynamic>? _dateBoundValidator(
+    String otherField, bool isStart, AbstractControl<dynamic> control) {
+  final other = _siblingControl(control, otherField);
+  if (other == null) {
+    // First run happens before the control joins its group; run again once
+    // it has, so the listener on the other field gets attached.
+    if (control.parent == null) {
+      scheduleMicrotask(() {
+        if (control.parent != null) control.updateValueAndValidity();
+      });
+    }
+    return null;
+  }
+  _revalidateOnChange(control, other);
+
+  final value = _asDate(control.value);
+  final bound = _asDate(other.value);
+  if (value == null || bound == null) return null;
+
+  final day = DateTime(value.year, value.month, value.day);
+  final boundDay = DateTime(bound.year, bound.month, bound.day);
+  final outOfRange = isStart ? day.isBefore(boundDay) : day.isAfter(boundDay);
+  return outOfRange ? {isStart ? 'startDate' : 'endDate': true} : null;
+}
+
+/// A date control's value as a DateTime: the picker stores a DateTime;
+/// prefilled values may be epoch ms, ISO, "dd MMM yyyy" or "dd/MM/yyyy".
+DateTime? _asDate(dynamic value) {
+  if (value == null || (value is String && value.trim().isEmpty)) return null;
+  final parsed = parseDateValue(value);
+  if (parsed != null) return parsed;
+  if (value is String) {
+    for (final pattern in const ['dd MMM yyyy', 'dd/MM/yyyy']) {
+      try {
+        return DateFormat(pattern).parseStrict(value.trim());
+      } catch (_) {}
+    }
+  }
+  return null;
 }
 
 /// The control named [name] in [control]'s form group, if any.

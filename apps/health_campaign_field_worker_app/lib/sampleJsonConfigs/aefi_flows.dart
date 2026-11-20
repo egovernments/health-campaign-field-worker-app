@@ -735,7 +735,11 @@ final dynamic sampleAefiFlows = {
                   "message": "AEFI_DATE_OF_ONSET_REQUIRED_ERROR"
                 },
                 // Not before the vaccination date, not in the future.
-                {"type": "startDate", "value": "{{dateOfVaccination}}"},
+                {
+                  "type": "startDate",
+                  "value": "{{dateOfVaccination}}",
+                  "message": "AEFI_DATE_OF_ONSET_BEFORE_VACCINATION_ERROR"
+                },
                 {"type": "endDate", "value": "{{today}}"}
               ],
               "errorMessage": "AEFI_DATE_OF_ONSET_REQUIRED_ERROR"

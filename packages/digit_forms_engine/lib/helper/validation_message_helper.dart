@@ -55,6 +55,13 @@ Map<String, String Function(Object)> buildValidationMessages(
       case 'notIn':
         messages['notIn'] = (_) => finalMessage;
         break;
+      // Date before/after another date field (validator_helper.dart).
+      case 'startDate':
+        messages['startDate'] = (_) => finalMessage;
+        break;
+      case 'endDate':
+        messages['endDate'] = (_) => finalMessage;
+        break;
       case 'scanLimit':
         messages['scanLimit'] = (_) => translated;
         break;
