@@ -2301,8 +2301,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.buildWith(
+      i18.home.beneficiaryLabel: (isPolio
+              ? homeShowcaseData.polioRegistration
+              : homeShowcaseData.distributorBeneficiaries)
+          .buildWith(
         child: HomeItemCard(
           icon: isPolio ? Icons.family_restroom : Icons.all_inbox,
           label: isPolio
@@ -3211,9 +3213,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
-      // INFO : Need to add showcase keys of package Here
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      i18.home.beneficiaryLabel: isPolio
+          ? homeShowcaseData.polioRegistration.showcaseKey
+          : homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:

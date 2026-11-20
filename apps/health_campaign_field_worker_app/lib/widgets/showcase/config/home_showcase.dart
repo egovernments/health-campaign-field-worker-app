@@ -131,7 +131,9 @@ class _HomePageShowcaseData {
   );
 
   final polioRegistration = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.polioRegistrationLabel,
+    // Was the card label key, not a showcase sentence.
+    // messageLocalizationKey: i18.home.polioRegistrationLabel,
+    messageLocalizationKey: i18.homeShowcase.polioRegistration,
   );
 
   final polioMissedChildren = ShowcaseItemBuilder(

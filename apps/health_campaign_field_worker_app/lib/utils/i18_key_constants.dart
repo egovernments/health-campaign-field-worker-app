@@ -558,6 +558,11 @@ class HomeShowcase {
     return 'DISTRIBUTOR_HOME_SHOWCASE_MISSED_CHILDREN';
   }
 
+  // "Enumeration & Immunisation" card (POLIO / Immunisation campaigns).
+  String get polioRegistration {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_POLIO_REGISTRATION';
+  }
+
   String get polioLqaDataCollection {
     return 'DISTRIBUTOR_HOME_SHOWCASE_LQAS';
   }
