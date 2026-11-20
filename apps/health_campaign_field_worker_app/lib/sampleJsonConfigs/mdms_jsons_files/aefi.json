@@ -4,36 +4,8 @@
   "uniqueIdentifier": "AEFI.CMP-2026-10-30-011277",
   "data": {
     "name": "AEFI",
-    "initialPage": "aefiOverview",
-    "project": "CMP-2026-10-30-011277",
-    "order": 9,
-    "version": 1,
-    "disabled": false,
-    "isSelected": true,
     "flows": [
       {
-        "name": "aefiOverview",
-        "order": 1,
-        "screenType": "TEMPLATE",
-        "heading": "AEFI_OVERVIEW_HEADING",
-        "description": "AEFI_OVERVIEW_DESCRIPTION",
-        "header": [
-          {
-            "type": "template",
-            "label": "AEFI_BACK_LABEL",
-            "format": "backLink",
-            "onAction": [
-              {
-                "actionType": "BACK_NAVIGATION",
-                "properties": {
-                  "name": "HOME",
-                  "type": "HOME"
-                }
-              }
-            ],
-            "fieldName": "backLink"
-          }
-        ],
         "body": [
           {
             "type": "template",
@@ -225,6 +197,8 @@
             }
           }
         ],
+        "name": "aefiOverview",
+        "order": 1,
         "footer": [
           {
             "type": "template",
@@ -237,11 +211,11 @@
                   "data": [
                     {
                       "key": "minAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                      "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "maxAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                      "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "isTransitPostVaccinator",
@@ -275,6 +249,26 @@
             }
           }
         ],
+        "header": [
+          {
+            "type": "template",
+            "label": "AEFI_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "AEFI_OVERVIEW_HEADING",
+        "screenType": "TEMPLATE",
+        "description": "AEFI_OVERVIEW_DESCRIPTION",
         "initActions": [
           {
             "actionType": "SEARCH_EVENT",
@@ -315,12 +309,6 @@
       {
         "name": "AEFI_CREATE",
         "order": 2,
-        "screenType": "FORM",
-        "project": "CMP-2026-10-30-011277",
-        "summary": true,
-        "version": 1,
-        "disabled": false,
-        "isSelected": true,
         "pages": [
           {
             "body": null,
@@ -419,6 +407,35 @@
                 "required": true,
                 "fieldName": "aefiLocationName",
                 "mandatory": true,
+                "conditions": {
+                  "localDataSource": {
+                    "select": [
+                      "facility",
+                      "address"
+                    ],
+                    "filters": [
+                      {
+                        "key": "usage",
+                        "root": "facility",
+                        "value": "{{form.locationType}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "localityBoundaryCode",
+                        "root": "address",
+                        "value": "{{singleton.boundaryAndParentCodes}}",
+                        "operation": "in"
+                      }
+                    ],
+                    "primary": "facility",
+                    "valueKey": "clientReferenceId",
+                    "displayKey": [
+                      "name"
+                    ],
+                    "resultModel": "facility",
+                    "labelControl": "locationNameLabel"
+                  }
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -428,36 +445,7 @@
                 ],
                 "errorMessage": "AEFI_LOCATION_NAME_REQUIRED_ERROR",
                 "isMultiSelect": false,
-                "includeInSummary": false,
-                "conditions": {
-                  "localDataSource": {
-                    "select": [
-                      "facility",
-                      "address"
-                    ],
-                    "primary": "facility",
-                    "resultModel": "facility",
-                    "filters": [
-                      {
-                        "root": "facility",
-                        "key": "usage",
-                        "operation": "equals",
-                        "value": "{{form.locationType}}"
-                      },
-                      {
-                        "root": "address",
-                        "key": "localityBoundaryCode",
-                        "operation": "in",
-                        "value": "{{singleton.boundaryAndParentCodes}}"
-                      }
-                    ],
-                    "displayKey": [
-                      "name"
-                    ],
-                    "valueKey": "clientReferenceId",
-                    "labelControl": "locationNameLabel"
-                  }
-                }
+                "includeInSummary": false
               },
               {
                 "type": "string",
@@ -662,6 +650,29 @@
                 "required": true,
                 "fieldName": "aefiVaccine",
                 "mandatory": true,
+                "conditions": {
+                  "localDataSource": {
+                    "select": [
+                      "projectResource",
+                      "productVariant"
+                    ],
+                    "filters": [
+                      {
+                        "key": "projectId",
+                        "root": "projectResource",
+                        "value": "{{singleton.projectId}}",
+                        "operation": "equals"
+                      }
+                    ],
+                    "primary": "projectResource",
+                    "valueKey": "id",
+                    "displayKey": [
+                      "sku"
+                    ],
+                    "resultModel": "productVariant",
+                    "labelControl": "vaccineAdministeredName"
+                  }
+                },
                 "validations": [
                   {
                     "type": "required",
@@ -671,30 +682,7 @@
                 ],
                 "errorMessage": "AEFI_VACCINE_REQUIRED_ERROR",
                 "isMultiSelect": false,
-                "includeInSummary": false,
-                "conditions": {
-                  "localDataSource": {
-                    "select": [
-                      "projectResource",
-                      "productVariant"
-                    ],
-                    "primary": "projectResource",
-                    "resultModel": "productVariant",
-                    "filters": [
-                      {
-                        "root": "projectResource",
-                        "key": "projectId",
-                        "operation": "equals",
-                        "value": "{{singleton.projectId}}"
-                      }
-                    ],
-                    "displayKey": [
-                      "sku"
-                    ],
-                    "valueKey": "id",
-                    "labelControl": "vaccineAdministeredName"
-                  }
-                }
+                "includeInSummary": false
               },
               {
                 "type": "string",
@@ -755,7 +743,8 @@
                   },
                   {
                     "type": "startDate",
-                    "value": "{{dateOfVaccination}}"
+                    "value": "{{dateOfVaccination}}",
+                    "message": "AEFI_DATE_OF_ONSET_BEFORE_VACCINATION_ERROR"
                   },
                   {
                     "type": "endDate",
@@ -825,6 +814,10 @@
             "preventScreenCapture": false
           }
         ],
+        "project": "CMP-2026-10-30-011277",
+        "summary": true,
+        "version": 1,
+        "disabled": false,
         "onAction": [
           {
             "actionType": "FETCH_TRANSFORMER_CONFIG",
@@ -871,14 +864,13 @@
             }
           }
         ],
+        "isSelected": true,
+        "screenType": "FORM",
         "initActions": [],
         "wrapperConfig": {},
         "scrollListener": {}
       },
       {
-        "name": "aefiAcknowledgement",
-        "order": 3,
-        "screenType": "TEMPLATE",
         "body": [
           {
             "type": "template",
@@ -899,11 +891,11 @@
                     "data": [
                       {
                         "key": "minAgeMonths",
-                        "value": "{{fn:getDeliveryAgeLimit('min')}}"
+                        "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                       },
                       {
                         "key": "maxAgeMonths",
-                        "value": "{{fn:getDeliveryAgeLimit('max')}}"
+                        "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                       },
                       {
                         "key": "isTransitPostVaccinator",
@@ -931,7 +923,8 @@
               "mandatory": true,
               "properties": {
                 "type": "primary"
-              }
+              },
+              "capitalizeLetters": false
             },
             "secondaryAction": {
               "type": "template",
@@ -959,15 +952,24 @@
             "secondaryActionLabel": "AEFI_SUCCESS_BACK_TO_OVERVIEW"
           }
         ],
+        "name": "aefiAcknowledgement",
+        "order": 3,
         "footer": [],
         "header": [],
         "navigateTo": null,
+        "screenType": "TEMPLATE",
         "initActions": [],
         "submitCondition": null,
         "preventScreenCapture": false,
         "isSuccessorErrorScreen": true
       }
-    ]
+    ],
+    "order": 9,
+    "project": "CMP-2026-10-30-011277",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "initialPage": "aefiOverview"
   },
   "isActive": true
 }
