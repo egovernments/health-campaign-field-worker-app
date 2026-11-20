@@ -1695,6 +1695,29 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           ],
         ),
         children: [
+          // "Summary" page heading, styled like a form page title shown
+          // outside its card (headingXl, 16px left/right/bottom).
+          Padding(
+            padding: const EdgeInsets.only(
+                left: spacer4, right: spacer4, bottom: spacer4),
+            child: Text(
+              () {
+                const key = 'CORE_COMMON_SUMMARY';
+                final text = localizations.translate(key);
+                // No translation uploaded yet: show the English word, not the key.
+                return text == key ? 'Summary' : text;
+              }(),
+              style: Theme.of(context).digitTextTheme(context).headingXl.copyWith(
+                    color: Theme.of(context).colorTheme.primary.primary2,
+                    // headingXl asks for 'Roboto Condensed', which the app
+                    // doesn't register under that name, so the device font
+                    // was used and its "S" got cropped in cached frames
+                    // (page slide-in, scrolling). 'Roboto' is registered, as
+                    // the card headings below use.
+                    fontFamily: 'Roboto',
+                  ),
+            ),
+          ),
           for (final entry in shownPages)
             DigitCard(
               // 16px side gutters like the form pages. Vertical spacing is
