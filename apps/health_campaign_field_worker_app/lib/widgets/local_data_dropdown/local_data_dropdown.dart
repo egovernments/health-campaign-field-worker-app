@@ -6,7 +6,6 @@ import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -125,7 +124,8 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
             return LabeledField(
               isRequired: isRequired,
               label: label != null ? localizations.translate(label) : '',
-              child: Dropdown(
+              child: DigitDropdown<String>(
+                sentenceCaseEnabled: false,
                 // Enabled once its filters are known, even with no results,
                 // so the user can open it and see "No options available".
                 readOnly: isReadOnly ||
