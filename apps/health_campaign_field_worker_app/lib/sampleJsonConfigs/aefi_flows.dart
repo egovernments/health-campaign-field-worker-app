@@ -515,22 +515,16 @@ final dynamic sampleAefiFlows = {
               "format": "text",
               "hidden": false,
               "readOnly": false,
-              "required": true,
+              "required": false,
               "fieldName": "childName",
-              "mandatory": true,
+              "mandatory": false,
               "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "AEFI_CHILD_NAME_REQUIRED_ERROR"
-                },
                 {
                   "type": "maxLength",
                   "value": "200",
                   "message": "AEFI_VALIDATION_MAX_200"
                 }
               ],
-              "errorMessage": "AEFI_CHILD_NAME_REQUIRED_ERROR",
               "isMultiSelect": false,
               "textCapitalization": "words"
             },
