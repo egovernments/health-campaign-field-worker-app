@@ -49,6 +49,9 @@ import '../localized.dart';
 ///   "name": <displayKey>}`, like the stock product picker's `{id, sku}`.
 ///   The transformer reads `<field>.id` / `<field>.name`, and the summary
 ///   page shows `name`.
+/// - With `isMultiSelect: true` on the field it renders a multi-select and
+///   keeps the same shape: `{"id": "<id1>,<id2>", "name": "<name1>, <name2>"}`,
+///   so the transformer's `<field>.id` / `<field>.name` stay unchanged.
 // - `labelControl` (optional) is a hidden field on the same page that gets
 //   the selected option's label, so the transformer and summary can use it.
 //   Replaced by the {id, name} value above: a second hidden field showed up
@@ -82,6 +85,9 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
   List<DropdownItem> _items = const [];
   bool _loading = false;
 
+  /// From the field's schema (`isMultiSelect`), read on each build.
+  bool _isMultiSelect = false;
+
   @override
   Widget build(BuildContext context) {
     final pages =
@@ -110,6 +116,7 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
             ?.any((v) => v.type == 'required' && v.value == true) ??
         false;
     final label = schema?.label ?? schema?.innerLabel;
+    _isMultiSelect = schema?.isMultiSelect == true;
     final validationMessages = schema?.validations != null
         ? buildValidationMessages(schema!.validations, localizations)
         : null;
@@ -125,20 +132,45 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
           validationMessages: validationMessages,
           showErrors: (control) => control.invalid && control.touched,
           builder: (field) {
-            final currentId =
-                _selectedId(form.control(widget.formControlName).value);
+            final selectedIds =
+                _selectedIds(form.control(widget.formControlName).value);
+            final currentId = selectedIds.firstOrNull;
+            // Enabled once its filters are known, even with no results, so
+            // the user can open it and see "No options available".
+            final readOnly = isReadOnly ||
+                _dependencyMissing ||
+                (_loading && _items.isEmpty);
+            final emptyItemText =
+                localizations.translate(i18.common.noOptionsAvailable);
+
+            if (_isMultiSelect) {
+              return LabeledField(
+                isRequired: isRequired,
+                label: label != null ? localizations.translate(label) : '',
+                child: MultiSelectDropDown<String>(
+                  sentenceCaseEnabled: false,
+                  readOnly: readOnly,
+                  emptyItemText: emptyItemText,
+                  errorMessage: field.errorText,
+                  options: _items,
+                  initialOptions: _items
+                      .where((item) => selectedIds.contains(item.code))
+                      .toList(),
+                  onOptionSelected: (selected) {
+                    form.control(widget.formControlName).markAsTouched();
+                    _write(form, widget.formControlName, _multiValue(selected));
+                  },
+                ),
+              );
+            }
+
             return LabeledField(
               isRequired: isRequired,
               label: label != null ? localizations.translate(label) : '',
               child: DigitDropdown<String>(
                 sentenceCaseEnabled: false,
-                // Enabled once its filters are known, even with no results,
-                // so the user can open it and see "No options available".
-                readOnly: isReadOnly ||
-                    _dependencyMissing ||
-                    (_loading && _items.isEmpty),
-                emptyItemText:
-                    localizations.translate(i18.common.noOptionsAvailable),
+                readOnly: readOnly,
+                emptyItemText: emptyItemText,
                 // A new copy on every build: DigitDropdown.didUpdateWidget
                 // clears its text when it gets the same option object as
                 // last build, so a later change elsewhere on the page (e.g.
@@ -274,12 +306,14 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
     void apply() {
       if (!mounted) return;
       setState(() => _items = items);
-      final current = _selectedId(form.control(widget.formControlName).value);
-      if (current != null &&
-          current.isNotEmpty &&
-          !items.any((i) => i.code == current)) {
-        _write(form, widget.formControlName, null);
-      }
+      final ids = _selectedIds(form.control(widget.formControlName).value);
+      final kept = items.where((i) => ids.contains(i.code)).toList();
+      if (kept.length == ids.length) return;
+      _write(
+        form,
+        widget.formControlName,
+        _isMultiSelect ? _multiValue(kept) : null,
+      );
     }
 
     if (duringBuild) {
@@ -303,11 +337,28 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
     return value;
   }
 
-  /// The selected option's id: the value is `{id, name}`, or a plain id if
-  /// it was set before this field stored both.
-  String? _selectedId(dynamic value) {
-    if (value is Map) return value['id']?.toString();
-    return value?.toString();
+  /// The selected options' ids: the value is `{id, name}` (ids
+  /// comma-joined for a multi-select), or a plain id if it was set before
+  /// this field stored both.
+  List<String> _selectedIds(dynamic value) {
+    final raw = value is Map ? value['id']?.toString() : value?.toString();
+    if (raw == null || raw.trim().isEmpty) return const [];
+    if (!_isMultiSelect) return [raw];
+    return raw
+        .split(',')
+        .map((id) => id.trim())
+        .where((id) => id.isNotEmpty)
+        .toList();
+  }
+
+  /// The multi-select value: `{id: "<id1>,<id2>", name: "<n1>, <n2>"}`, or
+  /// null when nothing is selected (so `required` still fails).
+  Map<String, dynamic>? _multiValue(List<DropdownItem> selected) {
+    if (selected.isEmpty) return null;
+    return <String, dynamic>{
+      'id': selected.map((e) => e.code).join(','),
+      'name': selected.map((e) => e.name).join(', '),
+    };
   }
 
   dynamic _readPath(Map<String, dynamic> map, String path) {

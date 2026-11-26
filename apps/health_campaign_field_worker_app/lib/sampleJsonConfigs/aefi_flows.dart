@@ -653,7 +653,7 @@ final dynamic sampleAefiFlows = {
                 }
               ],
               "errorMessage": "AEFI_VACCINE_REQUIRED_ERROR",
-              "isMultiSelect": false,
+              "isMultiSelect": true,
               "includeInSummary": false,
               // The campaign's vaccines: product variants of this project's
               // resources (same join as the stock screens).
