@@ -249,6 +249,10 @@
                     {
                       "key": "outsideHouseholdPlacesType",
                       "value": "OUTSIDE_HOUSEHOLD_PLACES"
+                    },
+                    {
+                      "key": "isCdd",
+                      "value": "{{fn:hasRole('DISTRIBUTOR')}}"
                     }
                   ],
                   "name": "AEFI_CREATE",
@@ -477,7 +481,13 @@
                 "mandatory": false,
                 "validations": [],
                 "isMultiSelect": false,
-                "includeInSummary": false
+                "includeInSummary": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{loggedInUserName}}",
+                    "expression": "navigation.isCdd==true || navigation.isTransitPostVaccinator==true || navigation.isCommunityCreator==true"
+                  }
+                ]
               }
             ],
             "actionLabel": "AEFI_NEXT",
@@ -783,6 +793,11 @@
                     "type": "required",
                     "value": true,
                     "message": "AEFI_DESCRIPTION_REQUIRED_ERROR"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "AEFI_VALIDATION_MAX_200"
                   }
                 ],
                 "errorMessage": "AEFI_DESCRIPTION_REQUIRED_ERROR",
@@ -905,6 +920,10 @@
                       {
                         "key": "outsideHouseholdPlacesType",
                         "value": "OUTSIDE_HOUSEHOLD_PLACES"
+                      },
+                      {
+                        "key": "isCdd",
+                        "value": "{{fn:hasRole('DISTRIBUTOR')}}"
                       }
                     ],
                     "name": "AEFI_CREATE",
