@@ -267,6 +267,11 @@ final dynamic sampleAefiFlows = {
                   {
                     "key": "outsideHouseholdPlacesType",
                     "value": "OUTSIDE_HOUSEHOLD_PLACES"
+                  },
+                  // Role flag for the referredBy autoFillCondition.
+                  {
+                    "key": "isCdd",
+                    "value": "{{fn:hasRole('DISTRIBUTOR')}}"
                   }
                 ],
                 "name": "AEFI_CREATE",
@@ -479,7 +484,15 @@ final dynamic sampleAefiFlows = {
               "mandatory": false,
               "validations": [],
               "isMultiSelect": false,
-              "includeInSummary": false
+              "includeInSummary": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{loggedInUserName}}",
+                  // CDD, Transit Post vaccinator or community creator.
+                  "expression":
+                      "navigation.isCdd==true || navigation.isTransitPostVaccinator==true || navigation.isCommunityCreator==true"
+                }
+              ]
             }
           ],
           "actionLabel": "AEFI_NEXT",
@@ -771,6 +784,11 @@ final dynamic sampleAefiFlows = {
                   "type": "required",
                   "value": true,
                   "message": "AEFI_DESCRIPTION_REQUIRED_ERROR"
+                },
+                {
+                  "type": "maxLength",
+                  "value": "200",
+                  "message": "AEFI_VALIDATION_MAX_200"
                 }
               ],
               "errorMessage": "AEFI_DESCRIPTION_REQUIRED_ERROR",
@@ -887,6 +905,10 @@ final dynamic sampleAefiFlows = {
                     {
                       "key": "outsideHouseholdPlacesType",
                       "value": "OUTSIDE_HOUSEHOLD_PLACES"
+                    },
+                    {
+                      "key": "isCdd",
+                      "value": "{{fn:hasRole('DISTRIBUTOR')}}"
                     }
                   ],
                   "name": "AEFI_CREATE",
