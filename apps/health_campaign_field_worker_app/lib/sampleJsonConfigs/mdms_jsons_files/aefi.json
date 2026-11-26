@@ -677,7 +677,7 @@
                   }
                 ],
                 "errorMessage": "AEFI_VACCINE_REQUIRED_ERROR",
-                "isMultiSelect": false,
+                "isMultiSelect": true,
                 "includeInSummary": false
               },
               {
