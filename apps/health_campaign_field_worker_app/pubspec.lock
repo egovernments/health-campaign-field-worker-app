@@ -622,10 +622,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: d29572eac5969eb818001064bfcd1cb0884ea3d2acda8d1742f25d8fcad54162
-      url: "https://pub.dev"
-    source: hosted
+      path: "flutter/digit-ui-components/digit_components"
+      ref: "UI/ux-audit-hcm-app-2005"
+      resolved-ref: d61e42a702c67d704e3ff2d924619de4fc7aa7a4
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
+    source: git
     version: "0.3.3"
   dio:
     dependency: "direct main"

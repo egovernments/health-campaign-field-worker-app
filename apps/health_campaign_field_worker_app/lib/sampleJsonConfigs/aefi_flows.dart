@@ -2,7 +2,7 @@
 //
 // Home "Report AEFI" card → aefiOverview (this user's case counts)
 //   → AEFI_CREATE form: aefiLocation → childDetails → aefiCaseDetails
-//   → summary → aefiAcknowledgement.
+//   → aefiAcknowledgement
 //
 // Cases are saved as HFReferral records with additionalFields.formType=AEFI
 // (transformer `aefiCreation`). Used as the local sample until the AEFI
@@ -229,11 +229,13 @@ final dynamic sampleAefiFlows = {
                 "data": [
                   {
                     "key": "minAgeMonths",
-                    "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
+                    "value":
+                        "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                   },
                   {
                     "key": "maxAgeMonths",
-                    "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
+                    "value":
+                        "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                   },
                   // Location type by role: a Transit Post vaccinator reports
                   // from a transit post, a community creator from an outside
@@ -305,7 +307,7 @@ final dynamic sampleAefiFlows = {
       "order": 2,
       "screenType": "FORM",
       "project": "CMP-2026-10-27-011213",
-      "summary": true,
+      "summary": false,
       "version": 1,
       "disabled": false,
       "isSelected": true,
@@ -355,7 +357,10 @@ final dynamic sampleAefiFlows = {
               "type": "string",
               // Fallback options; replaced from MDMS on a published config.
               "enums": [
-                {"code": "TRANSIT_POST", "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"},
+                {
+                  "code": "TRANSIT_POST",
+                  "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"
+                },
                 {
                   "code": "OUTSIDE_HOUSEHOLD_PLACES",
                   "name": "AEFI_LOCATION_TYPE_OUTSIDE_HOUSEHOLD_PLACES"
@@ -442,23 +447,8 @@ final dynamic sampleAefiFlows = {
                   ],
                   "displayKey": ["name"],
                   "valueKey": "clientReferenceId",
-                  "labelControl": "locationNameLabel"
                 }
               }
-            },
-            {
-              "type": "string",
-              "label": "AEFI_LOCATION_NAME_LABEL",
-              "order": 4,
-              "value": "",
-              "format": "text",
-              "hidden": true,
-              "readOnly": true,
-              "fieldName": "locationNameLabel",
-              "mandatory": false,
-              "validations": [],
-              "includeInForm": true,
-              "includeInSummary": false
             },
             {
               "type": "string",
@@ -566,7 +556,7 @@ final dynamic sampleAefiFlows = {
                 }
               ],
               "errorMessage": "AEFI_CHILD_DOB_OR_AGE_REQUIRED_ERROR",
-              "includeInSummary": true
+              "includeInSummary": false
             },
             {
               "type": "string",
@@ -668,24 +658,9 @@ final dynamic sampleAefiFlows = {
                   // the variant id (the dropdown's value).
                   "displayKey": ["sku"],
                   "valueKey": "id",
-                  "labelControl": "vaccineAdministeredName"
+                  // "labelControl": "vaccineAdministeredName"
                 }
               }
-            },
-            {
-              // Vaccine name written by the dropdown; shown on the summary.
-              "type": "string",
-              "label": "AEFI_VACCINE_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": true,
-              "readOnly": true,
-              "fieldName": "vaccineAdministeredName",
-              "mandatory": false,
-              "validations": [],
-              "includeInForm": true,
-              "includeInSummary": true
             },
             {
               "type": "string",
@@ -855,17 +830,33 @@ final dynamic sampleAefiFlows = {
             // Show the label as translated so "AEFI" stays in capitals.
             "capitalizeLetters": false,
             "onAction": [
+              // 1. Replace the old overview with a fresh one, so its counts
+              // include this case and Back from the next form lands on it
+              // (not on this acknowledgement screen).
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "aefiOverview",
+                  "type": "TEMPLATE",
+                  "navigationMode": "popUntilAndReplace",
+                  "popUntilPageName": "aefiOverview"
+                }
+              },
+              // 2. Open the form on top of the fresh overview.
               {
                 "actionType": "NAVIGATION",
                 "properties": {
                   "data": [
                     {
                       "key": "minAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
+                      "value":
+                          "{{fn:getDeliveryAgeLimit('min', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "maxAgeMonths",
-                      "value": "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
+                      "value":
+                          "{{fn:getDeliveryAgeLimit('max', 'OUTSIDEHOUSEHOLD')}}"
                     },
                     {
                       "key": "isTransitPostVaccinator",

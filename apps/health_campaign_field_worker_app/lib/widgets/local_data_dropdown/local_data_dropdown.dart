@@ -33,8 +33,7 @@ import '../localized.dart';
 ///        "value": "{{singleton.boundaryAndParentCodes}}"}
 ///     ],
 ///     "displayKey": ["name"],
-///     "valueKey": "clientReferenceId",
-///     "labelControl": "locationNameLabel"
+///     "valueKey": "clientReferenceId"
 ///   }
 /// }
 /// ```
@@ -46,8 +45,14 @@ import '../localized.dart';
 /// - `{{singleton.<path>}}` resolves from the flow-builder singleton.
 /// - `displayKey` is one key or a list of keys; the first non-empty value
 ///   is shown.
-/// - `labelControl` (optional) is a hidden field on the same page that gets
-///   the selected option's label, so the transformer and summary can use it.
+/// - The field's value is the selected option as `{"id": <valueKey>,
+///   "name": <displayKey>}`, like the stock product picker's `{id, sku}`.
+///   The transformer reads `<field>.id` / `<field>.name`, and the summary
+///   page shows `name`.
+// - `labelControl` (optional) is a hidden field on the same page that gets
+//   the selected option's label, so the transformer and summary can use it.
+//   Replaced by the {id, name} value above: a second hidden field showed up
+//   as a duplicate row in the console's Page properties.
 class LocalDataDropdown extends LocalizedStatefulWidget {
   final String schemaName;
   final String formControlName;
@@ -120,7 +125,8 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
           validationMessages: validationMessages,
           showErrors: (control) => control.invalid && control.touched,
           builder: (field) {
-            final current = form.control(widget.formControlName).value;
+            final currentId =
+                _selectedId(form.control(widget.formControlName).value);
             return LabeledField(
               isRequired: isRequired,
               label: label != null ? localizations.translate(label) : '',
@@ -140,7 +146,7 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
                 // evaluation_facility.dart.
                 selectedOption: () {
                   final match = _items.firstWhereOrNull(
-                    (item) => item.code == current?.toString(),
+                    (item) => item.code == currentId,
                   );
                   return match == null
                       ? const DropdownItem(name: '', code: '')
@@ -150,12 +156,16 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
                 items: _items,
                 onSelect: (val) {
                   form.control(widget.formControlName).markAsTouched();
-                  _write(form, widget.formControlName, val.code);
-                  final labelControl =
-                      source is Map ? source['labelControl']?.toString() : null;
-                  if (labelControl != null) {
-                    _write(form, labelControl, val.name);
-                  }
+                  _write(form, widget.formControlName, <String, dynamic>{
+                    'id': val.code,
+                    'name': val.name,
+                  });
+                  // _write(form, widget.formControlName, val.code);
+                  // final labelControl =
+                  //     source is Map ? source['labelControl']?.toString() : null;
+                  // if (labelControl != null) {
+                  //   _write(form, labelControl, val.name);
+                  // }
                 },
               ),
             );
@@ -264,7 +274,7 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
     void apply() {
       if (!mounted) return;
       setState(() => _items = items);
-      final current = form.control(widget.formControlName).value?.toString();
+      final current = _selectedId(form.control(widget.formControlName).value);
       if (current != null &&
           current.isNotEmpty &&
           !items.any((i) => i.code == current)) {
@@ -291,6 +301,13 @@ class _LocalDataDropdownState extends LocalizedState<LocalDataDropdown> {
       return resolved == value ? null : resolved;
     }
     return value;
+  }
+
+  /// The selected option's id: the value is `{id, name}`, or a plain id if
+  /// it was set before this field stored both.
+  String? _selectedId(dynamic value) {
+    if (value is Map) return value['id']?.toString();
+    return value?.toString();
   }
 
   dynamic _readPath(Map<String, dynamic> map, String path) {
