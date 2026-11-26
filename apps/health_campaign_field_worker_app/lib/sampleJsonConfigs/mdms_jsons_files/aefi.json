@@ -13,47 +13,62 @@
             "children": [
               {
                 "type": "template",
-                "value": "{{fn:length(contextData)}}",
-                "format": "textTemplate",
-                "fieldName": "totalCount",
-                "properties": {
-                  "style": "headingXl",
-                  "bottomGap": 0,
-                  "textStyle": {
-                    "color": "#0B4B66",
-                    "fontSize": "24px",
-                    "fontFamily": "Roboto Condensed, sans-serif",
-                    "fontWeight": 700,
-                    "lineHeight": 1.14
+                "label": "AEFI_OVERVIEW_TOTAL_PANEL",
+                "format": "column",
+                "children": [
+                  {
+                    "type": "template",
+                    "value": "{{fn:length(contextData)}}",
+                    "format": "textTemplate",
+                    "fieldName": "totalCount",
+                    "properties": {
+                      "style": "headingXl",
+                      "bottomGap": 0,
+                      "textStyle": {
+                        "color": "#0B4B66",
+                        "fontSize": "24px",
+                        "fontFamily": "Roboto, sans-serif",
+                        "fontWeight": 700,
+                        "lineHeight": 1.14
+                      },
+                      "isFieldValue": false
+                    }
                   },
-                  "isFieldValue": false
-                }
+                  {
+                    "type": "template",
+                    "value": "AEFI_OVERVIEW_TOTAL_LABEL",
+                    "format": "textTemplate",
+                    "fieldName": "totalLabel",
+                    "properties": {
+                      "style": "bodyS",
+                      "bottomGap": 4,
+                      "textStyle": {
+                        "color": "#1D1B20",
+                        "fontSize": "14px",
+                        "fontFamily": "Roboto, sans-serif",
+                        "fontWeight": 400,
+                        "lineHeight": 1.37
+                      },
+                      "isFieldValue": false
+                    }
+                  }
+                ],
+                "fieldName": "totalTile",
+                "properties": {
+                  "gap": 12,
+                  "mainAxisSize": "min"
+                },
+                "groupAsSingleElement": true
               },
               {
                 "type": "template",
-                "value": "AEFI_OVERVIEW_TOTAL_LABEL",
-                "format": "textTemplate",
-                "fieldName": "totalLabel",
-                "properties": {
-                  "style": "bodyS",
-                  "bottomGap": 4,
-                  "textStyle": {
-                    "color": "#1D1B20",
-                    "fontSize": "14px",
-                    "fontFamily": "Roboto, sans-serif",
-                    "fontWeight": 400,
-                    "lineHeight": 1.37
-                  },
-                  "isFieldValue": false
-                }
-              },
-              {
-                "type": "template",
+                "label": "AEFI_OVERVIEW_TYPE_PANEL",
                 "format": "row",
                 "children": [
                   {
                     "flex": 1,
                     "type": "template",
+                    "label": "AEFI_OVERVIEW_SERIOUS_PANEL",
                     "format": "card",
                     "children": [
                       {
@@ -120,6 +135,7 @@
                   {
                     "flex": 1,
                     "type": "template",
+                    "label": "AEFI_OVERVIEW_MINOR_PANEL",
                     "format": "card",
                     "children": [
                       {
@@ -187,7 +203,8 @@
                 "fieldName": "typeSplit",
                 "properties": {
                   "gap": 8
-                }
+                },
+                "groupAsSingleElement": true
               }
             ],
             "fieldName": "casesTile",
@@ -267,6 +284,7 @@
           }
         ],
         "heading": "AEFI_OVERVIEW_HEADING",
+        "category": "AEFI_REPORTING",
         "screenType": "TEMPLATE",
         "description": "AEFI_OVERVIEW_DESCRIPTION",
         "initActions": [
@@ -432,8 +450,7 @@
                     "displayKey": [
                       "name"
                     ],
-                    "resultModel": "facility",
-                    "labelControl": "locationNameLabel"
+                    "resultModel": "facility"
                   }
                 },
                 "validations": [
@@ -445,20 +462,6 @@
                 ],
                 "errorMessage": "AEFI_LOCATION_NAME_REQUIRED_ERROR",
                 "isMultiSelect": false,
-                "includeInSummary": false
-              },
-              {
-                "type": "string",
-                "label": "AEFI_LOCATION_NAME_LABEL",
-                "order": 4,
-                "value": "",
-                "format": "text",
-                "hidden": true,
-                "readOnly": true,
-                "fieldName": "locationNameLabel",
-                "mandatory": false,
-                "validations": [],
-                "includeInForm": true,
                 "includeInSummary": false
               },
               {
@@ -516,22 +519,16 @@
                 "format": "text",
                 "hidden": false,
                 "readOnly": false,
-                "required": true,
+                "required": false,
                 "fieldName": "childName",
-                "mandatory": true,
+                "mandatory": false,
                 "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "AEFI_CHILD_NAME_REQUIRED_ERROR"
-                  },
                   {
                     "type": "maxLength",
                     "value": "200",
                     "message": "AEFI_VALIDATION_MAX_200"
                   }
                 ],
-                "errorMessage": "AEFI_CHILD_NAME_REQUIRED_ERROR",
                 "isMultiSelect": false,
                 "textCapitalization": "words"
               },
@@ -571,7 +568,7 @@
                   }
                 ],
                 "errorMessage": "AEFI_CHILD_DOB_OR_AGE_REQUIRED_ERROR",
-                "includeInSummary": true
+                "includeInSummary": false
               },
               {
                 "type": "string",
@@ -669,8 +666,7 @@
                     "displayKey": [
                       "sku"
                     ],
-                    "resultModel": "productVariant",
-                    "labelControl": "vaccineAdministeredName"
+                    "resultModel": "productVariant"
                   }
                 },
                 "validations": [
@@ -683,20 +679,6 @@
                 "errorMessage": "AEFI_VACCINE_REQUIRED_ERROR",
                 "isMultiSelect": false,
                 "includeInSummary": false
-              },
-              {
-                "type": "string",
-                "label": "AEFI_VACCINE_LABEL",
-                "order": 2,
-                "value": "",
-                "format": "text",
-                "hidden": true,
-                "readOnly": true,
-                "fieldName": "vaccineAdministeredName",
-                "mandatory": false,
-                "validations": [],
-                "includeInForm": true,
-                "includeInSummary": true
               },
               {
                 "type": "string",
@@ -815,8 +797,9 @@
           }
         ],
         "project": "CMP-2026-10-30-011277",
-        "summary": true,
+        "summary": false,
         "version": 1,
+        "category": "AEFI_REPORTING",
         "disabled": false,
         "onAction": [
           {
@@ -888,6 +871,16 @@
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
+                    "data": [],
+                    "name": "aefiOverview",
+                    "type": "TEMPLATE",
+                    "navigationMode": "popUntilAndReplace",
+                    "popUntilPageName": "aefiOverview"
+                  }
+                },
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
                     "data": [
                       {
                         "key": "minAgeMonths",
@@ -956,6 +949,7 @@
         "order": 3,
         "footer": [],
         "header": [],
+        "category": "AEFI_REPORTING",
         "navigateTo": null,
         "screenType": "TEMPLATE",
         "initActions": [],

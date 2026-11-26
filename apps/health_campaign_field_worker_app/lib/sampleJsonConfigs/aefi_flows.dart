@@ -19,6 +19,7 @@ final dynamic sampleAefiFlows = {
       "name": "aefiOverview",
       "order": 1,
       "screenType": "TEMPLATE",
+      "category": "AEFI_REPORTING",
       "heading": "AEFI_OVERVIEW_HEADING",
       "description": "AEFI_OVERVIEW_DESCRIPTION",
       "header": [
@@ -42,47 +43,59 @@ final dynamic sampleAefiFlows = {
           "children": [
             {
               "type": "template",
-              "value": "{{fn:length(contextData)}}",
-              "format": "textTemplate",
-              "fieldName": "totalCount",
-              "properties": {
-                "style": "headingXl",
-                "bottomGap": 0,
-                "textStyle": {
-                  "color": "#0B4B66",
-                  "fontSize": "24px",
-                  "fontFamily": "Roboto Condensed, sans-serif",
-                  "fontWeight": 700,
-                  "lineHeight": 1.14
+              "label": "AEFI_OVERVIEW_TOTAL_PANEL",
+              "format": "column",
+              "children": [
+                {
+                  "type": "template",
+                  "value": "{{fn:length(contextData)}}",
+                  "format": "textTemplate",
+                  "fieldName": "totalCount",
+                  "properties": {
+                    "style": "headingXl",
+                    "bottomGap": 0,
+                    "textStyle": {
+                      "color": "#0B4B66",
+                      "fontSize": "24px",
+                      "fontFamily": "Roboto, sans-serif",
+                      "fontWeight": 700,
+                      "lineHeight": 1.14
+                    },
+                    "isFieldValue": false
+                  }
                 },
-                "isFieldValue": false
-              }
+                {
+                  "type": "template",
+                  "value": "AEFI_OVERVIEW_TOTAL_LABEL",
+                  "format": "textTemplate",
+                  "fieldName": "totalLabel",
+                  "properties": {
+                    "style": "bodyS",
+                    "bottomGap": 4,
+                    "textStyle": {
+                      "color": "#1D1B20",
+                      "fontSize": "14px",
+                      "fontFamily": "Roboto, sans-serif",
+                      "fontWeight": 400,
+                      "lineHeight": 1.37
+                    },
+                    "isFieldValue": false
+                  }
+                }
+              ],
+              "fieldName": "totalTile",
+              "properties": {"gap": 12, "mainAxisSize": "min"},
+              "groupAsSingleElement": true
             },
             {
               "type": "template",
-              "value": "AEFI_OVERVIEW_TOTAL_LABEL",
-              "format": "textTemplate",
-              "fieldName": "totalLabel",
-              "properties": {
-                "style": "bodyS",
-                "bottomGap": 4,
-                "textStyle": {
-                  "color": "#1D1B20",
-                  "fontSize": "14px",
-                  "fontFamily": "Roboto, sans-serif",
-                  "fontWeight": 400,
-                  "lineHeight": 1.37
-                },
-                "isFieldValue": false
-              }
-            },
-            {
-              "type": "template",
+              "label": "AEFI_OVERVIEW_TYPE_PANEL",
               "format": "row",
               "children": [
                 {
                   "flex": 1,
                   "type": "template",
+                  "label": "AEFI_OVERVIEW_SERIOUS_PANEL",
                   "format": "card",
                   "children": [
                     {
@@ -147,6 +160,7 @@ final dynamic sampleAefiFlows = {
                 {
                   "flex": 1,
                   "type": "template",
+                  "label": "AEFI_OVERVIEW_MINOR_PANEL",
                   "format": "card",
                   "children": [
                     {
@@ -210,7 +224,8 @@ final dynamic sampleAefiFlows = {
                 }
               ],
               "fieldName": "typeSplit",
-              "properties": {"gap": 8}
+              "properties": {"gap": 8},
+              "groupAsSingleElement": true
             }
           ],
           "fieldName": "casesTile",
@@ -306,6 +321,7 @@ final dynamic sampleAefiFlows = {
       "name": "AEFI_CREATE",
       "order": 2,
       "screenType": "FORM",
+      "category": "AEFI_REPORTING",
       "project": "CMP-2026-10-27-011213",
       "summary": false,
       "version": 1,
@@ -816,6 +832,7 @@ final dynamic sampleAefiFlows = {
       "name": "aefiAcknowledgement",
       "order": 3,
       "screenType": "TEMPLATE",
+      "category": "AEFI_REPORTING",
       "body": [
         {
           "type": "template",
