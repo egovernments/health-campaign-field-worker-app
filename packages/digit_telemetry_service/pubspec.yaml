@@ -1,0 +1,20 @@
+name: digit_telemetry_service
+description: Product telemetry for DIGIT apps behind one provider-independent API. Tracks screens, navigation and time on screen under a configurable tracking policy. Ships a PostHog provider; other providers plug in by implementing TelemetryProvider.
+version: 0.0.1
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_telemetry_service
+repository: https://github.com/egovernments/health-campaign-field-worker-app
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Only lib/src/providers/posthog_provider.dart imports this.
+  posthog_flutter: 5.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
